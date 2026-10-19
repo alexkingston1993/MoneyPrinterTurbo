@@ -51,6 +51,27 @@ class GitHubVercelPublisher:
         # Remove existing if same slug
         posts = [p for p in posts if p.get("slug") != article.slug]
 
+        # Ensure responsive video embed in HTML
+        html_content = article.html_content
+        if youtube_url:
+            vid_id = ""
+            if "youtu.be/" in youtube_url:
+                vid_id = youtube_url.split("youtu.be/")[1].split("?")[0]
+            elif "watch?v=" in youtube_url:
+                vid_id = youtube_url.split("watch?v=")[1].split("&")[0]
+            elif "embed/" in youtube_url:
+                vid_id = youtube_url.split("embed/")[1].split("?")[0]
+            
+            embed_src = f"https://www.youtube.com/embed/{vid_id}" if vid_id else youtube_url
+            embed_iframe = (
+                f'<div class="yt-embed-wrapper" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;margin:24px 0;">'
+                f'<iframe src="{embed_src}" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen></iframe>'
+                f'</div>'
+            )
+            html_content = html_content.replace("[YOUTUBE_EMBED_PLACEHOLDER]", embed_iframe)
+        else:
+            html_content = html_content.replace("[YOUTUBE_EMBED_PLACEHOLDER]", "")
+
         new_entry = {
             "slug": article.slug,
             "title": article.title,
@@ -60,7 +81,7 @@ class GitHubVercelPublisher:
             "categories": article.categories,
             "tags": article.tags,
             "youtubeUrl": youtube_url or "",
-            "html": article.html_content,
+            "html": html_content,
             "schema": article.schema_jsonld,
         }
         # Prepend latest
