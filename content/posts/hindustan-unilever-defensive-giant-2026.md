@@ -6,7 +6,7 @@ excerpt: "Fundamental review of Hindustan Unilever (NSE: HINDUNILVR). Rural volu
 focusKeyword: "HUL stock analysis 2026"
 categories: ["FMCG Sector", "Equities Research", "Nifty 50"]
 tags: ["HINDUNILVR", "HUL", "FMCG", "DefensiveStocks", "Nifty50"]
-youtubeUrl: ""
+youtubeUrl: "https://youtu.be/bi7XUJb5rqg"
 ---
 
 <div class="market-article">
