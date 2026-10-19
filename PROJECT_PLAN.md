@@ -1111,3 +1111,43 @@ frame_rate = 30
 - **8K rendering is resource-intensive**: Requires significant RAM and CPU time. YouTube will transcode to lower resolutions for viewers with slower connections. The 8K master ensures future-proofing.
 - **4K shorts** are recommended minimum for Instagram — Instagram compresses video heavily, and 4K source ensures acceptable quality after compression.
 - Video source material (Pexels/Pixabay) is typically 1080p-4K. For 8K output, clips are upscaled — actual detail is limited by source quality.
+
+## 18. Monetization & Growth Architecture (2026 Engine)
+
+### 18.1 Active Voice Persona
+- **Default Production Voice**: `kokoro:af_heart` (American Female — #1 Rated Naturalness in Open TTS, studio prosody & natural breathing). Configured in `config.toml`, `generate_series.py`, and `app/services/kokoro_voice.py`.
+
+### 18.2 Assigned User Tasks (Action Tracking)
+1. **Demat Brokerage & Partner Affiliate Engine**:
+   - Provide referral codes for Zerodha, Angel One, Groww, Dhan, Delta Exchange India, Bybit, TradingView, and GoCharting.
+   - Configure "Two-Way" referral split (10% rebate to audience) for maximum conversion.
+2. **Programmatic SEO (2,000+ Tickers)**:
+   - Generate dedicated quantitative analysis and options setup pages for all NSE 500 & top traded equities.
+   - Traffic projection: 2,000 stock pages $\times$ 50 organic search visits/day = 100,000 pageviews/day = 3,000,000 pageviews/month at high finance RPMs ($25–$45).
+3. **Website Revamp & Conversion Hub**:
+   - Institutional redesign of Dalal Street Alpha portal live at `https://dalal-street-alpha.vercel.app`.
+   - Incorporating "The Trader's Arsenal" (`/tools`), 24-Month RevShare Growth Simulator, and Fee & Slippage Impact Calculator.
+
+### 18.3 Three-Tier Brokerage & SaaS Monetization Strategy
+1. **Indian Stock Brokers (SEBI Regulated / Lifetime RevShare)**:
+   - **Dhan**: 20% Net Brokerage Lifetime (Best for active traders, free TradingView direct trading).
+   - **Zerodha**: 10% Net Brokerage + 300 Reward Points (High trust; 3 active accounts/year required for cash withdrawal).
+   - **Angel One**: 50%–70% via Authorized Person (AP) / ₹150–₹500 CPA.
+   - **The Pro Upgrade (Authorized Person - AP)**: Pass NISM Series-VIII (Equity Derivatives) to earn 50% to 70% of every ₹20 order legally under SEBI guidelines.
+2. **Global & Crypto Derivatives (High-Frequency Trading)**:
+   - **Delta Exchange India**: 10%–30% Daily INR payouts, FIU-registered in India, INR options on BTC/ETH.
+   - **Bybit**: 30% to 50% lifetime net fees + 10% sub-affiliate cut. Day-1 creator approval.
+   - **Binance**: 40%–50% Spot & Futures. Real-time USDT settlement to spot wallet.
+   - **Interactive Brokers (IBKR)**: $200 CPA bounty for US equity investors.
+3. **Charting & Order-Flow SaaS (100% SEBI-Crackdown Immune)**:
+   - **TradingView**: 30% recurring lifetime commission on monthly and annual plans.
+   - **GoCharting**: 15%–20% recurring revenue share on Nifty/BankNifty footprint charts.
+   - **Bookmap**: 15%–25%+ recurring commission on high-ticket institutional liquidity heatmaps ($39–$99/mo).
+
+### 18.4 Simulator Compounding Formula
+$$\text{Active Traders}(M) = N \times \frac{1 - (1 - c)^M}{c}$$
+Where:
+- $N$ = New active referrals per month
+- $c$ = Monthly attrition/churn rate (default 5%)
+- $M$ = Projection horizon (months)
+

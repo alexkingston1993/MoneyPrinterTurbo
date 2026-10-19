@@ -60,7 +60,7 @@ def parse_kokoro_voice(voice_name: str) -> tuple[str, str]:
          'kokoro:bm_george' -> ('bm_george', 'b')
     """
     parts = voice_name.split(":")
-    raw_voice = parts[1] if len(parts) > 1 else "am_adam"
+    raw_voice = parts[1] if len(parts) > 1 and parts[1] else "af_heart"
     voice_id = raw_voice.split("-")[0].strip()
 
     # Determine language code: 'b' for British, 'a' for American

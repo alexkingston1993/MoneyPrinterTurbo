@@ -5,17 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- Primary SEO Meta Tags -->
-    <title>Dalal Street Alpha — Live Indian Stock Market News, Nifty Analysis & Derivatives</title>
-    <meta name="title" content="Dalal Street Alpha — Live Indian Stock Market News, Nifty Analysis & Derivatives">
-    <meta name="description" content="Real-time Indian stock market intelligence, Nifty 50 & Bank Nifty technical levels, FII/DII institutional cash flow tracking, options chain setups, and video breakdowns.">
-    <meta name="keywords" content="Nifty 50 today, Bank Nifty analysis, Indian stock market live, FII DII data today, share market news, options chain analysis, Dalal Street news">
-    <meta name="author" content="Dalal Street Alpha Desk">
+    <title>Dalal Street Alpha — Institutional Indian Stock Market Intelligence, Nifty 50 Derivatives & The Trader's Arsenal</title>
+    <meta name="title" content="Dalal Street Alpha — Institutional Indian Stock Market Intelligence & The Trader's Arsenal">
+    <meta name="description" content="Autonomous quantitative Indian market desk. Real-time Nifty 50 & Bank Nifty levels, FII/DII cash flow tracking, options chain setups, verified broker comparison matrix, and 24-month RevShare simulator.">
+    <meta name="keywords" content="Nifty 50 analysis today, Bank Nifty derivative levels, Indian stock market news, FII DII data live, best broker for option trading, Dhan vs Zerodha, TradingView discount, RevShare simulator, Dalal Street alpha">
+    <meta name="author" content="Dalal Street Alpha Quantitative Desk">
     <meta name="robots" content="index, follow">
 
     <!-- Open Graph / Social Sharing -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Dalal Street Alpha — Live Market Intelligence">
-    <meta property="og:description" content="Real-time Indian stock market intelligence, Nifty 50 technical setups, FII/DII cash flow tracking, and video analysis.">
+    <meta property="og:url" content="https://dalal-street-alpha.vercel.app">
+    <meta property="og:title" content="Dalal Street Alpha — Institutional Market Intelligence & The Trader's Arsenal">
+    <meta property="og:description" content="Autonomous quantitative Indian stock market intelligence, Nifty 50 options chain analysis, broker kickback comparisons, and trading SaaS tools.">
     <meta property="og:image" content="brand_assets/opengraph_social_card_1200x630.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="brand_assets/opengraph_social_card_1200x630.png">
@@ -27,125 +28,934 @@
     <!-- Google Fonts: Outfit & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
 
-    <!-- Stylesheet -->
+    <!-- Primary Stylesheet -->
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <!-- Top Live Ticker Marquee -->
-    <div id="ticker-bar" class="ticker-bar">
+    <div id="ticker-bar" class="ticker-bar" aria-label="Live Market Ticker">
         <div class="ticker-track" id="ticker-track">
-            <div class="ticker-item"><span class="t-name">NIFTY 50</span> <span class="t-val" id="tk-nifty">23,055.9</span> <span class="t-chg down" id="tk-nifty-chg">-0.39%</span></div>
-            <div class="ticker-item"><span class="t-name">SENSEX</span> <span class="t-val" id="tk-sensex">74,444.4</span> <span class="t-chg down" id="tk-sensex-chg">-0.38%</span></div>
-            <div class="ticker-item"><span class="t-name">BANK NIFTY</span> <span class="t-val" id="tk-bank">55,620.1</span> <span class="t-chg down" id="tk-bank-chg">-0.40%</span></div>
-            <div class="ticker-item"><span class="t-name">INDIA VIX</span> <span class="t-val">13.85</span> <span class="t-chg up">+2.1%</span></div>
-            <div class="ticker-item"><span class="t-name">BRENT CRUDE</span> <span class="t-val">$78.40</span> <span class="t-chg down">-0.6%</span></div>
-            <div class="ticker-item"><span class="t-name">GOLD (10g)</span> <span class="t-val">₹78,250</span> <span class="t-chg up">+0.4%</span></div>
-            <div class="ticker-item"><span class="t-name">USD/INR</span> <span class="t-val">₹84.15</span> <span class="t-chg neutral">0.00%</span></div>
+            <div class="ticker-item"><span class="t-name">NIFTY 50</span> <span class="t-val" id="tk-nifty">23,055.90</span> <span class="t-chg down" id="tk-nifty-chg">-0.39%</span></div>
+            <div class="ticker-item"><span class="t-name">SENSEX</span> <span class="t-val" id="tk-sensex">74,444.40</span> <span class="t-chg down" id="tk-sensex-chg">-0.38%</span></div>
+            <div class="ticker-item"><span class="t-name">BANK NIFTY</span> <span class="t-val" id="tk-bank">55,620.10</span> <span class="t-chg down" id="tk-bank-chg">-0.40%</span></div>
+            <div class="ticker-item"><span class="t-name">INDIA VIX</span> <span class="t-val">13.85</span> <span class="t-chg up">+2.10%</span></div>
+            <div class="ticker-item"><span class="t-name">RELIANCE</span> <span class="t-val">₹2,688.00</span> <span class="t-chg up">+0.42%</span></div>
+            <div class="ticker-item"><span class="t-name">HDFC BANK</span> <span class="t-val">₹1,642.50</span> <span class="t-chg down">-0.74%</span></div>
+            <div class="ticker-item"><span class="t-name">BRENT CRUDE</span> <span class="t-val">$78.40</span> <span class="t-chg down">-0.60%</span></div>
+            <div class="ticker-item"><span class="t-name">USD / INR</span> <span class="t-val">₹84.15</span> <span class="t-chg neutral">0.00%</span></div>
+            <div class="ticker-item"><span class="t-name">BTC / USDT</span> <span class="t-val">$68,450</span> <span class="t-chg up">+1.85%</span></div>
+            <div class="ticker-item"><span class="t-name">ETH / USDT</span> <span class="t-val">$2,642</span> <span class="t-chg up">+2.30%</span></div>
         </div>
     </div>
 
     <!-- Navigation Header -->
-    <header class="navbar">
+    <header class="navbar" id="top-navbar">
         <div class="nav-container">
-            <a href="/" class="brand-logo" id="brand-home-link">
-                <img src="brand_assets/website_favicon_192x192.png" alt="Dalal Street Alpha Logo" class="brand-avatar-img" style="width:36px; height:36px; border-radius:8px; margin-right:10px; object-fit:cover; border:1px solid rgba(212,175,55,0.4);">
+            <a href="#hero" class="brand-logo" id="brand-home-link" aria-label="Dalal Street Alpha Home">
+                <div class="brand-avatar-box">
+                    <img src="brand_assets/logo_master_1024x1024.png" alt="Dalal Street Alpha Logo" class="brand-avatar-img">
+                </div>
                 <div class="logo-text">
-                    <span class="logo-title">DALAL STREET<span class="highlight">ALPHA</span></span>
-                    <span class="logo-sub">QUANTITATIVE MARKET DESK</span>
+                    <span class="logo-title">DALAL STREET<span class="highlight-gold">ALPHA</span></span>
+                    <span class="logo-sub">INSTITUTIONAL QUANT DESK & MEDIA</span>
                 </div>
             </a>
 
-            <nav class="nav-links">
-                <button class="nav-btn active" data-category="all" id="btn-cat-all">All News</button>
-                <button class="nav-btn" data-category="Nifty 50" id="btn-cat-nifty">Nifty 50</button>
-                <button class="nav-btn" data-category="Derivatives Analysis" id="btn-cat-derivatives">Derivatives</button>
-                <button class="nav-btn" data-category="FII Flow" id="btn-cat-fii">FII/DII Flows</button>
+            <nav class="nav-links" id="main-nav-links">
+                <a href="#hero" class="nav-link active" id="nav-item-intel">Live Intel</a>
+                <a href="#tools" class="nav-link" id="nav-item-tools">Trader's Arsenal <span class="nav-pill-badge">10% OFF</span></a>
+                <a href="#simulator" class="nav-link" id="nav-item-simulator">RevShare Simulator</a>
+                <a href="#calculator" class="nav-link" id="nav-item-calc">Fee Calculator</a>
+                <a href="#feed" class="nav-link" id="nav-item-feed">Market Feed</a>
+                <a href="#compliance" class="nav-link" id="nav-item-compliance">Compliance</a>
             </nav>
 
-            <div class="nav-status">
-                <span class="market-status-pill closed" id="market-status-pill">
-                    <span class="pulse-dot"></span> MARKET CLOSED
-                </span>
+            <div class="nav-right-actions">
+                <div class="market-status-box" id="market-status-box">
+                    <span class="market-status-pill closed" id="market-status-pill">
+                        <span class="pulse-dot"></span> <span id="market-status-label">MARKET CLOSED</span>
+                    </span>
+                    <span class="ist-clock" id="live-ist-clock">15:30:00 IST</span>
+                </div>
+                <a href="#tools" class="btn-primary-glow btn-sm" id="btn-top-tools">Open Demat</a>
             </div>
         </div>
     </header>
 
-    <!-- Main Content Container -->
+    <!-- Main Content Area -->
     <main class="main-layout">
-        <!-- Hero Section: Latest Breaking News -->
-        <section class="hero-section" id="hero-feature-container">
-            <div class="hero-badge-row">
-                <span class="badge pulse-badge">⚡ LIVE DESK REPORT</span>
-                <span class="badge tag-badge" id="hero-tag">NIFTY ANALYSIS</span>
-                <span class="hero-date" id="hero-date">Updated Today</span>
-            </div>
+        <!-- Hero Section: Algorithmic Radar & Breaking Desk Report -->
+        <section class="hero-section" id="hero">
+            <div class="hero-glow-orb hero-glow-1"></div>
+            <div class="hero-glow-orb hero-glow-2"></div>
 
-            <h1 class="hero-title" id="hero-title">
-                Loading latest market analysis...
-            </h1>
+            <div class="hero-content-wrapper">
+                <div class="hero-meta-row">
+                    <span class="badge badge-pulse">⚡ LIVE DESK REPORT</span>
+                    <span class="badge badge-accent" id="hero-tag">NIFTY 50 DERIVATIVES</span>
+                    <span class="badge badge-engine">GOOGLE AI STUDIO • GEMINI 3.8 FLASH</span>
+                    <span class="hero-timestamp" id="hero-date">Published Today</span>
+                </div>
 
-            <p class="hero-excerpt" id="hero-excerpt">
-                Fetching real-time algorithmic market intelligence, options open interest concentrations, and institutional cash flow data.
-            </p>
+                <h1 class="hero-title" id="hero-title">
+                    Nifty Today: Bears Tighten Grip as Nifty Cracks Critical Support | Full Analysis & Derivative Setup
+                </h1>
 
-            <!-- Video Embed Card -->
-            <div class="hero-video-box" id="hero-video-box">
-                <!-- Injected dynamically -->
-            </div>
+                <p class="hero-excerpt" id="hero-excerpt">
+                    Live market analysis: Benchmark Nifty 50 settles with nuanced liquidity rotation. FII/DII cash flow tracking, options open interest concentration, key pivot zones, and tomorrow's positioning strategy.
+                </p>
 
-            <!-- GEO Executive Summary Answer Box -->
-            <div class="hero-geo-box" id="hero-geo-box">
-                <!-- Injected dynamically -->
-            </div>
+                <!-- Hero Interactive Radar & Chart Screen -->
+                <div class="hero-visual-container">
+                    <div class="hero-visual-header">
+                        <div class="hero-visual-tabs">
+                            <button class="visual-tab-btn active" id="tab-btn-radar" data-target="radar-view">⚡ Quantitative Terminal</button>
+                            <button class="visual-tab-btn" id="tab-btn-chart" data-target="chart-view">📊 Candlestick Structure</button>
+                            <button class="visual-tab-btn" id="tab-btn-video" data-target="video-view">▶ Video Broadcast</button>
+                        </div>
+                        <div class="visual-header-badge">
+                            <span class="pulse-dot-green"></span>
+                            <span>5 DAILY CLOUD HARVEST CYCLES</span>
+                        </div>
+                    </div>
 
-            <div class="hero-actions">
-                <button class="cta-read-btn" id="hero-read-full-btn">Read Full Technical Breakdown & Option Chain →</button>
+                    <!-- View 1: Quantitative Terminal Stats -->
+                    <div class="visual-view-panel active" id="radar-view">
+                        <div class="terminal-stats-grid">
+                            <div class="t-stat-card">
+                                <div class="t-stat-header">
+                                    <span class="t-label">NIFTY 50</span>
+                                    <span class="t-badge bear">BEARISH</span>
+                                </div>
+                                <div class="t-val-main">22,888.90</div>
+                                <div class="t-sub-info bear">-256.40 (-1.11%)</div>
+                                <div class="t-micro-bar"><div class="micro-fill" style="width: 32%; background: var(--rose-bear);"></div></div>
+                            </div>
+
+                            <div class="t-stat-card">
+                                <div class="t-stat-header">
+                                    <span class="t-label">BSE SENSEX</span>
+                                    <span class="t-badge bear">PULLBACK</span>
+                                </div>
+                                <div class="t-val-main">73,852.90</div>
+                                <div class="t-sub-info bear">-872.10 (-1.08%)</div>
+                                <div class="t-micro-bar"><div class="micro-fill" style="width: 35%; background: var(--rose-bear);"></div></div>
+                            </div>
+
+                            <div class="t-stat-card">
+                                <div class="t-stat-header">
+                                    <span class="t-label">BANK NIFTY</span>
+                                    <span class="t-badge bear">HIGH BETA</span>
+                                </div>
+                                <div class="t-val-main">49,425.20</div>
+                                <div class="t-sub-info bear">-473.80 (-0.95%)</div>
+                                <div class="t-micro-bar"><div class="micro-fill" style="width: 40%; background: var(--rose-bear);"></div></div>
+                            </div>
+
+                            <div class="t-stat-card">
+                                <div class="t-stat-header">
+                                    <span class="t-label">INDIA VIX</span>
+                                    <span class="t-badge bull">ELEVATED</span>
+                                </div>
+                                <div class="t-val-main">15.42</div>
+                                <div class="t-sub-info bull">+0.62 (+4.20%)</div>
+                                <div class="t-micro-bar"><div class="micro-fill" style="width: 68%; background: var(--emerald-bull);"></div></div>
+                            </div>
+
+                            <div class="t-stat-card">
+                                <div class="t-stat-header">
+                                    <span class="t-label">FII CASH NET</span>
+                                    <span class="t-badge neutral">DII OFFSET</span>
+                                </div>
+                                <div class="t-val-main">-₹1,842 Cr</div>
+                                <div class="t-sub-info bear">Institutional Outflow</div>
+                                <div class="t-micro-bar"><div class="micro-fill" style="width: 25%; background: var(--rose-bear);"></div></div>
+                            </div>
+
+                            <div class="t-stat-card">
+                                <div class="t-stat-header">
+                                    <span class="t-label">DII CASH NET</span>
+                                    <span class="t-badge bull">SIP ABSORB</span>
+                                </div>
+                                <div class="t-val-main">+₹2,115 Cr</div>
+                                <div class="t-sub-info bull">Domestic Absorption</div>
+                                <div class="t-micro-bar"><div class="micro-fill" style="width: 78%; background: var(--emerald-bull);"></div></div>
+                            </div>
+                        </div>
+
+                        <!-- Technical Pivot Matrix Bar -->
+                        <div class="pivot-levels-bar">
+                            <div class="pivot-item"><span class="p-title">MAJOR SUPPORT 2:</span> <span class="p-num bear">22,650</span></div>
+                            <div class="pivot-item"><span class="p-title">IMMEDIATE SUPPORT 1:</span> <span class="p-num bear">22,740</span></div>
+                            <div class="pivot-item current"><span class="p-title">SPOT CLOSE:</span> <span class="p-num">22,888.90</span></div>
+                            <div class="pivot-item"><span class="p-title">IMMEDIATE RESISTANCE 1:</span> <span class="p-num bull">23,040</span></div>
+                            <div class="pivot-item"><span class="p-title">MAJOR RESISTANCE 2:</span> <span class="p-num bull">23,200</span></div>
+                        </div>
+                    </div>
+
+                    <!-- View 2: Candlestick Chart View -->
+                    <div class="visual-view-panel" id="chart-view">
+                        <div class="chart-embed-box">
+                            <img src="sample_charts/reliance_candlestick_pro.png" alt="Reliance Professional Candlestick Chart" class="candlestick-img" id="hero-chart-img">
+                            <div class="chart-overlay-legend">
+                                <span class="chart-tag">TRADINGVIEW DARK THEME</span>
+                                <span class="chart-tag">VOLUME PROFILE + 20/50 EMA OVERLAY</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- View 3: Video Player View -->
+                    <div class="visual-view-panel" id="video-view">
+                        <div class="hero-video-box" id="hero-video-box">
+                            <!-- Injected dynamically by app.js -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GEO Executive Summary Direct Answer Box -->
+                <div class="hero-geo-box" id="hero-geo-box">
+                    <div class="geo-badge-row">
+                        <span class="geo-title-badge">⚡ GEO Direct Answer • AI Overview & Perplexity Ready</span>
+                        <span class="geo-compliance-tag">Educational Context Only • Personal View</span>
+                    </div>
+                    <p class="geo-text" id="hero-geo-text">
+                        The Indian market witnessed active trading as the benchmark <strong>Nifty 50 settled at 22,888.9 (-1.11%)</strong>, while <strong>Sensex concluded at 73,852.9 (-1.17%)</strong>. Bank Nifty clocked <strong>49,425.2 (-0.95%)</strong>. Institutional flows reflected a net FII posture of -₹1,842 Cr, counterbalanced by domestic institutions at +₹2,115 Cr. Weekly options open interest indicates major call writing at 23,000 strikes, capping near-term rallies.
+                    </p>
+                </div>
+
+                <!-- Hero Action CTAs -->
+                <div class="hero-actions">
+                    <button class="btn-primary-glow" id="hero-read-full-btn">Read Full Technical Breakdown & Option Chain →</button>
+                    <a href="#tools" class="btn-secondary-glass">The Trader's Arsenal (10% Fee Discount)</a>
+                    <a href="#simulator" class="btn-ghost-gold">Launch RevShare Simulator</a>
+                </div>
             </div>
         </section>
 
-        <!-- Market Intelligence Grid -->
-        <section class="feed-section">
+        <!-- Section 1: The Trader's Arsenal (/tools Central Conversion Hub) -->
+        <section class="tools-section" id="tools">
+            <div class="section-header-box">
+                <div class="section-tag-badge">THE TRADER'S ARSENAL</div>
+                <h2 class="section-title">Verified Brokerage & Charting Setup</h2>
+                <p class="section-subtitle">
+                    Cut execution drag, access institutional footprint depth, and lock in permanent <strong>10% two-way fee kickbacks</strong> across India's top SEBI-regulated brokers and global derivatives platforms.
+                </p>
+            </div>
+
+            <!-- Arsenal Categories Filter -->
+            <div class="arsenal-filter-bar">
+                <button class="filter-btn active" data-filter="all">All Arsenal Platforms (10)</button>
+                <button class="filter-btn" data-filter="indian">Indian Stock Brokers (SEBI)</button>
+                <button class="filter-btn" data-filter="crypto">Global & Crypto Derivatives</button>
+                <button class="filter-btn" data-filter="saas">Charting & Order-Flow SaaS</button>
+            </div>
+
+            <!-- Grid of Platforms -->
+            <div class="arsenal-grid" id="arsenal-grid">
+                <!-- 1. Dhan -->
+                <div class="arsenal-card featured-gold" data-category="indian">
+                    <div class="card-glow-edge"></div>
+                    <div class="card-header-top">
+                        <span class="platform-badge gold">#1 FOR ACTIVE F&O TRADERS</span>
+                        <span class="payout-pill">20% Net Brokerage (Lifetime)</span>
+                    </div>
+                    <div class="platform-identity">
+                        <div class="platform-icon-box dhan-icon">DH</div>
+                        <div>
+                            <h3 class="platform-name">Dhan Brokerage</h3>
+                            <span class="platform-sub">SEBI Regulated • NSE / BSE / MCX</span>
+                        </div>
+                    </div>
+                    <p class="platform-desc">
+                        Seamless direct TradingView integration with free custom orders, zero AMC, options trader app, and daily automated cash kickback payouts once above ₹100.
+                    </p>
+                    <ul class="platform-perks">
+                        <li>⚡ Trade directly from TradingView charts with 0 latency</li>
+                        <li>⚡ Up to 50%–70% cut upgrade available via Authorized Person (AP)</li>
+                        <li>⚡ Instant UPI / IMPS bank account settlement</li>
+                    </ul>
+                    <div class="card-footer-cta">
+                        <a href="https://dhan.co" target="_blank" rel="noopener noreferrer" class="btn-claim-discount">
+                            <span>Claim 10% Fee Rebate & Open Account</span>
+                            <span class="cta-arrow">→</span>
+                        </a>
+                        <span class="discount-subtext">Use code <strong>ALPHA10</strong> for two-way discount split</span>
+                    </div>
+                </div>
+
+                <!-- 2. Zerodha -->
+                <div class="arsenal-card" data-category="indian">
+                    <div class="card-header-top">
+                        <span class="platform-badge blue">BENCHMARK TRUST & LIQUIDITY</span>
+                        <span class="payout-pill">10% RevShare + 300 Pts</span>
+                    </div>
+                    <div class="platform-identity">
+                        <div class="platform-icon-box zerodha-icon">ZD</div>
+                        <div>
+                            <h3 class="platform-name">Zerodha Kite</h3>
+                            <span class="platform-sub">India's Largest Retail Stockbroker</span>
+                        </div>
+                    </div>
+                    <p class="platform-desc">
+                        The gold standard in retail trading execution. Resumed brokerage sharing in June 2026. Access free Sensibull for options analytics and Kite Connect APIs.
+                    </p>
+                    <ul class="platform-perks">
+                        <li>⚡ Minimal slippage on Nifty & Bank Nifty index options</li>
+                        <li>⚡ Free Sensibull strategy builder for all registered users</li>
+                        <li>⚡ 10% lifetime brokerage sharing (refer 3 accounts/yr to unlock)</li>
+                    </ul>
+                    <div class="card-footer-cta">
+                        <a href="https://zerodha.com" target="_blank" rel="noopener noreferrer" class="btn-claim-discount">
+                            <span>Open Zerodha Demat & Trading Account</span>
+                            <span class="cta-arrow">→</span>
+                        </a>
+                        <span class="discount-subtext">Official Partner Link • Full SEBI Compliance</span>
+                    </div>
+                </div>
+
+                <!-- 3. Angel One -->
+                <div class="arsenal-card" data-category="indian">
+                    <div class="card-header-top">
+                        <span class="platform-badge purple">PRO AP REVENUE TIER</span>
+                        <span class="payout-pill">50%–70% AP Cut / ₹500 CPA</span>
+                    </div>
+                    <div class="platform-identity">
+                        <div class="platform-icon-box angel-icon">AO</div>
+                        <div>
+                            <h3 class="platform-name">Angel One SuperApp</h3>
+                            <span class="platform-sub">SmartAPI & High Beta Scalping</span>
+                        </div>
+                    </div>
+                    <p class="platform-desc">
+                        Ultra-fast execution with dedicated SmartAPI endpoints for Python algorithmic traders. High payout tier available through official DRA / Authorized Person registration.
+                    </p>
+                    <ul class="platform-perks">
+                        <li>⚡ 50% to 70% per-order cash cut for registered AP partners</li>
+                        <li>⚡ Powerful Python & NodeJS SmartAPI integration</li>
+                        <li>⚡ Zero brokerage on equity delivery investments</li>
+                    </ul>
+                    <div class="card-footer-cta">
+                        <a href="https://angelone.in" target="_blank" rel="noopener noreferrer" class="btn-claim-discount">
+                            <span>Claim SmartAPI & 10% Fee Rebate</span>
+                            <span class="cta-arrow">→</span>
+                        </a>
+                        <span class="discount-subtext">Verified Partner Onboarding Portal</span>
+                    </div>
+                </div>
+
+                <!-- 4. Delta Exchange India -->
+                <div class="arsenal-card featured-emerald" data-category="crypto">
+                    <div class="card-glow-edge"></div>
+                    <div class="card-header-top">
+                        <span class="platform-badge emerald">FIU-REGISTERED IN INDIA</span>
+                        <span class="payout-pill">10%–30% Daily INR Payout</span>
+                    </div>
+                    <div class="platform-identity">
+                        <div class="platform-icon-box delta-icon">DX</div>
+                        <div>
+                            <h3 class="platform-name">Delta Exchange India</h3>
+                            <span class="platform-sub">Crypto F&O Settled Directly in INR</span>
+                        </div>
+                    </div>
+                    <p class="platform-desc">
+                        Zero P2P bank freeze risk and no VPN requirement. Trade Bitcoin & Ethereum options/futures with pure Indian Rupees (INR) using regular UPI/IMPS deposits.
+                    </p>
+                    <ul class="platform-perks">
+                        <li>⚡ Daily cash kickbacks deposited directly in INR to your bank</li>
+                        <li>⚡ Trade BTC/ETH options with 100x leverage using ₹500 capital</li>
+                        <li>⚡ 100% FIU compliant with transparent TDS reporting</li>
+                    </ul>
+                    <div class="card-footer-cta">
+                        <a href="https://delta.exchange" target="_blank" rel="noopener noreferrer" class="btn-claim-discount">
+                            <span>Get 10% Fee Rebate on Delta India</span>
+                            <span class="cta-arrow">→</span>
+                        </a>
+                        <span class="discount-subtext">Exclusive INR deposit bonus + 10% discount</span>
+                    </div>
+                </div>
+
+                <!-- 5. Bybit -->
+                <div class="arsenal-card" data-category="crypto">
+                    <div class="card-header-top">
+                        <span class="platform-badge cyan">DAY-1 PARTNER APPROVAL</span>
+                        <span class="payout-pill">30% to 50% Lifetime Net Fees</span>
+                    </div>
+                    <div class="platform-identity">
+                        <div class="platform-icon-box bybit-icon">BY</div>
+                        <div>
+                            <h3 class="platform-name">Bybit Global Derivatives</h3>
+                            <span class="platform-sub">Deep Liquidity Perpetual Futures</span>
+                        </div>
+                    </div>
+                    <p class="platform-desc">
+                        The premier exchange for professional crypto derivatives traders. Low maker/taker fees, order book depth, and real-time affiliate analytics dashboard.
+                    </p>
+                    <ul class="platform-perks">
+                        <li>⚡ 30%–50% lifetime kickback on all maker/taker order fees</li>
+                        <li>⚡ 10% tier-2 commission from sub-affiliates you recruit</li>
+                        <li>⚡ Institutional liquidity on 400+ perpetual contract pairs</li>
+                    </ul>
+                    <div class="card-footer-cta">
+                        <a href="https://bybit.com" target="_blank" rel="noopener noreferrer" class="btn-claim-discount">
+                            <span>Claim 10% Bybit Fee Discount Code</span>
+                            <span class="cta-arrow">→</span>
+                        </a>
+                        <span class="discount-subtext">Immediate Tier-1 VIP fee level activation</span>
+                    </div>
+                </div>
+
+                <!-- 6. Binance -->
+                <div class="arsenal-card" data-category="crypto">
+                    <div class="card-header-top">
+                        <span class="platform-badge amber">WORLD'S #1 LIQUIDITY</span>
+                        <span class="payout-pill">40%–50% Spot & Futures</span>
+                    </div>
+                    <div class="platform-identity">
+                        <div class="platform-icon-box binance-icon">BN</div>
+                        <div>
+                            <h3 class="platform-name">Binance Affiliate</h3>
+                            <span class="platform-sub">Instant Real-Time USDT Settlement</span>
+                        </div>
+                    </div>
+                    <p class="platform-desc">
+                        The gold standard in global high-frequency trading. Referral commissions land in your spot wallet in USDT the exact second your referred trader executes an order.
+                    </p>
+                    <ul class="platform-perks">
+                        <li>⚡ Real-time automated USDT payout per closed trade</li>
+                        <li>⚡ 40% to 50% lifetime revenue split for approved creators</li>
+                        <li>⚡ Billions in daily order-flow volume across spot and futures</li>
+                    </ul>
+                    <div class="card-footer-cta">
+                        <a href="https://binance.com" target="_blank" rel="noopener noreferrer" class="btn-claim-discount">
+                            <span>Register with 10% Lifetime Fee Rebate</span>
+                            <span class="cta-arrow">→</span>
+                        </a>
+                        <span class="discount-subtext">Two-way kickback configured (10% rebate to you)</span>
+                    </div>
+                </div>
+
+                <!-- 7. TradingView -->
+                <div class="arsenal-card featured-gold" data-category="saas">
+                    <div class="card-glow-edge"></div>
+                    <div class="card-header-top">
+                        <span class="platform-badge gold">CLEANEST RECURRING REVENUE</span>
+                        <span class="payout-pill">30% Recurring (Annual/Monthly)</span>
+                    </div>
+                    <div class="platform-identity">
+                        <div class="platform-icon-box tv-icon">TV</div>
+                        <div>
+                            <h3 class="platform-name">TradingView Pro / Premium</h3>
+                            <span class="platform-sub">100% Immune to Broker Crackdowns</span>
+                        </div>
+                    </div>
+                    <p class="platform-desc">
+                        The indispensable charting workstation. When viewers watch technical setups, they immediately want the layout. Pays 30% recurring commission on every renewal.
+                    </p>
+                    <ul class="platform-perks">
+                        <li>⚡ 30% recurring cut ($50–$150+ per annual subscriber)</li>
+                        <li>⚡ Zero SEBI compliance friction (software tool, not broker)</li>
+                        <li>⚡ Unlimited indicators, bar replay, and multi-timeframe charts</li>
+                    </ul>
+                    <div class="card-footer-cta">
+                        <a href="https://tradingview.com" target="_blank" rel="noopener noreferrer" class="btn-claim-discount">
+                            <span>Get TradingView Free Trial + $15 Credit</span>
+                            <span class="cta-arrow">→</span>
+                        </a>
+                        <span class="discount-subtext">Applies automatically to monthly and annual upgrades</span>
+                    </div>
+                </div>
+
+                <!-- 8. GoCharting -->
+                <div class="arsenal-card" data-category="saas">
+                    <div class="card-header-top">
+                        <span class="platform-badge emerald">ORDER FLOW & FOOTPRINT</span>
+                        <span class="payout-pill">15%–20% Recurring Share</span>
+                    </div>
+                    <div class="platform-identity">
+                        <div class="platform-icon-box gc-icon">GC</div>
+                        <div>
+                            <h3 class="platform-name">GoCharting Order Flow</h3>
+                            <span class="platform-sub">Nifty & Bank Nifty Footprint Charts</span>
+                        </div>
+                    </div>
+                    <p class="platform-desc">
+                        Web-native order flow and market profile platform for NSE and Crypto. No expensive server setup needed. View delta imbalances, volume clusters, and trapped buyers.
+                    </p>
+                    <ul class="platform-perks">
+                        <li>⚡ 20% recurring revenue share on all subscription plans</li>
+                        <li>⚡ Real-time footprint (cluster) charts for Nifty / Bank Nifty</li>
+                        <li>⚡ Institutional delta divergence & volume profile</li>
+                    </ul>
+                    <div class="card-footer-cta">
+                        <a href="https://gocharting.com" target="_blank" rel="noopener noreferrer" class="btn-claim-discount">
+                            <span>Access GoCharting 14-Day Pro Pass</span>
+                            <span class="cta-arrow">→</span>
+                        </a>
+                        <span class="discount-subtext">Official Partner Portal Registration</span>
+                    </div>
+                </div>
+
+                <!-- 9. Bookmap -->
+                <div class="arsenal-card" data-category="saas">
+                    <div class="card-header-top">
+                        <span class="platform-badge blue">HIGH-TICKET HEATMAP SAAS</span>
+                        <span class="payout-pill">15%–25% Recurring Cut</span>
+                    </div>
+                    <div class="platform-identity">
+                        <div class="platform-icon-box bm-icon">BM</div>
+                        <div>
+                            <h3 class="platform-name">Bookmap Liquidity Heatmap</h3>
+                            <span class="platform-sub">CME & Crypto Institutional Heatmaps</span>
+                        </div>
+                    </div>
+                    <p class="platform-desc">
+                        Visualize hidden limit orders, iceberg depth, and market liquidity visually. Because subscriptions cost $39 to $99/month, single referral payouts are substantial.
+                    </p>
+                    <ul class="platform-perks">
+                        <li>⚡ High-ticket monthly payout per referred professional trader</li>
+                        <li>⚡ Real-time iceberg order detection and visual depth heatmap</li>
+                        <li>⚡ Top choice for serious NASDAQ and Bitcoin scalpers</li>
+                    </ul>
+                    <div class="card-footer-cta">
+                        <a href="https://bookmap.com" target="_blank" rel="noopener noreferrer" class="btn-claim-discount">
+                            <span>Explore Bookmap Free Edition</span>
+                            <span class="cta-arrow">→</span>
+                        </a>
+                        <span class="discount-subtext">Direct download with liquidity plugins</span>
+                    </div>
+                </div>
+
+                <!-- 10. Interactive Brokers (IBKR) -->
+                <div class="arsenal-card" data-category="crypto">
+                    <div class="card-header-top">
+                        <span class="platform-badge cyan">US MARKETS & NASDAQ</span>
+                        <span class="payout-pill">$200 Flat CPA Bounty</span>
+                    </div>
+                    <div class="platform-identity">
+                        <div class="platform-icon-box ibkr-icon">IB</div>
+                        <div>
+                            <h3 class="platform-name">Interactive Brokers (IBKR)</h3>
+                            <span class="platform-sub">Trade US Equities & Options from India</span>
+                        </div>
+                    </div>
+                    <p class="platform-desc">
+                        Direct LRS access to invest in Apple, Tesla, Nvidia, and US index ETFs from India with institutional-tier forex conversion rates and low margin rates.
+                    </p>
+                    <ul class="platform-perks">
+                        <li>⚡ $200 CPA bounty per funded US stock trading account</li>
+                        <li>⚡ Direct access to 150+ global exchanges in 33 countries</li>
+                        <li>⚡ Ultra-low margin financing rates globally</li>
+                    </ul>
+                    <div class="card-footer-cta">
+                        <a href="https://interactivebrokers.com" target="_blank" rel="noopener noreferrer" class="btn-claim-discount">
+                            <span>Open IBKR Account & Get Up to $1000 in IBKR Stock</span>
+                            <span class="cta-arrow">→</span>
+                        </a>
+                        <span class="discount-subtext">Global investor referral code active</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pro Upgrade Callout: Becoming an Authorized Person (AP) -->
+            <div class="pro-ap-callout">
+                <div class="ap-badge-row">
+                    <span class="ap-gold-badge">🏆 THE INSTITUTIONAL UPGRADE</span>
+                    <span class="ap-sub-badge">SEBI CIRCULAR 2024–2026 COMPLIANT</span>
+                </div>
+                <div class="ap-content-grid">
+                    <div>
+                        <h3 class="ap-title">Upgrade to Authorized Person (AP) for 50% to 70% Brokerage Share</h3>
+                        <p class="ap-desc">
+                            Instead of relying on casual 10%–20% retail referral links, registering as an Authorized Person (AP) with the exchange (NSE/BSE) through <strong>Dhan</strong> or <strong>Angel One</strong> legally unlocks <strong>50% to 70% of every ₹20 order</strong> executed by your referrals for life.
+                        </p>
+                        <div class="ap-math-snippet">
+                            <strong>Math Reality Check:</strong> 200 active F&O traders generating ₹1,000/mo in brokerage = ₹2,00,000 net brokerage. At a 60% AP split, you earn <strong>₹1,20,000/month</strong> recurring passive revenue.
+                        </div>
+                    </div>
+                    <div class="ap-requirements-box">
+                        <h4 class="req-title">How to Qualify (3 Simple Steps):</h4>
+                        <ol class="req-list">
+                            <li><strong>Pass NISM Series-VIII:</strong> Equity Derivatives Certification (exam fee: ₹1,500).</li>
+                            <li><strong>Broker Affiliation:</strong> Submit passing certificate to Dhan or Angel One partnership desk.</li>
+                            <li><strong>Adhere to SEBI Guidelines:</strong> Frame all content strictly as market research with personal perspective—zero guaranteed return tips.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Interactive RevShare Growth Simulator -->
+        <section class="simulator-section" id="simulator">
+            <div class="section-header-box">
+                <div class="section-tag-badge gold">REVENUE ENGINE SIMULATOR</div>
+                <h2 class="section-title">24-Month Compounding Kickback & RevShare Model</h2>
+                <p class="section-subtitle">
+                    Calculate your recurring passive run-rate combining <strong>Per-Trade Brokerage RevShare</strong> (Indian F&O + Crypto Futures) and <strong>Recurring Charting SaaS Cuts</strong> (TradingView, GoCharting) with an automatic <strong>5% monthly churn rate</strong>.
+                </p>
+            </div>
+
+            <div class="simulator-container">
+                <!-- Left: Interactive Sliders -->
+                <div class="simulator-controls-card">
+                    <div class="card-controls-header">
+                        <span class="ctrl-icon">⚙️</span>
+                        <h3>Model Parameters & Referral Velocity</h3>
+                    </div>
+
+                    <!-- Slider 1: New Active Traders / Month -->
+                    <div class="sim-control-group">
+                        <div class="control-label-row">
+                            <label for="slider-new-traders">New Active Traders / Month</label>
+                            <span class="control-val" id="val-new-traders">15 traders</span>
+                        </div>
+                        <input type="range" id="slider-new-traders" min="1" max="100" value="15" step="1" class="custom-slider">
+                        <div class="slider-ticks"><span>1</span><span>25</span><span>50</span><span>75</span><span>100</span></div>
+                    </div>
+
+                    <!-- Slider 2: Average Monthly Brokerage per Trader -->
+                    <div class="sim-control-group">
+                        <div class="control-label-row">
+                            <label for="slider-brokerage-cut">Avg Brokerage Cut Earned / Trader / Month</label>
+                            <span class="control-val" id="val-brokerage-cut">₹450 / mo</span>
+                        </div>
+                        <input type="range" id="slider-brokerage-cut" min="100" max="2500" value="450" step="50" class="custom-slider">
+                        <div class="slider-ticks"><span>₹100</span><span>₹500</span><span>₹1,000</span><span>₹1,800</span><span>₹2,500</span></div>
+                        <span class="control-hint">Based on 40 orders/mo at ₹20/order ($800 pool) split via retail or AP tier</span>
+                    </div>
+
+                    <!-- Slider 3: New Charting SaaS Subscribers / Month -->
+                    <div class="sim-control-group">
+                        <div class="control-label-row">
+                            <label for="slider-new-saas">New Charting SaaS Subscribers / Month</label>
+                            <span class="control-val" id="val-new-saas">5 users</span>
+                        </div>
+                        <input type="range" id="slider-new-saas" min="1" max="50" value="5" step="1" class="custom-slider">
+                        <div class="slider-ticks"><span>1</span><span>10</span><span>20</span><span>35</span><span>50</span></div>
+                    </div>
+
+                    <!-- Slider 4: Average Monthly SaaS Commission per Subscriber -->
+                    <div class="sim-control-group">
+                        <div class="control-label-row">
+                            <label for="slider-saas-cut">Avg SaaS Commission / Subscriber / Month</label>
+                            <span class="control-val" id="val-saas-cut">₹600 / mo</span>
+                        </div>
+                        <input type="range" id="slider-saas-cut" min="100" max="1500" value="600" step="50" class="custom-slider">
+                        <div class="slider-ticks"><span>₹100</span><span>₹400</span><span>₹600</span><span>₹1,000</span><span>₹1,500</span></div>
+                        <span class="control-hint">30% recurring cut on TradingView Plus/Pro or 20% on GoCharting</span>
+                    </div>
+
+                    <!-- Slider 5: Trader Churn Rate -->
+                    <div class="sim-control-group">
+                        <div class="control-label-row">
+                            <label for="slider-churn">Monthly Trader Churn Rate</label>
+                            <span class="control-val" id="val-churn">5.0%</span>
+                        </div>
+                        <input type="range" id="slider-churn" min="1" max="15" value="5" step="0.5" class="custom-slider">
+                        <div class="slider-ticks"><span>1%</span><span>3%</span><span>5%</span><span>10%</span><span>15%</span></div>
+                        <span class="control-hint">Realistic attrition as retail traders take breaks or cycle capital</span>
+                    </div>
+
+                    <!-- Slider 6: Projection Horizon -->
+                    <div class="sim-control-group">
+                        <div class="control-label-row">
+                            <label for="slider-horizon">Simulation Horizon</label>
+                            <span class="control-val" id="val-horizon">24 Months</span>
+                        </div>
+                        <input type="range" id="slider-horizon" min="6" max="36" value="24" step="6" class="custom-slider">
+                        <div class="slider-ticks"><span>6M</span><span>12M</span><span>18M</span><span>24M</span><span>36M</span></div>
+                    </div>
+                </div>
+
+                <!-- Right: KPI Dashboards & Animated Canvas Graph -->
+                <div class="simulator-display-card">
+                    <!-- Grand Total Banner -->
+                    <div class="sim-grand-total-banner">
+                        <div class="banner-sub">ESTIMATED MONTHLY PASSIVE RUN-RATE AT MONTH <span id="kpi-month-num">24</span></div>
+                        <div class="banner-grand-val" id="kpi-total-monthly">₹1,36,890 <span class="per-mo">/ month</span></div>
+                        <div class="banner-tags-row">
+                            <span class="tag-pill cyan">⚡ Compounding Lifetime Yield</span>
+                            <span class="tag-pill gold">Dual-Market Diversified</span>
+                        </div>
+                    </div>
+
+                    <!-- 4 Sub-KPI Cards Grid -->
+                    <div class="kpi-grid-row">
+                        <div class="kpi-box">
+                            <span class="kpi-label">Active Trader Pool</span>
+                            <span class="kpi-val" id="kpi-active-traders">210.6</span>
+                            <span class="kpi-note">Active accounts generating fees</span>
+                        </div>
+
+                        <div class="kpi-box">
+                            <span class="kpi-label">Brokerage RevShare / Mo</span>
+                            <span class="kpi-val cyan" id="kpi-broker-monthly">₹94,770</span>
+                            <span class="kpi-note">Per-trade kickbacks (Indian + Crypto)</span>
+                        </div>
+
+                        <div class="kpi-box">
+                            <span class="kpi-label">Retained SaaS Subs</span>
+                            <span class="kpi-val" id="kpi-active-saas">70.2</span>
+                            <span class="kpi-note">Active recurring users</span>
+                        </div>
+
+                        <div class="kpi-box">
+                            <span class="kpi-label">SaaS Commission / Mo</span>
+                            <span class="kpi-val gold" id="kpi-saas-monthly">₹42,120</span>
+                            <span class="kpi-note">TradingView & GoCharting 30% cut</span>
+                        </div>
+                    </div>
+
+                    <!-- 24-Month Cumulative Earnings Box -->
+                    <div class="kpi-cumulative-box">
+                        <div>
+                            <span class="cum-label">Cumulative Total Passive Cashflow Over <span id="kpi-cum-months">24</span> Months:</span>
+                            <span class="cum-val" id="kpi-cumulative-total">₹17,45,280</span>
+                        </div>
+                        <span class="cum-badge">Zero AdSense Required</span>
+                    </div>
+
+                    <!-- Dynamic Canvas Trajectory Graph -->
+                    <div class="chart-canvas-wrapper">
+                        <div class="chart-legend-row">
+                            <div class="legend-item"><span class="legend-dot blue"></span> <span>Total Combined Run-Rate (₹/mo)</span></div>
+                            <div class="legend-item"><span class="legend-dot cyan"></span> <span>Brokerage Kickbacks Only</span></div>
+                            <div class="legend-item"><span class="legend-dot gold"></span> <span>SaaS Commissions Only</span></div>
+                        </div>
+                        <canvas id="revshare-chart" width="600" height="220" class="sim-canvas"></canvas>
+                    </div>
+
+                    <!-- Mathematical Formula Explainer -->
+                    <div class="sim-formula-callout">
+                        <span class="formula-title">Mathematical Formula Applied:</span>
+                        <div class="formula-math" id="formula-math-display">
+                            $$\text{Active Pool} = 15 \times \frac{1 - (1 - 0.05)^{24}}{0.05} \approx 210.6 \text{ Traders}$$
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Trader Fee & Slippage Comparison Calculator -->
+        <section class="calculator-section" id="calculator">
+            <div class="section-header-box">
+                <div class="section-tag-badge">FEE OPTIMIZATION RADAR</div>
+                <h2 class="section-title">Fee & Slippage Impact Calculator</h2>
+                <p class="section-subtitle">
+                    Expose how much capital disappears into broker turnover charges, exchange transaction fees, and STT—and see how our 10% fee rebate protects your bottom line.
+                </p>
+            </div>
+
+            <div class="fee-calc-grid">
+                <!-- Input Box -->
+                <div class="fee-inputs-card">
+                    <h3>Your Trading Habit Parameters</h3>
+
+                    <div class="calc-field">
+                        <label for="calc-segment">Trading Instrument / Segment</label>
+                        <select id="calc-segment" class="custom-select">
+                            <option value="fno_options">NSE Equity F&O Options (Index & Stocks)</option>
+                            <option value="fno_futures">NSE Equity Futures</option>
+                            <option value="crypto_futures">Crypto Derivatives Perpetual Futures (Bybit / Delta)</option>
+                            <option value="equity_intraday">NSE Equity Cash Intraday</option>
+                        </select>
+                    </div>
+
+                    <div class="calc-field">
+                        <label for="calc-orders-day">Orders Executed per Day (Buy + Sell)</label>
+                        <div class="input-with-stepper">
+                            <input type="number" id="calc-orders-day" min="1" max="100" value="6" class="custom-input">
+                            <span class="input-unit">orders / day</span>
+                        </div>
+                        <span class="field-hint">e.g. 3 round trips = 6 completed orders</span>
+                    </div>
+
+                    <div class="calc-field">
+                        <label for="calc-trading-days">Trading Days per Month</label>
+                        <input type="number" id="calc-trading-days" min="1" max="31" value="20" class="custom-input">
+                        <span class="field-hint">Indian markets typically trade 20–21 sessions/month</span>
+                    </div>
+
+                    <div class="calc-field">
+                        <label for="calc-turnover">Average Turnover / Premium per Order (₹)</label>
+                        <input type="number" id="calc-turnover" min="1000" max="1000000" value="50000" step="5000" class="custom-input">
+                        <span class="field-hint">Average contract / option premium value per order</span>
+                    </div>
+                </div>
+
+                <!-- Output Box -->
+                <div class="fee-results-card">
+                    <h3>Annual Cost Breakdown & Savings</h3>
+
+                    <div class="fee-breakdown-table">
+                        <div class="fee-row">
+                            <span>Monthly Brokerage Paid:</span>
+                            <span class="fee-value bear" id="fee-res-monthly-brokerage">₹2,400</span>
+                        </div>
+                        <div class="fee-row">
+                            <span>Monthly Govt STT & Stamp Duty:</span>
+                            <span class="fee-value bear" id="fee-res-monthly-stt">₹1,250</span>
+                        </div>
+                        <div class="fee-row">
+                            <span>Exchange Turnover & GST (18%):</span>
+                            <span class="fee-value bear" id="fee-res-monthly-gst">₹732</span>
+                        </div>
+                        <div class="fee-row total">
+                            <span>Total Monthly Trading Friction:</span>
+                            <span class="fee-value bear-highlight" id="fee-res-monthly-total">₹4,382 / mo</span>
+                        </div>
+                    </div>
+
+                    <div class="annual-drain-banner">
+                        <span class="drain-label">Annual Capital Siphoned:</span>
+                        <span class="drain-val" id="fee-res-annual-drain">₹52,584 / year</span>
+                    </div>
+
+                    <div class="discount-savings-highlight">
+                        <div class="savings-title">⚡ Your Savings with Two-Way 10% Fee Rebate Code:</div>
+                        <div class="savings-val" id="fee-res-savings">Save ₹5,258 / year</div>
+                        <p class="savings-desc">
+                            Directly credited back to your trading ledger monthly. That covers your entire annual TradingView Pro subscription for free!
+                        </p>
+                        <a href="#tools" class="btn-primary-glow btn-block">Claim Your 10% Fee Rebate Now →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Dalal Street Feed & Timed Updates -->
+        <section class="feed-section" id="feed">
             <div class="section-title-row">
-                <h2 class="section-heading">Dalal Street Feed & Timed Updates</h2>
-                <div class="filter-count" id="feed-count-badge">5 Market Reports</div>
+                <div>
+                    <div class="section-tag-badge">MARKET DISPATCHES</div>
+                    <h2 class="section-heading">Dalal Street Feed & Algorithmic Reports</h2>
+                </div>
+                <div class="feed-controls-group">
+                    <div class="feed-filter-tabs">
+                        <button class="nav-btn active" data-category="all" id="btn-cat-all">All Dispatches</button>
+                        <button class="nav-btn" data-category="Nifty 50" id="btn-cat-nifty">Nifty 50</button>
+                        <button class="nav-btn" data-category="Derivatives Analysis" id="btn-cat-derivatives">Derivatives</button>
+                        <button class="nav-btn" data-category="FII Flow" id="btn-cat-fii">FII/DII Flows</button>
+                    </div>
+                    <div class="filter-count" id="feed-count-badge">Loading reports...</div>
+                </div>
             </div>
 
             <div class="articles-grid" id="articles-grid">
-                <!-- Dynamically rendered article cards -->
+                <!-- Dynamically rendered article cards by app.js -->
+            </div>
+        </section>
+
+        <!-- Section 5: SEBI Compliance & Transparency Hub -->
+        <section class="compliance-section" id="compliance">
+            <div class="compliance-card">
+                <div class="comp-badge-row">
+                    <span class="comp-badge">⚖️ REGULATORY FRAMEWORK & SEBI GUARDRAILS</span>
+                    <span class="comp-date">2024–2026 STRICT COMPLIANCE ACTIVE</span>
+                </div>
+                <h2 class="comp-title">Transparency, Disclaimers & Finfluencer Integrity</h2>
+                <div class="comp-grid">
+                    <div class="comp-item">
+                        <h4>1. Educational & Market Analysis Only</h4>
+                        <p>
+                            All content published on Dalal Street Alpha, our YouTube channel, and companion tools is designed exclusively for educational, technical, and analytical purposes. We are <strong>not SEBI-registered Investment Advisers (IA) or Research Analysts (RA)</strong>.
+                        </p>
+                    </div>
+                    <div class="comp-item">
+                        <h4>2. Zero Buy/Sell Recommendations</h4>
+                        <p>
+                            We never offer buy/sell tips, target prices, or guarantee trading outcomes. All analyses represent historical data points, technical setups, and personal perspectives (<em>"What I would watch"</em> rather than <em>"What you should buy"</em>).
+                        </p>
+                    </div>
+                    <div class="comp-item">
+                        <h4>3. Transparent Referral Disclosure</h4>
+                        <p>
+                            Some links to platforms (e.g. Dhan, Zerodha, Delta Exchange, TradingView) are affiliate or partner links that provide ongoing brokerage fee sharing or commissions at zero extra cost to you. We configure two-way discounts so you receive 10% fee rebates.
+                        </p>
+                    </div>
+                    <div class="comp-item">
+                        <h4>4. High Capital Risk in Derivatives</h4>
+                        <p>
+                            Per SEBI research studies, 9 out of 10 individual traders in equity futures and options incur net losses. Derivatives trading involves high leverage and substantial capital risk. Never trade with money you cannot afford to lose.
+                        </p>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
 
     <!-- Full Article Modal / Reader View -->
-    <div id="article-modal" class="article-modal hidden">
+    <div id="article-modal" class="article-modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-article-title">
         <div class="modal-backdrop" id="modal-backdrop"></div>
         <div class="modal-dialog">
             <button class="modal-close-btn" id="modal-close-btn" aria-label="Close reader">&times;</button>
             <div class="modal-body" id="modal-content-body">
-                <!-- Injected by app.js -->
+                <!-- Injected dynamically by app.js -->
             </div>
         </div>
     </div>
 
-    <!-- Footer -->
+    <!-- Institutional Footer -->
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-brand">
-                <h3>DALAL STREET ALPHA</h3>
-                <p>Autonomous Financial Media Engine. Real-time quantitative equity research, derivatives analysis, and algorithmic video breakdowns.</p>
+                <div class="footer-brand-header">
+                    <img src="brand_assets/logo_master_1024x1024.png" alt="Dalal Street Alpha Logo" class="footer-logo-img">
+                    <span class="footer-brand-title">DALAL STREET<span class="highlight-gold">ALPHA</span></span>
+                </div>
+                <p class="footer-brand-desc">
+                    Autonomous Financial Media Engine. Real-time quantitative equity research, algorithmic video intelligence, derivatives analysis, and low-latency trading toolkits.
+                </p>
+                <div class="footer-social-row">
+                    <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="social-chip" title="YouTube Channel">▶ YouTube Desk</a>
+                    <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="social-chip" title="X / Twitter">𝕏 Market Wire</a>
+                    <a href="#tools" class="social-chip" title="Trader's Arsenal">🛡️ Arsenal Hub</a>
+                    <a href="#simulator" class="social-chip" title="RevShare Simulator">📈 Simulator</a>
+                </div>
             </div>
-            <div class="footer-links">
-                <a href="#about">About Desk</a>
-                <a href="#compliance">SEBI Compliance</a>
-                <a href="#youtube">YouTube Channel</a>
-                <a href="#rss">RSS Feed</a>
+
+            <div class="footer-nav-col">
+                <h4 class="footer-col-title">Market Intel</h4>
+                <ul class="footer-col-list">
+                    <li><a href="#hero">Nifty 50 Levels</a></li>
+                    <li><a href="#hero">Bank Nifty Setups</a></li>
+                    <li><a href="#feed">FII & DII Cash Flows</a></li>
+                    <li><a href="#feed">Weekly Options Chains</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-nav-col">
+                <h4 class="footer-col-title">Trader's Arsenal</h4>
+                <ul class="footer-col-list">
+                    <li><a href="#tools">Dhan Brokerage</a></li>
+                    <li><a href="#tools">Zerodha Kite</a></li>
+                    <li><a href="#tools">Delta Exchange India (INR)</a></li>
+                    <li><a href="#tools">TradingView Pro (30% Off)</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-nav-col">
+                <h4 class="footer-col-title">Calculators & Tools</h4>
+                <ul class="footer-col-list">
+                    <li><a href="#simulator">24-Month RevShare Simulator</a></li>
+                    <li><a href="#calculator">F&O Fee & Slippage Calculator</a></li>
+                    <li><a href="#compliance">SEBI Compliance Policy</a></li>
+                    <li><a href="#feed">Latest Dispatches</a></li>
+                </ul>
             </div>
         </div>
-        <div class="footer-disclaimer">
-            <p><strong>Regulatory Disclaimer:</strong> Dalal Street Alpha is an educational market research portal. Content is for informational purposes only and does not constitute financial advice under SEBI guidelines. Trading in equities, futures, and options involves capital risk.</p>
-            <p>&copy; 2026 Dalal Street Alpha. Powered by Autonomous Pipeline Engine.</p>
+
+        <div class="footer-disclaimer-wrapper">
+            <div class="footer-disclaimer-box">
+                <p>
+                    <strong>Mandatory Regulatory Notice (SEBI & ASCI):</strong> Dalal Street Alpha operates exclusively as an educational market research and financial literacy publisher. Content on this domain and affiliated social channels is for informational purposes only and does not constitute financial, investment, legal, or tax advice under SEBI (Investment Advisers) Regulations, 2013 or SEBI (Research Analysts) Regulations, 2014. No material should be construed as an offer, recommendation, or solicitation to buy or sell securities, derivatives, commodities, or currencies. Past performance is no guarantee of future returns.
+                </p>
+                <div class="footer-bottom-row">
+                    <span>&copy; 2026 Dalal Street Alpha Quantitative Desk. Powered by Autonomous Pipeline Engine.</span>
+                    <span class="bottom-hash">SHA-256: 0x9f4b...alpha</span>
+                </div>
+            </div>
         </div>
     </footer>
 
