@@ -1,5 +1,5 @@
 ---
-title: "Nifty Today: Bears Tighten Grip as Nifty Cracks Critical Support | Full Analysis & Derivative Setup. Please do your own due diligence and market research as I am not a SEBI-registered financial advisor. This analysis is strictly for educational purposes only."
+title: "Nifty Today: Bears Tighten Grip as Nifty Cracks Critical Support | Full Analysis & Derivative Setup"
 date: "2026-10-19 19:38:32"
 slug: "nifty-market-analysis-2026-10-19-1938-ist"
 excerpt: "Live market analysis: Nifty closes at 22,889.0 (-1.11%), Sensex at 73,852.9. FII/DII flow breakdown, options chain support levels, and tomorrow's strategy."
@@ -113,4 +113,4 @@ youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
  <br><br>
  <strong>Derivatives Risk Notice:</strong> Per SEBI empirical studies, 9 out of 10 individual traders in equity futures and options incur net losses. Please consult an independent certified financial advisor. Read our official <a href="/disclaimer" style="color:#60a5fa; text-decoration:underline;">SEBI Regulatory Disclaimer</a>, <a href="/risk-disclosure" style="color:#60a5fa; text-decoration:underline;">Risk Disclosure</a>, and <a href="/affiliate-disclosure" style="color:#60a5fa; text-decoration:underline;">Affiliate Transparency Policy</a>.
  </div>
-</div>. Please do your own due diligence and market research as I am not a SEBI-registered financial advisor. This analysis is strictly for educational purposes only.
+</div>
