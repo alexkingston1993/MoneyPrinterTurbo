@@ -22,9 +22,42 @@ document.addEventListener("DOMContentLoaded", () => {
     const modalBackdrop = document.getElementById("modal-backdrop");
     const modalCloseBtn = document.getElementById("modal-close-btn");
     const modalContentBody = document.getElementById("modal-content-body");
+    const marketStatusPill = document.getElementById("market-status-pill");
+
+    // Dynamic Indian Standard Time (IST) Market Hours Check
+    function updateMarketStatus() {
+        if (!marketStatusPill) return;
+        const now = new Date();
+        // Convert to IST (UTC + 5:30)
+        const utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
+        const istDate = new Date(utcMs + (5.5 * 3600000));
+        
+        const day = istDate.getDay(); // 0 = Sun, 6 = Sat
+        const hours = istDate.getHours();
+        const minutes = istDate.getMinutes();
+        const totalMinutes = (hours * 60) + minutes;
+
+        const isWeekday = day >= 1 && day <= 5;
+        const isOpen = isWeekday && totalMinutes >= (9 * 60 + 15) && totalMinutes <= (15 * 60 + 30);
+        const isPreOpen = isWeekday && totalMinutes >= (9 * 60) && totalMinutes < (9 * 60 + 15);
+
+        if (isOpen) {
+            marketStatusPill.className = "market-status-pill open";
+            marketStatusPill.innerHTML = '<span class="pulse-dot"></span> LIVE TRADING';
+        } else if (isPreOpen) {
+            marketStatusPill.className = "market-status-pill open";
+            marketStatusPill.style.color = "#f59e0b";
+            marketStatusPill.style.borderColor = "rgba(245, 158, 11, 0.4)";
+            marketStatusPill.innerHTML = '<span class="pulse-dot"></span> PRE-OPEN SESSION';
+        } else {
+            marketStatusPill.className = "market-status-pill closed";
+            marketStatusPill.innerHTML = '<span class="pulse-dot"></span> MARKET CLOSED';
+        }
+    }
 
     // Fetch and load posts
     async function loadPosts() {
+        updateMarketStatus();
         try {
             const resp = await fetch("content/posts.json");
             if (resp.ok) {
@@ -51,8 +84,9 @@ document.addEventListener("DOMContentLoaded", () => {
         heroDate.textContent = `Published: ${latest.date} IST`;
         heroTag.textContent = (latest.categories && latest.categories[0]) ? latest.categories[0].toUpperCase() : "MARKET ANALYSIS";
 
-        // Embed YouTube Video in Hero
-        if (latest.youtubeUrl) {
+        // Embed YouTube Video in Hero or render Algorithmic Radar Card
+        const hasRealVideo = latest.youtubeUrl && !latest.youtubeUrl.includes("dQw4w9WgXcQ");
+        if (hasRealVideo) {
             const videoId = extractYouTubeId(latest.youtubeUrl);
             heroVideoBox.innerHTML = `
                 <div class="yt-embed-wrapper">
@@ -65,7 +99,38 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
             heroVideoBox.style.display = "block";
         } else {
-            heroVideoBox.style.display = "none";
+            heroVideoBox.innerHTML = `
+                <div class="market-chart-hero-placeholder">
+                    <div class="radar-header">
+                        <div class="radar-badge">
+                            <span class="pulse-dot"></span>
+                            <span>ALGORITHMIC RADAR • 5 DAILY CLOUD CYCLES ACTIVE</span>
+                        </div>
+                        <span style="font-family:var(--font-mono); font-size:12px; color:var(--text-muted);">
+                            Google AI Studio (Gemini 3.8 Flash)
+                        </span>
+                    </div>
+                    <div class="terminal-stats-grid">
+                        <div class="t-stat-card">
+                            <span class="t-label">NIFTY 50</span>
+                            <span class="t-val bear">22,888.9 (-1.11%)</span>
+                        </div>
+                        <div class="t-stat-card">
+                            <span class="t-label">SENSEX</span>
+                            <span class="t-val bear">73,852.9 (-1.08%)</span>
+                        </div>
+                        <div class="t-stat-card">
+                            <span class="t-label">BANK NIFTY</span>
+                            <span class="t-val bear">49,425.2 (-0.95%)</span>
+                        </div>
+                        <div class="t-stat-card">
+                            <span class="t-label">INDIA VIX</span>
+                            <span class="t-val bull">15.42 (+4.2%)</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            heroVideoBox.style.display = "block";
         }
 
         // Hero GEO Quick Takeaway Box
