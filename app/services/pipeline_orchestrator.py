@@ -70,14 +70,17 @@ class PipelineOrchestrator:
             # 5. Closed-Loop Backlink: Update YouTube video description and pinned comment
             published_url = publish_res.get("url")
             if published_url and youtube_url:
-                from app.services.youtube_uploader import get_uploader
-                uploader = get_uploader()
-                video_id = wp_publisher._extract_youtube_id(youtube_url)
-                if video_id and video_id != "dQw4w9WgXcQ":
-                    logger.info(f"[Orchestrator] Step 4: Closing flywheel — adding article link to YouTube video {video_id}...")
-                    uploader.append_article_link_to_description("en", video_id, published_url, article.title)
-                    comment_msg = f"📊 Read the full in-depth financial breakdown & data tables here: {published_url}"
-                    uploader.post_pinned_comment("en", video_id, comment_msg)
+                try:
+                    video_id = wp_publisher._extract_youtube_id(youtube_url)
+                    if video_id and video_id != "dQw4w9WgXcQ":
+                        from app.services.youtube_uploader import get_uploader
+                        uploader = get_uploader()
+                        logger.info(f"[Orchestrator] Step 4: Closing flywheel — adding article link to YouTube video {video_id}...")
+                        uploader.append_article_link_to_description("en", video_id, published_url, article.title)
+                        comment_msg = f"📊 Read the full in-depth financial breakdown & data tables here: {published_url}"
+                        uploader.post_pinned_comment("en", video_id, comment_msg)
+                except Exception as e:
+                    logger.warning(f"[Orchestrator] YouTube backlink update skipped: {e}")
 
         duration = time.time() - start_time
         logger.info(f"[Orchestrator] Market cycle completed in {duration:.1f}s")

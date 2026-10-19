@@ -45,7 +45,7 @@ jobs:
       - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytz yfinance requests loguru google-generativeai toml beautifulsoup4
+          pip install pytz yfinance requests loguru google-generativeai toml beautifulsoup4 google-api-python-client google-auth-oauthlib google-auth-httplib2
           if [ -f requirements.txt ]; then pip install -r requirements.txt || true; fi
 
       - name: Execute Autonomous Market Cycle

@@ -121,19 +121,20 @@ class GitHubVercelPublisher:
         # Maintain posts index in content/posts.json
         self._update_local_posts_index(article, youtube_url)
 
-        # Local fallback if token not configured yet
-        if not self.enabled:
-            logger.warning("[GitHubVercel] GitHub repo/token not configured in config.toml. Saving to content/posts/")
-            os.makedirs("content/posts", exist_ok=True)
-            local_path = f"content/posts/{article.slug}.md"
-            with open(local_path, "w", encoding="utf-8") as f:
-                f.write(markdown_text)
-            
+        # Always save locally first (for git commit step or local static server)
+        os.makedirs(self.posts_dir, exist_ok=True)
+        local_path = f"{self.posts_dir}/{article.slug}.md"
+        with open(local_path, "w", encoding="utf-8") as f:
+            f.write(markdown_text)
+
+        # In GitHub Actions runner, the workflow step handles the git commit and push
+        if os.getenv("GITHUB_ACTIONS") == "true" or not self.enabled:
+            logger.info(f"[GitHubVercel] Saved article to {local_path} (will be committed by workflow)")
             return {
                 "success": True,
                 "status": "saved_locally_for_vercel",
                 "file_path": local_path,
-                "url": f"file://{os.path.abspath(local_path)}",
+                "url": f"https://github.com/{self.repo}/blob/{self.branch}/{file_path}",
                 "title": article.title,
                 "slug": article.slug,
             }
