@@ -6,7 +6,7 @@ excerpt: "Institutional analysis of Larsen & Toubro (NSE: LT). Record order infl
 focusKeyword: "Larsen and Toubro stock analysis 2026"
 categories: ["Infrastructure", "Equities Research", "Nifty 50"]
 tags: ["LT", "LarsenAndToubro", "InfrastructureIndia", "CapexCycle", "Nifty50"]
-youtubeUrl: ""
+youtubeUrl: "https://youtu.be/d4n_NCOTRoI"
 ---
 
 <div class="market-article">
