@@ -1120,7 +1120,7 @@ frame_rate = 30
 ### 18.2 Assigned User Tasks (Action Tracking)
 1. **Demat Brokerage & Partner Affiliate Engine**:
    - Provide referral codes for Zerodha, Angel One, Groww, Dhan, Delta Exchange India, Bybit, TradingView, and GoCharting.
-   - Configure "Two-Way" referral split (10% rebate to audience) for maximum conversion.
+   - Embed partner links so trading platforms automatically credit eligible sign-up bonuses and fee rebates directly to users.
 2. **Programmatic SEO (2,000+ Tickers)**:
    - Generate dedicated quantitative analysis and options setup pages for all NSE 500 & top traded equities.
    - Traffic projection: 2,000 stock pages $\times$ 50 organic search visits/day = 100,000 pageviews/day = 3,000,000 pageviews/month at high finance RPMs ($25–$45).
@@ -1171,8 +1171,9 @@ To ensure the entire autonomous media machine is completely impenetrable against
 ### 19.2 Layer 2: Advertising & Consumer Protection Defense (ASCI & FTC)
 1. **Dedicated `/affiliate-disclosure` Transparency Hub**:
    - Full commercial disclosure detailing RevShare percentages across Dhan, Zerodha, Delta Exchange, Bybit, TradingView, and GoCharting.
-2. **Two-Way Fee Rebate Standard**:
-   - Referral links are configured to pass a 10% fee discount back to the audience, eliminating claims of predatory referral extraction.
+2. **Platform-Administered Fee Incentives**:
+   - Partner links route users to official broker/exchange sign-up portals where platforms credit fee discounts and sign-up perks directly to the user's trading ledger.
+   - Zero creator fund handling: Dalal Street Alpha never collects money, manages client accounts, or disburses cash rebates.
 3. **Zero Deceptive Advertising**:
    - Strictly no fake P&L screenshots, no luxury lifestyle flexing, and no claims of guaranteed returns.
 
@@ -1188,7 +1189,7 @@ To ensure the entire autonomous media machine is completely impenetrable against
 - Dedicated standalone legal suite deployed on Vercel:
   - `/disclaimer`: SEBI Non-Registration, Educational scope.
   - `/risk-disclosure`: F&O Capital Loss Warning & Leverage Mechanics.
-  - `/affiliate-disclosure`: Commercial RevShare transparency & Two-Way rebate disclosures.
+  - `/affiliate-disclosure`: Commercial RevShare transparency & platform incentive disclosures.
   - `/terms`: Total Limitation of Liability, Zero Financial Warranty, User Indemnification, Mumbai Jurisdiction.
   - `/privacy`: Digital Personal Data Protection (DPDP Act 2023) compliance; zero financial data storage; zero sale of data.
 

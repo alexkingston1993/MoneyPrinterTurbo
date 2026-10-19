@@ -247,8 +247,9 @@ class YouTubeUploader:
             f"Past performance does not guarantee future results. Consult a qualified, SEBI-registered financial professional.\n\n"
             f"5. AFFILIATE & COMMERCIAL DISCLOSURE:\n"
             f"Links to brokers and charting platforms (e.g., Dhan, Zerodha, Delta Exchange India, Bybit, TradingView, GoCharting) "
-            f"may be partner/affiliate links that provide commissions at zero extra cost to you. Two-way rebates are configured to pass "
-            f"a 10% fee discount back to viewers. These affiliations do not influence our independent educational analysis.\n\n"
+            f"may be partner/affiliate links that provide commissions at zero extra cost to you. All referral bonuses, reward points, "
+            f"and trading fee discounts are funded and credited directly by the respective platforms into your account. "
+            f"These affiliations do not influence our independent educational analysis.\n\n"
             f"#DalalStreetAlpha #Nifty50 #BankNifty #StockMarketIndia #OptionsTrading #FIIFlows #FinancialEducation"
         )
 
