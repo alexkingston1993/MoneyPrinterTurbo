@@ -6,7 +6,7 @@ excerpt: "Institutional analysis of HDFC Bank (NSE: HDFCBANK). Examining Credit-
 focusKeyword: "HDFC Bank stock analysis 2026"
 categories: ["Banking Sector", "Equities Research", "Nifty 50"]
 tags: ["HDFCBANK", "BankNifty", "PrivateBanks", "Nifty50", "CreditDepositRatio"]
-youtubeUrl: ""
+youtubeUrl: "https://www.youtube.com/watch?v=K62d0jpy55w"
 ---
 
 <div class="market-article">
