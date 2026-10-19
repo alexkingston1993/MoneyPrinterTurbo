@@ -17,6 +17,14 @@ Supported Studio Voices:
 """
 
 import os
+os.environ["OMP_NUM_THREADS"] = "1"
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+try:
+    import torch
+    torch.set_num_threads(1)
+except Exception:
+    pass
+
 from typing import Optional, Union
 from loguru import logger
 import numpy as np
@@ -37,6 +45,12 @@ def get_kokoro_pipeline(lang_code: str = "a"):
     global _kokoro_pipeline
     if _kokoro_pipeline is None:
         try:
+            import torch
+            torch.set_num_threads(1)
+            try:
+                torch.set_num_interop_threads(1)
+            except Exception:
+                pass
             from kokoro import KPipeline
             logger.info(f"[KokoroTTS] Initializing KPipeline with lang_code='{lang_code}'...")
             _kokoro_pipeline = KPipeline(lang_code=lang_code)

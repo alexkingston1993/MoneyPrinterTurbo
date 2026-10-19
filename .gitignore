@@ -38,6 +38,7 @@ streamlit.log
 .env*
 data/
 Final_Videos/
+*TEMP_MPY*
 output/
 my audio/
 *.whl

@@ -117,6 +117,26 @@ def validate_script(script: str) -> Tuple[bool, List[str]]:
     return is_clean, all_violations
 
 
+def generate_compliance_report(script: str) -> str:
+    """
+    Generates a structured compliance report for auditing script safety.
+    """
+    is_clean, violations = validate_script(script)
+    lines = [
+        "=== SEBI / ASCI COMPLIANCE AUDIT REPORT ===",
+        f"Status: {'PASSED (COMPLIANT)' if is_clean else 'FLAGGED (VIOLATIONS DETECTED)'}",
+        f"Violations Count: {len(violations)}",
+    ]
+    if violations:
+        lines.append("Detected Violations:")
+        for v in violations:
+            lines.append(f"  - {v}")
+    else:
+        lines.append("All statutory disclaimers & non-advice standards satisfied.")
+    lines.append("=========================================")
+    return "\n".join(lines)
+
+
 def auto_sanitize_script(script: str) -> str:
     """
     Intelligently rewrites non-compliant phrases into compliant personal perspectives
