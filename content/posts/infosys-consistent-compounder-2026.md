@@ -6,7 +6,7 @@ excerpt: "Quantitative breakdown of Infosys (NSE: INFY). Analyzing cobalt cloud 
 focusKeyword: "Infosys stock valuation 2026"
 categories: ["IT Sector", "Equities Research", "Nifty 50"]
 tags: ["INFY", "Infosys", "NiftyIT", "TechServices", "Dividends"]
-youtubeUrl: ""
+youtubeUrl: "https://youtu.be/b2ryVj4JRb8"
 ---
 
 <div class="market-article">
