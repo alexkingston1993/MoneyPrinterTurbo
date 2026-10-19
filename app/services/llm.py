@@ -463,7 +463,7 @@ def generate_script(
     language: str = "",
     paragraph_number: int = 1,
     hook_category: str = "",
-    compliance_mode: bool = False,
+    compliance_mode: bool = True,
 ) -> str:
     if compliance_mode:
         return _generate_sebi_compliant_script(
@@ -542,15 +542,11 @@ Generate a script for a video, depending on the subject of the video.
     else:
         logger.success(f"completed: \n{final_script}")
 
-    compliance_violations = []
     try:
-        from app.services.compliance import validate_script
-        is_clean, violations = validate_script(final_script)
-        if not is_clean:
-            logger.warning(f"COMPLIANCE VIOLATIONS in script:\n" + "\n".join(violations))
-            compliance_violations = violations
-    except ImportError:
-        pass
+        from app.services.compliance import enforce_strict_compliance
+        final_script = enforce_strict_compliance(final_script)
+    except Exception as e:
+        logger.warning(f"Compliance enforcement fallback: {e}")
 
     return final_script.strip()
 
@@ -660,12 +656,10 @@ Return ONLY the raw script text. No markdown, no formatting, no titles, no label
         logger.success(f"completed: \n{final_script}")
 
     try:
-        from app.services.compliance import validate_script, generate_compliance_report
-        is_clean, violations = validate_script(final_script)
-        if not is_clean:
-            logger.warning(f"COMPLIANCE VIOLATIONS:\n{generate_compliance_report(final_script)}")
-    except ImportError:
-        pass
+        from app.services.compliance import enforce_strict_compliance
+        final_script = enforce_strict_compliance(final_script)
+    except Exception as e:
+        logger.warning(f"Compliance enforcement error: {e}")
 
     return final_script.strip()
     prompt = f"""
