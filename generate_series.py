@@ -73,7 +73,7 @@ def generate_videos():
             "video_script": data["script"],
             "video_terms": data["terms"],
             "video_aspect": "9:16",
-            "video_concat_mode": "random",
+            "video_concat_mode": "sequential", # Strict chronological narrative matching
             "video_clip_duration": 5,
             "video_count": 1,
             "video_source": "pexels",
