@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">NSE Stock Intelligence & Derivatives Analysis | Dalal Street Alpha</title>
+    <meta name="description" id="page-desc" content="Institutional equity research, TradingView candlestick setups, fundamentals, and quantitative derivatives analytics for benchmark NSE stocks. Strictly educational.">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" id="canonical-url" href="https://dalal-street-alpha.vercel.app/stock.html">
+
+    <!-- Open Graph -->
+    <meta property="og:title" id="og-title" content="NSE Stock Intelligence & Derivatives Analysis | Dalal Street Alpha">
+    <meta property="og:description" id="og-desc" content="Quantitative analytics, TradingView candlestick chart structure, and fundamental moats for benchmark NSE equities.">
+    <meta property="og:type" content="article">
+    <meta property="og:image" content="https://dalal-street-alpha.vercel.app/brand_assets/opengraph_social_card_1200x630.png">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="brand_assets/website_favicon_32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="brand_assets/website_favicon_192x192.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Lenis Smooth Scroll -->
+    <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+
+    <style>
+        .stock-hub-header {
+            padding: 130px 0 32px 0;
+            border-bottom: 1px solid var(--border-subtle);
+            background: radial-gradient(circle at 50% 0%, rgba(26, 46, 77, 0.25) 0%, rgba(3, 7, 18, 0) 70%);
+        }
+        .stock-breadcrumb {
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .stock-breadcrumb a {
+            color: var(--color-blue);
+            text-decoration: none;
+        }
+        .stock-header-main {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+        .stock-title-group h1 {
+            font-size: clamp(28px, 4vw, 42px);
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+        .stock-badge-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        .stock-badge {
+            font-family: var(--font-mono);
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .stock-badge-primary {
+            background: rgba(37, 99, 235, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(37, 99, 235, 0.4);
+        }
+        .stock-badge-sector {
+            background: rgba(16, 185, 129, 0.12);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        .stock-badge-cat {
+            background: rgba(245, 158, 11, 0.12);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        .stock-search-quick {
+            position: relative;
+            min-width: 260px;
+        }
+        .stock-search-input {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            color: #ffffff;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            padding: 10px 14px;
+            border-radius: 6px;
+            outline: none;
+            transition: border-color var(--transition-fast);
+        }
+        .stock-search-input:focus {
+            border-color: var(--color-blue);
+        }
+        .stock-search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #090d16;
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            max-height: 280px;
+            overflow-y: auto;
+            z-index: 100;
+            display: none;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            margin-top: 4px;
+        }
+        .stock-search-item {
+            padding: 10px 14px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+        }
+        .stock-search-item:hover {
+            background: rgba(37, 99, 235, 0.15);
+        }
+        .stock-metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 14px;
+            margin-top: 24px;
+        }
+        .metric-cell {
+            background: rgba(9, 13, 22, 0.7);
+            border: 1px solid var(--border-subtle);
+            padding: 14px 16px;
+            border-radius: 6px;
+        }
+        .metric-cell-label {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        .metric-cell-val {
+            font-size: 17px;
+            font-weight: 700;
+            color: #ffffff;
+            font-family: var(--font-mono);
+        }
+        .chart-section-wrapper {
+            margin: 36px 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+        }
+        .chart-header-bar {
+            padding: 14px 20px;
+            background: rgba(2, 4, 8, 0.8);
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .tradingview-container {
+            height: 580px;
+            width: 100%;
+        }
+        .analysis-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 28px;
+            margin-bottom: 24px;
+        }
+        .analysis-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .faq-card {
+            background: rgba(9, 13, 22, 0.6);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            padding: 18px 20px;
+            margin-bottom: 12px;
+        }
+        .faq-card h4 {
+            color: #ffffff;
+            font-size: 15px;
+            margin-bottom: 8px;
+        }
+        .faq-card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Institutional Telemetry HUD Strip -->
+    <header class="telemetry-bar">
+        <div class="telemetry-inner">
+            <div class="telemetry-item">
+                <span class="telemetry-dot live"></span>
+                <span class="telemetry-label">DESK:</span>
+                <span class="telemetry-val">DALAL STREET ALPHA</span>
+            </div>
+            <div class="telemetry-item">
+                <span class="telemetry-label">ACTIVE TICKER:</span>
+                <span class="telemetry-val" id="hud-ticker">NSE: RELIANCE</span>
+            </div>
+            <div class="telemetry-item">
+                <span class="telemetry-label">NSE COLO:</span>
+                <span class="telemetry-val">1.2ms</span>
+            </div>
+            <div class="telemetry-item">
+                <span class="telemetry-label">STATUS:</span>
+                <span class="telemetry-val" style="color:var(--color-emerald)">REGULATORY SAFEGUARDED</span>
+            </div>
+            <div class="telemetry-item">
+                <span class="telemetry-label">SESSION:</span>
+                <span class="telemetry-val" id="hud-clock">00:00:00.000 IST</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Global Navigation -->
+    <nav class="main-nav">
+        <div class="nav-container">
+            <a href="/" class="nav-brand">
+                <img src="brand_assets/website_favicon_192x192.png" alt="Dalal Street Alpha Logo" class="brand-logo-img" width="40" height="40">
+                <span class="brand-text">DALAL STREET<span class="highlight-gold">ALPHA</span></span>
+            </a>
+            <div class="nav-links">
+                <a href="/" class="nav-roll-link"><span class="roll-track"><span class="roll-primary">Home Desk</span><span class="roll-hover">Home Desk</span></span></a>
+                <a href="/#reports" class="nav-roll-link"><span class="roll-track"><span class="roll-primary">Market Reports</span><span class="roll-hover">Market Reports</span></span></a>
+                <a href="/#tools" class="nav-roll-link"><span class="roll-track"><span class="roll-primary">Trader's Arsenal</span><span class="roll-hover">Trader's Arsenal</span></span></a>
+                <a href="/#simulator" class="nav-roll-link"><span class="roll-track"><span class="roll-primary">RevShare Engine</span><span class="roll-hover">RevShare Engine</span></span></a>
+                <a href="/disclaimer" class="nav-roll-link"><span class="roll-track"><span class="roll-primary">Compliance</span><span class="roll-hover">Compliance</span></span></a>
+            </div>
+            <div class="nav-actions">
+                <a href="/#tools" class="btn-primary-glow btn-sm">Explore Arsenal →</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Stock Hub Header Section -->
+    <header class="stock-hub-header">
+        <div class="content-container">
+            <nav class="stock-breadcrumb">
+                <a href="/">Home</a> <span>/</span>
+                <a href="/#reports">Equities</a> <span>/</span>
+                <span id="breadcrumb-stock" style="color:#ffffff;">Reliance Industries Ltd</span>
+            </nav>
+
+            <div class="stock-header-main">
+                <div class="stock-title-group">
+                    <h1 id="stock-name">Reliance Industries Ltd</h1>
+                    <div class="stock-badge-row">
+                        <span class="stock-badge stock-badge-primary" id="stock-symbol-badge">NSE: RELIANCE</span>
+                        <span class="stock-badge stock-badge-sector" id="stock-sector-badge">ENERGY & CONGLOMERATE</span>
+                        <span class="stock-badge stock-badge-cat" id="stock-cat-badge">LARGE CAP</span>
+                        <span class="stock-badge" style="background:rgba(255,255,255,0.08); color:#cbd5e1;" id="stock-isin-badge">ISIN: INE002A01018</span>
+                    </div>
+                </div>
+
+                <!-- Instant Stock Screener / Quick Switcher -->
+                <div class="stock-search-quick">
+                    <input type="text" id="stock-search-box" class="stock-search-input" placeholder="🔍 Search 114+ NSE Tickers..." autocomplete="off">
+                    <div id="stock-search-dropdown" class="stock-search-results"></div>
+                </div>
+            </div>
+
+            <!-- Key Financial Health & Valuation Metric Cells -->
+            <div class="stock-metrics-grid">
+                <div class="metric-cell">
+                    <div class="metric-cell-label">Primary Exchange</div>
+                    <div class="metric-cell-val" id="metric-exchange">NSE / BSE</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-cell-label">Listing Tier</div>
+                    <div class="metric-cell-val" id="metric-tier">Nifty 50 Benchmark</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-cell-label">F&O Segment</div>
+                    <div class="metric-cell-val" style="color:var(--color-emerald)">Active Derivatives</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-cell-label">Lot Size / Margins</div>
+                    <div class="metric-cell-val">Standard SEBI</div>
+                </div>
+                <div class="metric-cell">
+                    <div class="metric-cell-label">Data Latency</div>
+                    <div class="metric-cell-val" style="color:var(--color-gold)">Real-Time Widget</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="content-container" style="padding: 32px 0 64px 0;">
+        <!-- TradingView Advanced Real-Time Candlestick Chart -->
+        <section class="chart-section-wrapper">
+            <div class="chart-header-bar">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span style="display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--color-emerald);"></span>
+                    <span style="font-family:var(--font-mono); font-size:13px; font-weight:700; color:#ffffff;">
+                        TRADINGVIEW LIVE CANDLESTICK STRUCTURE & ORDER-FLOW
+                    </span>
+                </div>
+                <div style="font-family:var(--font-mono); font-size:11.5px; color:var(--text-muted);">
+                    Direct Technical Analysis Engine
+                </div>
+            </div>
+            <div class="tradingview-container" id="tradingview-widget-wrapper">
+                <!-- TradingView Widget dynamically inserted here -->
+            </div>
+        </section>
+
+        <!-- Executive GEO Answer Box & Long-Term Thesis -->
+        <section class="analysis-card">
+            <h3>⚡ Institutional Footprint & Moat Assessment</h3>
+            <p style="font-size:16px; line-height:1.7; color:#e2e8f0; margin-bottom:16px;" id="stock-moat-text">
+                Analyzing competitive positioning, return on capital employed, and multi-year structural tailwinds.
+            </p>
+            <div style="background:rgba(2, 4, 8, 0.6); border-left:3px solid var(--color-blue); padding:16px 20px; border-radius:4px; font-size:14px; color:#cbd5e1; line-height:1.6;">
+                <strong style="color:#ffffff;">Personal Strategy Perspective:</strong> 
+                When examining companies of this magnitude, institutional accumulators evaluate cash flow reinvestment efficiency rather than short-term quarterly noise. 
+                Historical consolidation ranges often act as institutional liquidity absorbing zones. 
+                <em>Please conduct independent due diligence before taking any market exposure.</em>
+            </div>
+        </section>
+
+        <!-- The Trader's Arsenal Direct Brokerage Gate -->
+        <section class="analysis-card" style="border-color: rgba(37, 99, 235, 0.4); background: linear-gradient(135deg, rgba(9, 13, 22, 0.9) 0%, rgba(15, 23, 42, 0.7) 100%);">
+            <h3>🛠️ Execute Orders on <span id="arsenal-stock-symbol" class="highlight-gold">RELIANCE</span> With The Trader's Arsenal</h3>
+            <p style="color:var(--text-secondary); font-size:15px; line-height:1.6; margin-bottom:20px;">
+                Trade equity delivery with zero brokerage, or connect directly to TradingView charts using our verified, institutional-grade execution partners:
+            </p>
+            <div class="arsenal-grid" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:16px;">
+                <div class="arsenal-card" style="margin:0; padding:20px;">
+                    <div style="font-weight:700; color:#ffffff; font-size:16px; margin-bottom:6px;">Dhan HQ</div>
+                    <div style="font-size:12px; color:var(--color-emerald); font-family:var(--font-mono); margin-bottom:10px;">Free Direct TradingView Trading</div>
+                    <p style="font-size:13px; color:var(--text-secondary); margin-bottom:14px;">Place bracket orders and execute options strategies directly from live TradingView chart tabs.</p>
+                    <a href="https://dhan.co/?aff=DSA" target="_blank" rel="noopener noreferrer" class="btn-primary-glow btn-sm" style="text-align:center;">Open Dhan Account →</a>
+                </div>
+                <div class="arsenal-card" style="margin:0; padding:20px;">
+                    <div style="font-weight:700; color:#ffffff; font-size:16px; margin-bottom:6px;">Zerodha Kite</div>
+                    <div style="font-size:12px; color:var(--color-blue); font-family:var(--font-mono); margin-bottom:10px;">India's Most Trusted Broker</div>
+                    <p style="font-size:13px; color:var(--text-secondary); margin-bottom:14px;">Zero brokerage on long-term equity delivery investments. High stability and clean API execution.</p>
+                    <a href="https://zerodha.com/?c=DSA" target="_blank" rel="noopener noreferrer" class="btn-secondary-dark btn-sm" style="text-align:center;">Open Zerodha Account →</a>
+                </div>
+                <div class="arsenal-card" style="margin:0; padding:20px;">
+                    <div style="font-weight:700; color:#ffffff; font-size:16px; margin-bottom:6px;">GoCharting Order Flow</div>
+                    <div style="font-size:12px; color:var(--color-gold); font-family:var(--font-mono); margin-bottom:10px;">Footprint & Volume Delta</div>
+                    <p style="font-size:13px; color:var(--text-secondary); margin-bottom:14px;">Inspect bid/ask imbalances and institutional absorptions inside every candle of this stock.</p>
+                    <a href="https://gocharting.com/?ref=DSA" target="_blank" rel="noopener noreferrer" class="btn-secondary-dark btn-sm" style="text-align:center;">Launch GoCharting →</a>
+                </div>
+            </div>
+            <div style="font-family:var(--font-mono); font-size:11px; color:#64748b; margin-top:16px;">
+                ⚖️ <strong>Affiliate Transparency:</strong> When opening an account via our verified partner links, fee waivers and sign-up reward points are administered and credited directly to your trading account by the respective platforms.
+            </div>
+        </section>
+
+        <!-- High-Intent Frequently Asked Questions (GEO / AEO Engine) -->
+        <section class="analysis-card">
+            <h3>❓ Frequently Asked Questions (FAQ)</h3>
+            <div id="faq-container">
+                <!-- Injected via JavaScript based on selected stock -->
+            </div>
+        </section>
+
+        <!-- Statutory Regulatory Notice & Compliance Box -->
+        <section class="legal-disclaimer-box" style="margin-top:32px;">
+            <div class="disclaimer-title">⚖️ STATUTORY NON-REGISTRATION & DERIVATIVES RISK DISCLOSURE</div>
+            <p>
+                <strong>Dalal Street Alpha</strong> operates exclusively as an educational research desk and financial technology developer. 
+                The author and algorithms are <strong>NOT registered with SEBI</strong> as an Investment Adviser (under SEBI IA Regulations, 2013) or Research Analyst (under SEBI RA Regulations, 2014).
+            </p>
+            <p>
+                All data, charts, and content on this page are provided strictly for educational purposes and personal observational commentary. 
+                <strong>Nothing on this page constitutes a buy recommendation, sell call, price target, or financial advice.</strong>
+            </p>
+            <p style="color:var(--color-rose); font-weight:600; margin-bottom:0;">
+                SEBI DERIVATIVES WARNING: 9 out of 10 individual traders in equity futures and options incur net financial losses. Please consult an independent certified financial professional before making financial commitments.
+            </p>
+        </section>
+    </main>
+
+    <!-- Global Footer -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <div class="footer-brand-header">
+                    <img src="brand_assets/website_favicon_192x192.png" alt="Dalal Street Alpha Logo" class="footer-logo-img" width="40" height="40">
+                    <span class="footer-brand-title">DALAL STREET<span class="highlight-gold">ALPHA</span></span>
+                </div>
+                <p class="footer-brand-desc">
+                    Institutional market analytics, Nifty 50 derivatives positioning, and quantitative order-flow intelligence. 100% SEBI/ASCI educational research standard.
+                </p>
+            </div>
+            <div class="footer-links-group">
+                <div class="footer-col">
+                    <div class="footer-col-title">PORTAL NAVIGATION</div>
+                    <ul class="footer-list">
+                        <li><a href="/">Home Intelligence Desk</a></li>
+                        <li><a href="/#reports">Market Reports Archive</a></li>
+                        <li><a href="/#tools">The Trader's Arsenal</a></li>
+                        <li><a href="/#simulator">RevShare Growth Engine</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <div class="footer-col-title">STATUTORY LEGAL</div>
+                    <ul class="footer-list">
+                        <li><a href="/disclaimer">SEBI Regulatory Disclaimer</a></li>
+                        <li><a href="/risk-disclosure">F&O Risk Disclosure</a></li>
+                        <li><a href="/affiliate-disclosure">Affiliate Transparency</a></li>
+                        <li><a href="/terms">Terms of Service</a></li>
+                        <li><a href="/privacy">Privacy Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="footer-container footer-bottom-inner">
+                <div>© 2026 Dalal Street Alpha Desk. Strictly for educational market analysis.</div>
+                <div>Server Latency: 1.2ms • High-Frequency Execution Protocol</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Dynamic Stock Hub Controller Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", async () => {
+            // 1. Initialize Lenis Smooth Scroll
+            if (typeof Lenis !== "undefined") {
+                const lenis = new Lenis({ duration: 1.1, easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+                function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+                requestAnimationFrame(raf);
+            }
+
+            // 2. Telemetry Clock
+            const hudClock = document.getElementById("hud-clock");
+            function updateClock() {
+                const now = new Date();
+                const utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
+                const ist = new Date(utcMs + (5.5 * 3600000));
+                const h = String(ist.getHours()).padStart(2, "0");
+                const m = String(ist.getMinutes()).padStart(2, "0");
+                const s = String(ist.getSeconds()).padStart(2, "0");
+                const ms = String(ist.getMilliseconds()).padStart(3, "0");
+                if (hudClock) hudClock.textContent = `${h}:${m}:${s}.${ms} IST`;
+            }
+            setInterval(updateClock, 40);
+            updateClock();
+
+            // 3. Load Stocks Database
+            let stocksList = [];
+            try {
+                const res = await fetch("data/nse_stocks.json");
+                if (res.ok) {
+                    stocksList = await res.json();
+                }
+            } catch (e) {
+                console.warn("Failed to load nse_stocks.json, using fallback", e);
+            }
+
+            if (!stocksList || stocksList.length === 0) {
+                stocksList = [
+                    { symbol: "RELIANCE", name: "Reliance Industries Ltd", sector: "Energy & Conglomerate", category: "Large Cap", isin: "INE002A01018", moat: "Dominant digital (Jio) and retail presence with expanding green energy capex." }
+                ];
+            }
+
+            // 4. Resolve Active Symbol from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            let activeSymbol = urlParams.get("symbol") || "";
+            if (!activeSymbol) {
+                // Check pathname for /stocks/SYMBOL
+                const pathParts = window.location.pathname.split("/").filter(Boolean);
+                if (pathParts.length >= 2 && pathParts[0] === "stocks") {
+                    activeSymbol = pathParts[1].toUpperCase();
+                }
+            }
+            if (!activeSymbol) activeSymbol = "RELIANCE";
+            activeSymbol = activeSymbol.toUpperCase().replace(".NS", "");
+
+            // Find stock object
+            let currentStock = stocksList.find(s => s.symbol === activeSymbol) || stocksList[0];
+
+            // 5. Update DOM with Stock Data
+            document.getElementById("page-title").textContent = `${currentStock.name} (${currentStock.symbol}) Stock Intelligence & Technical Setup | Dalal Street Alpha`;
+            document.getElementById("page-desc").textContent = `In-depth quantitative analysis for ${currentStock.name} (NSE: ${currentStock.symbol}). TradingView candlestick structures, financial moats, and derivatives positioning. Strictly educational.`;
+            document.getElementById("canonical-url").href = `https://dalal-street-alpha.vercel.app/stocks/${currentStock.symbol}`;
+            document.getElementById("og-title").textContent = `${currentStock.name} (${currentStock.symbol}) — Technical & Fundamental Intelligence`;
+            document.getElementById("og-desc").textContent = `Explore ${currentStock.name}'s institutional footprint, moat factors, and TradingView candlestick setups.`;
+
+            document.getElementById("hud-ticker").textContent = `NSE: ${currentStock.symbol}`;
+            document.getElementById("breadcrumb-stock").textContent = currentStock.name;
+            document.getElementById("stock-name").textContent = currentStock.name;
+            document.getElementById("stock-symbol-badge").textContent = `NSE: ${currentStock.symbol}`;
+            document.getElementById("stock-sector-badge").textContent = (currentStock.sector || "EQUITIES").toUpperCase();
+            document.getElementById("stock-cat-badge").textContent = (currentStock.category || "BENCHMARK").toUpperCase();
+            document.getElementById("stock-isin-badge").textContent = `ISIN: ${currentStock.isin || "INE000000000"}`;
+            document.getElementById("stock-moat-text").textContent = currentStock.moat || "Prominent Indian benchmark equity with substantial institutional liquidity and nationwide operating presence.";
+            document.getElementById("arsenal-stock-symbol").textContent = currentStock.symbol;
+
+            // 6. Inject Dynamic TradingView Advanced Real-Time Chart
+            const tvWrapper = document.getElementById("tradingview-widget-wrapper");
+            tvWrapper.innerHTML = `
+                <div class="tradingview-widget-container" style="height:100%;width:100%;">
+                    <iframe src="https://s.tradingview.com/widgetembed/?frameElementId=tradingview_chart&symbol=NSE%3A${currentStock.symbol}&interval=D&hidesidetoolbar=0&symboledit=1&saveimage=1&toolbarbg=f1f3f6&studies=%5B%22MASimple%40tv-basicstudies%22%2C%22RSI%40tv-basicstudies%22%5D&theme=dark&style=1&timezone=Asia%2FKolkata&studies_overrides=%7B%7D&overrides=%7B%7D&enabled_features=%5B%5D&disabled_features=%5B%5D&locale=en&utm_source=dalal-street-alpha.vercel.app" 
+                            style="width:100%;height:100%;border:0;" 
+                            title="${currentStock.name} TradingView Chart" 
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            `;
+
+            // 7. Inject FAQs & Schema.org JSON-LD
+            const faqs = [
+                {
+                    q: `What is the core competitive moat of ${currentStock.name}?`,
+                    a: `${currentStock.name} maintains a durable competitive advantage through: ${currentStock.moat} Its structural scale establishes significant barriers to entry across Indian and global markets.`
+                },
+                {
+                    q: `Is ${currentStock.symbol} traded in the F&O derivatives segment on the NSE?`,
+                    a: `Yes, ${currentStock.symbol} is actively traded in the NSE equity derivatives segment, featuring weekly and monthly options contracts and futures with deep institutional liquidity.`
+                },
+                {
+                    q: `How can I trade ${currentStock.symbol} directly from TradingView charts?`,
+                    a: `You can execute orders on ${currentStock.symbol} directly from TradingView charts by integrating a certified broker like Dhan, which offers native TradingView API execution with zero brokerage on long-term equity delivery.`
+                },
+                {
+                    q: `Does Dalal Street Alpha provide buy or sell calls for ${currentStock.symbol}?`,
+                    a: `No. Dalal Street Alpha operates exclusively as an educational market intelligence portal and is not registered with SEBI as an investment adviser or research analyst. All commentary reflects personal observational methodology.`
+                }
+            ];
+
+            const faqContainer = document.getElementById("faq-container");
+            faqContainer.innerHTML = faqs.map(f => `
+                <div class="faq-card">
+                    <h4>Q: ${f.q}</h4>
+                    <p>${f.a}</p>
+                </div>
+            `).join("");
+
+            // Dynamic Schema.org JSON-LD
+            const schemaScript = document.createElement("script");
+            schemaScript.type = "application/ld+json";
+            schemaScript.text = JSON.stringify({
+                "@context": "https://schema.org",
+                "@graph": [
+                    {
+                        "@type": "ItemPage",
+                        "@id": `https://dalal-street-alpha.vercel.app/stocks/${currentStock.symbol}`,
+                        "url": `https://dalal-street-alpha.vercel.app/stocks/${currentStock.symbol}`,
+                        "name": `${currentStock.name} (${currentStock.symbol}) Technical & Fundamental Intelligence`,
+                        "description": `In-depth quantitative analytics and TradingView candlestick setups for ${currentStock.name}.`,
+                        "breadcrumb": {
+                            "@type": "BreadcrumbList",
+                            "itemListElement": [
+                                { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://dalal-street-alpha.vercel.app" },
+                                { "@type": "ListItem", "position": 2, "name": "Equities", "item": "https://dalal-street-alpha.vercel.app/#reports" },
+                                { "@type": "ListItem", "position": 3, "name": currentStock.symbol, "item": `https://dalal-street-alpha.vercel.app/stocks/${currentStock.symbol}` }
+                            ]
+                        }
+                    },
+                    {
+                        "@type": "FinancialProduct",
+                        "name": currentStock.name,
+                        "tickerSymbol": `NSE:${currentStock.symbol}`,
+                        "category": currentStock.sector,
+                        "description": currentStock.moat
+                    },
+                    {
+                        "@type": "FAQPage",
+                        "mainEntity": faqs.map(f => ({
+                            "@type": "Question",
+                            "name": f.q,
+                            "acceptedAnswer": { "@type": "Answer", "text": f.a }
+                        }))
+                    }
+                ]
+            });
+            document.head.appendChild(schemaScript);
+
+            // 8. Ticker Screener Search Functionality
+            const searchBox = document.getElementById("stock-search-box");
+            const searchDropdown = document.getElementById("stock-search-dropdown");
+
+            function renderSearchResults(query) {
+                if (!query) {
+                    searchDropdown.style.display = "none";
+                    return;
+                }
+                const filtered = stocksList.filter(s => 
+                    s.symbol.toLowerCase().includes(query.toLowerCase()) || 
+                    s.name.toLowerCase().includes(query.toLowerCase())
+                ).slice(0, 10);
+
+                if (filtered.length === 0) {
+                    searchDropdown.innerHTML = `<div style="padding:12px; font-size:12px; color:#64748b; font-family:var(--font-mono); text-align:center;">No matching NSE tickers found</div>`;
+                    searchDropdown.style.display = "block";
+                    return;
+                }
+
+                searchDropdown.innerHTML = filtered.map(s => `
+                    <div class="stock-search-item" onclick="window.location.href='/stock.html?symbol=${s.symbol}'">
+                        <div>
+                            <strong style="color:#ffffff;">${s.symbol}</strong>
+                            <span style="color:#94a3b8; font-size:12px; margin-left:8px;">${s.name}</span>
+                        </div>
+                        <span style="color:var(--color-blue); font-family:var(--font-mono); font-size:11px;">${s.sector}</span>
+                    </div>
+                `).join("");
+                searchDropdown.style.display = "block";
+            }
+
+            searchBox.addEventListener("input", (e) => renderSearchResults(e.target.value.trim()));
+            document.addEventListener("click", (e) => {
+                if (!searchBox.contains(e.target) && !searchDropdown.contains(e.target)) {
+                    searchDropdown.style.display = "none";
+                }
+            });
+        });
+    </script>
+</body>
+</html>

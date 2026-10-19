@@ -4,6 +4,16 @@
   "framework": null,
   "cleanUrls": true,
   "trailingSlash": false,
+  "rewrites": [
+    {
+      "source": "/stocks/:symbol",
+      "destination": "/stock.html"
+    },
+    {
+      "source": "/stocks",
+      "destination": "/stock.html"
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",

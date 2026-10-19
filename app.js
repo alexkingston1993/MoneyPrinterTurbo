@@ -768,6 +768,89 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     setInterval(addTapePrint, 2200);
 
+    // ── 12. Programmatic NSE 500 Ticker Directory Hydration ──
+    const homeEquitiesGrid = document.getElementById("home-equities-grid");
+    const homeStockSearch = document.getElementById("home-stock-search");
+    const stockFilterBtns = document.querySelectorAll("[data-stock-filter]");
+    let loadedStocks = [];
+    let currentStockCategory = "all";
+
+    async function initHomeEquities() {
+        if (!homeEquitiesGrid) return;
+        try {
+            const resp = await fetch("data/nse_stocks.json");
+            if (resp.ok) {
+                loadedStocks = await resp.json();
+            }
+        } catch (e) {
+            console.warn("Could not load nse_stocks.json for home grid:", e);
+        }
+
+        renderHomeEquities();
+    }
+
+    function renderHomeEquities() {
+        if (!homeEquitiesGrid || !loadedStocks.length) return;
+        const query = (homeStockSearch ? homeStockSearch.value.trim().toLowerCase() : "");
+
+        let filtered = loadedStocks;
+        if (currentStockCategory !== "all") {
+            filtered = filtered.filter(s => 
+                (s.category && s.category.toLowerCase().includes(currentStockCategory.toLowerCase())) ||
+                (s.sector && s.sector.toLowerCase().includes(currentStockCategory.toLowerCase()))
+            );
+        }
+
+        if (query) {
+            filtered = filtered.filter(s =>
+                s.symbol.toLowerCase().includes(query) ||
+                s.name.toLowerCase().includes(query) ||
+                (s.sector && s.sector.toLowerCase().includes(query))
+            );
+        }
+
+        // Display up to 24 tickers for fast rendering
+        const displayed = filtered.slice(0, 24);
+
+        if (displayed.length === 0) {
+            homeEquitiesGrid.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 30px; color: var(--text-muted); font-family: var(--font-mono);">
+                    No matching NSE tickers found for "${query}". Try searching "Reliance", "Tata", or "Bank".
+                </div>
+            `;
+            return;
+        }
+
+        homeEquitiesGrid.innerHTML = displayed.map(s => `
+            <a href="/stock.html?symbol=${s.symbol}" class="equity-chip-card">
+                <div>
+                    <div class="equity-chip-top">
+                        <span class="equity-chip-sym">${s.symbol}</span>
+                        <span class="equity-chip-cat">${s.category || "EQUITY"}</span>
+                    </div>
+                    <div class="equity-chip-name">${s.name}</div>
+                </div>
+                <div class="equity-chip-sector">${s.sector || "NSE Equity"} →</div>
+            </a>
+        `).join("");
+    }
+
+    if (homeStockSearch) {
+        homeStockSearch.addEventListener("input", renderHomeEquities);
+    }
+
+    stockFilterBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+            stockFilterBtns.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            currentStockCategory = btn.getAttribute("data-stock-filter");
+            renderHomeEquities();
+        });
+    });
+
+    initHomeEquities();
+
     // Initialize content
     loadContent();
 });
+

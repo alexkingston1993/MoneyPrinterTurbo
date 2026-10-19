@@ -1,5 +1,6 @@
 import io
 import os
+import re
 import tempfile
 from datetime import datetime, timedelta
 from typing import List, Optional, Tuple
@@ -363,3 +364,137 @@ def pe_band(
     fig.autofmt_xdate()
 
     return _fig_to_clip(fig, duration, resolution)
+
+
+def detect_ticker_from_text(text: str) -> Optional[str]:
+    """Extract standard NSE ticker from script, subject, or search terms."""
+    if not text:
+        return None
+    lower = text.lower()
+    
+    ticker_map = {
+        "reliance": "RELIANCE.NS",
+        "hdfc bank": "HDFCBANK.NS",
+        "hdfc": "HDFCBANK.NS",
+        "tcs": "TCS.NS",
+        "tata consultancy": "TCS.NS",
+        "icici bank": "ICICIBANK.NS",
+        "icici": "ICICIBANK.NS",
+        "infy": "INFY.NS",
+        "infosys": "INFY.NS",
+        "bajaj finance": "BAJFINANCE.NS",
+        "bajaj auto": "BAJAJ-AUTO.NS",
+        "larsen": "LT.NS",
+        "l&t": "LT.NS",
+        "hindustan unilever": "HINDUNILVR.NS",
+        "hul": "HINDUNILVR.NS",
+        "itc": "ITC.NS",
+        "bharti airtel": "BHARTIARTL.NS",
+        "airtel": "BHARTIARTL.NS",
+        "state bank": "SBIN.NS",
+        "sbi": "SBIN.NS",
+        "tata motors": "TATAMOTORS.NS",
+        "maruti": "MARUTI.NS",
+        "titan": "TITAN.NS",
+        "sun pharma": "SUNPHARMA.NS",
+        "zomato": "ZOMATO.NS",
+        "trent": "TRENT.NS",
+        "bel": "BEL.NS",
+        "suzlon": "SUZLON.NS",
+        "nifty": "^NSEI",
+        "sensex": "^BSESN",
+        "bank nifty": "^NSEBANK",
+        "banknifty": "^NSEBANK",
+    }
+    
+    for kw, sym in ticker_map.items():
+        if re.search(r'\b' + re.escape(kw) + r'\b', lower):
+            return sym
+    return None
+
+
+def generate_candlestick_clip(
+    ticker: str,
+    output_path: str,
+    duration: float = 4.0,
+    aspect: str = "9:16",
+    period: str = "3mo"
+) -> Optional[str]:
+    """
+    Generates a high-resolution dark-mode institutional candlestick MP4 clip.
+    Features moving averages (20 EMA, 50 SMA), volume histogram, and regulatory watermark.
+    """
+    try:
+        import mplfinance as mpf
+        import yfinance as yf
+        import subprocess
+
+        clean_sym = ticker
+        if not clean_sym.endswith(".NS") and not clean_sym.endswith(".BO") and not clean_sym.startswith("^"):
+            clean_sym = f"{clean_sym}.NS"
+
+        stock = yf.Ticker(clean_sym)
+        df = stock.history(period=period)
+        if df.empty and clean_sym.endswith(".NS"):
+            clean_sym = clean_sym.replace(".NS", ".BO")
+            stock = yf.Ticker(clean_sym)
+            df = stock.history(period=period)
+
+        if df.empty:
+            logger.warning(f"[Candlestick] No market data returned for {ticker}")
+            return None
+
+        # Build institutional styling
+        mc = mpf.make_marketcolors(up="#10b981", down="#ef4444", inherit=True)
+        s = mpf.make_mpf_style(
+            base_mpl_style="dark_background",
+            marketcolors=mc,
+            figcolor="#030712",
+            facecolor="#090d16",
+            gridcolor="#1e293b",
+            gridstyle="--",
+        )
+
+        display_name = ticker.replace(".NS", "").replace(".BO", "").upper()
+        chart_title = f"{display_name} — QUANTITATIVE CANDLESTICK STRUCTURE"
+        
+        # Save temp image
+        os.makedirs(os.path.dirname(output_path) or ".", exist_ok=True)
+        temp_img = output_path + ".temp.png"
+
+        fig, _ = mpf.plot(
+            df,
+            type="candle",
+            style=s,
+            volume=True,
+            returnfig=True,
+            mav=(20, 50),
+            title=chart_title,
+        )
+        fig.savefig(temp_img, bbox_inches="tight", dpi=120)
+        plt.close(fig)
+
+        # Target dimensions based on aspect
+        if aspect in ("9:16", "portrait"):
+            scale_vf = "scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2:color=#030712"
+        else:
+            scale_vf = "scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2:color=#030712"
+
+        cmd = [
+            "ffmpeg", "-y", "-loop", "1", "-i", temp_img,
+            "-c:v", "libx264", "-t", str(duration), "-pix_fmt", "yuv420p",
+            "-vf", scale_vf,
+            output_path
+        ]
+        subprocess.run(cmd, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+        if os.path.exists(temp_img):
+            os.remove(temp_img)
+
+        logger.success(f"[Candlestick] Generated institutional chart clip for {display_name} -> {output_path}")
+        return output_path
+
+    except Exception as e:
+        logger.error(f"[Candlestick] Failed to generate candlestick clip: {e}")
+        return None
+

@@ -20,6 +20,7 @@
     <meta property="og:image" content="brand_assets/opengraph_social_card_1200x630.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="brand_assets/opengraph_social_card_1200x630.png">
+    <link rel="canonical" href="https://dalal-street-alpha.vercel.app/">
 
     <!-- Favicon & Touch Icons -->
     <link rel="icon" type="image/png" sizes="32x32" href="brand_assets/website_favicon_32x32.png">
@@ -70,7 +71,7 @@
         <div class="nav-container">
             <a href="#hero" class="brand-logo" id="brand-home-link" aria-label="Dalal Street Alpha Home">
                 <div class="brand-avatar-box">
-                    <img src="brand_assets/website_favicon_192x192.png" alt="Dalal Street Alpha Logo" class="brand-avatar-img">
+                    <img src="brand_assets/website_favicon_192x192.png" alt="Dalal Street Alpha Logo" class="brand-avatar-img" width="40" height="40">
                 </div>
                 <div class="logo-text">
                     <span class="logo-title">DALAL STREET<span class="highlight-gold">ALPHA</span></span>
@@ -89,6 +90,12 @@
                     <span class="roll-track">
                         <span class="roll-text">GEX Terminal</span>
                         <span class="roll-text accent">GEX Terminal</span>
+                    </span>
+                </a>
+                <a href="#equities" class="nav-roll-link" id="nav-item-equities">
+                    <span class="roll-track">
+                        <span class="roll-text">Stock Hub</span>
+                        <span class="roll-text accent">Stock Hub</span>
                     </span>
                 </a>
                 <a href="#tools" class="nav-roll-link" id="nav-item-tools">
@@ -208,7 +215,7 @@
                             <div class="t-stat-card">
                                 <div class="t-stat-header">
                                     <span class="t-label">INDIA VIX</span>
-                                    <span class="t-badge bull">ELEVATED</span>
+                                    <span class="t-badge bull">EXPANDED</span>
                                 </div>
                                 <div class="t-val-main">15.42</div>
                                 <div class="t-sub-info bull">+0.62 (+4.20%)</div>
@@ -379,6 +386,44 @@
                             <!-- Stream populated dynamically -->
                         </div>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 0.7: Programmatic NSE 500 Ticker Intelligence Hub -->
+        <section class="equities-hub-section" id="equities">
+            <div class="content-container">
+                <div class="section-header-box" style="text-align:center;">
+                    <div class="section-tag-badge">QUANTITATIVE DIRECTORY</div>
+                    <h2 class="section-title">NSE 500 Ticker Intelligence & Technical Setups</h2>
+                    <p class="section-subtitle">
+                        Inspect institutional footprints, TradingView candlestick structures, fundamental competitive moats, and derivative positioning across 114+ benchmark Indian equities.
+                    </p>
+                </div>
+
+                <!-- Instant Search / Filter Bar -->
+                <div class="equities-search-container">
+                    <input type="text" id="home-stock-search" class="equities-search-input" placeholder="🔍 Search any stock (e.g. Reliance, HDFC, TCS, Tata Motors, ITC, SBI, Zomato, Trent)..." autocomplete="off">
+                </div>
+
+                <!-- Fast Filter Category Tabs -->
+                <div class="arsenal-filter-bar" style="justify-content:center; margin-bottom:24px;">
+                    <button class="filter-btn active" data-stock-filter="all">All Benchmark Equities</button>
+                    <button class="filter-btn" data-stock-filter="Large Cap">Nifty 50 Large Caps</button>
+                    <button class="filter-btn" data-stock-filter="Financial Services">Banking & Financials</button>
+                    <button class="filter-btn" data-stock-filter="Information Technology">Technology & AI</button>
+                    <button class="filter-btn" data-stock-filter="Defense">Defense & Aerospace</button>
+                </div>
+
+                <!-- Dynamic Grid of Ticker Chips -->
+                <div class="equities-chips-grid" id="home-equities-grid">
+                    <!-- Hydrated via JavaScript from data/nse_stocks.json -->
+                </div>
+
+                <div style="text-align:center; margin-top:28px;">
+                    <a href="/stock.html?symbol=RELIANCE" class="btn-primary-glow btn-sm">
+                        Explore Full Ticker Terminal & TradingView Setup →
+                    </a>
                 </div>
             </div>
         </section>
@@ -1109,7 +1154,7 @@
         <div class="footer-container">
             <div class="footer-brand">
                 <div class="footer-brand-header">
-                    <img src="brand_assets/website_favicon_192x192.png" alt="Dalal Street Alpha Logo" class="footer-logo-img">
+                    <img src="brand_assets/website_favicon_192x192.png" alt="Dalal Street Alpha Logo" class="footer-logo-img" width="44" height="44">
                     <span class="footer-brand-title">DALAL STREET<span class="highlight-gold">ALPHA</span></span>
                 </div>
                 <p class="footer-brand-desc">

@@ -2978,3 +2978,100 @@ html.lenis, html.lenis body {
     }
 }
 
+/* ── 7. Programmatic NSE Ticker Intelligence Hub ── */
+.equities-hub-section {
+    padding: 72px 0;
+    border-top: 1px solid var(--border-subtle);
+    border-bottom: 1px solid var(--border-subtle);
+    background: radial-gradient(circle at 50% 30%, rgba(37, 99, 235, 0.08) 0%, rgba(2, 4, 8, 0) 70%);
+}
+
+.equities-search-container {
+    max-width: 640px;
+    margin: 28px auto 20px auto;
+    position: relative;
+}
+
+.equities-search-input {
+    width: 100%;
+    background: rgba(9, 13, 22, 0.85);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: 14px 20px;
+    font-family: var(--font-mono);
+    font-size: 14px;
+    color: #ffffff;
+    outline: none;
+    transition: all var(--transition-fast);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.equities-search-input:focus {
+    border-color: var(--blue-accent);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+}
+
+.equities-chips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+    margin-top: 24px;
+}
+
+.equity-chip-card {
+    background: rgba(9, 13, 22, 0.7);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all var(--transition-fast);
+}
+
+.equity-chip-card:hover {
+    border-color: var(--blue-accent);
+    transform: translateY(-2px);
+    background: rgba(15, 23, 42, 0.9);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.equity-chip-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.equity-chip-sym {
+    font-family: var(--font-mono);
+    font-weight: 700;
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.equity-chip-cat {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--gold-accent);
+    background: rgba(245, 158, 11, 0.1);
+    padding: 2px 6px;
+    border-radius: 3px;
+}
+
+.equity-chip-name {
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    line-height: 1.35;
+    margin-bottom: 8px;
+}
+
+.equity-chip-sector {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--emerald-bull);
+}
+
+

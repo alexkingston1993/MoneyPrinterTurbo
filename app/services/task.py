@@ -217,6 +217,27 @@ def get_video_materials(task_id, params, video_terms, audio_duration):
                 "failed to download videos, maybe the network is not available. if you are in China, please use a VPN."
             )
             return None
+
+        # Programmatic Candlestick Chart Injection (Scene 2 institutional visual anchor)
+        try:
+            from app.services.chart import detect_ticker_from_text, generate_candlestick_clip
+            detected_ticker = detect_ticker_from_text(f"{params.video_subject} {' '.join(video_terms)}")
+            if detected_ticker:
+                task_materials_dir = utils.task_dir(task_id)
+                candlestick_path = os.path.join(task_materials_dir, f"candlestick_{detected_ticker.replace('.', '_')}.mp4")
+                chart_clip = generate_candlestick_clip(
+                    ticker=detected_ticker,
+                    output_path=candlestick_path,
+                    duration=float(params.video_clip_duration or 4.0),
+                    aspect=params.video_aspect.value if hasattr(params.video_aspect, 'value') else str(params.video_aspect)
+                )
+                if chart_clip and os.path.exists(chart_clip):
+                    insert_idx = min(1, len(downloaded_videos))
+                    downloaded_videos.insert(insert_idx, chart_clip)
+                    logger.success(f"[Video Pipeline] Inserted dynamic candlestick chart clip for {detected_ticker} at index {insert_idx}")
+        except Exception as e:
+            logger.warning(f"[Video Pipeline] Candlestick chart injection bypassed: {e}")
+
         return downloaded_videos
 
 
