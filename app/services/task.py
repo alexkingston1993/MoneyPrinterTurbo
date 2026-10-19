@@ -284,8 +284,9 @@ def generate_final_videos(
             params=params,
         )
 
-        # Composite talking avatar overlay (if avatar images exist)
-        avatar_image = avatar.get_today_avatar()
+        # Composite talking avatar overlay (if enabled in config)
+        avatar_enabled = config.app.get("enable_avatar_overlay", False)
+        avatar_image = avatar.get_today_avatar() if avatar_enabled else None
         if avatar_image:
             logger.info(f"\n\n## compositing avatar overlay: {os.path.basename(avatar_image)}")
             avatar_output = path.join(utils.task_dir(task_id), f"final_avatar-{index}.mp4")
@@ -475,9 +476,17 @@ def start(task_id, params: VideoParams, stop_at: str = "video"):
         yt = youtube_uploader.get_uploader()
 
         # Use SEO-optimized title and description if available
-        optimized_title = seo_result["title"] if seo_result else (params.video_subject or "Investing, Not Trading")
+        optimized_title = seo_result.get("title", "") if seo_result else ""
+        if not optimized_title or "Error:" in optimized_title or "429" in optimized_title:
+            optimized_title = params.video_subject or "Dalal Street Alpha Market Analysis"
+        
         optimized_desc = seo_result.get("description", "") if seo_result else ""
+        if not optimized_desc or "Error:" in optimized_desc or "429" in optimized_desc:
+            optimized_desc = f"{params.video_subject}\n\nComprehensive institutional quantitative breakdown, technical structure, and long-term equity analysis."
+        
         optimized_tags = seo_result.get("tags", []) if seo_result else None
+        if not optimized_tags or not isinstance(optimized_tags, list):
+            optimized_tags = ["#shorts", "#stockmarketindia", "#nifty", "#investing", "#dalalstreetalpha"]
 
         # Upload primary video in the content language
         primary_lang = params.video_language or "en"

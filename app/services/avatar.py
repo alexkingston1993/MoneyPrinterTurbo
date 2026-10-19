@@ -44,15 +44,8 @@ def get_available_avatars() -> List[str]:
 
 
 def get_today_avatar() -> Optional[str]:
-    avatars = get_available_avatars()
-    if not avatars:
-        logger.warning("No avatar images found in data/avatars/")
-        return None
-    day_of_year = datetime.datetime.now().timetuple().tm_yday
-    index = day_of_year % len(avatars)
-    selected = avatars[index]
-    logger.info(f"[Avatar] Day {day_of_year} -> index {index}: {os.path.basename(selected)}")
-    return selected
+    # Permanently disabled - user photo removed
+    return None
 
 
 def _get_audio_amplitude_envelope(

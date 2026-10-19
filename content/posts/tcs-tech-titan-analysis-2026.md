@@ -6,7 +6,7 @@ excerpt: "Analysis of Tata Consultancy Services (NSE: TCS). Evaluating free cash
 focusKeyword: "TCS stock forecast 2026"
 categories: ["IT Sector", "Equities Research", "Nifty 50"]
 tags: ["TCS", "NiftyIT", "TechStocks", "TataGroup", "ArtificialIntelligence"]
-youtubeUrl: ""
+youtubeUrl: "https://www.youtube.com/watch?v=4GS8pOV0oBU"
 ---
 
 <div class="market-article">
@@ -17,7 +17,9 @@ youtubeUrl: ""
         </p>
     </div>
 
-    
+    <div class="video-embed-container" style="margin:28px 0; text-align:center;">
+        <div class="yt-embed-wrapper" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;margin:24px 0;"><iframe src="https://www.youtube.com/embed/4GS8pOV0oBU" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen></iframe></div>
+    </div>
 
     <h2>1. Free Cash Flow & Operational Efficiency</h2>
     <div class="table-responsive" style="overflow-x:auto; margin:20px 0;">
@@ -30,26 +32,13 @@ youtubeUrl: ""
                 </tr>
             </thead>
             <tbody>
-                <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
-                    <td style="padding:10px;"><strong>Return on Equity (ROE)</strong></td>
-                    <td style="padding:10px; color:#ffffff;">48.5%</td>
-                    <td style="padding:10px; color:#10b981;">Top-tier Global Capital Productivity</td>
-                </tr>
-                <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
-                    <td style="padding:10px;"><strong>Annual Free Cash Flow</strong></td>
-                    <td style="padding:10px; color:#ffffff;">₹42,000+ Cr</td>
-                    <td style="padding:10px; color:#10b981;">Predictable Shareholder Payout Engine</td>
-                </tr>
-                <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
-                    <td style="padding:10px;"><strong>Total Contract Value (TCV)</strong></td>
-                    <td style="padding:10px; color:#ffffff;">$10.2B Quarterly Run-rate</td>
-                    <td style="padding:10px; color:#10b981;">Durable Multi-Year Revenue Visibility</td>
-                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.06);"><td style="padding:10px;"><strong>Return on Equity (ROE)</strong></td><td style="padding:10px; color:#ffffff;">48.5%</td><td style="padding:10px; color:#10b981;">Top-tier Global Capital Productivity</td></tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.06);"><td style="padding:10px;"><strong>Annual Free Cash Flow</strong></td><td style="padding:10px; color:#ffffff;">₹42,000+ Cr</td><td style="padding:10px; color:#10b981;">Predictable Shareholder Payout Engine</td></tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.06);"><td style="padding:10px;"><strong>Total Contract Value (TCV)</strong></td><td style="padding:10px; color:#ffffff;">$10.2B Quarterly Run-rate</td><td style="padding:10px; color:#10b981;">Durable Multi-Year Revenue Visibility</td></tr>
             </tbody>
         </table>
     </div>
 
-    <!-- Regulatory Disclaimer -->
     <div class="disclaimer-box" style="margin-top:40px; padding:22px; background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-left:4px solid #f43f5e; font-size:12.5px; color:#94a3b8; border-radius:8px; line-height:1.6;">
         <strong style="color:#f8fafc;">⚖️ Mandatory Regulatory Notice (SEBI Compliance):</strong><br>
         Dalal Street Alpha provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.

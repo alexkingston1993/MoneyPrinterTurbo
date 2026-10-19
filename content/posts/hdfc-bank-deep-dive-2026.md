@@ -18,7 +18,9 @@ youtubeUrl: "https://www.youtube.com/watch?v=K62d0jpy55w"
         </p>
     </div>
 
-    
+    <div class="video-embed-container" style="margin:28px 0; text-align:center;">
+        <div class="yt-embed-wrapper" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;margin:24px 0;"><iframe src="https://www.youtube.com/embed/K62d0jpy55w" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen></iframe></div>
+    </div>
 
     <h2>1. Banking Metrics & Asset Quality Overview</h2>
     <div class="table-responsive" style="overflow-x:auto; margin:20px 0;">
@@ -32,40 +34,14 @@ youtubeUrl: "https://www.youtube.com/watch?v=K62d0jpy55w"
                 </tr>
             </thead>
             <tbody>
-                <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
-                    <td style="padding:10px;"><strong>Gross NPA</strong></td>
-                    <td style="padding:10px; color:#ffffff;">1.33%</td>
-                    <td style="padding:10px; color:#94a3b8;">2.80%</td>
-                    <td style="padding:10px; color:#10b981;">Benchmark Quality</td>
-                </tr>
-                <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
-                    <td style="padding:10px;"><strong>Net NPA</strong></td>
-                    <td style="padding:10px; color:#ffffff;">0.39%</td>
-                    <td style="padding:10px; color:#94a3b8;">0.75%</td>
-                    <td style="padding:10px; color:#10b981;">Pristine Underwriting</td>
-                </tr>
-                <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
-                    <td style="padding:10px;"><strong>Capital Adequacy (CAR)</strong></td>
-                    <td style="padding:10px; color:#ffffff;">19.8%</td>
-                    <td style="padding:10px; color:#94a3b8;">15.5%</td>
-                    <td style="padding:10px; color:#10b981;">High Tier-1 Cushion</td>
-                </tr>
-                <tr style="border-bottom:1px solid rgba(255,255,255,0.06);">
-                    <td style="padding:10px;"><strong>Price-to-Book (P/B)</strong></td>
-                    <td style="padding:10px; color:#ffffff;">2.5x</td>
-                    <td style="padding:10px; color:#94a3b8;">3.4x (10-Yr Avg)</td>
-                    <td style="padding:10px; color:#10b981;">Undervalued Decile</td>
-                </tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.06);"><td style="padding:10px;"><strong>Gross NPA</strong></td><td style="padding:10px; color:#ffffff;">1.33%</td><td style="padding:10px; color:#94a3b8;">2.80%</td><td style="padding:10px; color:#10b981;">Benchmark Quality</td></tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.06);"><td style="padding:10px;"><strong>Net NPA</strong></td><td style="padding:10px; color:#ffffff;">0.39%</td><td style="padding:10px; color:#94a3b8;">0.75%</td><td style="padding:10px; color:#10b981;">Pristine Underwriting</td></tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.06);"><td style="padding:10px;"><strong>Capital Adequacy (CAR)</strong></td><td style="padding:10px; color:#ffffff;">19.8%</td><td style="padding:10px; color:#94a3b8;">15.5%</td><td style="padding:10px; color:#10b981;">High Tier-1 Cushion</td></tr>
+                <tr style="border-bottom:1px solid rgba(255,255,255,0.06);"><td style="padding:10px;"><strong>Price-to-Book (P/B)</strong></td><td style="padding:10px; color:#ffffff;">2.5x</td><td style="padding:10px; color:#94a3b8;">3.4x (10-Yr Avg)</td><td style="padding:10px; color:#10b981;">Undervalued Decile</td></tr>
             </tbody>
         </table>
     </div>
 
-    <h2>2. Deposit Mobilization & Cross-Selling Catalysts</h2>
-    <p>
-        Prior to the amalgamation, only 30% of mortgage customers had an HDFC Bank savings account. The unified distribution network provides an immense cross-selling runway for wealth management, credit cards, and auto loans across a customer base exceeding 90 million Indians.
-    </p>
-
-    <!-- Regulatory Disclaimer -->
     <div class="disclaimer-box" style="margin-top:40px; padding:22px; background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-left:4px solid #f43f5e; font-size:12.5px; color:#94a3b8; border-radius:8px; line-height:1.6;">
         <strong style="color:#f8fafc;">⚖️ Mandatory Regulatory Notice (SEBI Compliance):</strong><br>
         Dalal Street Alpha provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.
