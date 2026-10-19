@@ -48,6 +48,16 @@ jobs:
           pip install pytz yfinance requests loguru google-generativeai toml beautifulsoup4 google-api-python-client google-auth-oauthlib google-auth-httplib2
           if [ -f requirements.txt ]; then pip install -r requirements.txt || true; fi
 
+      - name: Restore YouTube Token
+        env:
+          YOUTUBE_TOKEN_EN: ${{ secrets.YOUTUBE_TOKEN_EN }}
+        run: |
+          if [ -n "$YOUTUBE_TOKEN_EN" ]; then
+            mkdir -p data/youtube_tokens
+            echo "$YOUTUBE_TOKEN_EN" | base64 -d > data/youtube_tokens/youtube_token_en.pickle
+            echo "✓ YouTube OAuth token restored for autonomous cloud upload"
+          fi
+
       - name: Execute Autonomous Market Cycle
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
