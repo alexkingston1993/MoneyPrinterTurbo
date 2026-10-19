@@ -6,7 +6,7 @@ excerpt: "Quantitative analysis of Bajaj Finance (NSE: BAJFINANCE). Decoding omn
 focusKeyword: "Bajaj Finance stock outlook 2026"
 categories: ["NBFC Sector", "Equities Research", "Nifty 50"]
 tags: ["BAJFINANCE", "NBFC", "ConsumerCredit", "BajajFinserv", "Nifty50"]
-youtubeUrl: ""
+youtubeUrl: "https://youtu.be/rPJIp3lrZgY"
 ---
 
 <div class="market-article">
