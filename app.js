@@ -18,12 +18,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
         const istDate = new Date(utcMs + (5.5 * 3600000));
 
-        // Format Clock: HH:MM:SS IST
+        // Format Clock: HH:MM:SS.mmm IST
         const hours = String(istDate.getHours()).padStart(2, "0");
         const minutes = String(istDate.getMinutes()).padStart(2, "0");
         const seconds = String(istDate.getSeconds()).padStart(2, "0");
+        const ms = String(istDate.getMilliseconds()).padStart(3, "0");
         if (liveIstClock) {
-            liveIstClock.textContent = `${hours}:${minutes}:${seconds} IST`;
+            liveIstClock.textContent = `${hours}:${minutes}:${seconds}.${ms} IST`;
         }
 
         const day = istDate.getDay(); // 0 = Sun, 6 = Sat
@@ -48,7 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     updateMarketClock();
-    setInterval(updateMarketClock, 1000);
+    setInterval(updateMarketClock, 40);
 
     // ── 2. Hero Visual Switcher Tabs ──
     const visualTabs = document.querySelectorAll(".visual-tab-btn");
@@ -539,6 +540,233 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         ];
     }
+
+    // ── 9. Lenis Smooth Scroll Engine ──
+    if (typeof Lenis !== "undefined") {
+        try {
+            const lenis = new Lenis({
+                duration: 1.2,
+                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+                orientation: "vertical",
+                gestureOrientation: "vertical",
+                smoothWheel: true,
+                wheelMultiplier: 1.0,
+                touchMultiplier: 1.5,
+            });
+            function raf(time) {
+                lenis.raf(time);
+                requestAnimationFrame(raf);
+            }
+            requestAnimationFrame(raf);
+        } catch (e) {
+            console.debug("Lenis initialized with native scroll fallback");
+        }
+    }
+
+    // ── 10. Web Audio Synthesizer Haptic Desk Click ──
+    let audioEnabled = false;
+    let audioCtx = null;
+    const audioToggleBtn = document.getElementById("audio-toggle-btn");
+    const audioIcon = document.getElementById("audio-icon");
+    const audioLabel = document.getElementById("audio-label");
+
+    function playDeskClick() {
+        if (!audioEnabled) return;
+        try {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = "sine";
+            osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(1400, audioCtx.currentTime + 0.035);
+            gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.035);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.04);
+        } catch (e) {}
+    }
+
+    if (audioToggleBtn) {
+        audioToggleBtn.addEventListener("click", () => {
+            audioEnabled = !audioEnabled;
+            if (audioIcon) audioIcon.textContent = audioEnabled ? "🔊" : "🔈";
+            if (audioLabel) audioLabel.textContent = audioEnabled ? "AUDIO: ON" : "AUDIO: OFF";
+            if (audioEnabled) playDeskClick();
+        });
+    }
+
+    document.querySelectorAll("button, a.btn-primary-glow, a.btn-claim-discount, .nav-roll-link").forEach(btn => {
+        btn.addEventListener("click", playDeskClick);
+    });
+
+    // ── 11. Specular Reactive Border Lighting ──
+    const specularCards = document.querySelectorAll(".arsenal-card, .signature-terminal-chassis, .t-stat-card");
+    specularCards.forEach(card => {
+        card.addEventListener("mousemove", (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            card.style.setProperty("--mouse-x", `${x}px`);
+            card.style.setProperty("--mouse-y", `${y}px`);
+        });
+    });
+
+    // ── 12. Signature Institutional Terminal Engine ──
+    const footprintTbody = document.getElementById("footprint-tbody");
+    const gexSlider = document.getElementById("gex-slider");
+    const gexSimSpot = document.getElementById("gex-sim-spot");
+    const gexBarsContainer = document.getElementById("gex-bars-container");
+    const tapeStreamBox = document.getElementById("tape-stream-box");
+    const termTabFootprint = document.getElementById("term-tab-footprint");
+    const termTabGex = document.getElementById("term-tab-gex");
+    const termPanelFootprint = document.getElementById("term-panel-footprint");
+    const termPanelGex = document.getElementById("term-panel-gex");
+
+    // Tab Switcher
+    if (termTabFootprint && termTabGex && termPanelFootprint && termPanelGex) {
+        termTabFootprint.addEventListener("click", () => {
+            termTabFootprint.classList.add("active");
+            termTabGex.classList.remove("active");
+            termPanelFootprint.style.display = "block";
+            termPanelGex.style.display = "none";
+        });
+        termTabGex.addEventListener("click", () => {
+            termTabGex.classList.add("active");
+            termTabFootprint.classList.remove("active");
+            termPanelGex.style.display = "block";
+            termPanelFootprint.style.display = "none";
+            renderGexBars(Number(gexSlider ? gexSlider.value : 22900));
+        });
+    }
+
+    // Footprint Initial Data
+    const footprintStrikes = [
+        { strike: 23100, bid: 14200, ask: 6500, tag: "CALL WALL RESISTANCE", type: "selloff" },
+        { strike: 23050, bid: 18450, ask: 9200, tag: "HEAVY CALL WRITING", type: "selloff" },
+        { strike: 23000, bid: 32100, ask: 14800, tag: "INSTITUTIONAL SUPPLY", type: "selloff" },
+        { strike: 22950, bid: 19800, ask: 24500, tag: "TRAPPED SHORTS (BUY DELTA)", type: "absorb" },
+        { strike: 22900, bid: 22400, ask: 26100, isSpot: true, tag: "ATM DELTA EQUILIBRIUM", type: "absorb" },
+        { strike: 22850, bid: 15600, ask: 28900, tag: "AGGRESSIVE ASK SWEEPS", type: "absorb" },
+        { strike: 22800, bid: 12100, ask: 38400, tag: "DII PUT ABSORPTION BED", type: "absorb" },
+        { strike: 22750, bid: 8400, ask: 21500, tag: "ACCUMULATION BASE", type: "absorb" },
+        { strike: 22700, bid: 5900, ask: 29800, tag: "MAJOR DEALER PUT BED", type: "absorb" }
+    ];
+
+    function renderFootprintTable() {
+        if (!footprintTbody) return;
+        footprintTbody.innerHTML = footprintStrikes.map(row => {
+            const delta = row.ask - row.bid;
+            const deltaClass = delta >= 0 ? "bull" : "bear";
+            const deltaPrefix = delta >= 0 ? "+" : "";
+            const rowClass = row.isSpot ? ' class="spot-strike"' : '';
+            return `
+                <tr${rowClass}>
+                    <td class="fp-bid-vol">${row.bid.toLocaleString()}</td>
+                    <td class="fp-strike">${row.strike} ${row.isSpot ? '<span style="color:var(--gold-bright); font-size:10px;">[SPOT]</span>' : ''}</td>
+                    <td class="fp-ask-vol">${row.ask.toLocaleString()}</td>
+                    <td class="fp-delta ${deltaClass}">${deltaPrefix}${delta.toLocaleString()}</td>
+                    <td style="text-align:center;">
+                        <span class="fp-imbalance-tag ${row.type}">${row.tag}</span>
+                    </td>
+                </tr>
+            `;
+        }).join("");
+    }
+
+    renderFootprintTable();
+
+    // Footprint Micro Jitter (Simulate Real Tick Flow)
+    setInterval(() => {
+        const randIndex = Math.floor(Math.random() * footprintStrikes.length);
+        const item = footprintStrikes[randIndex];
+        const addedQty = Math.floor(Math.random() * 450) + 50;
+        if (Math.random() > 0.45) {
+            item.ask += addedQty;
+        } else {
+            item.bid += addedQty;
+        }
+        renderFootprintTable();
+    }, 2800);
+
+    // GEX Simulator
+    const gexData = [
+        { strike: 22600, callGex: 12, putGex: 88 },
+        { strike: 22700, callGex: 20, putGex: 78 },
+        { strike: 22800, callGex: 34, putGex: 68 },
+        { strike: 22900, callGex: 52, putGex: 50 },
+        { strike: 23000, callGex: 84, putGex: 24 },
+        { strike: 23100, callGex: 92, putGex: 14 },
+        { strike: 23200, callGex: 98, putGex: 8 }
+    ];
+
+    function renderGexBars(simSpot) {
+        if (!gexBarsContainer) return;
+        if (gexSimSpot) gexSimSpot.textContent = Number(simSpot).toLocaleString();
+
+        gexBarsContainer.innerHTML = gexData.map(d => {
+            const distance = Math.abs(d.strike - simSpot);
+            const isNear = distance <= 50;
+            const shiftImpact = (simSpot - 22900) * 0.04;
+            const adjustedCall = Math.min(100, Math.max(5, d.callGex + shiftImpact));
+            const adjustedPut = Math.min(100, Math.max(5, d.putGex - shiftImpact));
+
+            return `
+                <div class="gex-bar-row">
+                    <span style="${isNear ? 'color:var(--gold-bright); font-weight:700;' : ''}">${d.strike} ${isNear ? '●' : ''}</span>
+                    <div class="gex-bar-track">
+                        <div class="gex-bar-fill call-gex" style="width: ${adjustedCall}%;"></div>
+                    </div>
+                    <span style="text-align:right; color:var(--cyan-accent);">${adjustedCall.toFixed(0)}% GEX</span>
+                </div>
+            `;
+        }).join("");
+    }
+
+    if (gexSlider) {
+        gexSlider.addEventListener("input", (e) => {
+            renderGexBars(Number(e.target.value));
+        });
+    }
+
+    // High Frequency Institutional Tape Stream
+    const tapePool = [
+        { contract: "NIFTY 22,900 PE", qty: "12,500 L", price: "₹54.20", type: "buy" },
+        { contract: "NIFTY 23,050 CE", qty: "8,200 L", price: "₹31.80", type: "sell" },
+        { contract: "BANKNIFTY 49,500 PE", qty: "15,000 L", price: "₹112.40", type: "buy" },
+        { contract: "RELIANCE 2680 CE", qty: "6,400 L", price: "₹18.50", type: "buy" },
+        { contract: "NIFTY 22,800 PE", qty: "24,000 L", price: "₹28.90", type: "buy" },
+        { contract: "HDFCBANK 1640 PE", qty: "9,800 L", price: "₹14.20", type: "sell" },
+        { contract: "NIFTY 23,000 CE", qty: "35,000 L", price: "₹44.10", type: "sell" },
+        { contract: "BTC 68,500 CALL", qty: "45 BTC", price: "$1,420", type: "buy" },
+        { contract: "TCS 4100 CE", qty: "4,200 L", price: "₹38.60", type: "buy" }
+    ];
+
+    function addTapePrint() {
+        if (!tapeStreamBox) return;
+        const print = tapePool[Math.floor(Math.random() * tapePool.length)];
+        const now = new Date();
+        const timeStr = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}:${String(now.getSeconds()).padStart(2, "0")}.${String(now.getMilliseconds()).padStart(3, "0").slice(0, 2)}`;
+
+        const row = document.createElement("div");
+        row.className = `tape-row ${print.type}`;
+        row.innerHTML = `
+            <span class="tape-time">${timeStr}</span>
+            <span class="tape-contract">${print.contract}</span>
+            <span class="tape-qty ${print.type}">${print.type === "buy" ? "▲" : "▼"} ${print.qty}</span>
+        `;
+
+        tapeStreamBox.insertBefore(row, tapeStreamBox.firstChild);
+        if (tapeStreamBox.children.length > 8) {
+            tapeStreamBox.removeChild(tapeStreamBox.lastChild);
+        }
+    }
+
+    for (let i = 0; i < 5; i++) {
+        addTapePrint();
+    }
+    setInterval(addTapePrint, 2200);
 
     // Initialize content
     loadContent();

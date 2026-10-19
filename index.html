@@ -50,12 +50,27 @@
         </div>
     </div>
 
+    <!-- Four-Corner Desk Telemetry HUD Strip -->
+    <div class="telemetry-strip" aria-label="Colocation Telemetry">
+        <div class="telemetry-group">
+            <span class="telemetry-item"><span class="telemetry-ping">●</span> NSE COLO: <span class="telemetry-val">1.2ms</span></span>
+            <span class="telemetry-item"><span class="telemetry-ping">●</span> BSE COLO: <span class="telemetry-val">1.7ms</span></span>
+            <span class="telemetry-item">TICK FREQ: <span class="telemetry-val">100Hz</span></span>
+        </div>
+        <div class="telemetry-group">
+            <span class="telemetry-item">SYSTEM: <span class="telemetry-val">PROPRIETARY ALGO DESK</span></span>
+            <button class="telemetry-audio-btn" id="audio-toggle-btn" aria-label="Toggle Desk Audio Feedback">
+                <span id="audio-icon">🔈</span> <span id="audio-label">AUDIO: OFF</span>
+            </button>
+        </div>
+    </div>
+
     <!-- Navigation Header -->
     <header class="navbar" id="top-navbar">
         <div class="nav-container">
             <a href="#hero" class="brand-logo" id="brand-home-link" aria-label="Dalal Street Alpha Home">
                 <div class="brand-avatar-box">
-                    <img src="brand_assets/logo_master_1024x1024.png" alt="Dalal Street Alpha Logo" class="brand-avatar-img">
+                    <img src="brand_assets/website_favicon_192x192.png" alt="Dalal Street Alpha Logo" class="brand-avatar-img">
                 </div>
                 <div class="logo-text">
                     <span class="logo-title">DALAL STREET<span class="highlight-gold">ALPHA</span></span>
@@ -63,13 +78,49 @@
                 </div>
             </a>
 
-            <nav class="nav-links" id="main-nav-links">
-                <a href="#hero" class="nav-link active" id="nav-item-intel">Live Intel</a>
-                <a href="#tools" class="nav-link" id="nav-item-tools">Trader's Arsenal <span class="nav-pill-badge">10% OFF</span></a>
-                <a href="#simulator" class="nav-link" id="nav-item-simulator">RevShare Simulator</a>
-                <a href="#calculator" class="nav-link" id="nav-item-calc">Fee Calculator</a>
-                <a href="#feed" class="nav-link" id="nav-item-feed">Market Feed</a>
-                <a href="#compliance" class="nav-link" id="nav-item-compliance">Compliance</a>
+            <nav class="nav-links" id="main-nav-links" aria-label="Main Navigation">
+                <a href="#hero" class="nav-roll-link active" id="nav-item-intel">
+                    <span class="roll-track">
+                        <span class="roll-text">Live Intel</span>
+                        <span class="roll-text accent">Live Intel</span>
+                    </span>
+                </a>
+                <a href="#terminal" class="nav-roll-link" id="nav-item-terminal">
+                    <span class="roll-track">
+                        <span class="roll-text">GEX Terminal</span>
+                        <span class="roll-text accent">GEX Terminal</span>
+                    </span>
+                </a>
+                <a href="#tools" class="nav-roll-link" id="nav-item-tools">
+                    <span class="roll-track">
+                        <span class="roll-text">Trader's Arsenal</span>
+                        <span class="roll-text accent">Trader's Arsenal</span>
+                    </span>
+                </a>
+                <a href="#simulator" class="nav-roll-link" id="nav-item-simulator">
+                    <span class="roll-track">
+                        <span class="roll-text">RevShare Model</span>
+                        <span class="roll-text accent">RevShare Model</span>
+                    </span>
+                </a>
+                <a href="#calculator" class="nav-roll-link" id="nav-item-calc">
+                    <span class="roll-track">
+                        <span class="roll-text">Fee Calculator</span>
+                        <span class="roll-text accent">Fee Calculator</span>
+                    </span>
+                </a>
+                <a href="#feed" class="nav-roll-link" id="nav-item-feed">
+                    <span class="roll-track">
+                        <span class="roll-text">Market Feed</span>
+                        <span class="roll-text accent">Market Feed</span>
+                    </span>
+                </a>
+                <a href="#compliance" class="nav-roll-link" id="nav-item-compliance">
+                    <span class="roll-track">
+                        <span class="roll-text">Compliance</span>
+                        <span class="roll-text accent">Compliance</span>
+                    </span>
+                </a>
             </nav>
 
             <div class="nav-right-actions">
@@ -77,7 +128,7 @@
                     <span class="market-status-pill closed" id="market-status-pill">
                         <span class="pulse-dot"></span> <span id="market-status-label">MARKET CLOSED</span>
                     </span>
-                    <span class="ist-clock" id="live-ist-clock">15:30:00 IST</span>
+                    <span class="ist-clock" id="live-ist-clock">15:30:00.000 IST</span>
                 </div>
                 <a href="#tools" class="btn-primary-glow btn-sm" id="btn-top-tools">Open Demat</a>
             </div>
@@ -228,8 +279,106 @@
                 <!-- Hero Action CTAs -->
                 <div class="hero-actions">
                     <button class="btn-primary-glow" id="hero-read-full-btn">Read Full Technical Breakdown & Option Chain →</button>
-                    <a href="#tools" class="btn-secondary-glass">The Trader's Arsenal (10% Fee Discount)</a>
-                    <a href="#simulator" class="btn-ghost-gold">Launch RevShare Simulator</a>
+                    <a href="#terminal" class="btn-secondary-glass">Launch GEX Terminal</a>
+                    <a href="#tools" class="btn-ghost-gold">The Trader's Arsenal</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 0.5: The Signature Centerpiece — Institutional Footprint & GEX Terminal -->
+        <section class="signature-section" id="terminal" aria-label="Institutional Greeks and Order-Flow Terminal">
+            <div class="section-header-box">
+                <div class="section-tag-badge">PROPRIETARY QUANT TERMINAL</div>
+                <h2 class="section-title">Institutional Footprint & Gamma Exposure (GEX) Desk</h2>
+                <p class="section-subtitle">
+                    Real-time market maker positioning, bid/ask volume delta absorption, and dealer hedging flip points across the active Nifty 50 weekly derivatives chain.
+                </p>
+            </div>
+
+            <div class="signature-terminal-chassis" id="signature-terminal-chassis">
+                <!-- Topbar -->
+                <div class="terminal-topbar">
+                    <div class="terminal-window-dots">
+                        <span class="dot-red"></span>
+                        <span class="dot-amber"></span>
+                        <span class="dot-green"></span>
+                    </div>
+                    <div class="terminal-title-pill">
+                        <span class="pulse-dot"></span>
+                        <span>NIFTY 50 WEEKLY EXPIRY • LIVE DEPTH LADDER</span>
+                    </div>
+                    <div class="terminal-tabs">
+                        <button class="term-tab-btn active" id="term-tab-footprint">⚡ Footprint & Delta</button>
+                        <button class="term-tab-btn" id="term-tab-gex">🎯 Dealer Gamma (GEX)</button>
+                    </div>
+                </div>
+
+                <!-- Terminal Core Grid -->
+                <div class="terminal-core-grid">
+                    <!-- Left: Footprint / GEX View -->
+                    <div class="terminal-main-view">
+                        <!-- Mode 1: Footprint Ladder -->
+                        <div class="term-mode-panel active" id="term-panel-footprint">
+                            <div class="gex-slider-row" style="margin-bottom: 8px;">
+                                <span>SPOT PIVOT: <strong class="gex-spot-val" id="fp-spot-val">22,888.90</strong></span>
+                                <span>CUMULATIVE DELTA: <strong class="telemetry-ping" id="fp-cum-delta">+4,820 LOTS</strong></span>
+                            </div>
+                            <div class="footprint-table-wrapper">
+                                <table class="footprint-table">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align:right;">Bid Vol (Sell)</th>
+                                            <th style="text-align:center;">Strike</th>
+                                            <th style="text-align:left;">Ask Vol (Buy)</th>
+                                            <th style="text-align:right;">Net Delta</th>
+                                            <th style="text-align:center;">Institutional Flow</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="footprint-tbody">
+                                        <!-- Injected dynamically by app.js -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Mode 2: GEX Simulator -->
+                        <div class="term-mode-panel" id="term-panel-gex" style="display: none;">
+                            <div class="gex-slider-control">
+                                <div class="gex-slider-row">
+                                    <span>Simulate Nifty Spot Shift:</span>
+                                    <span>Spot Target: <strong class="gex-spot-val" id="gex-sim-spot">22,900</strong></span>
+                                </div>
+                                <input type="range" min="22600" max="23300" step="50" value="22900" class="gex-range-slider" id="gex-slider">
+                                <div class="gex-slider-row" style="font-size: 10.5px; color: var(--text-muted); margin-top: 4px;">
+                                    <span>Put Wall (22,600)</span>
+                                    <span>Zero Gamma Flip (22,920)</span>
+                                    <span>Call Resistance (23,200)</span>
+                                </div>
+                            </div>
+                            <div class="gex-bars-visualizer" id="gex-bars-container">
+                                <!-- Bars rendered dynamically by app.js -->
+                            </div>
+                        </div>
+
+                        <div class="terminal-footer-notes" style="margin-top: 14px; font-family: var(--font-mono); font-size: 10.5px; color: var(--text-muted); display:flex; justify-content:space-between; align-items:center;">
+                            <span>CALC ENGINE: BLACK-SCHOLES VOL SURFACE • IV: 13.85%</span>
+                            <span style="color: var(--cyan-accent);">0-LATENCY ALGO TICK STREAM</span>
+                        </div>
+                    </div>
+
+                    <!-- Right: Live Execution Tape -->
+                    <div class="terminal-side-tape">
+                        <div class="tape-header">
+                            <div style="display:flex; align-items:center; gap:6px;">
+                                <span class="tape-live-dot"></span>
+                                <span>INSTITUTIONAL TAPE</span>
+                            </div>
+                            <span>NSE / BSE FEED</span>
+                        </div>
+                        <div class="tape-stream-box" id="tape-stream-box" aria-live="polite">
+                            <!-- Stream populated dynamically -->
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -269,8 +418,13 @@
                         </div>
                     </div>
                     <p class="platform-desc">
-                        Seamless direct TradingView integration with free custom orders, zero AMC, options trader app, and daily automated cash kickback payouts once above ₹100.
+                        Direct TradingView chart execution with custom multi-leg orders, ₹0 AMC, advanced options trader app, and daily automated brokerage share settlements.
                     </p>
+                    <div class="card-hardware-spec">
+                        <div class="hw-item"><div class="hw-lbl">Order Latency</div><div class="hw-val">12ms</div></div>
+                        <div class="hw-item"><div class="hw-lbl">TradingView</div><div class="hw-val">Free</div></div>
+                        <div class="hw-item"><div class="hw-lbl">AMC Cost</div><div class="hw-val">₹0 Life</div></div>
+                    </div>
                     <ul class="platform-perks">
                         <li>⚡ Trade directly from TradingView charts with 0 latency</li>
                         <li>⚡ Up to 50%–70% cut upgrade available via Authorized Person (AP)</li>
@@ -301,6 +455,11 @@
                     <p class="platform-desc">
                         The gold standard in retail trading execution. Resumed brokerage sharing in June 2026. Access free Sensibull for options analytics and Kite Connect APIs.
                     </p>
+                    <div class="card-hardware-spec">
+                        <div class="hw-item"><div class="hw-lbl">Order Latency</div><div class="hw-val">18ms</div></div>
+                        <div class="hw-item"><div class="hw-lbl">Sensibull Pro</div><div class="hw-val">Free</div></div>
+                        <div class="hw-item"><div class="hw-lbl">Daily Vol</div><div class="hw-val">#1 Retail</div></div>
+                    </div>
                     <ul class="platform-perks">
                         <li>⚡ Minimal slippage on Nifty & Bank Nifty index options</li>
                         <li>⚡ Free Sensibull strategy builder for all registered users</li>
@@ -329,8 +488,13 @@
                         </div>
                     </div>
                     <p class="platform-desc">
-                        Ultra-fast execution with dedicated SmartAPI endpoints for Python algorithmic traders. High payout tier available through official DRA / Authorized Person registration.
+                        Low-latency execution with dedicated SmartAPI endpoints for Python algorithmic traders. High payout tier available through official DRA / Authorized Person registration.
                     </p>
+                    <div class="card-hardware-spec">
+                        <div class="hw-item"><div class="hw-lbl">API Speed</div><div class="hw-val">15ms</div></div>
+                        <div class="hw-item"><div class="hw-lbl">Python SDK</div><div class="hw-val">Native</div></div>
+                        <div class="hw-item"><div class="hw-lbl">Delivery</div><div class="hw-val">₹0</div></div>
+                    </div>
                     <ul class="platform-perks">
                         <li>⚡ 50% to 70% per-order cash cut for registered AP partners</li>
                         <li>⚡ Powerful Python & NodeJS SmartAPI integration</li>
@@ -362,8 +526,13 @@
                     <p class="platform-desc">
                         Zero P2P bank freeze risk and no VPN requirement. Trade Bitcoin & Ethereum options/futures with pure Indian Rupees (INR) using regular UPI/IMPS deposits.
                     </p>
+                    <div class="card-hardware-spec">
+                        <div class="hw-item"><div class="hw-lbl">Settlement</div><div class="hw-val">INR UPI</div></div>
+                        <div class="hw-item"><div class="hw-lbl">Leverage</div><div class="hw-val">100x</div></div>
+                        <div class="hw-item"><div class="hw-lbl">FIU India</div><div class="hw-val">Compliant</div></div>
+                    </div>
                     <ul class="platform-perks">
-                        <li>⚡ Daily cash kickbacks deposited directly in INR to your bank</li>
+                        <li>⚡ Daily cash brokerage deposits directly in INR to your bank</li>
                         <li>⚡ Trade BTC/ETH options with 100x leverage using ₹500 capital</li>
                         <li>⚡ 100% FIU compliant with transparent TDS reporting</li>
                     </ul>
@@ -392,8 +561,13 @@
                     <p class="platform-desc">
                         The premier exchange for professional crypto derivatives traders. Low maker/taker fees, order book depth, and real-time affiliate analytics dashboard.
                     </p>
+                    <div class="card-hardware-spec">
+                        <div class="hw-item"><div class="hw-lbl">Engine Speed</div><div class="hw-val">100k TPS</div></div>
+                        <div class="hw-item"><div class="hw-lbl">Fee Discount</div><div class="hw-val">10% Off</div></div>
+                        <div class="hw-item"><div class="hw-lbl">Liquidity</div><div class="hw-val">Top 2 Global</div></div>
+                    </div>
                     <ul class="platform-perks">
-                        <li>⚡ 30%–50% lifetime kickback on all maker/taker order fees</li>
+                        <li>⚡ 30%–50% lifetime revenue share on maker/taker order fees</li>
                         <li>⚡ 10% tier-2 commission from sub-affiliates you recruit</li>
                         <li>⚡ Institutional liquidity on 400+ perpetual contract pairs</li>
                     </ul>
@@ -422,6 +596,11 @@
                     <p class="platform-desc">
                         The gold standard in global high-frequency trading. Referral commissions land in your spot wallet in USDT the exact second your referred trader executes an order.
                     </p>
+                    <div class="card-hardware-spec">
+                        <div class="hw-item"><div class="hw-lbl">Settlement</div><div class="hw-val">Real-Time</div></div>
+                        <div class="hw-item"><div class="hw-lbl">Daily Vol</div><div class="hw-val">$50B+</div></div>
+                        <div class="hw-item"><div class="hw-lbl">Fee Rebate</div><div class="hw-val">10% Life</div></div>
+                    </div>
                     <ul class="platform-perks">
                         <li>⚡ Real-time automated USDT payout per closed trade</li>
                         <li>⚡ 40% to 50% lifetime revenue split for approved creators</li>
@@ -453,6 +632,11 @@
                     <p class="platform-desc">
                         The indispensable charting workstation. When viewers watch technical setups, they immediately want the layout. Pays 30% recurring commission on every renewal.
                     </p>
+                    <div class="card-hardware-spec">
+                        <div class="hw-item"><div class="hw-lbl">Bar Replay</div><div class="hw-val">Sub-Sec</div></div>
+                        <div class="hw-item"><div class="hw-lbl">Pine Script</div><div class="hw-val">v5 Engine</div></div>
+                        <div class="hw-item"><div class="hw-lbl">Trial Bonus</div><div class="hw-val">$15 Credit</div></div>
+                    </div>
                     <ul class="platform-perks">
                         <li>⚡ 30% recurring cut ($50–$150+ per annual subscriber)</li>
                         <li>⚡ Zero SEBI compliance friction (software tool, not broker)</li>
@@ -483,6 +667,11 @@
                     <p class="platform-desc">
                         Web-native order flow and market profile platform for NSE and Crypto. No expensive server setup needed. View delta imbalances, volume clusters, and trapped buyers.
                     </p>
+                    <div class="card-hardware-spec">
+                        <div class="hw-item"><div class="hw-lbl">Footprint</div><div class="hw-val">NSE Cluster</div></div>
+                        <div class="hw-item"><div class="hw-lbl">Delta Imbal</div><div class="hw-val">Real-Time</div></div>
+                        <div class="hw-item"><div class="hw-lbl">Pass</div><div class="hw-val">14 Days</div></div>
+                    </div>
                     <ul class="platform-perks">
                         <li>⚡ 20% recurring revenue share on all subscription plans</li>
                         <li>⚡ Real-time footprint (cluster) charts for Nifty / Bank Nifty</li>
@@ -513,6 +702,11 @@
                     <p class="platform-desc">
                         Visualize hidden limit orders, iceberg depth, and market liquidity visually. Because subscriptions cost $39 to $99/month, single referral payouts are substantial.
                     </p>
+                    <div class="card-hardware-spec">
+                        <div class="hw-item"><div class="hw-lbl">Iceberg Detect</div><div class="hw-val">Algorithmic</div></div>
+                        <div class="hw-item"><div class="hw-lbl">Resolution</div><div class="hw-val">Nanosecond</div></div>
+                        <div class="hw-item"><div class="hw-lbl">Exchanges</div><div class="hw-val">NSE/CME</div></div>
+                    </div>
                     <ul class="platform-perks">
                         <li>⚡ High-ticket monthly payout per referred professional trader</li>
                         <li>⚡ Real-time iceberg order detection and visual depth heatmap</li>
@@ -543,6 +737,11 @@
                     <p class="platform-desc">
                         Direct LRS access to invest in Apple, Tesla, Nvidia, and US index ETFs from India with institutional-tier forex conversion rates and low margin rates.
                     </p>
+                    <div class="card-hardware-spec">
+                        <div class="hw-item"><div class="hw-lbl">Markets</div><div class="hw-val">150+ Global</div></div>
+                        <div class="hw-item"><div class="hw-lbl">US Access</div><div class="hw-val">Direct LRS</div></div>
+                        <div class="hw-item"><div class="hw-lbl">Bonus</div><div class="hw-val">$1000 Stock</div></div>
+                    </div>
                     <ul class="platform-perks">
                         <li>⚡ $200 CPA bounty per funded US stock trading account</li>
                         <li>⚡ Direct access to 150+ global exchanges in 33 countries</li>
@@ -969,6 +1168,8 @@
         </div>
     </footer>
 
+    <!-- Lenis Smooth Scroll Engine -->
+    <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
     <!-- Application Script -->
     <script src="app.js"></script>
 </body>
