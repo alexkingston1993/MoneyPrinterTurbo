@@ -6,7 +6,7 @@ excerpt: "Analysis of ITC Limited (NSE: ITC). Free cash flow yields, non-cigaret
 focusKeyword: "ITC stock dividend analysis 2026"
 categories: ["FMCG Sector", "Equities Research", "Nifty 50"]
 tags: ["ITC", "Dividends", "FMCG", "ValueInvesting", "Nifty50"]
-youtubeUrl: ""
+youtubeUrl: "https://youtu.be/X3gTTDS7T1o"
 ---
 
 <div class="market-article">
