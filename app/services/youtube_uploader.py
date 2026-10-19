@@ -221,16 +221,35 @@ class YouTubeUploader:
                 if t not in video_tags:
                     video_tags.append(t)
 
-        channel_name = CHANNEL_LANGUAGES.get(language, {}).get("name", language)
+        channel_name = CHANNEL_LANGUAGES.get(language, {}).get("name", "Dalal Street Alpha")
         full_description = (
             f"{description}\n\n"
-            f"---\n"
-            f"🔔 Subscribe to {channel_name} for more investing education.\n"
-            f"📧 Business: please don't — this is a free educational channel.\n\n"
-            f"⚠️ Disclaimer: This video is for educational purposes only. "
-            f"I am not a SEBI registered advisor. "
-            f"Please do your own research before investing in any stock.\n\n"
-            f"#InvestingNotTrading #FinancialEducation #{language.upper()}Finance"
+            f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            f"🌐 Official Portal & The Trader's Arsenal:\n"
+            f"https://dalal-street-alpha.vercel.app\n"
+            f"(Compare low-slippage brokers, Footprint/Order-flow settings, TradingView templates & Fee Calculators)\n\n"
+            f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            f"⚖️ MANDATORY SEBI REGULATORY DISCLAIMER & RISK WARNING\n"
+            f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            f"1. NOT A SEBI REGISTERED FINANCIAL ADVISER / RESEARCH ANALYST:\n"
+            f"The creator of Dalal Street Alpha is NOT registered with the Securities and Exchange Board of India (SEBI) "
+            f"as an Investment Adviser (under SEBI IA Regulations, 2013) or as a Research Analyst (under SEBI RA Regulations, 2014).\n\n"
+            f"2. STRICTLY FOR EDUCATIONAL & RESEARCH PURPOSES:\n"
+            f"This video and market breakdown are produced strictly for educational, informational, and financial literacy purposes. "
+            f"Nothing stated in this video constitutes financial, investment, legal, or tax advice.\n\n"
+            f"3. ZERO BUY / SELL / HOLD CALLS OR RECOMMENDATIONS:\n"
+            f"We NEVER provide stock tips, buy/sell recommendations, price targets, or guaranteed return claims. "
+            f"All commentary represents historical price action, mathematical observations, and personal perspectives "
+            f"('What I personally observe / what data shows' — NEVER 'What you should trade or buy').\n\n"
+            f"4. HIGH CAPITAL RISK IN DERIVATIVES (F&O TRADING):\n"
+            f"Trading in Equity Derivatives (Futures and Options) involves substantial leverage and severe capital risk. "
+            f"According to SEBI's official research study, 9 out of 10 individual retail traders in equity derivatives incur net financial losses. "
+            f"Past performance does not guarantee future results. Consult a qualified, SEBI-registered financial professional.\n\n"
+            f"5. AFFILIATE & COMMERCIAL DISCLOSURE:\n"
+            f"Links to brokers and charting platforms (e.g., Dhan, Zerodha, Delta Exchange India, Bybit, TradingView, GoCharting) "
+            f"may be partner/affiliate links that provide commissions at zero extra cost to you. Two-way rebates are configured to pass "
+            f"a 10% fee discount back to viewers. These affiliations do not influence our independent educational analysis.\n\n"
+            f"#DalalStreetAlpha #Nifty50 #BankNifty #StockMarketIndia #OptionsTrading #FIIFlows #FinancialEducation"
         )
 
         body = {

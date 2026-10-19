@@ -1151,3 +1151,50 @@ Where:
 - $c$ = Monthly attrition/churn rate (default 5%)
 - $M$ = Projection horizon (months)
 
+## 19. The Bulletproof Legal, Compliance & Ethical Defense Framework (2026)
+
+To ensure the entire autonomous media machine is completely impenetrable against legal, regulatory, platform, and ethical challenges, the platform implements a 5-layer failsafe architecture:
+
+### 19.1 Layer 1: SEBI Regulatory Shield (RA/IA Defense)
+1. **Statutory Non-Registration Declarations**:
+   - Active on all channels: YouTube Channel Description, Video Descriptions, Website Header, Sticky Footer, and Dedicated `/disclaimer` Page.
+   - Clear declaration: Not a SEBI-registered Research Analyst (under SEBI RA Regulations, 2014) or Investment Adviser (under SEBI IA Regulations, 2013).
+2. **Universe Restriction (Zero Market Manipulation / Front-Running)**:
+   - **Hard Constraint**: Content covers ONLY benchmark indices (Nifty 50, Bank Nifty) and top-tier large-cap equities (NSE 500 large caps with >₹100 Cr daily liquidity).
+   - **Absolute Ban**: Micro-caps, SME stocks, and penny stocks are permanently blacklisted. It is mathematically impossible to manipulate or front-run stocks like Reliance, TCS, or HDFC Bank.
+3. **The "Personal Perspective" Standard ("I Would" vs. "You Should")**:
+   - Every analytical statement must reflect personal observation or historical statistical pattern (*"What I personally observe / I would consider"*) immediately followed by *"Please do your own due diligence and market research"*.
+   - Prohibited: Directive commands ("Buy this", "Sell that", "Enter here").
+4. **Mandatory SEBI F&O Study Loss Warning**:
+   - Every video description and article features the statutory disclosure: *9 out of 10 (93%) individual retail traders in equity derivatives incur net financial losses*.
+
+### 19.2 Layer 2: Advertising & Consumer Protection Defense (ASCI & FTC)
+1. **Dedicated `/affiliate-disclosure` Transparency Hub**:
+   - Full commercial disclosure detailing RevShare percentages across Dhan, Zerodha, Delta Exchange, Bybit, TradingView, and GoCharting.
+2. **Two-Way Fee Rebate Standard**:
+   - Referral links are configured to pass a 10% fee discount back to the audience, eliminating claims of predatory referral extraction.
+3. **Zero Deceptive Advertising**:
+   - Strictly no fake P&L screenshots, no luxury lifestyle flexing, and no claims of guaranteed returns.
+
+### 19.3 Layer 3: Platform Ban & Algorithmic Protection (YouTube / Meta)
+1. **Studio-Grade Human Audio Prosody (`kokoro:af_heart`)**:
+   - Natural human cadence, breathing pauses, and studio inflection protect against YouTube's automated inauthentic TTS spam filters.
+2. **Programmatic Candlestick Charts & Sequential Video**:
+   - Custom `mplfinance` technical charts and sequential scene matching eliminate repetitive footage flags.
+3. **Zero Copyright Exposure**:
+   - Authorized API credentials for Pexels/Pixabay stock footage; zero stolen news or third-party audio clips.
+
+### 19.4 Layer 4: Website Legal Armor
+- Dedicated standalone legal suite deployed on Vercel:
+  - `/disclaimer`: SEBI Non-Registration, Educational scope.
+  - `/risk-disclosure`: F&O Capital Loss Warning & Leverage Mechanics.
+  - `/affiliate-disclosure`: Commercial RevShare transparency & Two-Way rebate disclosures.
+  - `/terms`: Total Limitation of Liability, Zero Financial Warranty, User Indemnification, Mumbai Jurisdiction.
+  - `/privacy`: Digital Personal Data Protection (DPDP Act 2023) compliance; zero financial data storage; zero sale of data.
+
+### 19.5 Layer 5: Automated QA Critic & Compliance Gatekeeper
+- Dual-tier pre-publication gating (`app/services/compliance.py` and `app/services/qa_critic.py`):
+  - Deterministic regex scanner checks for 40+ banned phrases, required disclaimers, price target violations, and personal opinion follow-ups.
+  - Rejection & rewrite loop: Any script or article with compliance score < 100% is automatically intercepted, sanitized, and corrected before rendering or publishing.
+
+

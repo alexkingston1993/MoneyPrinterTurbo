@@ -275,9 +275,12 @@ class ArticleGenerator:
         {"".join([f"<div style='margin-bottom:16px;'><h4 style='color:#1e293b; margin-bottom:6px;'>Q: {f['question']}</h4><p style='color:#475569; margin-top:0;'>{f['answer']}</p></div>" for f in faqs])}
     </div>
 
-    <!-- Regulatory Disclaimer (SEBI Compliance) -->
-    <div class="disclaimer-box" style="margin-top:40px; padding:15px; border:1px solid #cbd5e1; background:#f8fafc; font-size:12px; color:#64748b; border-radius:4px;">
-        <strong>Disclaimer:</strong> This market report and video summary are created strictly for educational and informational purposes. It does not constitute investment or trading advice under SEBI guidelines. Securities market trading involves high capital risk. Please consult a SEBI-registered financial advisor before taking financial positions.
+    <!-- Regulatory Disclaimer & Statutory Notice (SEBI & ASCI Bulletproof Compliance) -->
+    <div class="disclaimer-box" style="margin-top:40px; padding:20px; background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-left:4px solid #f43f5e; font-size:12.5px; color:#94a3b8; border-radius:8px; line-height:1.6;">
+        <strong style="color:#f8fafc;">⚖️ Mandatory Regulatory Notice (SEBI & ASCI Compliance):</strong> 
+        Dalal Street Alpha operates exclusively as an educational market research desk. The author and algorithms are NOT registered with SEBI as an Investment Adviser (IA) or Research Analyst (RA). This report contains personal observations and historical data points—NEVER buy/sell calls, target prices, or financial advice. 
+        <br><br>
+        <strong>Derivatives Risk Notice:</strong> Per SEBI empirical studies, 9 out of 10 individual traders in equity futures and options incur net losses. Please consult an independent certified financial advisor. Read our official <a href="/disclaimer" style="color:#60a5fa; text-decoration:underline;">SEBI Regulatory Disclaimer</a>, <a href="/risk-disclosure" style="color:#60a5fa; text-decoration:underline;">Risk Disclosure</a>, and <a href="/affiliate-disclosure" style="color:#60a5fa; text-decoration:underline;">Affiliate Transparency Policy</a>.
     </div>
 </div>
 """
