@@ -54,6 +54,21 @@ class PipelineOrchestrator:
         article: GeneratedArticle = article_generator.generate_article_from_context(ctx, youtube_url=youtube_url)
         logger.info(f"[Orchestrator] Article generated: '{article.title}' ({len(article.html_content.split())} words)")
 
+        # 3.5 QA Critic Agent Gate: Comprehensive evaluation before publishing
+        logger.info("[Orchestrator] Step 2.5: Running Autonomous QA Critic on article before web publishing...")
+        from app.services.qa_critic import qa_critic
+        clean_title, clean_html, qa_result = qa_critic.evaluate_and_refine(
+            content_type="web_article",
+            title=article.title,
+            body=article.html_content,
+        )
+        article.title = clean_title
+        article.html_content = clean_html
+        logger.info(
+            f"[Orchestrator] Article QA Gate passed: score={qa_result.overall_score}/100, "
+            f"compliance={qa_result.compliance_score}, passed={qa_result.passed}"
+        )
+
         # 4. Publish to Website (GitHub / Vercel or WordPress)
         publish_res = {}
         if publish_article:

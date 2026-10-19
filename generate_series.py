@@ -78,7 +78,7 @@ def generate_videos():
             "video_count": 1,
             "video_source": "pexels",
             "video_language": "",
-            "voice_name": "en-US-AriaNeural-Female", # Good English voice
+            "voice_name": "kokoro:am_adam", # Studio-grade human voice (Kokoro-82M)
             "bgm_type": "random",
             "subtitle_enabled": True,
             "subtitle_position": "center",

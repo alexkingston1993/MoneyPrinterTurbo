@@ -658,10 +658,20 @@ Return ONLY the raw script text. No markdown, no formatting, no titles, no label
     try:
         from app.services.compliance import enforce_strict_compliance
         final_script = enforce_strict_compliance(final_script)
+        from app.services.qa_critic import qa_critic
+        _, final_script, qa_res = qa_critic.evaluate_and_refine(
+            content_type="video_script",
+            title=video_subject,
+            body=final_script,
+        )
+        logger.info(f"[ScriptQA] QA Score: {qa_res.overall_score}/100, Passed: {qa_res.passed}")
     except Exception as e:
-        logger.warning(f"Compliance enforcement error: {e}")
+        logger.warning(f"QA Critic enforcement error: {e}")
 
     return final_script.strip()
+
+
+def generate_terms(video_subject: str, video_script: str, amount: int = 5) -> List[str]:
     prompt = f"""
 # Role: Video Search Terms Generator
 

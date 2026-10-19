@@ -1246,7 +1246,10 @@ def tts(
     voice_file: str,
     voice_volume: float = 1.0,
 ) -> Union[SubMaker, None]:
-    if is_azure_v2_voice(voice_name):
+    if voice_name and voice_name.lower().startswith("kokoro:"):
+        from app.services.kokoro_voice import kokoro_tts
+        return kokoro_tts(text, voice_name, voice_rate, voice_file, voice_volume)
+    elif is_azure_v2_voice(voice_name):
         return azure_tts_v2(text, voice_name, voice_file)
     elif is_siliconflow_voice(voice_name):
         # 从voice_name中提取模型和声音
