@@ -281,6 +281,7 @@ def combine_videos(
     video_transition_mode: VideoTransitionMode = None,
     max_clip_duration: int = 5,
     threads: int = 2,
+    video_resolution: str = "standard",
 ) -> str:
     audio_clip = AudioFileClip(audio_file)
     try:
@@ -297,7 +298,8 @@ def combine_videos(
     output_dir = os.path.dirname(combined_video_path)
 
     aspect = VideoAspect(video_aspect)
-    video_width, video_height = aspect.to_resolution()
+    video_width, video_height = aspect.to_resolution(video_resolution)
+    logger.info(f"combining videos: {video_width}x{video_height}, resolution: {video_resolution}")
 
     processed_clips = []
     subclipped_items = []
@@ -512,7 +514,7 @@ def generate_video(
     params: VideoParams,
 ):
     aspect = VideoAspect(params.video_aspect)
-    video_width, video_height = aspect.to_resolution()
+    video_width, video_height = aspect.to_resolution(params.video_resolution or "standard")
 
     logger.info(f"generating video: {video_width} x {video_height}")
     logger.info(f"  ① video: {video_path}")

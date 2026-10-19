@@ -37,6 +37,7 @@ def save_config():
         _cfg["app"] = app
         _cfg["azure"] = azure
         _cfg["siliconflow"] = siliconflow
+        _cfg["fishspeech"] = fishspeech
         _cfg["ui"] = ui
         f.write(toml.dumps(_cfg))
 
@@ -47,6 +48,7 @@ whisper = _cfg.get("whisper", {})
 proxy = _cfg.get("proxy", {})
 azure = _cfg.get("azure", {})
 siliconflow = _cfg.get("siliconflow", {})
+fishspeech = _cfg.get("fishspeech", {})
 ui = _cfg.get(
     "ui",
     {
@@ -72,6 +74,33 @@ app["redis_host"] = os.getenv(
     os.getenv("REDIS_HOST", app.get("redis_host", "localhost")),
 )
 
+# Cloud / GitHub Actions Environment Overrides
+if os.getenv("GEMINI_API_KEY"):
+    app["gemini_api_key"] = os.getenv("GEMINI_API_KEY")
+    if not os.getenv("LLM_PROVIDER"):
+        app["llm_provider"] = "gemini"
+
+if os.getenv("LLM_PROVIDER"):
+    app["llm_provider"] = os.getenv("LLM_PROVIDER")
+
+if os.getenv("GEMINI_MODEL_NAME"):
+    app["gemini_model_name"] = os.getenv("GEMINI_MODEL_NAME")
+elif app.get("gemini_model_name") in ["gemini-pro", "gemini-1.0-pro", "gemini-2.5-flash"]:
+    app["gemini_model_name"] = "gemini-flash-latest"
+
+if os.getenv("PEXELS_API_KEY"):
+    app["pexels_api_keys"] = [os.getenv("PEXELS_API_KEY")]
+
+# GitHub publisher config overrides
+if "github" not in _cfg:
+    _cfg["github"] = {}
+if os.getenv("GITHUB_TOKEN"):
+    _cfg["github"]["token"] = os.getenv("GITHUB_TOKEN")
+    app["github_token"] = os.getenv("GITHUB_TOKEN")
+if os.getenv("GITHUB_REPO"):
+    _cfg["github"]["repo"] = os.getenv("GITHUB_REPO")
+    app["github_repo"] = os.getenv("GITHUB_REPO")
+
 imagemagick_path = app.get("imagemagick_path", "")
 if imagemagick_path and os.path.isfile(imagemagick_path):
     os.environ["IMAGEMAGICK_BINARY"] = imagemagick_path
@@ -80,4 +109,4 @@ ffmpeg_path = app.get("ffmpeg_path", "")
 if ffmpeg_path and os.path.isfile(ffmpeg_path):
     os.environ["IMAGEIO_FFMPEG_EXE"] = ffmpeg_path
 
-logger.info(f"{project_name} v{project_version}")
+logger.info(f"{project_name} v{project_version} [LLM: {app.get('llm_provider', 'none')}]")

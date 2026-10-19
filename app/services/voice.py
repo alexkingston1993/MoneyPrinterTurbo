@@ -1151,6 +1151,94 @@ def is_gemini_voice(voice_name: str):
     return voice_name.startswith("gemini:")
 
 
+def is_fishspeech_voice(voice_name: str):
+    """检查是否是Fish Speech TTS的声音"""
+    return voice_name.startswith("fishspeech:")
+
+
+def is_edge_voice(voice_name: str):
+    """检查是否是 edge_tts 的声音 (用于多语言回退)"""
+    return voice_name.startswith("edge:")
+
+
+def is_coqui_voice(voice_name: str):
+    """检查是否是 Coqui TTS (XTTS v2) 的声音 (零预算语音克隆)"""
+    return voice_name.startswith("coqui:")
+
+
+def get_language_from_voice(voice_name: str) -> str:
+    """从voice name中提取语言代码"""
+    if is_fishspeech_voice(voice_name):
+        parts = voice_name.split(":")
+        if len(parts) >= 3:
+            return parts[2]
+    return "en"
+
+
+MULTILINGUAL_EDGE_VOICES = {
+    "en": {"voice": "en-US-JennyNeural", "locale": "en-US"},
+    "ta": {"voice": "ta-IN-PallaviNeural", "locale": "ta-IN"},
+    "hi": {"voice": "hi-IN-SwaraNeural", "locale": "hi-IN"},
+    "te": {"voice": "te-IN-ShrutiNeural", "locale": "te-IN"},
+    "kn": {"voice": "kn-IN-SapnaNeural", "locale": "kn-IN"},
+    "ml": {"voice": "ml-IN-SobhanaNeural", "locale": "ml-IN"},
+    "bn": {"voice": "bn-IN-TanishaaNeural", "locale": "bn-IN"},
+    "gu": {"voice": "gu-IN-DhwaniNeural", "locale": "gu-IN"},
+    "mr": {"voice": "mr-IN-AarohiNeural", "locale": "mr-IN"},
+}
+
+
+def select_voice_for_language(language: str, default_voice: str = "") -> str:
+    """
+    Select the appropriate voice name based on the content language.
+    
+    Looks up language-specific voice config (voice_en, voice_ta, voice_hi, etc.)
+    Falls back to default_voice if no language-specific voice is configured.
+    
+    Args:
+        language: Language code (en, ta, hi, te, kn, ml, bn, gu, mr)
+        default_voice: Fallback voice if no language-specific one is set
+        
+    Returns:
+        Voice name string suitable for passing to tts()
+    """
+    if not language:
+        language = "en"
+    
+    lang = language.strip().lower()[:2]
+    
+    # Look up language-specific voice from config
+    voice_key = f"voice_{lang}"
+    configured_voice = config.ui.get(voice_key, "")
+    if configured_voice:
+        logger.info(f"using language-specific voice: {voice_key}={configured_voice}")
+        return configured_voice
+    
+    # Fallback: use edge_tts multilingual presets
+    edge_voice = MULTILINGUAL_EDGE_VOICES.get(lang)
+    if edge_voice:
+        voice = f"edge:{edge_voice['voice']}"
+        logger.info(f"using edge_tts fallback for {lang}: {voice}")
+        return voice
+    
+    # Ultimate fallback
+    if default_voice:
+        return default_voice
+    return config.ui.get("voice_name", "")
+
+
+def get_edge_voice_for_language(language: str) -> str:
+    """Get the appropriate edge_tts voice name for a given language code."""
+    voice_info = MULTILINGUAL_EDGE_VOICES.get(language, MULTILINGUAL_EDGE_VOICES["en"])
+    return voice_info["voice"]
+
+
+def get_edge_locale_for_language(language: str) -> str:
+    """Get the appropriate edge_tts locale for a given language code."""
+    voice_info = MULTILINGUAL_EDGE_VOICES.get(language, MULTILINGUAL_EDGE_VOICES["en"])
+    return voice_info["locale"]
+
+
 def tts(
     text: str,
     voice_name: str,
@@ -1188,6 +1276,37 @@ def tts(
             return gemini_tts(text, voice, voice_rate, voice_file, voice_volume)
         else:
             logger.error(f"Invalid gemini voice name format: {voice_name}")
+            return None
+    elif is_fishspeech_voice(voice_name):
+        # 格式: fishspeech:<reference_id>:<language>
+        # 例如: fishspeech:user-voice:ta
+        parts = voice_name.split(":")
+        if len(parts) >= 2:
+            reference_id = parts[1]
+            language = parts[2] if len(parts) >= 3 else "en"
+            return fishspeech_tts(
+                text, reference_id, language, voice_rate, voice_file, voice_volume
+            )
+        else:
+            logger.error(f"Invalid fishspeech voice name format: {voice_name}")
+            return None
+    elif is_edge_voice(voice_name):
+        # 格式: edge:<voice_name>
+        # 例如: edge:ta-IN-PallaviNeural
+        voice = voice_name[len("edge:"):]
+        return edge_multilingual_tts(text, voice, voice_rate, voice_file, voice_volume)
+    elif is_coqui_voice(voice_name):
+        # 格式: coqui:<reference_file>:<language>
+        # 例如: coqui:my_voice.wav:en
+        parts = voice_name.split(":")
+        if len(parts) >= 2:
+            ref_file = parts[1]
+            language = parts[2] if len(parts) >= 3 else "en"
+            return coqui_tts(
+                text, ref_file, language, voice_rate, voice_file, voice_volume
+            )
+        else:
+            logger.error(f"Invalid coqui voice name format: {voice_name}")
             return None
     return azure_tts_v1(text, voice_name, voice_rate, voice_file)
 
@@ -1868,6 +1987,264 @@ def gemini_tts(
         return None
     except Exception as e:
         logger.error(f"Gemini TTS failed, error: {str(e)}")
+        return None
+
+
+def fishspeech_tts(
+    text: str,
+    reference_id: str,
+    language: str,
+    voice_rate: float,
+    voice_file: str,
+    voice_volume: float = 1.0,
+) -> Union[SubMaker, None]:
+    """
+    Use Fish Audio API for cross-lingual voice cloning TTS.
+    Supports English, Tamil, Hindi, and 80+ languages.
+
+    Args:
+        text: Text to convert to speech
+        reference_id: Voice reference ID from Fish Audio dashboard
+        language: Target language code (en, ta, hi, etc.)
+        voice_rate: Speech speed [0.25, 4.0]
+        voice_file: Output audio file path
+        voice_volume: Audio volume [0.6, 5.0]
+
+    Returns:
+        SubMaker object or None
+    """
+    text = text.strip()
+    api_key = config.fishspeech.get("api_key", "")
+
+    if not api_key:
+        logger.error("Fish Speech API key is not set. Add fishspeech_api_key to config.toml [app] section")
+        return None
+
+    gain = voice_volume - 1.0
+    gain = max(-10, min(10, gain))
+
+    url = "https://api.fish.audio/v1/tts"
+    payload = {
+        "text": text,
+        "reference_id": reference_id,
+        "format": "mp3",
+        "sample_rate": 44100,
+        "latency": "normal",
+        "speed": voice_rate,
+    }
+    if language:
+        payload["language"] = language
+
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json",
+    }
+
+    for i in range(3):
+        try:
+            logger.info(
+                f"start fishspeech tts, ref: {reference_id}, lang: {language}, try: {i + 1}"
+            )
+            response = requests.post(url, json=payload, headers=headers, timeout=60)
+
+            if response.status_code == 200:
+                with open(voice_file, "wb") as f:
+                    f.write(response.content)
+
+                sub_maker = ensure_legacy_submaker_fields(SubMaker())
+                try:
+                    from moviepy import AudioFileClip
+
+                    audio_clip = AudioFileClip(voice_file)
+                    audio_duration = audio_clip.duration
+                    audio_clip.close()
+
+                    audio_duration_100ns = int(audio_duration * 10000000)
+                    sentences = utils.split_string_by_punctuations(text)
+
+                    if sentences:
+                        total_chars = sum(len(s) for s in sentences)
+                        char_duration = (
+                            audio_duration_100ns / total_chars if total_chars > 0 else 0
+                        )
+                        current_offset = 0
+                        for sentence in sentences:
+                            if not sentence.strip():
+                                continue
+                            sentence_chars = len(sentence)
+                            sentence_duration = int(sentence_chars * char_duration)
+                            sub_maker.subs.append(sentence)
+                            sub_maker.offset.append(
+                                (current_offset, current_offset + sentence_duration)
+                            )
+                            current_offset += sentence_duration
+                    else:
+                        sub_maker.subs = [text]
+                        sub_maker.offset = [(0, audio_duration_100ns)]
+                except Exception as e:
+                    logger.warning(f"Failed to create accurate subtitles: {str(e)}")
+                    sub_maker.subs = [text]
+                    sub_maker.offset = [(0, int(10 * 10000000))]
+
+                logger.success(f"fishspeech tts succeeded: {voice_file}")
+                return sub_maker
+            else:
+                logger.error(
+                    f"fishspeech tts failed with status {response.status_code}: {response.text}"
+                )
+        except Exception as e:
+            logger.error(f"fishspeech tts failed: {str(e)}")
+
+    return None
+
+
+def edge_multilingual_tts(
+    text: str,
+    voice: str,
+    voice_rate: float,
+    voice_file: str,
+    voice_volume: float = 1.0,
+) -> Union[SubMaker, None]:
+    """
+    Use edge_tts for multilingual speech synthesis.
+    Supports Indian languages: ta-IN (Tamil), hi-IN (Hindi), te-IN (Telugu), etc.
+
+    Args:
+        text: Text to convert to speech
+        voice: Edge TTS voice name (e.g., "ta-IN-PallaviNeural")
+        voice_rate: Speech speed
+        voice_file: Output audio file path
+        voice_volume: Audio volume (unused for edge_tts)
+
+    Returns:
+        SubMaker object or None
+    """
+    text = text.strip()
+    _configure_pydub_ffmpeg(__import__("pydub").AudioSegment)
+
+    async def _do():
+        communicate = edge_tts.Communicate(text, voice, rate=convert_rate_to_percent(voice_rate))
+        sub_maker = await communicate.save(voice_file)
+        return sub_maker
+
+    try:
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        sub_maker = loop.run_until_complete(_do())
+        loop.close()
+        if sub_maker is not None and not hasattr(sub_maker, "offset"):
+            sub_maker = ensure_legacy_submaker_fields(sub_maker)
+            return populate_legacy_submaker_with_full_text(
+                sub_maker=sub_maker,
+                text=text,
+                audio_duration_seconds=get_audio_duration(sub_maker),
+            )
+        logger.success(f"edge_tts multilingual succeeded: {voice_file}")
+        return sub_maker
+    except Exception as e:
+        logger.error(f"edge_tts multilingual failed: {str(e)}")
+        return None
+
+
+def coqui_tts(
+    text: str,
+    reference_file: str,
+    language: str,
+    voice_rate: float,
+    voice_file: str,
+    voice_volume: float = 1.0,
+) -> Union[SubMaker, None]:
+    """
+    Use Coqui XTTS v2 for local zero-budget voice cloning.
+    Supports English + Hindi cross-lingual voice cloning on CPU.
+    Requires: pip install TTS
+
+    Args:
+        text: Text to convert to speech
+        reference_file: Path to reference WAV file (6-30s of user's voice)
+        language: Target language code (en, hi, etc.)
+        voice_rate: Speech speed [0.25, 4.0]
+        voice_file: Output audio file path
+        voice_volume: Audio volume [0.6, 5.0]
+
+    Returns:
+        SubMaker object or None
+    """
+    os.environ["COQUI_TOS_AGREED"] = "1"
+    text = text.strip()
+    if not os.path.isfile(reference_file):
+        logger.error(f"Coqui TTS reference file not found: {reference_file}")
+        return None
+
+    try:
+        from TTS.api import TTS
+    except ImportError:
+        logger.error(
+            "Coqui TTS not installed. Run: pip install TTS"
+        )
+        return None
+
+    try:
+        logger.info(
+            f"start coqui tts, ref: {reference_file}, lang: {language}, "
+            f"device: cpu (no GPU available)"
+        )
+
+        model = TTS("tts_models/multilingual/multi-dataset/xtts_v2")
+        model.to("cpu")
+
+        model.tts_to_file(
+            text=text,
+            file_path=voice_file,
+            speaker_wav=reference_file,
+            language=language,
+            speed=voice_rate,
+        )
+
+        if not os.path.isfile(voice_file):
+            logger.error("Coqui TTS did not produce output file")
+            return None
+
+        sub_maker = ensure_legacy_submaker_fields(SubMaker())
+        try:
+            from moviepy import AudioFileClip
+
+            audio_clip = AudioFileClip(voice_file)
+            audio_duration = audio_clip.duration
+            audio_clip.close()
+
+            audio_duration_100ns = int(audio_duration * 10000000)
+            sentences = utils.split_string_by_punctuations(text)
+
+            if sentences:
+                total_chars = sum(len(s) for s in sentences)
+                char_duration = (
+                    audio_duration_100ns / total_chars if total_chars > 0 else 0
+                )
+                current_offset = 0
+                for sentence in sentences:
+                    if not sentence.strip():
+                        continue
+                    sentence_chars = len(sentence)
+                    sentence_duration = int(sentence_chars * char_duration)
+                    sub_maker.subs.append(sentence)
+                    sub_maker.offset.append(
+                        (current_offset, current_offset + sentence_duration)
+                    )
+                    current_offset += sentence_duration
+            else:
+                sub_maker.subs = [text]
+                sub_maker.offset = [(0, audio_duration_100ns)]
+        except Exception as e:
+            logger.warning(f"Failed to create accurate subtitles: {str(e)}")
+            sub_maker.subs = [text]
+            sub_maker.offset = [(0, int(10 * 10000000))]
+
+        logger.success(f"coqui tts succeeded: {voice_file}")
+        return sub_maker
+
+    except Exception as e:
+        logger.error(f"coqui tts failed: {str(e)}")
         return None
 
 

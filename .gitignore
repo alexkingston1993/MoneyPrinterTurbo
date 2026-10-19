@@ -34,3 +34,12 @@ debug_*.py
 test_*.py
 !test/services/test_*.py
 streamlit.log
+.vercel
+.env*
+data/
+Final_Videos/
+output/
+my audio/
+*.whl
+client_secret_*.json
+*.log

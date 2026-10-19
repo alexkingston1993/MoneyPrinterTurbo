@@ -1,0 +1,415 @@
+"""
+YouTube upload automation for the Investing, Not Trading channel.
+
+Supports 3 channels (English, Tamil, Hindi) via YouTube Data API v3.
+OAuth 2.0 authentication with token persistence and auto-refresh.
+Also supports service account authentication for server-side uploads.
+"""
+
+import datetime
+import json
+import os
+import pickle
+import re
+import time
+from typing import Dict, List, Optional, Tuple
+
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google.oauth2.service_account import Credentials as SACredentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+from googleapiclient.http import MediaFileUpload
+from loguru import logger
+
+from app.config import config
+
+DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data")
+TOKEN_DIR = os.path.join(DATA_DIR, "youtube_tokens")
+SCOPES = ["https://www.googleapis.com/auth/youtube.upload"]
+
+
+CHANNEL_LANGUAGES = {
+    "en": {"name": "The Compounder", "desc": "English"},
+    "ta": {"name": "The Compounder Tamil", "desc": "Tamil"},
+    "hi": {"name": "The Compounder Hindi", "desc": "Hindi"},
+}
+
+DEFAULT_CATEGORY = "22"  # "People & Blogs"
+DEFAULT_PRIVACY = "public"  # public, unlisted, private
+
+SHORTS_TAGS = ["#shorts", "#investing", "#stockmarketindia", "#nifty", "#sensex"]
+LONGFORM_TAGS = [
+    "#investing", "#stockmarketindia", "#nifty", "#sensex",
+    "#longterminvesting", "#financialeducation", "#personalfinance",
+]
+
+
+def _token_path(language: str) -> str:
+    os.makedirs(TOKEN_DIR, exist_ok=True)
+    return os.path.join(TOKEN_DIR, f"youtube_token_{language}.pickle")
+
+
+def _client_secrets_path(language: str) -> str:
+    return os.path.join(TOKEN_DIR, f"client_secrets_{language}.json")
+
+
+def _service_account_path(language: str) -> str:
+    return os.path.join(TOKEN_DIR, f"service_account_{language}.json")
+
+
+class YouTubeUploader:
+    """Upload videos to YouTube channels via Data API v3."""
+
+    def __init__(self):
+        self.services: Dict[str, any] = {}
+
+    def _get_service_account_credentials(self, language: str):
+        """Try to authenticate via service account JSON key."""
+        sa_path = _service_account_path(language)
+        if not os.path.exists(sa_path):
+            return None
+        try:
+            with open(sa_path) as f:
+                sa_info = json.load(f)
+            creds = SACredentials.from_service_account_info(sa_info, scopes=SCOPES)
+            return creds
+        except Exception as e:
+            logger.warning(f"failed to load service account for {language}: {e}")
+            return None
+
+    def _get_service(self, language: str):
+        """Get or create an authenticated YouTube API service for a channel.
+        Tries OAuth pickle first, then service account key."""
+        if language in self.services:
+            return self.services[language]
+
+        token_file = _token_path(language)
+        creds = None
+
+        if os.path.exists(token_file):
+            try:
+                with open(token_file, "rb") as f:
+                    creds = pickle.load(f)
+            except Exception as e:
+                logger.warning(f"failed to load token for {language}: {e}")
+
+        if creds and creds.expired and creds.refresh_token:
+            try:
+                creds.refresh(Request())
+                with open(token_file, "wb") as f:
+                    pickle.dump(creds, f)
+                logger.info(f"refreshed token for {language}")
+            except Exception as e:
+                logger.warning(f"failed to refresh token for {language}: {e}")
+                return None
+
+        if not creds or not creds.valid:
+            creds = self._get_service_account_credentials(language)
+
+        if not creds or not creds.valid:
+            logger.warning(
+                f"no valid token for {language}. "
+                f"Run auth_setup('{language}') first, or place token at {token_file}"
+            )
+            return None
+
+        try:
+            service = build("youtube", "v3", credentials=creds)
+            self.services[language] = service
+            return service
+        except Exception as e:
+            logger.error(f"failed to build YouTube service for {language}: {e}")
+            return None
+
+    def auth_setup(self, language: str):
+        """Run OAuth 2.0 authorization flow for a channel.
+
+        Requires a client_secrets_{language}.json file in the tokens directory.
+        Get this from Google Cloud Console → APIs & Services → Credentials → OAuth 2.0 Client IDs.
+        """
+        secrets_file = _client_secrets_path(language)
+        if not os.path.exists(secrets_file):
+            logger.error(
+                f"client secrets not found: {secrets_file}. "
+                f"Create an OAuth 2.0 client ID in Google Cloud Console "
+                f"(Desktop app type) and save it here."
+            )
+            return False
+
+        flow = InstalledAppFlow.from_client_secrets_file(secrets_file, SCOPES)
+        creds = flow.run_console()
+
+        token_file = _token_path(language)
+        with open(token_file, "wb") as f:
+            pickle.dump(creds, f)
+
+        logger.success(f"OAuth setup complete for {language}. Token saved to {token_file}")
+        return True
+
+    def is_authenticated(self, language: str) -> bool:
+        """Check if a channel has a valid token."""
+        service = self._get_service(language)
+        return service is not None
+
+    def verify(self, language: str) -> bool:
+        """Verify the token works by calling the channels.list API."""
+        service = self._get_service(language)
+        if not service:
+            return False
+
+        try:
+            response = service.channels().list(part="snippet", mine=True).execute()
+            items = response.get("items", [])
+            if items:
+                channel = items[0]
+                logger.info(
+                    f"[{language}] Authenticated as: {channel['snippet']['title']} "
+                    f"({channel['snippet']['customUrl']})"
+                )
+                return True
+            else:
+                logger.warning(f"[{language}] No channel found for this account")
+                return False
+        except HttpError as e:
+            logger.error(f"[{language}] Verification failed: {e}")
+            return False
+
+    def upload_video(
+        self,
+        language: str,
+        video_path: str,
+        title: str,
+        description: str = "",
+        tags: Optional[List[str]] = None,
+        category_id: str = DEFAULT_CATEGORY,
+        privacy_status: str = DEFAULT_PRIVACY,
+        is_short: bool = False,
+        thumbnail_path: Optional[str] = None,
+    ) -> Dict:
+        """Upload a video to YouTube.
+
+        Args:
+            language: Channel language code (en, ta, hi)
+            video_path: Path to the video file
+            title: Video title (max 100 chars)
+            description: Video description
+            tags: List of tags
+            category_id: YouTube category ID
+            privacy_status: public, unlisted, or private
+            is_short: If True, adds #shorts tag
+            thumbnail_path: Optional path to custom thumbnail image
+
+        Returns:
+            dict: Upload result with video_id, status, url
+        """
+        service = self._get_service(language)
+        if not service:
+            return {"success": False, "error": f"Not authenticated for {language}"}
+
+        if not os.path.exists(video_path):
+            return {"success": False, "error": f"Video not found: {video_path}"}
+
+        video_tags = list(tags or [])
+        if is_short:
+            for t in SHORTS_TAGS:
+                if t not in video_tags:
+                    video_tags.append(t)
+        else:
+            for t in LONGFORM_TAGS:
+                if t not in video_tags:
+                    video_tags.append(t)
+
+        channel_name = CHANNEL_LANGUAGES.get(language, {}).get("name", language)
+        full_description = (
+            f"{description}\n\n"
+            f"---\n"
+            f"🔔 Subscribe to {channel_name} for more investing education.\n"
+            f"📧 Business: please don't — this is a free educational channel.\n\n"
+            f"⚠️ Disclaimer: This video is for educational purposes only. "
+            f"I am not a SEBI registered advisor. "
+            f"Please do your own research before investing in any stock.\n\n"
+            f"#InvestingNotTrading #FinancialEducation #{language.upper()}Finance"
+        )
+
+        body = {
+            "snippet": {
+                "title": title[:100],
+                "description": full_description[:5000],
+                "tags": video_tags[:500],
+                "categoryId": category_id,
+            },
+            "status": {
+                "privacyStatus": privacy_status,
+                "selfDeclaredMadeForKids": False,
+            },
+        }
+
+        try:
+            logger.info(f"[{language}] Uploading: {title[:60]}... ({os.path.getsize(video_path)/1024/1024:.1f}MB)")
+
+            media = MediaFileUpload(video_path, chunksize=1024 * 1024, resumable=True)
+            request = service.videos().insert(
+                part="snippet,status",
+                body=body,
+                media_body=media,
+            )
+
+            response = None
+            last_progress = 0
+            while response is None:
+                status, response = request.next_chunk()
+                if status:
+                    progress = int(status.progress() * 100)
+                    if progress - last_progress >= 10:
+                        logger.info(f"[{language}] Upload progress: {progress}%")
+                        last_progress = progress
+
+            video_id = response.get("id")
+            video_url = f"https://youtu.be/{video_id}"
+
+            logger.success(f"[{language}] Uploaded: {video_url}")
+
+            # Upload thumbnail if provided
+            if thumbnail_path and os.path.exists(thumbnail_path):
+                try:
+                    service.thumbnails().set(
+                        videoId=video_id,
+                        media_body=MediaFileUpload(thumbnail_path),
+                    ).execute()
+                    logger.info(f"[{language}] Thumbnail set for {video_id}")
+                except HttpError as e:
+                    logger.warning(f"[{language}] Thumbnail upload failed: {e}")
+
+            return {
+                "success": True,
+                "video_id": video_id,
+                "url": video_url,
+                "title": title[:100],
+                "language": language,
+            }
+
+        except HttpError as e:
+            error_reason = str(e)
+            if "quotaExceeded" in error_reason:
+                error_reason = "YouTube API quota exceeded. Try again tomorrow."
+            logger.error(f"[{language}] Upload failed: {error_reason}")
+            return {"success": False, "error": error_reason}
+        except Exception as e:
+            logger.error(f"[{language}] Upload failed: {e}")
+            return {"success": False, "error": str(e)}
+
+    def upload_multilanguage(
+        self,
+        videos: Dict[str, Dict],
+        is_short: bool = False,
+        privacy_status: str = DEFAULT_PRIVACY,
+    ) -> Dict[str, Dict]:
+        """Upload videos for all available languages.
+
+        Args:
+            videos: Dict mapping language -> {video_path, title, description, tags, thumbnail_path}
+            is_short: Whether these are Shorts
+            privacy_status: public, unlisted, private
+
+        Returns:
+            dict: language -> upload result
+        """
+        results = {}
+        for lang, info in videos.items():
+            logger.info(f"\n--- Uploading [{lang}] video ---")
+            result = self.upload_video(
+                language=lang,
+                video_path=info.get("video_path", ""),
+                title=info.get("title", "Investing, Not Trading"),
+                description=info.get("description", ""),
+                tags=info.get("tags"),
+                is_short=is_short,
+                privacy_status=privacy_status,
+                thumbnail_path=info.get("thumbnail_path"),
+            )
+            results[lang] = result
+            if result.get("success"):
+                logger.success(f"[{lang}] → {result['url']}")
+            else:
+                logger.warning(f"[{lang}] → FAILED: {result.get('error')}")
+
+            # Small delay between uploads to avoid quota issues
+            if len(videos) > 1:
+                time.sleep(2)
+
+        return results
+
+    def append_article_link_to_description(self, language: str, video_id: str, article_url: str, article_title: str) -> bool:
+        """Append the published website article link to the YouTube video description for backlinks."""
+        service = self._get_service(language)
+        if not service:
+            return False
+        try:
+            # 1. Fetch current video snippet
+            response = service.videos().list(part="snippet", id=video_id).execute()
+            items = response.get("items", [])
+            if not items:
+                return False
+            
+            snippet = items[0]["snippet"]
+            current_desc = snippet.get("description", "")
+            
+            # 2. Append link if not already present
+            if article_url not in current_desc:
+                cta_block = (
+                    f"\n\n📊 IN-DEPTH FINANCIAL REPORT & DATA TABLES:\n"
+                    f"Read full breakdown for '{article_title}':\n"
+                    f"👉 {article_url}\n"
+                )
+                snippet["description"] = (cta_block + current_desc)[:5000]
+                
+                # 3. Update video
+                service.videos().update(
+                    part="snippet",
+                    body={"id": video_id, "snippet": snippet}
+                ).execute()
+                logger.info(f"[{language}] Successfully updated YouTube description with article link: {article_url}")
+                return True
+            return True
+        except Exception as e:
+            logger.warning(f"[{language}] Failed to append article link to YouTube description: {e}")
+            return False
+
+    def post_pinned_comment(self, language: str, video_id: str, comment_text: str) -> bool:
+        """Post a top comment on the video with the article link."""
+        service = self._get_service(language)
+        if not service:
+            return False
+        try:
+            service.commentThreads().insert(
+                part="snippet",
+                body={
+                    "snippet": {
+                        "videoId": video_id,
+                        "topLevelComment": {
+                            "snippet": {
+                                "textOriginal": comment_text
+                            }
+                        }
+                    }
+                }
+            ).execute()
+            logger.info(f"[{language}] Pinned comment posted on video {video_id}")
+            return True
+        except Exception as e:
+            logger.warning(f"[{language}] Failed to post comment on video: {e}")
+            return False
+
+
+
+# Singleton
+_uploader: Optional[YouTubeUploader] = None
+
+
+def get_uploader() -> YouTubeUploader:
+    global _uploader
+    if _uploader is None:
+        _uploader = YouTubeUploader()
+    return _uploader

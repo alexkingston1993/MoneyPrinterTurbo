@@ -34,7 +34,22 @@ class VideoAspect(str, Enum):
     portrait = "9:16"
     square = "1:1"
 
-    def to_resolution(self):
+    def to_resolution(self, video_resolution: str = "standard"):
+        if video_resolution == "8k":
+            if self == VideoAspect.landscape.value:
+                return 7680, 4320
+            elif self == VideoAspect.portrait.value:
+                return 4320, 7680
+            elif self == VideoAspect.square.value:
+                return 7680, 7680
+        elif video_resolution == "4k":
+            if self == VideoAspect.landscape.value:
+                return 3840, 2160
+            elif self == VideoAspect.portrait.value:
+                return 2160, 3840
+            elif self == VideoAspect.square.value:
+                return 3840, 3840
+        # standard (1080p)
         if self == VideoAspect.landscape.value:
             return 1920, 1080
         elif self == VideoAspect.portrait.value:
@@ -74,6 +89,7 @@ class VideoParams(BaseModel):
     video_script: str = ""  # Script used to generate the video
     video_terms: Optional[str | list] = None  # Keywords used to generate the video
     video_aspect: Optional[VideoAspect] = VideoAspect.portrait.value
+    video_resolution: Optional[str] = "standard"  # standard, 4k, 8k
     video_concat_mode: Optional[VideoConcatMode] = VideoConcatMode.random.value
     video_transition_mode: Optional[VideoTransitionMode] = None
     video_clip_duration: Optional[int] = 5
@@ -86,6 +102,7 @@ class VideoParams(BaseModel):
     
     custom_audio_file: Optional[str] = None  # Custom audio file path, will ignore video_script and disable subtitle
     video_language: Optional[str] = ""  # auto detect
+    target_languages: Optional[list] = None  # multi-language targets: ["ta", "hi"]
 
     voice_name: Optional[str] = ""
     voice_volume: Optional[float] = 1.0

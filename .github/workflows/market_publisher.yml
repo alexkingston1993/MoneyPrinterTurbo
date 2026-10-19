@@ -1,0 +1,74 @@
+name: Autonomous Live Market Media & News Engine
+
+on:
+  schedule:
+    # 5 Daily Slots aligned with Indian Standard Time (IST = UTC + 5:30)
+    - cron: '30 3 * * 1-5'   # 09:00 AM IST (Pre-Market / Open Brief)
+    - cron: '30 5 * * 1-5'   # 11:00 AM IST (Morning Momentum & Sector Rotation)
+    - cron: '00 8 * * 1-5'   # 13:30 PM IST (Mid-Day / European Cues)
+    - cron: '30 10 * * 1-5'  # 16:00 PM IST (Closing Bell Wrap & Top Movers)
+    - cron: '00 14 * * 1-5'  # 19:30 PM IST (Evening FII/DII Deep Dive)
+    - cron: '30 5 * * 6'     # 11:00 AM IST Saturday (Weekend Masterclass)
+  workflow_dispatch:
+    inputs:
+      slot:
+        description: 'Market slot name'
+        required: false
+        default: 'manual_trigger'
+
+permissions:
+  contents: write
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install FFmpeg
+        run: |
+          sudo apt update
+          sudo apt install -y ffmpeg
+
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytz yfinance requests loguru google-generativeai toml beautifulsoup4
+          if [ -f requirements.txt ]; then pip install -r requirements.txt || true; fi
+
+      - name: Execute Autonomous Market Cycle
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          LLM_PROVIDER: "gemini"
+          GEMINI_MODEL_NAME: "gemini-flash-latest"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPO: ${{ github.repository }}
+        run: |
+          SLOT="${{ github.event.inputs.slot || 'scheduled_cron' }}"
+          echo "🚀 Running autonomous market cycle for slot: $SLOT"
+          python -m app.services.autonomous_scheduler --now "$SLOT"
+
+      - name: Commit and Push New Articles to GitHub
+        run: |
+          git config --global user.name "Market Pulse Bot"
+          git config --global user.email "bot@marketpulse.media"
+          git add content/ output/articles/
+          if git diff --staged --quiet; then
+            echo "No new changes to commit."
+          else
+            git commit -m "feat(market): autonomous market news release [skip ci]"
+            git push origin main
+          fi

@@ -11,8 +11,8 @@ from openai.types.chat import ChatCompletion
 from app.config import config
 
 _max_retries = 5
-_DEFAULT_GEMINI_MODEL = "gemini-2.5-flash"
-_DEPRECATED_GEMINI_MODELS = {"gemini-pro", "gemini-1.0-pro"}
+_DEFAULT_GEMINI_MODEL = "gemini-flash-latest"
+_DEPRECATED_GEMINI_MODELS = {"gemini-pro", "gemini-1.0-pro", "gemini-2.5-flash"}
 
 
 def _normalize_text_response(content, llm_provider: str) -> str:
@@ -459,8 +459,20 @@ def _generate_response(prompt: str) -> str:
 
 
 def generate_script(
-    video_subject: str, language: str = "", paragraph_number: int = 1
+    video_subject: str,
+    language: str = "",
+    paragraph_number: int = 1,
+    hook_category: str = "",
+    compliance_mode: bool = False,
 ) -> str:
+    if compliance_mode:
+        return _generate_sebi_compliant_script(
+            video_subject=video_subject,
+            language=language,
+            paragraph_number=paragraph_number,
+            hook_category=hook_category,
+        )
+
     prompt = f"""
 # Role: Video Script Generator
 
@@ -529,10 +541,133 @@ Generate a script for a video, depending on the subject of the video.
         logger.error(f"failed to generate video script: {final_script}")
     else:
         logger.success(f"completed: \n{final_script}")
+
+    compliance_violations = []
+    try:
+        from app.services.compliance import validate_script
+        is_clean, violations = validate_script(final_script)
+        if not is_clean:
+            logger.warning(f"COMPLIANCE VIOLATIONS in script:\n" + "\n".join(violations))
+            compliance_violations = violations
+    except ImportError:
+        pass
+
     return final_script.strip()
 
 
-def generate_terms(video_subject: str, video_script: str, amount: int = 5) -> List[str]:
+HOOK_CATEGORIES = [
+    "stat_shock",
+    "myth_bust",
+    "story_open",
+    "question",
+    "contrast",
+    "challenge",
+    "what_if",
+    "relatable",
+    "visual",
+    "bold_claim",
+]
+
+HOOK_CATEGORY_EXAMPLES = {
+    "stat_shock": "Start with a surprising statistic that makes the viewer pause",
+    "myth_bust": "Start by naming a common belief and immediately say it's wrong",
+    "story_open": "Start with a short personal or relatable anecdote",
+    "question": "Start with a provocative question that makes the viewer think",
+    "contrast": "Start by comparing two opposites (rich vs broke, trader vs investor)",
+    "challenge": "Start by telling the viewer to stop doing something",
+    "what_if": "Start with a 'What if I told you' scenario",
+    "relatable": "Start with something everyone in India experiences with money",
+    "visual": "Start by describing a chart or visual that tells a story",
+    "bold_claim": "Start with a strong, defensible statement that grabs attention",
+}
+
+
+def _generate_sebi_compliant_script(
+    video_subject: str,
+    language: str = "",
+    paragraph_number: int = 1,
+    hook_category: str = "",
+) -> str:
+    hook_instruction = ""
+    if hook_category and hook_category in HOOK_CATEGORY_EXAMPLES:
+        hook_instruction = f"""
+## Hook Style
+Use the "{hook_category}" hook style: {HOOK_CATEGORY_EXAMPLES[hook_category]}
+NEVER start with "Did you know" or "Do you know" — these are overused and boring."""
+
+    prompt = f"""
+# Role: Script for Alex (Retail Investor from Chennai)
+
+You are writing a script for Alex, a retail investor from Chennai, Tamil Nadu.
+Alex shares his personal views on the Indian stock market for educational purposes.
+
+## Content Rules (HARD CONSTRAINTS - Never Violate)
+1. FRAME EVERYTHING as personal opinion: "I would...", "In my view...", "The data shows..."
+2. NEVER say "you should", "you must", "you need to" (buy/sell/invest)
+3. NEVER give price targets or stock predictions
+4. NEVER promise returns or use words like "guaranteed", "sure-shot", "double your money"
+5. Every "I would buy/sell/hold" MUST be followed by "But please do your own research before investing in this or any stock"
+6. Use only historical data (90+ days old). No live prices.
+7. Start the script with: "Hey, I'm Alex from Chennai. Before we dive in — this is for educational purposes only. I'm not a SEBI-registered advisor."
+8. End with: "This is Alex from Chennai, signing off."
+9. Keep language simple enough for a common person to understand
+10. Include BOTH positives and risks when discussing any stock
+11. NEVER mention future price movements or predictions
+12. NEVER use the phrase "this is not financial advice" — instead say "this is for educational purposes" (positive framing)
+
+## Tone
+- Conversational, like one friend explaining to another
+- Use "I", "my", "me" — Alex's personal perspective
+- Confident but humble — data speaks, not ego
+- Speak in short, punchy sentences (works better for shorts)
+
+## Format
+Return ONLY the raw script text. No markdown, no formatting, no titles, no labels.
+
+## Subject
+{video_subject}
+{("- Language: " + language) if language else ""}
+{hook_instruction}
+""".strip()
+
+    final_script = ""
+    logger.info(f"subject (SEBI compliant): {video_subject}")
+    if hook_category:
+        logger.info(f"hook category: {hook_category}")
+
+    for i in range(_max_retries):
+        try:
+            response = _generate_response(prompt=prompt)
+            if response:
+                final_script = response.strip()
+            else:
+                logging.error("gpt returned an empty response")
+
+            if final_script and "当日额度已消耗完" in final_script:
+                raise ValueError(final_script)
+
+            if final_script:
+                break
+        except Exception as e:
+            logger.error(f"failed to generate script: {e}")
+
+        if i < _max_retries:
+            logger.warning(f"failed to generate video script, trying again... {i + 1}")
+
+    if "Error: " in final_script:
+        logger.error(f"failed to generate video script: {final_script}")
+    else:
+        logger.success(f"completed: \n{final_script}")
+
+    try:
+        from app.services.compliance import validate_script, generate_compliance_report
+        is_clean, violations = validate_script(final_script)
+        if not is_clean:
+            logger.warning(f"COMPLIANCE VIOLATIONS:\n{generate_compliance_report(final_script)}")
+    except ImportError:
+        pass
+
+    return final_script.strip()
     prompt = f"""
 # Role: Video Search Terms Generator
 
@@ -596,6 +731,46 @@ Please note that you must use English for generating video search terms; Chinese
 
     logger.success(f"completed: \n{search_terms}")
     return search_terms
+
+
+def translate_script(script: str, target_language: str, source_language: str = "en") -> str:
+    prompt = f"""
+Translate the following video script from {source_language} to {target_language}.
+
+## Rules:
+1. Keep the exact same meaning and tone — conversational, personal opinion.
+2. Preserve all financial terms (SIP, Nifty, Sensex, PE ratio, etc.) in English.
+3. Preserve all disclaimer sentences exactly — do not translate disclaimers.
+4. Preserve the phrase "I'm not a SEBI registered advisor" in English.
+5. Preserve the phrase "do your own research" in English.
+6. Keep proper nouns (company names, person names, index names) in English.
+7. Return ONLY the translated script. No explanations, no notes, no formatting.
+8. The output must be natural and fluent in {target_language}, as if a native speaker wrote it.
+
+## Source Script ({source_language}):
+{script}
+""".strip()
+
+    translated = ""
+    for i in range(_max_retries):
+        try:
+            response = _generate_response(prompt=prompt)
+            if response:
+                translated = response.strip()
+                break
+        except Exception as e:
+            logger.error(f"failed to translate script to {target_language}: {e}")
+
+        if i < _max_retries:
+            logger.warning(f"retrying translation to {target_language}... ({i + 1})")
+
+    if translated:
+        logger.success(f"translated to {target_language}: {translated[:100]}...")
+    else:
+        logger.error(f"translation to {target_language} failed, using original")
+        return script
+
+    return translated
 
 
 if __name__ == "__main__":

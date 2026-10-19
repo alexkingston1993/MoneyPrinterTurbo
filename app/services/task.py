@@ -8,7 +8,8 @@ from loguru import logger
 from app.config import config
 from app.models import const
 from app.models.schema import VideoConcatMode, VideoParams
-from app.services import llm, material, subtitle, video, voice, upload_post
+from app.services import llm, material, subtitle, video, voice, upload_post, compliance, multilang, youtube_uploader, avatar
+from app.services import seo_optimizer as seo_module
 from app.services import state as sm
 from app.utils import utils
 
@@ -29,6 +30,22 @@ def generate_script(task_id, params):
         sm.state.update_task(task_id, state=const.TASK_STATE_FAILED)
         logger.error("failed to generate video script.")
         return None
+
+    # Validate script for SEBI compliance
+    is_clean, violations = compliance.validate_script(video_script)
+    report = compliance.generate_compliance_report(video_script)
+    logger.info(f"compliance report:\n{report}")
+
+    if not is_clean:
+        logger.warning(f"compliance violations detected ({len(violations)}):")
+        for v in violations:
+            logger.warning(f"  {v}")
+        # Only block if strict mode is enabled in config
+        strict_mode = getattr(params, "compliance_strict", False)
+        if strict_mode:
+            sm.state.update_task(task_id, state=const.TASK_STATE_FAILED)
+            logger.error("strict compliance mode enabled — blocking task due to violations.")
+            return None
 
     return video_script
 
@@ -92,10 +109,19 @@ def generate_audio(task_id, params, video_script):
             )
         else:
             logger.info("no custom audio file provided, using TTS to generate audio.")
+        # Auto-select voice based on language if video_language is set
+        selected_voice = params.voice_name
+        if params.video_language:
+            selected_voice = voice.select_voice_for_language(
+                language=params.video_language,
+                default_voice=params.voice_name,
+            )
+            logger.info(f"language '{params.video_language}' -> selected voice: {selected_voice}")
+
         audio_file = path.join(utils.task_dir(task_id), "audio.mp3")
         sub_maker = voice.tts(
             text=video_script,
-            voice_name=voice.parse_voice_name(params.voice_name),
+            voice_name=voice.parse_voice_name(selected_voice),
             voice_rate=params.voice_rate,
             voice_file=audio_file,
         )
@@ -220,6 +246,7 @@ def generate_final_videos(
             video_transition_mode=video_transition_mode,
             max_clip_duration=params.video_clip_duration,
             threads=params.n_threads,
+            video_resolution=params.video_resolution or "standard",
         )
 
         _progress += 50 / params.video_count / 2
@@ -235,6 +262,25 @@ def generate_final_videos(
             output_file=final_video_path,
             params=params,
         )
+
+        # Composite talking avatar overlay (if avatar images exist)
+        avatar_image = avatar.get_today_avatar()
+        if avatar_image:
+            logger.info(f"\n\n## compositing avatar overlay: {os.path.basename(avatar_image)}")
+            avatar_output = path.join(utils.task_dir(task_id), f"final_avatar-{index}.mp4")
+            try:
+                avatar.composite_avatar_on_video(
+                    video_path=final_video_path,
+                    audio_path=audio_file,
+                    output_path=avatar_output,
+                    avatar_image_path=avatar_image,
+                )
+                # Replace final video with avatar-composited version
+                if os.path.exists(avatar_output):
+                    os.replace(avatar_output, final_video_path)
+                    logger.success(f"avatar overlay composited on video {index}")
+            except Exception as e:
+                logger.warning(f"avatar compositing failed for video {index}: {e}")
 
         _progress += 50 / params.video_count / 2
         sm.state.update_task(task_id, progress=_progress)
@@ -254,6 +300,20 @@ def start(task_id, params: VideoParams, stop_at: str = "video"):
     if not video_script or "Error: " in video_script:
         sm.state.update_task(task_id, state=const.TASK_STATE_FAILED)
         return
+
+    # Run SEO optimization for titles, description, tags, thumbnails
+    seo_result = None
+    try:
+        engine = seo_module.get_engine()
+        seo_result = engine.optimize(
+            topic=params.video_subject,
+            hook_category="",
+            script=video_script,
+            is_short=(params.video_aspect == "9:16"),
+        )
+        logger.info(f"SEO: title=\"{seo_result['title']}\", score={seo_result['title_score']}")
+    except Exception as e:
+        logger.warning(f"SEO optimization failed: {e}")
 
     sm.state.update_task(task_id, state=const.TASK_STATE_PROCESSING, progress=10)
 
@@ -350,10 +410,27 @@ def start(task_id, params: VideoParams, stop_at: str = "video"):
         return
 
     logger.success(
-        f"task {task_id} finished, generated {len(final_video_paths)} videos."
+        f"task {task_id} finished, generated {len(final_video_paths)} primary video(s)."
     )
 
-    # 7. Cross-post to TikTok/Instagram (if enabled)
+    # 7. Generate multi-language content (if target_languages is set)
+    multilang_results = {}
+    if params.target_languages:
+        logger.info("\n\n## generating multi-language content")
+        multilang_results = multilang.generate_multilanguage_content(
+            task_id=task_id,
+            params=params,
+            primary_script=video_script,
+            downloaded_videos=downloaded_videos,
+            audio_duration=audio_duration,
+        )
+        if multilang_results:
+            logger.success(
+                f"generated {len(multilang_results)} additional language videos: "
+                f"{list(multilang_results.keys())}"
+            )
+
+    # 8. Cross-post to TikTok/Instagram (if enabled)
     cross_post_results = []
     if upload_post.upload_post_service.is_configured() and upload_post.upload_post_service.auto_upload:
         logger.info("\n\n## cross-posting videos to TikTok/Instagram")
@@ -368,6 +445,59 @@ def start(task_id, params: VideoParams, stop_at: str = "video"):
             else:
                 logger.warning(f"⚠️ Failed to cross-post: {video_path} - {result.get('error', 'Unknown error')}")
 
+    # 9. Upload to YouTube (if enabled)
+    youtube_results = {}
+    youtube_enabled = config.ui.get("youtube_enabled", False)
+    youtube_auto = config.ui.get("youtube_auto_upload", False)
+    if youtube_enabled and youtube_auto:
+        logger.info("\n\n## uploading to YouTube")
+        yt = youtube_uploader.get_uploader()
+
+        # Use SEO-optimized title and description if available
+        optimized_title = seo_result["title"] if seo_result else (params.video_subject or "Investing, Not Trading")
+        optimized_desc = seo_result.get("description", "") if seo_result else ""
+        optimized_tags = seo_result.get("tags", []) if seo_result else None
+
+        # Upload primary video in the content language
+        primary_lang = params.video_language or "en"
+        if final_video_paths and yt.is_authenticated(primary_lang):
+            privacy = config.ui.get("youtube_privacy", "public")
+            result = yt.upload_video(
+                language=primary_lang,
+                video_path=final_video_paths[0],
+                title=optimized_title,
+                description=optimized_desc,
+                tags=optimized_tags,
+                is_short=(params.video_aspect == "9:16"),
+                privacy_status=privacy,
+            )
+            youtube_results[primary_lang] = result
+            if result.get("success"):
+                logger.success(f"YouTube [{primary_lang}]: {result['url']}")
+
+        # Upload multi-language videos
+        if multilang_results:
+            videos_to_upload = {}
+            for lang, ml_data in multilang_results.items():
+                if yt.is_authenticated(lang):
+                    channel_name = youtube_uploader.CHANNEL_LANGUAGES.get(lang, {}).get("name", lang)
+                    suffix = "" if lang == primary_lang else f" | {channel_name}"
+                    videos_to_upload[lang] = {
+                        "video_path": ml_data.get("final_video", ""),
+                        "title": f"{optimized_title}{suffix}",
+                        "description": optimized_desc,
+                        "tags": optimized_tags,
+                    }
+
+            if videos_to_upload:
+                privacy = config.ui.get("youtube_privacy", "public")
+                ml_results = yt.upload_multilanguage(
+                    videos=videos_to_upload,
+                    is_short=(params.video_aspect == "9:16"),
+                    privacy_status=privacy,
+                )
+                youtube_results.update(ml_results)
+
     kwargs = {
         "videos": final_video_paths,
         "combined_videos": combined_video_paths,
@@ -378,6 +508,9 @@ def start(task_id, params: VideoParams, stop_at: str = "video"):
         "subtitle_path": subtitle_path,
         "materials": downloaded_videos,
         "cross_post_results": cross_post_results if cross_post_results else None,
+        "multilang": multilang_results if multilang_results else None,
+        "youtube_upload": youtube_results if youtube_results else None,
+        "seo": seo_result,
     }
     sm.state.update_task(
         task_id, state=const.TASK_STATE_COMPLETE, progress=100, **kwargs

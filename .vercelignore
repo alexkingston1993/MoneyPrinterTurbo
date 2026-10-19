@@ -1,0 +1,15 @@
+.venv
+.venv/
+venv/
+Final_Videos/
+output/
+data/
+resource/
+storage/
+my audio/
+__pycache__/
+*.whl
+*.mp4
+*.mp3
+*.wav
+*.pickle

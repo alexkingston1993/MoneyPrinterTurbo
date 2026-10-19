@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Primary SEO Meta Tags -->
+    <title>Dalal Street Alpha — Live Indian Stock Market News, Nifty Analysis & Derivatives</title>
+    <meta name="title" content="Dalal Street Alpha — Live Indian Stock Market News, Nifty Analysis & Derivatives">
+    <meta name="description" content="Real-time Indian stock market intelligence, Nifty 50 & Bank Nifty technical levels, FII/DII institutional cash flow tracking, options chain setups, and video breakdowns.">
+    <meta name="keywords" content="Nifty 50 today, Bank Nifty analysis, Indian stock market live, FII DII data today, share market news, options chain analysis, Dalal Street news">
+    <meta name="author" content="Dalal Street Alpha Desk">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph / Social -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Dalal Street Alpha — Live Market Intelligence">
+    <meta property="og:description" content="Real-time Indian stock market intelligence, Nifty 50 technical setups, FII/DII cash flow tracking, and video analysis.">
+    <meta property="og:image" content="https://dalalstreetalpha.com/og-banner.jpg">
+
+    <!-- Google Fonts: Outfit & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Top Live Ticker Marquee -->
+    <div id="ticker-bar" class="ticker-bar">
+        <div class="ticker-track" id="ticker-track">
+            <div class="ticker-item"><span class="t-name">NIFTY 50</span> <span class="t-val" id="tk-nifty">23,055.9</span> <span class="t-chg down" id="tk-nifty-chg">-0.39%</span></div>
+            <div class="ticker-item"><span class="t-name">SENSEX</span> <span class="t-val" id="tk-sensex">74,444.4</span> <span class="t-chg down" id="tk-sensex-chg">-0.38%</span></div>
+            <div class="ticker-item"><span class="t-name">BANK NIFTY</span> <span class="t-val" id="tk-bank">55,620.1</span> <span class="t-chg down" id="tk-bank-chg">-0.40%</span></div>
+            <div class="ticker-item"><span class="t-name">INDIA VIX</span> <span class="t-val">13.85</span> <span class="t-chg up">+2.1%</span></div>
+            <div class="ticker-item"><span class="t-name">BRENT CRUDE</span> <span class="t-val">$78.40</span> <span class="t-chg down">-0.6%</span></div>
+            <div class="ticker-item"><span class="t-name">GOLD (10g)</span> <span class="t-val">₹78,250</span> <span class="t-chg up">+0.4%</span></div>
+            <div class="ticker-item"><span class="t-name">USD/INR</span> <span class="t-val">₹84.15</span> <span class="t-chg neutral">0.00%</span></div>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header class="navbar">
+        <div class="nav-container">
+            <a href="/" class="brand-logo" id="brand-home-link">
+                <div class="logo-icon">▲</div>
+                <div class="logo-text">
+                    <span class="logo-title">DALAL STREET<span class="highlight">ALPHA</span></span>
+                    <span class="logo-sub">QUANTITATIVE MARKET DESK</span>
+                </div>
+            </a>
+
+            <nav class="nav-links">
+                <button class="nav-btn active" data-category="all" id="btn-cat-all">All News</button>
+                <button class="nav-btn" data-category="Nifty 50" id="btn-cat-nifty">Nifty 50</button>
+                <button class="nav-btn" data-category="Derivatives Analysis" id="btn-cat-derivatives">Derivatives</button>
+                <button class="nav-btn" data-category="FII Flow" id="btn-cat-fii">FII/DII Flows</button>
+            </nav>
+
+            <div class="nav-status">
+                <span class="market-status-pill closed" id="market-status-pill">
+                    <span class="pulse-dot"></span> MARKET CLOSED
+                </span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="main-layout">
+        <!-- Hero Section: Latest Breaking News -->
+        <section class="hero-section" id="hero-feature-container">
+            <div class="hero-badge-row">
+                <span class="badge pulse-badge">⚡ LIVE DESK REPORT</span>
+                <span class="badge tag-badge" id="hero-tag">NIFTY ANALYSIS</span>
+                <span class="hero-date" id="hero-date">Updated Today</span>
+            </div>
+
+            <h1 class="hero-title" id="hero-title">
+                Loading latest market analysis...
+            </h1>
+
+            <p class="hero-excerpt" id="hero-excerpt">
+                Fetching real-time algorithmic market intelligence, options open interest concentrations, and institutional cash flow data.
+            </p>
+
+            <!-- Video Embed Card -->
+            <div class="hero-video-box" id="hero-video-box">
+                <!-- Injected dynamically -->
+            </div>
+
+            <!-- GEO Executive Summary Answer Box -->
+            <div class="hero-geo-box" id="hero-geo-box">
+                <!-- Injected dynamically -->
+            </div>
+
+            <div class="hero-actions">
+                <button class="cta-read-btn" id="hero-read-full-btn">Read Full Technical Breakdown & Option Chain →</button>
+            </div>
+        </section>
+
+        <!-- Market Intelligence Grid -->
+        <section class="feed-section">
+            <div class="section-title-row">
+                <h2 class="section-heading">Dalal Street Feed & Timed Updates</h2>
+                <div class="filter-count" id="feed-count-badge">5 Market Reports</div>
+            </div>
+
+            <div class="articles-grid" id="articles-grid">
+                <!-- Dynamically rendered article cards -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Full Article Modal / Reader View -->
+    <div id="article-modal" class="article-modal hidden">
+        <div class="modal-backdrop" id="modal-backdrop"></div>
+        <div class="modal-dialog">
+            <button class="modal-close-btn" id="modal-close-btn" aria-label="Close reader">&times;</button>
+            <div class="modal-body" id="modal-content-body">
+                <!-- Injected by app.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <h3>DALAL STREET ALPHA</h3>
+                <p>Autonomous Financial Media Engine. Real-time quantitative equity research, derivatives analysis, and algorithmic video breakdowns.</p>
+            </div>
+            <div class="footer-links">
+                <a href="#about">About Desk</a>
+                <a href="#compliance">SEBI Compliance</a>
+                <a href="#youtube">YouTube Channel</a>
+                <a href="#rss">RSS Feed</a>
+            </div>
+        </div>
+        <div class="footer-disclaimer">
+            <p><strong>Regulatory Disclaimer:</strong> Dalal Street Alpha is an educational market research portal. Content is for informational purposes only and does not constitute financial advice under SEBI guidelines. Trading in equities, futures, and options involves capital risk.</p>
+            <p>&copy; 2026 Dalal Street Alpha. Powered by Autonomous Pipeline Engine.</p>
+        </div>
+    </footer>
+
+    <!-- Application Script -->
+    <script src="app.js"></script>
+</body>
+</html>
