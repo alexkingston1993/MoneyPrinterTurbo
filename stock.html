@@ -13,6 +13,7 @@
     <meta property="og:description" id="og-desc" content="Quantitative analytics, TradingView candlestick chart structure, and fundamental moats for benchmark NSE equities.">
     <meta property="og:type" content="article">
     <meta property="og:image" content="https://dalal-street-alpha.vercel.app/brand_assets/opengraph_social_card_1200x630.png">
+    <meta name="twitter:card" content="summary_large_image">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" sizes="32x32" href="brand_assets/website_favicon_32x32.png">
@@ -135,6 +136,8 @@
             display: flex;
             justify-content: space-between;
             font-size: 13px;
+            text-decoration: none;
+            color: inherit;
         }
         .stock-search-item:hover {
             background: rgba(37, 99, 235, 0.15);
@@ -192,6 +195,7 @@
             padding: 28px;
             margin-bottom: 24px;
         }
+        .analysis-card h2,
         .analysis-card h3 {
             font-size: 20px;
             font-weight: 700;
@@ -344,7 +348,7 @@
 
         <!-- Executive GEO Answer Box & Long-Term Thesis -->
         <section class="analysis-card">
-            <h3>⚡ Institutional Footprint & Moat Assessment</h3>
+            <h2>⚡ Institutional Footprint & Moat Assessment</h2>
             <p style="font-size:16px; line-height:1.7; color:#e2e8f0; margin-bottom:16px;" id="stock-moat-text">
                 Analyzing competitive positioning, return on capital employed, and multi-year structural tailwinds.
             </p>
@@ -358,7 +362,7 @@
 
         <!-- The Trader's Arsenal Direct Brokerage Gate -->
         <section class="analysis-card" style="border-color: rgba(37, 99, 235, 0.4); background: linear-gradient(135deg, rgba(9, 13, 22, 0.9) 0%, rgba(15, 23, 42, 0.7) 100%);">
-            <h3>🛠️ Execute Orders on <span id="arsenal-stock-symbol" class="highlight-gold">RELIANCE</span> With The Trader's Arsenal</h3>
+            <h2>🛠️ Execute Orders on <span id="arsenal-stock-symbol" class="highlight-gold">RELIANCE</span> With The Trader's Arsenal</h2>
             <p style="color:var(--text-secondary); font-size:15px; line-height:1.6; margin-bottom:20px;">
                 Trade equity delivery with zero brokerage, or connect directly to TradingView charts using our verified, institutional-grade execution partners:
             </p>
@@ -389,7 +393,7 @@
 
         <!-- High-Intent Frequently Asked Questions (GEO / AEO Engine) -->
         <section class="analysis-card">
-            <h3>❓ Frequently Asked Questions (FAQ)</h3>
+            <h2>❓ Frequently Asked Questions (FAQ)</h2>
             <div id="faq-container">
                 <!-- Injected via JavaScript based on selected stock -->
             </div>
@@ -630,13 +634,13 @@
                 }
 
                 searchDropdown.innerHTML = filtered.map(s => `
-                    <div class="stock-search-item" onclick="window.location.href='/stock.html?symbol=${s.symbol}'">
+                    <a href="/stock.html?symbol=${s.symbol}" class="stock-search-item">
                         <div>
                             <strong style="color:#ffffff;">${s.symbol}</strong>
                             <span style="color:#94a3b8; font-size:12px; margin-left:8px;">${s.name}</span>
                         </div>
                         <span style="color:var(--color-blue); font-family:var(--font-mono); font-size:11px;">${s.sector}</span>
-                    </div>
+                    </a>
                 `).join("");
                 searchDropdown.style.display = "block";
             }
