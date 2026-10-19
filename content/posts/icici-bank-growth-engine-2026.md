@@ -6,7 +6,7 @@ excerpt: "Fundamental review of ICICI Bank (NSE: ICICIBANK). Examining return on
 focusKeyword: "ICICI Bank stock analysis 2026"
 categories: ["Banking Sector", "Equities Research", "Nifty 50"]
 tags: ["ICICIBANK", "BankNifty", "PrivateBanking", "FinancialsIndia"]
-youtubeUrl: ""
+youtubeUrl: "https://youtu.be/iF0KWHKmobk"
 ---
 
 <div class="market-article">
