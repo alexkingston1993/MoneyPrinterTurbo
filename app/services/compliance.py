@@ -42,9 +42,9 @@ BANNED_PHRASES = [
 ]
 
 REQUIRED_DISCLAIMER_PATTERNS = [
-    r"educational (purpose|only)",
-    r"not (a |an |)SEBI[\s-]?(registered|regist)",
-    r"(do your own|your own) (research|due diligence)",
+    r"educational",
+    r"(not\s+(a\s+|an\s+)?SEBI|SEBI[\s-]?(registered|regist))",
+    r"(due diligence|market research|do your own (research|due diligence))",
 ]
 
 FOLLOW_UP_REQUIRED = re.compile(

@@ -108,6 +108,6 @@ youtubeUrl: "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
 
  <!-- Regulatory Disclaimer (SEBI Compliance) -->
  <div class="disclaimer-box" style="margin-top:40px; padding:15px; border:1px solid #cbd5e1; background:#f8fafc; font-size:12px; color:#64748b; border-radius:4px;">
- <strong>Disclaimer:</strong> This market report and video summary are created strictly for educational and informational purposes. It does not constitute investment or trading advice under SEBI guidelines. Securities market trading involves high capital risk. Please consult a SEBI-registered financial advisor before taking financial positions.
+ <strong>Disclaimer:</strong> This market report and video summary are created strictly for educational purposes only. I am not a SEBI-registered financial advisor or research analyst. Securities market trading involves high capital risk. Please do your own due diligence and market research before taking financial positions.
  </div>
 </div>
