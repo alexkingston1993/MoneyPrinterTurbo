@@ -1125,7 +1125,7 @@ frame_rate = 30
    - Generate dedicated quantitative analysis and options setup pages for all NSE 500 & top traded equities.
    - Traffic projection: 2,000 stock pages $\times$ 50 organic search visits/day = 100,000 pageviews/day = 3,000,000 pageviews/month at high finance RPMs ($25–$45).
 3. **Website Revamp & Conversion Hub**:
-   - Institutional redesign of Dalal Street Alpha portal live at `https://dalal-street-alpha.vercel.app`.
+   - Institutional redesign of The Bull Print portal live at `https://the-bull-print.vercel.app`.
    - Incorporating "The Trader's Arsenal" (`/tools`), 24-Month RevShare Growth Simulator, and Fee & Slippage Impact Calculator.
 4. **Regional YouTube Channels Activation (Hindi & Tamil)**:
    - **Step 1**: Create YouTube Brand Channels under your primary Google Account for:
@@ -1184,7 +1184,7 @@ To ensure the entire autonomous media machine is completely impenetrable against
    - Full commercial disclosure detailing RevShare percentages across Dhan, Zerodha, Delta Exchange, Bybit, TradingView, and GoCharting.
 2. **Platform-Administered Fee Incentives**:
    - Partner links route users to official broker/exchange sign-up portals where platforms credit fee discounts and sign-up perks directly to the user's trading ledger.
-   - Zero creator fund handling: Dalal Street Alpha never collects money, manages client accounts, or disburses cash rebates.
+   - Zero creator fund handling: The Bull Print never collects money, manages client accounts, or disburses cash rebates.
 3. **Zero Deceptive Advertising**:
    - Strictly no fake P&L screenshots, no luxury lifestyle flexing, and no claims of guaranteed returns.
 

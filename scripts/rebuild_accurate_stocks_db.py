@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Dalal Street Alpha - 1000% Accurate Screener.in Grade Database Generator
+The Bull Print - 1000% Accurate Screener.in Grade Database Generator
 Calibrated with verified NSE / BSE live market metrics for Indian equities.
 """
 

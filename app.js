@@ -1,5 +1,5 @@
 // ==============================================================================
-// DALAL STREET ALPHA — APPLICATION SCRIPT
+// THE BULL PRINT — APPLICATION SCRIPT
 // Quantitative Market Desk, Interactive RevShare Simulator & Fee Engine
 // ==============================================================================
 

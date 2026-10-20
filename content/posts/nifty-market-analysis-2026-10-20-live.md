@@ -1,5 +1,5 @@
 ---
-title: "Dalal Street Intelligence: Nifty 50 Navigates Key Inflexion Levels | Institutional FII Flow Breakdown"
+title: "The Bull Print Intelligence: Nifty 50 Navigates Key Inflexion Levels | Institutional FII Flow Breakdown"
 date: "2026-10-20 03:10:00"
 slug: "nifty-market-analysis-2026-10-20-live"
 excerpt: "Live market intelligence: Nifty 50 consolidates around critical moving average support. FII/DII cash market dynamics, options chain open interest concentration, and volatility posture."
@@ -57,6 +57,6 @@ youtubeUrl: "https://www.youtube.com/watch?v=9AVhwVNCKug"
     <!-- Regulatory Disclaimer -->
     <div class="disclaimer-box" style="margin-top:40px; padding:22px; background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-left:4px solid #f43f5e; font-size:12.5px; color:#94a3b8; border-radius:8px; line-height:1.6;">
         <strong style="color:#f8fafc;">⚖️ Mandatory Regulatory Notice (SEBI Compliance):</strong><br>
-        Dalal Street Alpha provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.
+        The Bull Print provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.
     </div>
 </div>

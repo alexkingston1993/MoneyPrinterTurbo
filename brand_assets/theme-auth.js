@@ -1,4 +1,4 @@
-// Dalal Street Alpha - Global Theme Switcher & Google Auth / Watchlist Controller
+// The Bull Print - Global Theme Switcher & Google Auth / Watchlist Controller
 // Theme default: LIGHT MODE (as specified by user requirement)
 
 (function() {
@@ -115,7 +115,7 @@
                         <button type="submit" class="g-submit-btn">Continue with Gmail</button>
                     </form>
                     <div class="g-modal-disclaimer">
-                        By continuing, you agree to Dalal Street Alpha's Educational Terms & Privacy Policy.
+                        By continuing, you agree to The Bull Print's Educational Terms & Privacy Policy.
                     </div>
                 </div>
             `;
@@ -366,7 +366,7 @@
         }
 
         const calDate = event.date.replace(/-/g, '');
-        const calUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.company + ' - ' + event.title)}&dates=${calDate}T090000Z/${calDate}T170000Z&details=${encodeURIComponent(event.details + '\n\nTracked via Dalal Street Alpha')}`;
+        const calUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.company + ' - ' + event.title)}&dates=${calDate}T090000Z/${calDate}T170000Z&details=${encodeURIComponent(event.details + '\n\nTracked via The Bull Print')}`;
 
         popup.innerHTML = `
             <div class="dsa-alert-pop-header">

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Dalal Street Alpha - Real-time Screener.in Scraper & Verifier
+The Bull Print - Real-time Screener.in Scraper & Verifier
 Fetches 100% authentic, verified financial statements directly from Screener.in.
 Zero synthetic or placeholder numbers.
 """

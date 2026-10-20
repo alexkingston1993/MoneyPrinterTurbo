@@ -58,7 +58,7 @@ ARTICLES = [
 
     <div class="disclaimer-box" style="margin-top:40px; padding:22px; background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-left:4px solid #f43f5e; font-size:12.5px; color:#94a3b8; border-radius:8px; line-height:1.6;">
         <strong style="color:#f8fafc;">⚖️ Mandatory Regulatory Notice (SEBI & ASCI Compliance):</strong><br>
-        Dalal Street Alpha operates exclusively as an educational market research desk. The author and algorithms are NOT registered with SEBI as an Investment Adviser (IA) or Research Analyst (RA). This report contains personal observations and historical data points—NEVER buy/sell calls, target prices, or financial advice.
+        The Bull Print operates exclusively as an educational market research desk. The author and algorithms are NOT registered with SEBI as an Investment Adviser (IA) or Research Analyst (RA). This report contains personal observations and historical data points—NEVER buy/sell calls, target prices, or financial advice.
         <br><br>
         <strong>Derivatives Risk Notice:</strong> Per SEBI empirical studies, 9 out of 10 individual traders in equity futures and options incur net losses. Please consult an independent certified financial advisor. Read our official <a href="/disclaimer" style="color:#60a5fa; text-decoration:underline;">SEBI Regulatory Disclaimer</a>, <a href="/risk-disclosure" style="color:#60a5fa; text-decoration:underline;">Risk Disclosure</a>, and <a href="/affiliate-disclosure" style="color:#60a5fa; text-decoration:underline;">Affiliate Transparency Policy</a>.
     </div>
@@ -108,7 +108,7 @@ ARTICLES = [
 
     <div class="disclaimer-box" style="margin-top:40px; padding:22px; background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-left:4px solid #f43f5e; font-size:12.5px; color:#94a3b8; border-radius:8px; line-height:1.6;">
         <strong style="color:#f8fafc;">⚖️ Mandatory Regulatory Notice (SEBI Compliance):</strong><br>
-        Dalal Street Alpha provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.
+        The Bull Print provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.
     </div>
 </div>"""
     },
@@ -153,7 +153,7 @@ ARTICLES = [
 
     <div class="disclaimer-box" style="margin-top:40px; padding:22px; background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-left:4px solid #f43f5e; font-size:12.5px; color:#94a3b8; border-radius:8px; line-height:1.6;">
         <strong style="color:#f8fafc;">⚖️ Mandatory Regulatory Notice (SEBI Compliance):</strong><br>
-        Dalal Street Alpha provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.
+        The Bull Print provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.
     </div>
 </div>"""
     },
@@ -199,7 +199,7 @@ ARTICLES = [
 
     <div class="disclaimer-box" style="margin-top:40px; padding:22px; background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-left:4px solid #f43f5e; font-size:12.5px; color:#94a3b8; border-radius:8px; line-height:1.6;">
         <strong style="color:#f8fafc;">⚖️ Mandatory Regulatory Notice (SEBI Compliance):</strong><br>
-        Dalal Street Alpha provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.
+        The Bull Print provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.
     </div>
 </div>"""
     },
@@ -247,7 +247,7 @@ ARTICLES = [
 
     <div class="disclaimer-box" style="margin-top:40px; padding:22px; background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-left:4px solid #f43f5e; font-size:12.5px; color:#94a3b8; border-radius:8px; line-height:1.6;">
         <strong style="color:#f8fafc;">⚖️ Mandatory Regulatory Notice (SEBI Compliance):</strong><br>
-        Dalal Street Alpha provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.
+        The Bull Print provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.
     </div>
 </div>"""
     },
@@ -293,7 +293,7 @@ ARTICLES = [
 
     <div class="disclaimer-box" style="margin-top:40px; padding:22px; background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-left:4px solid #f43f5e; font-size:12.5px; color:#94a3b8; border-radius:8px; line-height:1.6;">
         <strong style="color:#f8fafc;">⚖️ Mandatory Regulatory Notice (SEBI Compliance):</strong><br>
-        Dalal Street Alpha provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.
+        The Bull Print provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.
     </div>
 </div>"""
     },
@@ -339,7 +339,7 @@ ARTICLES = [
 
     <div class="disclaimer-box" style="margin-top:40px; padding:22px; background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-left:4px solid #f43f5e; font-size:12.5px; color:#94a3b8; border-radius:8px; line-height:1.6;">
         <strong style="color:#f8fafc;">⚖️ Mandatory Regulatory Notice (SEBI Compliance):</strong><br>
-        Dalal Street Alpha provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.
+        The Bull Print provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.
     </div>
 </div>"""
     },
@@ -385,7 +385,7 @@ ARTICLES = [
 
     <div class="disclaimer-box" style="margin-top:40px; padding:22px; background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-left:4px solid #f43f5e; font-size:12.5px; color:#94a3b8; border-radius:8px; line-height:1.6;">
         <strong style="color:#f8fafc;">⚖️ Mandatory Regulatory Notice (SEBI Compliance):</strong><br>
-        Dalal Street Alpha provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.
+        The Bull Print provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.
     </div>
 </div>"""
     },
@@ -431,7 +431,7 @@ ARTICLES = [
 
     <div class="disclaimer-box" style="margin-top:40px; padding:22px; background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-left:4px solid #f43f5e; font-size:12.5px; color:#94a3b8; border-radius:8px; line-height:1.6;">
         <strong style="color:#f8fafc;">⚖️ Mandatory Regulatory Notice (SEBI Compliance):</strong><br>
-        Dalal Street Alpha provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.
+        The Bull Print provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.
     </div>
 </div>"""
     },
@@ -478,7 +478,7 @@ ARTICLES = [
 
     <div class="disclaimer-box" style="margin-top:40px; padding:22px; background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-left:4px solid #f43f5e; font-size:12.5px; color:#94a3b8; border-radius:8px; line-height:1.6;">
         <strong style="color:#f8fafc;">⚖️ Mandatory Regulatory Notice (SEBI Compliance):</strong><br>
-        Dalal Street Alpha provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.
+        The Bull Print provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.
     </div>
 </div>"""
     }
@@ -541,8 +541,8 @@ def main():
                 "description": art["excerpt"],
                 "datePublished": art["date"],
                 "dateModified": art["date"],
-                "mainEntityOfPage": {"@type": "WebPage", "@id": f"https://dalal-street-alpha.vercel.app/article?slug={slug}"},
-                "author": {"@type": "Organization", "name": "Dalal Street Alpha Desk", "url": "https://dalal-street-alpha.vercel.app"}
+                "mainEntityOfPage": {"@type": "WebPage", "@id": f"https://the-bull-print.vercel.app/article?slug={slug}"},
+                "author": {"@type": "Organization", "name": "The Bull Print Desk", "url": "https://the-bull-print.vercel.app"}
             }
         }
         

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Dalal Street Alpha - Universal Data Synchronization & Accuracy Engine
+The Bull Print - Universal Data Synchronization & Accuracy Engine
 Integrates 100% authentic Screener.in live verified metrics into stocks_database.json
 Eliminates all contradictions, stale figures, and synthetic anomalies.
 """

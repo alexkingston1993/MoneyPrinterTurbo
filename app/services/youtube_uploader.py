@@ -221,18 +221,18 @@ class YouTubeUploader:
                 if t not in video_tags:
                     video_tags.append(t)
 
-        channel_name = CHANNEL_LANGUAGES.get(language, {}).get("name", "Dalal Street Alpha")
+        channel_name = CHANNEL_LANGUAGES.get(language, {}).get("name", "The Bull Print")
         full_description = (
             f"{description}\n\n"
             f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
             f"🌐 Official Portal & The Trader's Arsenal:\n"
-            f"https://dalal-street-alpha.vercel.app\n"
+            f"https://the-bull-print.vercel.app\n"
             f"(Compare low-slippage brokers, Footprint/Order-flow settings, TradingView templates & Fee Calculators)\n\n"
             f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
             f"⚖️ MANDATORY SEBI REGULATORY DISCLAIMER & RISK WARNING\n"
             f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
             f"1. NOT A SEBI REGISTERED FINANCIAL ADVISER / RESEARCH ANALYST:\n"
-            f"The creator of Dalal Street Alpha is NOT registered with the Securities and Exchange Board of India (SEBI) "
+            f"The creator of The Bull Print is NOT registered with the Securities and Exchange Board of India (SEBI) "
             f"as an Investment Adviser (under SEBI IA Regulations, 2013) or as a Research Analyst (under SEBI RA Regulations, 2014).\n\n"
             f"2. STRICTLY FOR EDUCATIONAL & RESEARCH PURPOSES:\n"
             f"This video and market breakdown are produced strictly for educational, informational, and financial literacy purposes. "

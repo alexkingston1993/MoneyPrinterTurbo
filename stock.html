@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="page-title">NSE Stock Intelligence & Fundamental Screener | Dalal Street Alpha</title>
+    <title id="page-title">NSE Stock Intelligence & Fundamental Screener | The Bull Print</title>
     <meta name="description" id="page-desc" content="Comprehensive institutional equity research, verified Screener fundamentals, real-world value dossiers, and TradingView technical setups for Indian equities.">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" id="canonical-url" href="https://dalal-street-alpha.vercel.app/stock">
+    <link rel="canonical" id="canonical-url" href="https://the-bull-print.vercel.app/stock">
 
     <!-- Open Graph & Social Cards -->
-    <meta property="og:title" id="og-title" content="NSE Stock Intelligence & Screener | Dalal Street Alpha">
+    <meta property="og:title" id="og-title" content="NSE Stock Intelligence & Screener | The Bull Print">
     <meta property="og:description" id="og-desc" content="Institutional balance sheet compounding, real-world moats, promoter integrity scorecards, and live NSE quotes.">
     <meta property="og:type" content="article">
-    <meta property="og:image" content="https://dalal-street-alpha.vercel.app/brand_assets/opengraph_social_card_1200x630.png">
+    <meta property="og:image" content="https://the-bull-print.vercel.app/brand_assets/opengraph_social_card_1200x630.png">
     <meta name="twitter:card" content="summary_large_image">
 
     <!-- Favicon -->
@@ -925,7 +925,7 @@
         <div class="navbar-inner">
             <a href="/" class="brand-group">
                 <img src="brand_assets/website_favicon_192x192.png" alt="Logo" class="brand-logo-img">
-                <span class="brand-name">DALAL STREET <span>ALPHA</span></span>
+                <span class="brand-name">THE BULL <span>PRINT</span></span>
             </a>
 
             <!-- Search -->
@@ -1303,7 +1303,7 @@
                 <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
                     <div>
                         <span style="font-size:14px; font-weight:800; color:var(--text-primary);" id="concall-meta-title">Q2 FY25 Earnings Call Synthesis</span>
-                        <div style="font-size:11.5px; color:var(--text-muted);" id="concall-meta-date">Recorded: October 2024 • Audio Length: 58 mins • Analyzed by Dalal Street Alpha AI</div>
+                        <div style="font-size:11.5px; color:var(--text-muted);" id="concall-meta-date">Recorded: October 2024 • Audio Length: 58 mins • Analyzed by The Bull Print AI</div>
                     </div>
                     <div style="display:flex; gap:8px;">
                         <button class="btn-primary" style="font-size:12px; padding:6px 12px;" onclick="showToast('Loading full 28-page earnings transcript PDF...')">📑 Full Transcript (PDF)</button>
@@ -1544,9 +1544,9 @@
 
     <!-- Footer -->
     <footer class="site-footer">
-        <p style="font-weight:700; color:var(--text-primary); margin-bottom:6px;">DALAL STREET ALPHA • INSTITUTIONAL EQUITY INTELLIGENCE DESK</p>
+        <p style="font-weight:700; color:var(--text-primary); margin-bottom:6px;">THE BULL PRINT • INSTITUTIONAL EQUITY INTELLIGENCE DESK</p>
         <p>Real-time data feeds via NSE/BSE. Complete balance sheet compounding and ratio tables compiled for educational analysis.</p>
-        <p>© 2026 Dalal Street Alpha Desk. Strictly educational. Not SEBI registered investment advice.</p>
+        <p>© 2026 The Bull Print Desk. Strictly educational. Not SEBI registered investment advice.</p>
     </footer>
 
     <!-- Scripts -->
@@ -1621,7 +1621,7 @@
         // C. Render Complete Screener.in Grade Stock Page
         function renderFullStockPage(stock) {
             if (!stock) return;
-            document.getElementById("page-title").textContent = `${stock.name} (${stock.symbol}) Fundamentals & Real-Time Screener | Dalal Street Alpha`;
+            document.getElementById("page-title").textContent = `${stock.name} (${stock.symbol}) Fundamentals & Real-Time Screener | The Bull Print`;
             document.getElementById("page-desc").textContent = `Complete 10-year financial statements, quarterly results, balance sheet, and live quotes for ${stock.name}.`;
             document.getElementById("stock-name").textContent = stock.name;
             document.getElementById("stock-symbol-badge").textContent = `NSE: ${stock.symbol}`;
@@ -1920,7 +1920,7 @@
             const stockData = CONCALL_DATABASE[sym] || CONCALL_DATABASE["ITC"];
             const qData = stockData[qtr] || stockData["Q2FY25"] || {
                 title: `${sym} ${qtr} Earnings Conference Call`,
-                date: "Recorded: Recent Quarter • Synthesized by Dalal Street Alpha AI",
+                date: "Recorded: Recent Quarter • Synthesized by The Bull Print AI",
                 guidance: `Management reiterated positive volume trajectory with double-digit growth expected in high-margin segments. Export demand remained solid with healthy domestic order book conversion.`,
                 capex: `Capital expenditure on track for planned brownfield capacity additions and digitalization of supply chains.`,
                 headwinds: `Input cost fluctuations and foreign exchange volatility observed during the quarter, partially mitigated by dynamic product pricing.`,

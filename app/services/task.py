@@ -478,7 +478,7 @@ def start(task_id, params: VideoParams, stop_at: str = "video"):
         # Use SEO-optimized title and description if available
         optimized_title = seo_result.get("title", "") if seo_result else ""
         if not optimized_title or "Error:" in optimized_title or "429" in optimized_title:
-            optimized_title = params.video_subject or "Dalal Street Alpha Market Analysis"
+            optimized_title = params.video_subject or "The Bull Print Market Analysis"
         
         optimized_desc = seo_result.get("description", "") if seo_result else ""
         if not optimized_desc or "Error:" in optimized_desc or "429" in optimized_desc:

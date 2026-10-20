@@ -253,8 +253,8 @@ def run_single(item):
     upload_res = uploader.upload_video(
         language="en",
         video_path=final_video_path,
-        title=f"{item['subject']} | Dalal Street Alpha",
-        description=f"In-depth institutional stock analysis of {item['ticker']}. Full research breakdown, technical setup, and valuation multiples.\n\nRead the quantitative report: https://dalal-street-alpha.vercel.app\n\n#Shorts #{item['ticker']} #StockMarketIndia #Nifty50 #Investing",
+        title=f"{item['subject']} | The Bull Print",
+        description=f"In-depth institutional stock analysis of {item['ticker']}. Full research breakdown, technical setup, and valuation multiples.\n\nRead the quantitative report: https://the-bull-print.vercel.app\n\n#Shorts #{item['ticker']} #StockMarketIndia #Nifty50 #Investing",
         is_short=True,
         privacy_status="public"
     )

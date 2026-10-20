@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Dalal Street Alpha - Comprehensive Screener.in Grade Financial Statements & Stock Intelligence Database Generator
+The Bull Print - Comprehensive Screener.in Grade Financial Statements & Stock Intelligence Database Generator
 Generates:
 1. Quarterly Results (Sales, Expenses, OP, OPM%, Other Income, Interest, Dep, PBT, Tax, Net Profit, EPS)
 2. 10-Yr Profit & Loss Statement (Sales, OP, Net Profit, EPS, Dividend Payout)

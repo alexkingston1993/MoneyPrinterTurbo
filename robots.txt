@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://dalal-street-alpha.vercel.app/sitemap.xml
+Sitemap: https://the-bull-print.vercel.app/sitemap.xml

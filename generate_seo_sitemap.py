@@ -1,5 +1,5 @@
 """
-Programmatic SEO Sitemap & Robots.txt Generator for Dalal Street Alpha Desk.
+Programmatic SEO Sitemap & Robots.txt Generator for The Bull Print Desk.
 Indexes all benchmark NSE equity analysis pages, legal pages, and market archives.
 """
 
@@ -7,7 +7,7 @@ import datetime
 import json
 import os
 
-BASE_URL = "https://dalal-street-alpha.vercel.app"
+BASE_URL = "https://the-bull-print.vercel.app"
 
 def generate_sitemap():
     now_iso = datetime.datetime.utcnow().strftime("%Y-%m-%d")

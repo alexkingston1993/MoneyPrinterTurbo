@@ -43,6 +43,6 @@ youtubeUrl: ""
 
     <div class="disclaimer-box" style="margin-top:40px; padding:22px; background:rgba(15,23,42,0.9); border:1px solid rgba(255,255,255,0.1); border-left:4px solid #f43f5e; font-size:12.5px; color:#94a3b8; border-radius:8px; line-height:1.6;">
         <strong style="color:#f8fafc;">⚖️ Mandatory Regulatory Notice (SEBI Compliance):</strong><br>
-        Dalal Street Alpha provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.
+        The Bull Print provides quantitative education. We are NOT registered with SEBI as an Investment Adviser or Research Analyst. No content here is financial advice or a trade recommendation.
     </div>
 </div>

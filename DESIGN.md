@@ -1,11 +1,11 @@
-# Dalal Street Alpha — UI/UX Design System & Architecture Specification
+# The Bull Print — UI/UX Design System & Architecture Specification
 *Built according to Awwwards Site of the Day Standards & Groww + Screener.in Benchmarks*
 
 ---
 
 ## 1. Concept Card
 
-- **Product Identity**: Dalal Street Alpha (`https://dalal-street-alpha.vercel.app`)
+- **Product Identity**: The Bull Print (`https://the-bull-print.vercel.app`)
 - **Idea**: An institutional-grade Indian market intelligence and exploration desk combining Groww's uncluttered consumer layout with Screener.in's deep fundamental financial metrics.
 - **Metaphor**: A Bloomberg Terminal stripped of noise — high signal-to-noise ratio, pure readability, dark mode precision with live ticks.
 - **Signature Interactions**:
