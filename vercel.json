@@ -14,6 +14,18 @@
       "destination": "/stock.html"
     },
     {
+      "source": "/screens/:slug",
+      "destination": "/screener.html"
+    },
+    {
+      "source": "/screens",
+      "destination": "/screener.html"
+    },
+    {
+      "source": "/screener",
+      "destination": "/screener.html"
+    },
+    {
       "source": "/portfolio",
       "destination": "/portfolio.html"
     },

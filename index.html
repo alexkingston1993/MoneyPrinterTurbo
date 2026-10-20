@@ -78,7 +78,7 @@
 
         /* ── 1. Top Indices Ribbon (Sleek Ticker Tape) ── */
         .indices-strip {
-            background: rgba(8, 11, 18, 0.90);
+            background: var(--bg-surface);
             border-bottom: 1px solid var(--border-subtle);
             padding: 8px 0;
             position: sticky;
@@ -86,6 +86,10 @@
             z-index: 1000;
             backdrop-filter: blur(20px);
             -webkit-backdrop-filter: blur(20px);
+            transition: background 0.2s ease, border-color 0.2s ease;
+        }
+        [data-theme="dark"] .indices-strip {
+            background: rgba(8, 11, 18, 0.90);
         }
         .indices-container {
             max-width: 1280px;
@@ -105,7 +109,7 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            background: rgba(16, 22, 36, 0.7);
+            background: var(--bg-card);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-sm);
             padding: 7px 14px;
@@ -113,12 +117,13 @@
             transition: all 0.24s var(--ease-apple);
             white-space: nowrap;
             user-select: none;
+            box-shadow: var(--card-shadow);
         }
         .index-pill:hover {
             border-color: var(--groww-mint);
-            background: rgba(21, 30, 48, 0.95);
+            background: var(--bg-card-hover);
             transform: translateY(-2px);
-            box-shadow: 0 6px 18px rgba(0, 208, 156, 0.15);
+            box-shadow: 0 6px 18px var(--groww-mint-soft);
         }
         .index-title {
             font-family: var(--font-display);
@@ -131,7 +136,7 @@
             font-family: var(--font-mono);
             font-size: 13px;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--text-primary);
             font-variant-numeric: tabular-nums;
         }
         .index-chg {
@@ -163,13 +168,14 @@
 
         /* ── 2. Sleek Minimal Navigation Bar ── */
         .main-navbar {
-            background: rgba(10, 14, 24, 0.75);
+            background: var(--navbar-bg);
             border-bottom: 1px solid var(--border-subtle);
             padding: 14px 20px;
             position: relative;
             z-index: 900;
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
+            transition: background 0.2s ease, border-color 0.2s ease;
         }
         .navbar-inner {
             max-width: 1280px;
@@ -189,13 +195,13 @@
             width: 32px;
             height: 32px;
             border-radius: 8px;
-            box-shadow: 0 0 14px rgba(0, 208, 156, 0.25);
+            box-shadow: 0 0 14px var(--groww-mint-soft);
         }
         .brand-name {
             font-family: var(--font-display);
             font-size: 18px;
             font-weight: 800;
-            color: #ffffff;
+            color: var(--text-primary);
             letter-spacing: -0.3px;
             display: flex;
             align-items: center;
@@ -209,7 +215,7 @@
             font-size: 9px;
             font-weight: 700;
             letter-spacing: 0.5px;
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--bg-card-hover);
             color: var(--text-secondary);
             padding: 2px 7px;
             border-radius: 4px;
@@ -229,7 +235,7 @@
             transition: color 0.2s ease;
         }
         .nav-link-item:hover {
-            color: #ffffff;
+            color: var(--groww-mint);
         }
 
         .header-utility {
@@ -248,7 +254,7 @@
             background: var(--groww-mint-soft);
             padding: 5px 12px;
             border-radius: var(--radius-full);
-            border: 1px solid rgba(0, 208, 156, 0.25);
+            border: 1px solid var(--groww-mint);
             white-space: nowrap;
         }
         .status-pulse-dot {
@@ -275,12 +281,17 @@
             font-family: var(--font-display);
             font-size: clamp(28px, 4.2vw, 42px);
             font-weight: 800;
-            color: #ffffff;
+            color: var(--text-primary);
             letter-spacing: -0.8px;
             line-height: 1.15;
             margin-bottom: 10px;
         }
         .hero-title span {
+            background: linear-gradient(135deg, var(--groww-mint) 30%, #0284c7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        [data-theme="dark"] .hero-title span {
             background: linear-gradient(135deg, #ffffff 30%, var(--groww-mint) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -302,25 +313,25 @@
         .hero-search-box {
             display: flex;
             align-items: center;
-            background: rgba(16, 22, 36, 0.85);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
             border-radius: var(--radius-md);
             padding: 12px 18px;
             gap: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+            box-shadow: var(--card-shadow);
             transition: all 0.25s var(--ease-apple);
         }
         .hero-search-box:focus-within {
             border-color: var(--groww-mint);
-            background: rgba(18, 26, 44, 0.98);
-            box-shadow: 0 12px 35px rgba(0, 208, 156, 0.18), 0 0 0 3px rgba(0, 208, 156, 0.15);
+            background: var(--bg-surface);
+            box-shadow: 0 10px 30px var(--groww-mint-soft), 0 0 0 3px var(--groww-mint-soft);
             transform: translateY(-2px);
         }
         .hero-search-box input {
             background: transparent;
             border: none;
             outline: none;
-            color: #ffffff;
+            color: var(--text-primary);
             font-size: 14.5px;
             width: 100%;
             font-family: var(--font-body);
@@ -332,10 +343,10 @@
             font-family: var(--font-mono);
             font-size: 11px;
             color: var(--text-muted);
-            background: rgba(255, 255, 255, 0.08);
+            background: var(--bg-card-hover);
             padding: 3px 7px;
             border-radius: 4px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-subtle);
             white-space: nowrap;
         }
 
@@ -345,15 +356,18 @@
             top: calc(100% + 8px);
             left: 0;
             right: 0;
-            background: #0f1628;
-            border: 1px solid var(--border-hover);
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
             border-radius: var(--radius-md);
             max-height: 340px;
             overflow-y: auto;
             z-index: 1000;
             display: none;
-            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75);
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.15);
             text-align: left;
+        }
+        [data-theme="dark"] .search-dropdown {
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75);
         }
         .search-dropdown-item {
             padding: 12px 16px;
@@ -361,12 +375,12 @@
             align-items: center;
             justify-content: space-between;
             text-decoration: none;
-            color: inherit;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            color: var(--text-primary);
+            border-bottom: 1px solid var(--border-subtle);
             transition: background 0.18s ease;
         }
         .search-dropdown-item:hover {
-            background: rgba(0, 208, 156, 0.12);
+            background: var(--groww-mint-soft);
         }
 
         /* Live Market Pulse Bar */
@@ -394,7 +408,7 @@
             background: var(--groww-mint);
         }
         .pulse-val {
-            color: #ffffff;
+            color: var(--text-primary);
             font-weight: 700;
         }
         .pulse-val.mint {
@@ -435,11 +449,15 @@
             position: relative;
             overflow: hidden;
             transition: all 0.25s var(--ease-apple);
+            box-shadow: var(--card-shadow);
         }
         .stock-quick-card:hover {
             border-color: var(--border-hover);
             background: var(--bg-card-hover);
             transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08), 0 0 16px -4px var(--groww-mint-soft);
+        }
+        [data-theme="dark"] .stock-quick-card:hover {
             box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4), 0 0 16px -4px rgba(0, 208, 156, 0.15);
         }
         .stock-quick-header {
@@ -461,7 +479,7 @@
             color: #ffffff;
             letter-spacing: 0.5px;
             flex-shrink: 0;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
         }
         .stock-avatar-reliance {
             background: linear-gradient(135deg, #1e3a8a, #3b82f6);
@@ -483,7 +501,7 @@
             font-family: var(--font-display);
             font-size: 14.5px;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--text-primary);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -507,7 +525,7 @@
             font-family: var(--font-mono);
             font-size: 17px;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--text-primary);
             font-variant-numeric: tabular-nums;
         }
         .stock-quick-badge {
@@ -538,7 +556,7 @@
         .tab-segmented-bar {
             display: inline-flex;
             align-items: center;
-            background: rgba(14, 19, 32, 0.7);
+            background: var(--bg-card-hover);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-md);
             padding: 5px;
@@ -570,10 +588,16 @@
             z-index: 2;
         }
         .seg-tab-btn:hover {
-            color: #ffffff;
-            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-primary);
+            background: var(--bg-surface);
         }
         .seg-tab-btn.active {
+            background: var(--bg-surface);
+            color: var(--groww-mint);
+            border-color: var(--border-subtle);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        }
+        [data-theme="dark"] .seg-tab-btn.active {
             background: #151d30;
             color: var(--groww-mint);
             border-color: rgba(0, 208, 156, 0.35);
@@ -586,7 +610,7 @@
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-md);
             padding: 24px;
-            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3);
+            box-shadow: var(--card-shadow);
         }
         .tab-panel.active-view {
             animation: butterySlideUp 0.28s var(--ease-apple) forwards;
@@ -614,7 +638,7 @@
             font-family: var(--font-display);
             font-size: 18px;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--text-primary);
             letter-spacing: -0.2px;
             display: flex;
             align-items: center;
@@ -626,7 +650,7 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            background: rgba(255, 255, 255, 0.04);
+            background: var(--bg-card-hover);
             padding: 4px;
             border-radius: var(--radius-sm);
             border: 1px solid var(--border-subtle);
@@ -644,10 +668,10 @@
             font-family: var(--font-body);
         }
         .filter-pill:hover {
-            color: #ffffff;
+            color: var(--text-primary);
         }
         .filter-pill.active {
-            background: rgba(0, 208, 156, 0.15);
+            background: var(--groww-mint-soft);
             color: var(--groww-mint);
             font-weight: 700;
         }
@@ -665,11 +689,11 @@
             text-align: left;
         }
         .groww-table th {
-            background: rgba(8, 12, 22, 0.75);
+            background: var(--table-header-bg);
             padding: 12px 18px;
             font-family: var(--font-mono);
             font-size: 11px;
-            color: var(--text-muted);
+            color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 0.5px;
             border-bottom: 1px solid var(--border-subtle);
@@ -677,8 +701,8 @@
         }
         .groww-table td {
             padding: 14px 18px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            color: #cbd5e1;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-primary);
             white-space: nowrap;
             transition: background 0.18s ease;
         }
@@ -687,7 +711,7 @@
             transition: background 0.18s ease;
         }
         .groww-table tr:hover td {
-            background: rgba(255, 255, 255, 0.035);
+            background: var(--table-row-hover);
         }
         .groww-table tr:hover .row-hover-arrow {
             opacity: 1;
@@ -702,21 +726,21 @@
             width: 32px;
             height: 32px;
             border-radius: 8px;
-            background: rgba(255, 255, 255, 0.06);
+            background: var(--bg-card-hover);
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: var(--font-display);
             font-size: 11px;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--text-primary);
             border: 1px solid var(--border-subtle);
             flex-shrink: 0;
         }
         .company-name {
             font-family: var(--font-display);
             font-weight: 700;
-            color: #ffffff;
+            color: var(--text-primary);
             font-size: 13.5px;
         }
         .company-ticker {
@@ -728,7 +752,7 @@
         .price-cell {
             font-family: var(--font-mono);
             font-weight: 700;
-            color: #ffffff;
+            color: var(--text-primary);
             font-variant-numeric: tabular-nums;
         }
         .row-hover-arrow {
@@ -747,24 +771,25 @@
             margin-bottom: 24px;
         }
         .screen-card {
-            background: rgba(10, 15, 26, 0.6);
+            background: var(--bg-card);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-sm);
             padding: 16px 18px;
             text-decoration: none;
             color: inherit;
             transition: all 0.22s ease;
+            box-shadow: var(--card-shadow);
         }
         .screen-card:hover {
             border-color: var(--groww-mint);
-            background: rgba(16, 24, 40, 0.9);
+            background: var(--bg-card-hover);
             transform: translateY(-2px);
         }
         .screen-title {
             font-family: var(--font-display);
             font-size: 14.5px;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--text-primary);
             margin-bottom: 6px;
         }
         .screen-desc {
@@ -780,13 +805,14 @@
             gap: 14px;
         }
         .sector-card {
-            background: rgba(10, 15, 26, 0.6);
+            background: var(--bg-card);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-sm);
             padding: 16px 18px;
             display: flex;
             flex-direction: column;
             gap: 10px;
+            box-shadow: var(--card-shadow);
         }
         .sector-header {
             display: flex;
@@ -797,7 +823,7 @@
             font-family: var(--font-display);
             font-size: 13.5px;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--text-primary);
         }
         .sector-pct {
             font-family: var(--font-mono);
@@ -807,7 +833,7 @@
         .ratio-bar-wrapper {
             height: 6px;
             width: 100%;
-            background: rgba(255, 255, 255, 0.08);
+            background: var(--bg-card-hover);
             border-radius: 3px;
             overflow: hidden;
             display: flex;
@@ -825,6 +851,7 @@
             justify-content: space-between;
             font-family: var(--font-mono);
             font-size: 11px;
+            color: var(--text-secondary);
         }
 
         /* Research Reports Grid */
@@ -834,7 +861,7 @@
             gap: 18px;
         }
         .report-card {
-            background: rgba(10, 15, 26, 0.6);
+            background: var(--bg-card);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-sm);
             padding: 20px;
@@ -844,12 +871,13 @@
             flex-direction: column;
             justify-content: space-between;
             transition: all 0.22s ease;
+            box-shadow: var(--card-shadow);
         }
         .report-card:hover {
             border-color: var(--groww-mint);
-            background: rgba(16, 24, 40, 0.95);
+            background: var(--bg-card-hover);
             transform: translateY(-2px);
-            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
         }
         .report-badge {
             display: inline-flex;
@@ -867,7 +895,7 @@
             font-family: var(--font-display);
             font-size: 16px;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--text-primary);
             margin-bottom: 8px;
             line-height: 1.4;
         }
@@ -883,7 +911,7 @@
             justify-content: space-between;
             font-size: 11.5px;
             color: var(--text-muted);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid var(--border-subtle);
             padding-top: 12px;
         }
         .report-link-btn {
@@ -893,7 +921,7 @@
 
         /* TradingView Studio Container */
         .chart-studio-box {
-            background: #080c16;
+            background: var(--bg-surface);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-sm);
             overflow: hidden;
@@ -911,7 +939,7 @@
             width: 100vw;
             height: 100vh;
             height: 100dvh;
-            background: rgba(4, 7, 14, 0.80);
+            background: rgba(4, 7, 14, 0.70);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             z-index: 9999;
@@ -932,12 +960,18 @@
             max-width: 95vw;
             height: 100vh;
             height: 100dvh;
-            background: #0d1222;
-            border-left: 1px solid rgba(0, 208, 156, 0.3);
+            background: var(--bg-surface);
+            color: var(--text-primary);
+            border-left: 1px solid var(--border-subtle);
             transform: translateX(100%);
             transition: transform 0.34s var(--ease-drawer);
             display: flex;
             flex-direction: column;
+            box-shadow: -24px 0 70px rgba(0, 0, 0, 0.3);
+        }
+        [data-theme="dark"] .drawer-panel {
+            background: #0d1222;
+            border-left: 1px solid rgba(0, 208, 156, 0.3);
             box-shadow: -24px 0 70px rgba(0, 0, 0, 0.85);
         }
         .drawer-backdrop.active .drawer-panel {
@@ -949,13 +983,13 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(14, 19, 32, 0.95);
+            background: var(--bg-surface);
         }
         .drawer-title-group h2 {
             font-family: var(--font-display);
             font-size: 20px;
             font-weight: 800;
-            color: #ffffff;
+            color: var(--text-primary);
             letter-spacing: -0.3px;
         }
         .drawer-title-group span {
@@ -963,7 +997,7 @@
             color: var(--text-secondary);
         }
         .drawer-close-btn {
-            background: rgba(255, 255, 255, 0.05);
+            background: var(--bg-card-hover);
             border: 1px solid var(--border-subtle);
             color: var(--text-secondary);
             font-size: 16px;
@@ -977,15 +1011,15 @@
             transition: all 0.2s ease;
         }
         .drawer-close-btn:hover {
-            color: #ffffff;
-            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            background: var(--bg-card);
             border-color: var(--groww-mint);
         }
 
         .drawer-switcher {
             display: flex;
             padding: 10px 24px;
-            background: rgba(10, 14, 24, 0.7);
+            background: var(--bg-card-subtle);
             border-bottom: 1px solid var(--border-subtle);
             gap: 8px;
             overflow-x: auto;
@@ -1008,19 +1042,19 @@
             transition: all 0.2s ease;
         }
         .drawer-tab:hover {
-            color: #ffffff;
+            color: var(--text-primary);
         }
         .drawer-tab.active {
             background: var(--groww-mint-soft);
             color: var(--groww-mint);
-            border-color: rgba(0, 208, 156, 0.35);
+            border-color: var(--border-subtle);
         }
 
         .drawer-stats-strip {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             padding: 14px 24px;
-            background: rgba(14, 20, 34, 0.6);
+            background: var(--bg-card-hover);
             border-bottom: 1px solid var(--border-subtle);
             gap: 10px;
         }
@@ -1034,7 +1068,7 @@
         .drawer-stat-item strong {
             font-family: var(--font-mono);
             font-size: 13px;
-            color: #ffffff;
+            color: var(--text-primary);
             font-weight: 700;
             font-variant-numeric: tabular-nums;
         }
@@ -1042,15 +1076,15 @@
         .drawer-search-bar {
             padding: 12px 24px;
             border-bottom: 1px solid var(--border-subtle);
-            background: rgba(10, 14, 24, 0.5);
+            background: var(--bg-card-subtle);
         }
         .drawer-search-bar input {
             width: 100%;
-            background: rgba(255, 255, 255, 0.04);
+            background: var(--bg-surface);
             border: 1px solid var(--border-subtle);
             border-radius: 6px;
             padding: 8px 14px;
-            color: #ffffff;
+            color: var(--text-primary);
             font-size: 12.5px;
             outline: none;
             font-family: var(--font-body);
@@ -1058,7 +1092,6 @@
         }
         .drawer-search-bar input:focus {
             border-color: var(--groww-mint);
-            background: rgba(255, 255, 255, 0.06);
         }
 
         .drawer-body {
@@ -1071,7 +1104,7 @@
         .site-footer {
             border-top: 1px solid var(--border-subtle);
             padding: 40px 20px;
-            background: #05070c;
+            background: var(--bg-card-subtle);
             font-size: 12.5px;
             color: var(--text-muted);
         }
@@ -1150,7 +1183,7 @@
 
             <nav class="header-nav-links">
                 <a href="#movers-section" class="nav-link-item" onclick="switchDashboardTab('movers')">Movers</a>
-                <a href="/stock.html?symbol=ITC" class="nav-link-item">Stock Screener</a>
+                <a href="/screener.html" class="nav-link-item">Stock Screener</a>
                 <a href="/portfolio.html" class="nav-link-item">Portfolio</a>
                 <a href="/calculators.html" class="nav-link-item">Calculators</a>
                 <a href="#chart-section" class="nav-link-item" onclick="switchDashboardTab('chart')">Chart Studio</a>
@@ -1378,19 +1411,19 @@
         <!-- Tab 2: Stock Screener -->
         <div id="view-screener" class="tab-panel" style="display: none;">
             <div class="screens-grid">
-                <a href="/stock.html?symbol=TCS" class="screen-card">
+                <a href="/screener.html?screen=roce" class="screen-card">
                     <div class="screen-title">🚀 High ROCE & Low Debt</div>
                     <p class="screen-desc">Companies generating > 25% ROCE with debt-to-equity ratio under 0.20.</p>
                 </a>
-                <a href="/stock.html?symbol=HDFCBANK" class="screen-card">
+                <a href="/screener.html?screen=fii" class="screen-card">
                     <div class="screen-title">💎 FII Institutional Inflows</div>
                     <p class="screen-desc">Equities experiencing consecutive quarterly institutional accumulation.</p>
                 </a>
-                <a href="/stock.html?symbol=TRENT" class="screen-card">
+                <a href="/screener.html?screen=52w" class="screen-card">
                     <div class="screen-title">📈 52-Week High Breakouts</div>
                     <p class="screen-desc">Stocks breaking out above multi-month consolidation with volume expansion.</p>
                 </a>
-                <a href="/stock.html?symbol=ITC" class="screen-card">
+                <a href="/screener.html?screen=dividend" class="screen-card">
                     <div class="screen-title">💰 Dividend Compounders</div>
                     <p class="screen-desc">Consistent dividend payouts for 10+ years with strong free cash flows.</p>
                 </a>
@@ -1398,7 +1431,10 @@
 
             <div class="panel-header-row">
                 <h3 class="panel-title"><span>📊</span> Audited Fundamental Scorecard</h3>
-                <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);">Consolidated TTM Data</span>
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <a href="/screener.html" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:var(--groww-mint); background:var(--groww-mint-soft); padding:6px 14px; border-radius:6px; border:1px solid var(--groww-mint);">⚡ Open Full Screener Dashboard →</a>
+                    <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);">Consolidated TTM Data</span>
+                </div>
             </div>
 
             <div class="groww-table-wrapper">
