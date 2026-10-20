@@ -1151,6 +1151,10 @@
 
         function smoothJump(event, targetId) {
             event.preventDefault();
+            if (targetId === 'series-chart' && !tvWidgetLoaded) {
+                tvWidgetLoaded = true;
+                loadTradingViewWidget();
+            }
             const target = document.getElementById(targetId);
             if (target) {
                 if (lenis) {
@@ -1418,7 +1422,7 @@
                             loadTradingViewWidget();
                         }
                     });
-                }, { rootMargin: '300px 0px' });
+                }, { rootMargin: '600px 0px' });
                 observer.observe(chartSection);
             } else {
                 loadTradingViewWidget();
