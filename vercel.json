@@ -48,6 +48,22 @@
     {
       "source": "/events",
       "destination": "/events.html"
+    },
+    {
+      "source": "/ipo/:slug",
+      "destination": "/ipo.html"
+    },
+    {
+      "source": "/ipo",
+      "destination": "/ipo.html"
+    },
+    {
+      "source": "/unlisted/:slug",
+      "destination": "/unlisted.html"
+    },
+    {
+      "source": "/unlisted",
+      "destination": "/unlisted.html"
     }
   ],
   "headers": [

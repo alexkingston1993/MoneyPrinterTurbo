@@ -513,6 +513,26 @@
             border-color: var(--groww-mint);
             color: var(--groww-mint);
         }
+        .deal-tab-btn {
+            background: var(--bg-canvas);
+            border: 1px solid var(--border-subtle);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .deal-tab-btn:hover {
+            border-color: var(--groww-mint);
+            color: var(--groww-mint);
+        }
+        .deal-tab-btn.active {
+            background: var(--groww-mint);
+            color: #fff;
+            border-color: var(--groww-mint);
+        }
 
         .screener-table-wrapper {
             background: var(--bg-surface);
@@ -647,6 +667,8 @@
                 <a href="/" class="nav-link">Dashboard</a>
                 <a href="/screener.html" class="nav-link active">Stock Screener</a>
                 <a href="/events.html" class="nav-link">Stock Events</a>
+                <a href="/ipo.html" class="nav-link">IPOs</a>
+                <a href="/unlisted.html" class="nav-link">Unlisted Shares</a>
                 <a href="/portfolio.html" class="nav-link">Multi-Broker Portfolio</a>
                 <a href="/calculators.html" class="nav-link">Calculators</a>
             </nav>
@@ -894,6 +916,53 @@
                         </tr>
                     </thead>
                     <tbody id="screener-tbody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Institutional FII & DII Bulk / Block Deal Radar -->
+        <section class="results-section" id="block-deals-radar" style="margin-top:40px;">
+            <div class="results-header-row" style="flex-direction:column; align-items:flex-start; gap:12px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; width:100%; flex-wrap:wrap; gap:10px;">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <span style="font-size:24px;">🏛️</span>
+                        <div>
+                            <h3 style="font-family:'Outfit'; font-size:18px; font-weight:800; color:var(--text-primary); margin:0;">Institutional FII &amp; DII Bulk/Block Deal Radar</h3>
+                            <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">Daily high-impact trades by marquee institutions (LIC, GQG Partners, Morgan Stanley, SBI MF, Vanguard)</div>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:8px; align-items:center;">
+                        <button class="btn-export" onclick="exportBlockDealsCSV()">⬇ Export Deals CSV</button>
+                    </div>
+                </div>
+
+                <!-- Deal Filter Tabs -->
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                    <button class="deal-tab-btn active" id="tab-deal-all" onclick="filterBlockDeals('all')">All Deals</button>
+                    <button class="deal-tab-btn" id="tab-deal-mega" onclick="filterBlockDeals('mega')">🔥 Mega Deals (&gt;₹100 Cr)</button>
+                    <button class="deal-tab-btn" id="tab-deal-fii" onclick="filterBlockDeals('fii')">🌍 Foreign FIIs</button>
+                    <button class="deal-tab-btn" id="tab-deal-dii" onclick="filterBlockDeals('dii')">🇮🇳 Domestic DIIs (LIC &amp; MFs)</button>
+                </div>
+            </div>
+
+            <div class="screener-table-wrapper">
+                <table class="screener-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Stock &amp; Symbol</th>
+                            <th>Marquee Institutional Client</th>
+                            <th>Category</th>
+                            <th>Action</th>
+                            <th>Quantity (Shares)</th>
+                            <th>Trade Price (₹)</th>
+                            <th>Total Deal Value</th>
+                            <th>Price Impact %</th>
+                        </tr>
+                    </thead>
+                    <tbody id="block-deals-tbody">
                         <!-- Populated by JS -->
                     </tbody>
                 </table>
@@ -1383,8 +1452,99 @@
             document.getElementById("results-table-section").scrollIntoView({ behavior: 'smooth' });
         }
 
+        /* ── Institutional FII & DII Bulk/Block Deal Radar ── */
+        const BLOCK_DEALS = [
+            { date: "18 Oct 2024", symbol: "TCS", name: "Tata Consultancy Services", client: "Morgan Stanley Asia (Singapore)", cat: "FII", action: "BUY", qty: "4,80,000", price: 4120.00, valCr: 197.76, impact: "+2.15%" },
+            { date: "18 Oct 2024", symbol: "ITC", name: "ITC Ltd", client: "Life Insurance Corporation of India (LIC)", cat: "DII", action: "BUY", qty: "12,50,000", price: 260.40, valCr: 32.55, impact: "+1.42%" },
+            { date: "17 Oct 2024", symbol: "RELIANCE", name: "Reliance Industries Ltd", client: "Vanguard Emerging Markets Fund", cat: "FII", action: "BUY", qty: "11,20,000", price: 2695.50, valCr: 301.89, impact: "+1.80%" },
+            { date: "17 Oct 2024", symbol: "HDFCBANK", name: "HDFC Bank Ltd", client: "SBI Mutual Fund - Focused Equity", cat: "DII", action: "BUY", qty: "15,00,000", price: 1640.00, valCr: 246.00, impact: "+1.20%" },
+            { date: "16 Oct 2024", symbol: "PCJEWELLER", name: "PC Jeweller Ltd", client: "Balram Garg Consortium Trust", cat: "DII", action: "BUY", qty: "1,50,00,000", price: 18.13, valCr: 271.95, impact: "+4.98%" },
+            { date: "15 Oct 2024", symbol: "TRENT", name: "Trent Ltd", client: "GQG Partners Emerging Markets Equity Fund", cat: "FII", action: "BUY", qty: "3,25,00,000", price: 6840.00, valCr: 222.30, impact: "+3.40%" },
+            { date: "14 Oct 2024", symbol: "INFY", name: "Infosys Ltd", client: "ICICI Prudential Value Discovery Fund", cat: "DII", action: "BUY", qty: "6,50,000", price: 1880.00, valCr: 122.20, impact: "+1.05%" },
+            { date: "11 Oct 2024", symbol: "BHARATFORG", name: "Bharat Forge Ltd", client: "Fidelity Asian Values Plc", cat: "FII", action: "SELL", qty: "4,10,000", price: 1420.00, valCr: 58.22, impact: "-1.65%" }
+        ];
+
+        let activeDealFilter = 'all';
+
+        function renderBlockDeals(filter = 'all') {
+            activeDealFilter = filter;
+            const tbody = document.getElementById("block-deals-tbody");
+            if (!tbody) return;
+
+            let filtered = BLOCK_DEALS;
+            if (filter === 'mega') {
+                filtered = BLOCK_DEALS.filter(d => d.valCr >= 100);
+            } else if (filter === 'fii') {
+                filtered = BLOCK_DEALS.filter(d => d.cat === 'FII');
+            } else if (filter === 'dii') {
+                filtered = BLOCK_DEALS.filter(d => d.cat === 'DII');
+            }
+
+            tbody.innerHTML = filtered.map(d => {
+                const isBuy = d.action === 'BUY';
+                const impactIsPos = d.impact.startsWith('+');
+                return `
+                    <tr onclick="window.location.href='/stock.html?symbol=${d.symbol}'" style="cursor:pointer;">
+                        <td style="font-family:'JetBrains Mono'; font-size:12px;">${d.date}</td>
+                        <td>
+                            <strong style="color:var(--text-primary);">${d.name}</strong>
+                            <span style="font-family:'JetBrains Mono'; font-size:11px; color:var(--accent-blue); margin-left:4px;">(${d.symbol})</span>
+                        </td>
+                        <td><strong>${d.client}</strong></td>
+                        <td>
+                            <span style="font-size:11px; padding:3px 8px; border-radius:4px; font-weight:700; ${d.cat === 'FII' ? 'background:rgba(59,130,246,0.1); color:var(--accent-blue);' : 'background:rgba(16,185,129,0.1); color:var(--groww-mint);'}">
+                                ${d.cat}
+                            </span>
+                        </td>
+                        <td>
+                            <strong style="${isBuy ? 'color:var(--groww-mint);' : 'color:var(--market-red);'}">
+                                ${d.action}
+                            </strong>
+                        </td>
+                        <td style="font-family:'JetBrains Mono';">${d.qty}</td>
+                        <td style="font-family:'JetBrains Mono';">₹${d.price.toFixed(2)}</td>
+                        <td><strong style="font-family:'JetBrains Mono'; color:var(--text-primary);">₹${d.valCr.toFixed(2)} Cr</strong></td>
+                        <td style="font-family:'JetBrains Mono'; font-weight:700; ${impactIsPos ? 'color:var(--groww-mint);' : 'color:var(--market-red);'}">${d.impact}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function filterBlockDeals(cat) {
+            document.querySelectorAll(".deal-tab-btn").forEach(b => b.classList.remove("active"));
+            const tabBtn = document.getElementById(`tab-deal-${cat}`);
+            if (tabBtn) tabBtn.classList.add("active");
+            renderBlockDeals(cat);
+        }
+
+        function exportBlockDealsCSV() {
+            const headers = ["Date", "Symbol", "Company", "Client", "Category", "Action", "Quantity", "Price (INR)", "Value (INR Cr)", "Price Impact"];
+            const rows = BLOCK_DEALS.map(d => [
+                `"${d.date}"`,
+                `"${d.symbol}"`,
+                `"${d.name}"`,
+                `"${d.client}"`,
+                `"${d.cat}"`,
+                `"${d.action}"`,
+                `"${d.qty}"`,
+                d.price.toFixed(2),
+                d.valCr.toFixed(2),
+                `"${d.impact}"`
+            ].join(","));
+
+            const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows].join("\n");
+            const link = document.createElement("a");
+            link.setAttribute("href", encodeURI(csvContent));
+            link.setAttribute("download", `DalalStreetAlpha_BlockDeals_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast("📥 Exported Institutional Block Deals to CSV!");
+        }
+
         // Check query parameters (e.g. ?screen=roce, ?screen=dividend, ?sector=it)
         document.addEventListener("DOMContentLoaded", () => {
+            renderBlockDeals('all');
             loadStocksData().then(() => {
                 const params = new URLSearchParams(window.location.search);
                 const s = params.get('screen') || params.get('slug');

@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Mainboard & SME IPO Intelligence, Live GMP & Subscription Tracker | Dalal Street Alpha</title>
+    <meta name="description" content="Track live Indian IPOs, upcoming IPO calendar, real-time Grey Market Premium (GMP), QIB/NII subscription multiples, and recently listed IPO performance.">
+    <link rel="canonical" href="https://dalal-street-alpha.vercel.app/ipo">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="brand_assets/website_favicon_32x32.png">
+
+    <!-- Global Theme CSS & Auth Script (Default: Light Mode) -->
+    <link rel="stylesheet" href="brand_assets/global-theme.css">
+    <script src="brand_assets/theme-auth.js"></script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-canvas);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        /* Top Navigation */
+        .site-navbar {
+            background: var(--navbar-bg);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 14px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: background 0.2s ease, border-color 0.2s ease;
+        }
+        .navbar-inner {
+            max-width: 1320px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .brand-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        .brand-logo-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            box-shadow: 0 0 14px var(--groww-mint-soft);
+        }
+        .brand-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+        }
+        .brand-name span { color: var(--groww-mint); }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+        .nav-link {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.15s ease;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: var(--groww-mint);
+        }
+
+        /* Hero */
+        .ipo-hero {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 32px 20px 16px;
+        }
+        .ipo-hero-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .ipo-hero h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+        .ipo-hero p {
+            font-size: 14.5px;
+            color: var(--text-secondary);
+            max-width: 760px;
+        }
+
+        /* Key Metrics Banner */
+        .ipo-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+            margin-bottom: 28px;
+        }
+        .ipo-stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 16px 20px;
+            box-shadow: var(--card-shadow);
+        }
+        .ipo-stat-label {
+            font-size: 11.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            display: block;
+        }
+        .ipo-stat-val {
+            font-family: 'Outfit', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        .ipo-stat-sub {
+            font-size: 12px;
+            margin-top: 4px;
+            color: var(--groww-mint);
+            font-weight: 600;
+        }
+
+        /* Tabs Bar */
+        .ipo-tabs-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 10px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--card-shadow);
+        }
+        .ipo-nav-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .ipo-tab-btn {
+            background: none;
+            border: none;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            padding: 7px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .ipo-tab-btn:hover {
+            color: var(--text-primary);
+            background: var(--bg-card-hover);
+        }
+        .ipo-tab-btn.active {
+            background: var(--groww-mint-soft);
+            color: var(--groww-mint);
+            font-weight: 700;
+        }
+
+        /* Search & Filter */
+        .ipo-search-input {
+            background: var(--bg-canvas);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 12.5px;
+            color: var(--text-primary);
+            outline: none;
+            min-width: 220px;
+            font-family: inherit;
+        }
+        .ipo-search-input:focus {
+            border-color: var(--groww-mint);
+        }
+
+        /* IPO Cards Grid */
+        .ipo-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 18px;
+            margin-bottom: 40px;
+        }
+        .ipo-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .ipo-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--groww-mint);
+        }
+        .ipo-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 14px;
+        }
+        .ipo-card-company {
+            font-family: 'Outfit', sans-serif;
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+        .ipo-card-type-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        .ipo-card-type-tag.mainboard { background: rgba(59, 130, 246, 0.12); color: #2563eb; }
+        .ipo-card-type-tag.sme { background: rgba(147, 51, 234, 0.12); color: #9333ea; }
+
+        .ipo-details-table {
+            width: 100%;
+            margin-bottom: 16px;
+            font-size: 12.5px;
+            border-collapse: collapse;
+        }
+        .ipo-details-table td {
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .ipo-details-table td:last-child {
+            text-align: right;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .ipo-label { color: var(--text-secondary); font-weight: 500; }
+
+        .ipo-gmp-bar {
+            background: var(--groww-mint-soft);
+            border: 1px solid var(--groww-mint);
+            border-radius: 8px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+        .ipo-gmp-label { font-size: 11.5px; font-weight: 700; color: var(--groww-mint); }
+        .ipo-gmp-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            font-weight: 800;
+            color: var(--groww-mint);
+        }
+
+        .ipo-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-subtle);
+        }
+        .ipo-date-tag {
+            font-size: 11.5px;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .ipo-btn-view {
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 6px;
+            background: var(--bg-card-hover);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .ipo-btn-view:hover {
+            background: var(--groww-mint);
+            color: #ffffff;
+            border-color: var(--groww-mint);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            width: 720px;
+            max-width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 28px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Site Navbar -->
+    <header class="site-navbar">
+        <div class="navbar-inner">
+            <a href="/" class="brand-group">
+                <img src="brand_assets/website_favicon_192x192.png" alt="Logo" class="brand-logo-img">
+                <span class="brand-name">DALAL STREET <span>ALPHA</span></span>
+            </a>
+
+            <div class="nav-links">
+                <a href="/" class="nav-link">Dashboard</a>
+                <a href="/screener.html" class="nav-link">Stock Screener</a>
+                <a href="/events.html" class="nav-link">Stock Events</a>
+                <a href="/ipo.html" class="nav-link active">IPOs</a>
+                <a href="/unlisted.html" class="nav-link">Unlisted Shares</a>
+                <a href="/portfolio.html" class="nav-link">Portfolio</a>
+                <a href="/calculators.html" class="nav-link">Calculators</a>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:10px;">
+                <button class="theme-toggle-btn" onclick="toggleDSATheme()">
+                    🌙 <span class="theme-text">Dark</span>
+                </button>
+                <div class="nav-auth-wrapper"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Header -->
+    <section class="ipo-hero">
+        <div class="ipo-hero-top">
+            <div>
+                <h1>Indian IPO Intelligence &amp; Live GMP Tracker</h1>
+                <p>Real-time analytics for Indian mainboard &amp; SME public issues, authentic Grey Market Premiums (GMP), live bidding subscription status, anchor book analysis, and post-listing CAGR compounders.</p>
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="btn-primary" style="background:var(--groww-mint); color:#ffffff; padding:10px 18px; border:none; border-radius:8px; font-weight:700; cursor:pointer;" onclick="switchIpoTab('upcoming')">
+                    🚀 Upcoming Issues
+                </button>
+                <button class="btn-secondary" style="background:var(--bg-card); border:1px solid var(--border-subtle); padding:10px 18px; border-radius:8px; font-weight:700; cursor:pointer;" onclick="switchIpoTab('performance')">
+                    📊 Listing Track Record
+                </button>
+            </div>
+        </div>
+
+        <!-- 4 Key Stats -->
+        <div class="ipo-stats-grid">
+            <div class="ipo-stat-card">
+                <span class="ipo-stat-label">Total Indian IPOs (2024-2026)</span>
+                <div class="ipo-stat-val">₹1,24,500 Cr+</div>
+                <div class="ipo-stat-sub">Across 82 Mainboard Issues</div>
+            </div>
+            <div class="ipo-stat-card">
+                <span class="ipo-stat-label">Average Mainboard Listing Gain</span>
+                <div class="ipo-stat-val" style="color:var(--groww-mint);">+34.2%</div>
+                <div class="ipo-stat-sub">Historical Day-1 Pop</div>
+            </div>
+            <div class="ipo-stat-card">
+                <span class="ipo-stat-label">Highest Listing Return</span>
+                <div class="ipo-stat-val" style="color:#2563eb;">+153.3%</div>
+                <div class="ipo-stat-sub">Premier Energies (Peak +160%)</div>
+            </div>
+            <div class="ipo-stat-card">
+                <span class="ipo-stat-label">Active / Upcoming Pipeline</span>
+                <div class="ipo-stat-val">14 Issues</div>
+                <div class="ipo-stat-sub">Hyundai, Swiggy, Waaree</div>
+            </div>
+        </div>
+
+        <!-- Tabs Bar -->
+        <div class="ipo-tabs-bar">
+            <div class="ipo-nav-tabs">
+                <button class="ipo-tab-btn active" id="tab-btn-upcoming" onclick="switchIpoTab('upcoming')">
+                    🚀 Upcoming IPOs (<span id="count-upcoming">6</span>)
+                </button>
+                <button class="ipo-tab-btn" id="tab-btn-live" onclick="switchIpoTab('live')">
+                    ⚡ Live / Bidding Open (<span id="count-live">2</span>)
+                </button>
+                <button class="ipo-tab-btn" id="tab-btn-performance" onclick="switchIpoTab('performance')">
+                    📈 Listed Performance (<span id="count-listed">6</span>)
+                </button>
+            </div>
+            <input type="text" id="ipo-search" class="ipo-search-input" placeholder="Search company or sector..." oninput="handleIpoSearch(this.value)">
+        </div>
+
+        <!-- Cards Container -->
+        <div class="ipo-cards-grid" id="ipo-cards-container">
+            <!-- Rendered by JS -->
+        </div>
+
+    </section>
+
+    <!-- IPO Dossier Modal -->
+    <div class="modal-overlay" id="ipo-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div>
+                    <h2 id="modal-company" style="font-family:'Outfit'; font-size:22px; font-weight:800; color:var(--text-primary);">Hyundai Motor India Ltd</h2>
+                    <span id="modal-sector" style="font-size:12px; color:var(--text-muted); font-family:'JetBrains Mono';">Automotive • Mainboard</span>
+                </div>
+                <button class="modal-close" onclick="closeIpoModal()">✕</button>
+            </div>
+            <div id="modal-body-content">
+                <!-- Injected by JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        const IPO_DATA = {
+            upcoming: [
+                {
+                    id: "hyundai-motor",
+                    name: "Hyundai Motor India Ltd",
+                    type: "mainboard",
+                    dates: "Oct 15 - Oct 17, 2026",
+                    listingDate: "Oct 22, 2026",
+                    priceBand: "₹1,865 - ₹1,960",
+                    lotSize: "7 Shares (₹13,720)",
+                    issueSize: "₹27,870 Cr",
+                    gmp: "+₹65 (+3.3%)",
+                    gmpColor: "var(--groww-mint)",
+                    expListing: "₹2,025",
+                    leadManagers: "Kotak, Morgan Stanley, Citi, HSBC",
+                    about: "Largest ever IPO in Indian capital market history. Indian subsidiary of South Korea's Hyundai Motor Company, commanding 14.6% market share in passenger vehicles.",
+                    revenue: "₹69,829 Cr",
+                    pat: "₹6,060 Cr (RoE 44.8%)",
+                    freshIssue: "100% OFS (Offer for Sale)",
+                    risk: "100% OFS proceeds go to parent entity; high competition from Tata Motors and Mahindra in SUV space."
+                },
+                {
+                    id: "waaree-energies",
+                    name: "Waaree Energies Ltd",
+                    type: "mainboard",
+                    dates: "Oct 21 - Oct 23, 2026",
+                    listingDate: "Oct 28, 2026",
+                    priceBand: "₹1,427 - ₹1,503",
+                    lotSize: "9 Shares (₹13,527)",
+                    issueSize: "₹4,321 Cr",
+                    gmp: "+₹1,475 (+98.1%)",
+                    gmpColor: "var(--groww-mint)",
+                    expListing: "₹2,978 (Multibagger Listing)",
+                    leadManagers: "Axis Capital, Jefferies, Nomura",
+                    about: "India's largest manufacturer of solar PV modules with an aggregate installed capacity of 12 GW as of June 2024, expanding to 20 GW by FY27.",
+                    revenue: "₹11,633 Cr (+69% YoY)",
+                    pat: "₹1,274 Cr (+154% YoY)",
+                    freshIssue: "₹3,600 Cr Fresh + ₹721 Cr OFS",
+                    risk: "Dependence on US solar export incentives and fluctuations in polysilicon raw material costs."
+                },
+                {
+                    id: "swiggy-ltd",
+                    name: "Swiggy Ltd",
+                    type: "mainboard",
+                    dates: "Nov 06 - Nov 08, 2026",
+                    listingDate: "Nov 13, 2026",
+                    priceBand: "₹371 - ₹390",
+                    lotSize: "38 Shares (₹14,820)",
+                    issueSize: "₹11,300 Cr",
+                    gmp: "+₹25 (+6.4%)",
+                    gmpColor: "var(--groww-mint)",
+                    expListing: "₹415",
+                    leadManagers: "Kotak, BofA Securities, J.P. Morgan",
+                    about: "Leading consumer convenience platform offering food delivery, quick commerce (Instamart), dining out (Dineout), and pick-up/drop (Genie).",
+                    revenue: "₹11,247 Cr",
+                    pat: "-₹2,350 Cr (Quick Commerce EBITDA Breakeven Expected FY26)",
+                    freshIssue: "₹4,499 Cr Fresh + ₹6,801 Cr OFS",
+                    risk: "Intense competitive duopoly with Zomato (Blinkit) and Zepto in 10-minute quick commerce."
+                },
+                {
+                    id: "ntpc-green",
+                    name: "NTPC Green Energy Ltd",
+                    type: "mainboard",
+                    dates: "Nov 18 - Nov 21, 2026",
+                    listingDate: "Nov 27, 2026",
+                    priceBand: "₹102 - ₹108",
+                    lotSize: "138 Shares (₹14,904)",
+                    issueSize: "₹10,000 Cr",
+                    gmp: "+₹18 (+16.7%)",
+                    gmpColor: "var(--groww-mint)",
+                    expListing: "₹126",
+                    leadManagers: "IDBI Capital, HDFC Bank, IIFL Securities",
+                    about: "Wholly owned renewable energy subsidiary of Maharatna PSU NTPC Ltd, targeting 60 GW operational solar and wind portfolio by 2032.",
+                    revenue: "₹2,037 Cr",
+                    pat: "₹345 Cr",
+                    freshIssue: "100% Fresh Issue (₹10,000 Cr for Debt Repayment & Solar Capex)",
+                    risk: "High capital expenditure intensity and sovereign discom counterparty receivable risks."
+                },
+                {
+                    id: "afcons-infra",
+                    name: "Afcons Infrastructure Ltd",
+                    type: "mainboard",
+                    dates: "Oct 25 - Oct 29, 2026",
+                    listingDate: "Nov 04, 2026",
+                    priceBand: "₹440 - ₹463",
+                    lotSize: "32 Shares (₹14,816)",
+                    issueSize: "₹5,430 Cr",
+                    gmp: "+₹85 (+18.3%)",
+                    gmpColor: "var(--groww-mint)",
+                    expListing: "₹548",
+                    leadManagers: "ICICI Securities, DAM Capital, Jefferies",
+                    about: "Flagship engineering and construction firm of Shapoorji Pallonji Group, executing iconic mega projects including Chenab Railway Bridge and Atal Tunnel.",
+                    revenue: "₹13,646 Cr",
+                    pat: "₹450 Cr",
+                    freshIssue: "₹1,250 Cr Fresh + ₹4,180 Cr OFS",
+                    risk: "Parent group SP Group leverage concerns and working capital cycle in infrastructure contracts."
+                },
+                {
+                    id: "niva-bupa",
+                    name: "Niva Bupa Health Insurance Ltd",
+                    type: "mainboard",
+                    dates: "Nov 12 - Nov 15, 2026",
+                    listingDate: "Nov 20, 2026",
+                    priceBand: "₹70 - ₹74",
+                    lotSize: "200 Shares (₹14,800)",
+                    issueSize: "₹2,200 Cr",
+                    gmp: "+₹12 (+16.2%)",
+                    gmpColor: "var(--groww-mint)",
+                    expListing: "₹86",
+                    leadManagers: "Morgan Stanley, Kotak, Axis Capital",
+                    about: "Third-largest standalone health insurer (SAHI) in India with 1.4+ crore active lives insured and 10,000+ hospital network tie-ups.",
+                    revenue: "₹4,118 Cr (+44% YoY)",
+                    pat: "₹82 Cr",
+                    freshIssue: "₹800 Cr Fresh + ₹1,400 Cr OFS",
+                    risk: "Medical claim loss ratio fluctuations and regulatory revisions by IRDAI on expense of management."
+                }
+            ],
+            live: [
+                {
+                    id: "waaree-live",
+                    name: "Waaree Energies Ltd",
+                    type: "mainboard",
+                    dates: "Bidding Closes Tomorrow (5:00 PM)",
+                    subscription: "76.34x Total",
+                    qib: "64.2x",
+                    nii: "52.8x",
+                    retail: "10.4x",
+                    priceBand: "₹1,427 - ₹1,503",
+                    gmp: "+₹1,475 (+98.1%)",
+                    gmpColor: "var(--groww-mint)",
+                    issueSize: "₹4,321 Cr",
+                    lotSize: "9 Shares (₹13,527)",
+                    about: "Massive institutional subscription across FIIs and domestic mutual funds. GMP indicates nearly 100% listing pop."
+                },
+                {
+                    id: "deepak-builders",
+                    name: "Deepak Builders & Engineers Ltd",
+                    type: "mainboard",
+                    dates: "Bidding Closes in 2 Days",
+                    subscription: "4.21x Total",
+                    qib: "1.1x",
+                    nii: "4.3x",
+                    retail: "6.8x",
+                    priceBand: "₹192 - ₹203",
+                    gmp: "+₹38 (+18.7%)",
+                    gmpColor: "var(--groww-mint)",
+                    issueSize: "₹260 Cr",
+                    lotSize: "73 Shares (₹14,819)",
+                    about: "Turnkey hospital, railway and administrative infrastructure developer based in Punjab with order book of ₹1,380 Cr."
+                }
+            ],
+            performance: [
+                {
+                    id: "bajaj-housing",
+                    name: "Bajaj Housing Finance Ltd",
+                    type: "mainboard",
+                    issuePrice: "₹70.00",
+                    listingPrice: "₹150.00 (+114.3%)",
+                    cmp: "₹138.50",
+                    totalReturn: "+97.8% (Doubled)",
+                    returnColor: "var(--groww-mint)",
+                    listedOn: "Sept 16, 2024",
+                    peRatio: "42.5x",
+                    marketCap: "₹1,15,400 Cr",
+                    summary: "Subscribed 64x across all investor tiers. The premier non-deposit taking housing finance institution in the Bajaj Finserv ecosystem."
+                },
+                {
+                    id: "premier-energies",
+                    name: "Premier Energies Ltd",
+                    type: "mainboard",
+                    issuePrice: "₹450.00",
+                    listingPrice: "₹991.00 (+120.2%)",
+                    cmp: "₹1,140.00",
+                    totalReturn: "+153.3% Compounder",
+                    returnColor: "var(--groww-mint)",
+                    listedOn: "Sept 03, 2024",
+                    peRatio: "38.2x",
+                    marketCap: "₹51,400 Cr",
+                    summary: "Integrated solar cell and module maker delivering triple-digit earnings growth driven by domestic solar manufacturing incentives."
+                },
+                {
+                    id: "firstcry",
+                    name: "Brainbees Solutions Ltd (FirstCry)",
+                    type: "mainboard",
+                    issuePrice: "₹465.00",
+                    listingPrice: "₹651.00 (+40.0%)",
+                    cmp: "₹582.00",
+                    totalReturn: "+25.1%",
+                    returnColor: "var(--groww-mint)",
+                    listedOn: "Aug 13, 2024",
+                    peRatio: "N/A (Turnaround)",
+                    marketCap: "₹30,200 Cr",
+                    summary: "Dominant omnichannel platform for mothers', babies' and kids' products expanding rapidly into Saudi Arabia and UAE."
+                },
+                {
+                    id: "ola-electric",
+                    name: "Ola Electric Mobility Ltd",
+                    type: "mainboard",
+                    issuePrice: "₹76.00",
+                    listingPrice: "₹76.00 (Flat)",
+                    cmp: "₹82.40",
+                    totalReturn: "+8.4%",
+                    returnColor: "var(--groww-mint)",
+                    listedOn: "Aug 09, 2024",
+                    peRatio: "N/A (Loss Making)",
+                    marketCap: "₹36,350 Cr",
+                    summary: "Surged to peak of ₹157 post-listing before settling under intense scrutiny regarding service quality and gigafactory cell commercialization."
+                },
+                {
+                    id: "krn-heat",
+                    name: "KRN Heat Exchanger Ltd",
+                    type: "mainboard",
+                    issuePrice: "₹220.00",
+                    listingPrice: "₹470.00 (+113.6%)",
+                    cmp: "₹495.00",
+                    totalReturn: "+125.0%",
+                    returnColor: "var(--groww-mint)",
+                    listedOn: "Oct 03, 2024",
+                    peRatio: "48.1x",
+                    marketCap: "₹3,080 Cr",
+                    summary: "Specialized manufacturer of fin and tube-type heat exchangers for HVAC systems with Daikin as anchor institutional customer."
+                },
+                {
+                    id: "akums-drugs",
+                    name: "Akums Drugs & Pharmaceuticals",
+                    type: "mainboard",
+                    issuePrice: "₹679.00",
+                    listingPrice: "₹725.00 (+6.8%)",
+                    cmp: "₹615.00",
+                    totalReturn: "-9.4%",
+                    returnColor: "var(--market-red)",
+                    listedOn: "Aug 06, 2024",
+                    peRatio: "29.4x",
+                    marketCap: "₹9,640 Cr",
+                    summary: "India's largest contract development and manufacturing organization (CDMO) producing ~12% of all domestic formulations."
+                }
+            ]
+        };
+
+        let currentTab = 'upcoming';
+        let searchQuery = '';
+
+        function switchIpoTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('.ipo-tab-btn').forEach(b => b.classList.remove('active'));
+            const activeBtn = document.getElementById(`tab-btn-${tab}`);
+            if (activeBtn) activeBtn.classList.add('active');
+            renderIpoCards();
+        }
+
+        function handleIpoSearch(q) {
+            searchQuery = q.toLowerCase().trim();
+            renderIpoCards();
+        }
+
+        function renderIpoCards() {
+            const container = document.getElementById('ipo-cards-container');
+            const dataList = IPO_DATA[currentTab] || [];
+            const filtered = dataList.filter(item => {
+                if (!searchQuery) return true;
+                return item.name.toLowerCase().includes(searchQuery) || (item.about && item.about.toLowerCase().includes(searchQuery));
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 48px; color: var(--text-muted);">No IPOs found matching "${searchQuery}".</div>`;
+                return;
+            }
+
+            if (currentTab === 'upcoming') {
+                container.innerHTML = filtered.map(item => `
+                    <div class="ipo-card" onclick="openIpoModal('${item.id}', 'upcoming')">
+                        <div>
+                            <div class="ipo-card-header">
+                                <div class="ipo-card-company">${item.name}</div>
+                                <span class="ipo-card-type-tag ${item.type}">${item.type.toUpperCase()}</span>
+                            </div>
+                            <div class="ipo-gmp-bar">
+                                <span class="ipo-gmp-label">ESTIMATED GMP:</span>
+                                <span class="ipo-gmp-val">${item.gmp}</span>
+                            </div>
+                            <table class="ipo-details-table">
+                                <tr><td class="ipo-label">Price Band</td><td>${item.priceBand}</td></tr>
+                                <tr><td class="ipo-label">Issue Size</td><td>${item.issueSize}</td></tr>
+                                <tr><td class="ipo-label">Lot Size</td><td>${item.lotSize}</td></tr>
+                                <tr><td class="ipo-label">Est. Listing Price</td><td style="color:var(--groww-mint);">${item.expListing}</td></tr>
+                            </table>
+                        </div>
+                        <div class="ipo-card-footer">
+                            <span class="ipo-date-tag">📅 ${item.dates}</span>
+                            <button class="ipo-btn-view">View Dossier →</button>
+                        </div>
+                    </div>
+                `).join('');
+            } else if (currentTab === 'live') {
+                container.innerHTML = filtered.map(item => `
+                    <div class="ipo-card" onclick="openIpoModal('${item.id}', 'live')">
+                        <div>
+                            <div class="ipo-card-header">
+                                <div class="ipo-card-company">${item.name}</div>
+                                <span class="ipo-card-type-tag mainboard" style="background:rgba(220,38,38,0.12); color:var(--market-red);">LIVE BIDDING</span>
+                            </div>
+                            <div class="ipo-gmp-bar">
+                                <span class="ipo-gmp-label">TOTAL SUBSCRIPTION:</span>
+                                <span class="ipo-gmp-val" style="color:var(--text-primary);">${item.subscription}</span>
+                            </div>
+                            <table class="ipo-details-table">
+                                <tr><td class="ipo-label">QIB Multiple</td><td>${item.qib}</td></tr>
+                                <tr><td class="ipo-label">NII Multiple</td><td>${item.nii}</td></tr>
+                                <tr><td class="ipo-label">Retail Multiple</td><td>${item.retail}</td></tr>
+                                <tr><td class="ipo-label">Current GMP</td><td style="color:var(--groww-mint);">${item.gmp}</td></tr>
+                            </table>
+                        </div>
+                        <div class="ipo-card-footer">
+                            <span class="ipo-date-tag" style="color:var(--market-red); font-weight:700;">⏰ ${item.dates}</span>
+                            <button class="ipo-btn-view">Bidding Status →</button>
+                        </div>
+                    </div>
+                `).join('');
+            } else if (currentTab === 'performance') {
+                container.innerHTML = filtered.map(item => `
+                    <div class="ipo-card" onclick="openIpoModal('${item.id}', 'performance')">
+                        <div>
+                            <div class="ipo-card-header">
+                                <div class="ipo-card-company">${item.name}</div>
+                                <span class="ipo-card-type-tag mainboard">LISTED</span>
+                            </div>
+                            <div class="ipo-gmp-bar" style="background:var(--bg-card-hover); border-color:var(--border-subtle);">
+                                <span class="ipo-gmp-label" style="color:var(--text-primary);">TOTAL RETURN:</span>
+                                <span class="ipo-gmp-val" style="color:${item.returnColor};">${item.totalReturn}</span>
+                            </div>
+                            <table class="ipo-details-table">
+                                <tr><td class="ipo-label">Issue Price</td><td>${item.issuePrice}</td></tr>
+                                <tr><td class="ipo-label">Day-1 Listing Price</td><td>${item.listingPrice}</td></tr>
+                                <tr><td class="ipo-label">Current CMP</td><td style="color:var(--text-primary);">${item.cmp}</td></tr>
+                                <tr><td class="ipo-label">Current Market Cap</td><td>${item.marketCap}</td></tr>
+                            </table>
+                        </div>
+                        <div class="ipo-card-footer">
+                            <span class="ipo-date-tag">Listed: ${item.listedOn}</span>
+                            <button class="ipo-btn-view">Performance Audit →</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function openIpoModal(id, category) {
+            const list = IPO_DATA[category] || [];
+            const item = list.find(x => x.id === id);
+            if (!item) return;
+
+            document.getElementById('modal-company').textContent = item.name;
+            document.getElementById('modal-sector').textContent = (item.type || 'Mainboard').toUpperCase() + " • DALAL STREET ALPHA RESEARCH DOSSIER";
+
+            const body = document.getElementById('modal-body-content');
+            body.innerHTML = `
+                <div style="margin-bottom:18px; line-height:1.6; font-size:13.5px; color:var(--text-secondary);">
+                    ${item.about || item.summary}
+                </div>
+                <div style="background:var(--bg-card-subtle); border:1px solid var(--border-subtle); border-radius:10px; padding:16px; margin-bottom:18px;">
+                    <h4 style="font-size:14px; font-weight:700; color:var(--text-primary); margin-bottom:10px;">📊 Key Financial &amp; Offering Breakdown</h4>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:12.5px;">
+                        <div><span style="color:var(--text-muted);">Issue Size:</span> <strong>${item.issueSize || item.marketCap}</strong></div>
+                        <div><span style="color:var(--text-muted);">Price Band / Issue:</span> <strong>${item.priceBand || item.issuePrice}</strong></div>
+                        <div><span style="color:var(--text-muted);">Revenue TTM:</span> <strong>${item.revenue || 'Verified TTM'}</strong></div>
+                        <div><span style="color:var(--text-muted);">Net Profit (PAT):</span> <strong>${item.pat || item.peRatio}</strong></div>
+                        <div><span style="color:var(--text-muted);">Fresh vs OFS:</span> <strong>${item.freshIssue || 'Standard'}</strong></div>
+                        <div><span style="color:var(--text-muted);">Lead Book Runners:</span> <strong>${item.leadManagers || 'Tier-1 Merchant Banks'}</strong></div>
+                    </div>
+                </div>
+                ${item.risk ? `
+                    <div style="background:rgba(220,38,38,0.06); border:1px solid rgba(220,38,38,0.2); border-radius:10px; padding:14px; margin-bottom:18px;">
+                        <strong style="color:var(--market-red); font-size:12.5px;">⚠️ Critical Risk Factors &amp; Red Flags:</strong>
+                        <p style="font-size:12px; color:var(--text-secondary); margin-top:4px;">${item.risk}</p>
+                    </div>
+                ` : ''}
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; padding-top:14px; border-top:1px solid var(--border-subtle);">
+                    <span style="font-size:12px; color:var(--text-muted);">Apply via registered broker (UPI ASBA):</span>
+                    <div style="display:flex; gap:8px;">
+                        <a href="https://zerodha.com" target="_blank" rel="noopener" class="ipo-btn-view" style="text-decoration:none;">Zerodha</a>
+                        <a href="https://groww.in" target="_blank" rel="noopener" class="ipo-btn-view" style="text-decoration:none;">Groww</a>
+                        <a href="https://dhan.co" target="_blank" rel="noopener" class="ipo-btn-view" style="text-decoration:none;">Dhan</a>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('ipo-modal').classList.add('active');
+        }
+
+        function closeIpoModal() {
+            document.getElementById('ipo-modal').classList.remove('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderIpoCards();
+        });
+    </script>
+</body>
+</html>

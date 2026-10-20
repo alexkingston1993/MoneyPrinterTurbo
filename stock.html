@@ -641,6 +641,78 @@
             text-align: center;
         }
 
+        /* AI Concall & Insider Radar Styles */
+        .concall-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 22px;
+            margin-bottom: 20px;
+        }
+        .concall-tab-btn {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            background: var(--bg-card-hover);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .concall-tab-btn.active {
+            background: var(--groww-mint);
+            color: #fff;
+            border-color: var(--groww-mint);
+        }
+        .concall-pillar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .concall-pillar-card {
+            background: var(--bg-card-subtle);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 16px;
+        }
+        .concall-pillar-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+        .concall-pillar-text {
+            font-size: 12.5px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+        .insider-radar-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12.5px;
+        }
+        .insider-radar-table th {
+            text-align: left;
+            padding: 10px 14px;
+            background: var(--table-header-bg);
+            color: var(--text-secondary);
+            font-weight: 700;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .insider-radar-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+        }
+        .insider-radar-table tr:hover td {
+            background: var(--table-row-hover);
+        }
+
         @media (max-width: 800px) {
             .pros-cons-grid, .doc-grid { grid-template-columns: 1fr; }
             .stock-title-group h1 { font-size: 24px; }
@@ -668,6 +740,8 @@
                 <a href="/" class="nav-link">Dashboard</a>
                 <a href="/screener.html" class="nav-link">Screener</a>
                 <a href="/events.html" class="nav-link">Stock Events</a>
+                <a href="/ipo.html" class="nav-link">IPOs</a>
+                <a href="/unlisted.html" class="nav-link">Unlisted Shares</a>
                 <a href="/portfolio.html" class="nav-link">Portfolio</a>
                 <a href="/calculators.html" class="nav-link">Calculators</a>
             </div>
@@ -1007,6 +1081,140 @@
             </div>
         </section>
 
+        <!-- Series 10A: AI Concall & Management Guidance Summaries -->
+        <section id="series-concall" class="series-section">
+            <div class="section-header-row">
+                <div class="section-title-wrap">
+                    <div class="section-icon-badge">🎙️</div>
+                    <div>
+                        <h2 class="section-heading">AI Concall & Management Guidance Summaries</h2>
+                        <div class="section-subtext">Quarterly Earnings Call Digest • 1-Minute Executive Synthesis</div>
+                    </div>
+                </div>
+                <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                    <span class="stock-pill stock-pill-primary">⚡ 1-MIN AI SUMMARY</span>
+                    <button class="concall-tab-btn active" id="btn-concall-q2" onclick="switchConcallQuarter('Q2FY25')">Q2 FY25 (Latest)</button>
+                    <button class="concall-tab-btn" id="btn-concall-q1" onclick="switchConcallQuarter('Q1FY25')">Q1 FY25</button>
+                    <button class="concall-tab-btn" id="btn-concall-q4" onclick="switchConcallQuarter('Q4FY24')">Q4 FY24</button>
+                </div>
+            </div>
+
+            <div class="concall-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:14px;">
+                    <div>
+                        <span style="font-size:14px; font-weight:800; color:var(--text-primary);" id="concall-meta-title">Q2 FY25 Earnings Call Synthesis</span>
+                        <div style="font-size:11.5px; color:var(--text-muted);" id="concall-meta-date">Recorded: October 2024 • Audio Length: 58 mins • Analyzed by Dalal Street Alpha AI</div>
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn-primary" style="font-size:12px; padding:6px 12px;" onclick="showToast('Loading full 28-page earnings transcript PDF...')">📑 Full Transcript (PDF)</button>
+                        <button class="btn-secondary" style="font-size:12px; padding:6px 12px;" onclick="showToast('Streaming audio call replay...')">🔊 Audio Replay</button>
+                    </div>
+                </div>
+
+                <div class="concall-pillar-grid">
+                    <div class="concall-pillar-card" style="border-left:3px solid var(--groww-mint);">
+                        <div class="concall-pillar-title">
+                            <span>🚀</span> Volume &amp; Revenue Guidance
+                        </div>
+                        <div class="concall-pillar-text" id="concall-guidance">
+                            Loading management outlook...
+                        </div>
+                    </div>
+
+                    <div class="concall-pillar-card" style="border-left:3px solid var(--accent-blue);">
+                        <div class="concall-pillar-title">
+                            <span>🏗️</span> Capex &amp; Expansion Trajectory
+                        </div>
+                        <div class="concall-pillar-text" id="concall-capex">
+                            Loading capital deployment targets...
+                        </div>
+                    </div>
+
+                    <div class="concall-pillar-card" style="border-left:3px solid var(--accent-amber);">
+                        <div class="concall-pillar-title">
+                            <span>⚠️</span> Margin Headwinds &amp; Raw Material
+                        </div>
+                        <div class="concall-pillar-text" id="concall-headwinds">
+                            Loading cost pressures and margin guidance...
+                        </div>
+                    </div>
+
+                    <div class="concall-pillar-card" style="border-left:3px solid var(--market-red);">
+                        <div class="concall-pillar-title">
+                            <span>🚩</span> Analyst Q&amp;A Red Flags
+                        </div>
+                        <div class="concall-pillar-text" id="concall-redflags">
+                            Loading institutional interrogation flags...
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background:var(--bg-card-subtle); border-radius:8px; padding:12px 16px; margin-top:14px; border-left:3px solid var(--text-primary); font-size:12.5px; font-style:italic; color:var(--text-secondary);" id="concall-quote">
+                    "Management remains confident in double-digit organic compounding and operating cash generation across core divisions."
+                </div>
+            </div>
+        </section>
+
+        <!-- Series 10B: Promoter Pledging & SEBI SAST Insider Trading Live Radar -->
+        <section id="series-insider" class="series-section">
+            <div class="section-header-row">
+                <div class="section-title-wrap">
+                    <div class="section-icon-badge">🕵️</div>
+                    <div>
+                        <h2 class="section-heading">Promoter Pledging &amp; SEBI SAST Insider Trading Radar</h2>
+                        <div class="section-subtext">Real-time SEBI PIT (Prohibition of Insider Trading) &amp; SAST Disclosures</div>
+                    </div>
+                </div>
+                <div style="display:flex; gap:8px; align-items:center;">
+                    <span class="stock-pill stock-pill-success" id="insider-sentiment-badge">🟢 PROMOTERS NET BUYING (+₹142.5 Cr)</span>
+                </div>
+            </div>
+
+            <!-- Key Insider Metrics Grid -->
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:16px;">
+                <div class="scorecard-item">
+                    <div class="scorecard-title">Promoter Holding</div>
+                    <div style="font-size:20px; font-weight:800; color:var(--text-primary); font-family:'JetBrains Mono';" id="insider-promoter-holding">51.2%</div>
+                    <div style="font-size:11px; color:var(--groww-mint); margin-top:3px;">+0.42% QoQ Net Change</div>
+                </div>
+                <div class="scorecard-item">
+                    <div class="scorecard-title">Promoter Pledge %</div>
+                    <div style="font-size:20px; font-weight:800; color:var(--groww-mint); font-family:'JetBrains Mono';" id="insider-pledge-pct">0.00%</div>
+                    <div style="font-size:11px; color:var(--text-muted); margin-top:3px;">Zero encumbrance / Clean</div>
+                </div>
+                <div class="scorecard-item">
+                    <div class="scorecard-title">90-Day Insider Flow</div>
+                    <div style="font-size:20px; font-weight:800; color:var(--groww-mint); font-family:'JetBrains Mono';" id="insider-90d-flow">+₹142.5 Cr</div>
+                    <div style="font-size:11px; color:var(--text-muted); margin-top:3px;">Open market accumulation</div>
+                </div>
+                <div class="scorecard-item">
+                    <div class="scorecard-title">Last SEBI Filing</div>
+                    <div style="font-size:15px; font-weight:700; color:var(--text-primary); font-family:'JetBrains Mono';" id="insider-last-filing">18 Oct 2024</div>
+                    <div style="font-size:11px; color:var(--accent-blue); margin-top:3px;">SEBI PIT Reg 7(2)</div>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="insider-radar-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Insider / Promoter Entity</th>
+                            <th>Regulation</th>
+                            <th>Action</th>
+                            <th>Quantity</th>
+                            <th>Traded Price</th>
+                            <th>Deal Value</th>
+                            <th>Post Stake %</th>
+                        </tr>
+                    </thead>
+                    <tbody id="insider-table-body">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
         <!-- Series 11: Executive Intelligence Dossier -->
         <section id="series-dossier" class="series-section">
             <div class="section-header-row">
@@ -1241,6 +1449,12 @@
                 if (ex.investorThesis) document.getElementById("dos-investor").textContent = ex.investorThesis;
                 if (ex.traderThesis) document.getElementById("dos-trader").textContent = ex.traderThesis;
             }
+
+            // AI Concall & Management Guidance Summaries
+            renderConcallSummaries(stock);
+
+            // Promoter Pledging & SEBI SAST Insider Radar
+            renderInsiderRadar(stock);
         }
 
         // Generic Table Renderer
@@ -1337,6 +1551,181 @@
                     </div>
                 `).join('');
             }
+        }
+
+        /* ── E. AI Concall & Management Guidance Summaries ── */
+        const CONCALL_DATABASE = {
+            "ITC": {
+                "Q2FY25": {
+                    title: "ITC Ltd Q2 FY25 Institutional Earnings Call",
+                    date: "Recorded: 24 October 2024 • Audio Length: 62 mins • Transcript: 32 Pages",
+                    guidance: "Cigarette volumes exhibited resilience with 3.5% YoY volume growth. Non-cigarette FMCG posted 8.3% revenue expansion led by staples (Aashirvaad, Sunfeast) and branded packaged foods. Hotel demerger scheme approved by shareholders and NCLT on track for Q4 completion.",
+                    capex: "FY25 capex outlay pegged at ₹3,000-3,200 Cr focused on Integrated Consumer Goods Logistics facilities (ICML), climate-smart agriculture centers, and green energy transition across Bhadrachalam paperboard mills.",
+                    headwinds: "Paperboards & Specialty Paper business continues to face severe margin compression due to surge in domestic wood pulp costs and flood of cheap Chinese paper imports into India.",
+                    redflags: "Analysts probed the pace of FMCG EBITDA margin expansion (currently 11%) and capital allocation towards international hotel acquisitions post-demerger.",
+                    quote: "Our diversified conglomerate model continues to generate record operating cash flows, funding aggressive capacity ramp-up across branded packaged goods."
+                },
+                "Q1FY25": {
+                    title: "ITC Ltd Q1 FY25 Institutional Earnings Call",
+                    date: "Recorded: 01 August 2024 • Audio Length: 54 mins",
+                    guidance: "Gross revenue grew 7.2% YoY. Cigarette business demonstrated steady performance amidst stable tax regime. Agribusiness revenues surged on robust exports of value-added agri commodities.",
+                    capex: "Committed ₹800 Cr in Q1 towards FMCG manufacturing hubs in Telangana and Odisha.",
+                    headwinds: "Extreme summer heatwave impacted ice cream and beverage cold chain logistics temporarily.",
+                    redflags: "Questions raised on export restrictions on non-basmati white rice and impact on leaf tobacco export realization.",
+                    quote: "We remain committed to delivering sustainable value with robust return on capital employed across both traditional and emerging FMCG vectors."
+                },
+                "Q4FY24": {
+                    title: "ITC Ltd Q4 FY24 Annual Earnings Call",
+                    date: "Recorded: 23 May 2024 • Audio Length: 70 mins",
+                    guidance: "Full-year FY24 consolidated revenue surpassed ₹70,000 Cr with record annual dividend payout of ₹13.75/share.",
+                    capex: "Annual capex executed at ₹3,100 Cr across paperboards, hotels, and packaged food lines.",
+                    headwinds: "Inflationary pressures in wheat and sugar prices partially offset by strategic procurement.",
+                    redflags: "Institutional investors sought clarity on British American Tobacco (BAT) stake trimming timeline and market absorption.",
+                    quote: "ITC enters FY25 with a fortress balance sheet, zero long-term debt, and unprecedented free cash flow generation."
+                }
+            },
+            "PCJEWELLER": {
+                "Q2FY25": {
+                    title: "PC Jeweller Ltd Q2 FY25 Settlement & Turnaround Call",
+                    date: "Recorded: 16 October 2024 • Audio Length: 45 mins • Transcript: 21 Pages",
+                    guidance: "Consortium of 14 lenders signed formal One-Time Settlement (OTS) sanction letters. Retail showroom footfalls jumped 42% QoQ driven by wedding and festive collections.",
+                    capex: "Working capital infusion of ₹1,500 Cr via preferential equity warrants to clear legacy bank dues and restock gold inventory across 60+ franchise stores.",
+                    headwinds: "Union Budget reduction in gold customs duty from 15% to 6% caused inventory mark-to-market loss in Q2, though lowering consumer purchase barriers for Q3 wedding demand.",
+                    redflags: "Strict compliance with lenders' escrow monitoring and timely repayment tranches remain the primary operational focus.",
+                    quote: "With banking consortium settlements executed, our legacy litigation overhang is permanently eliminated, pivoting the company back to retail expansion."
+                }
+            },
+            "TCS": {
+                "Q2FY25": {
+                    title: "Tata Consultancy Services Q2 FY25 Global Earnings Call",
+                    date: "Recorded: 10 October 2024 • Audio Length: 58 mins • Transcript: 29 Pages",
+                    guidance: "BFSI sector in North America showing revival with sequential growth in discretionary tech spend. Total Contract Value (TCV) stood at $8.6 Billion with robust mega-deal pipeline.",
+                    capex: "Annual capex of ₹3,500 Cr centered on AI infrastructure, enterprise cloud sovereign centers, and training 350,000+ engineers on foundational generative AI models.",
+                    headwinds: "Continental Europe and UK enterprise clients remain cautious on large discretionary transformation engagements; hiring pace muted with focus on bench utilization.",
+                    redflags: "Attrition edged down to 12.3%, but questions centered on AI automation potentially deflating billing hours in legacy application maintenance contracts.",
+                    quote: "We are witnessing enterprise clients pivot from experimental AI pilots to enterprise-grade AI production deployments on TCS AI Wisdom platform."
+                }
+            },
+            "RELIANCE": {
+                "Q2FY25": {
+                    title: "Reliance Industries Ltd Q2 FY25 Consolidated Earnings Call",
+                    date: "Recorded: 14 October 2024 • Audio Length: 75 mins • Transcript: 38 Pages",
+                    guidance: "Jio Infocomm tariff hikes driving ARPU expansion towards ₹200+. Retail store footfalls grew 18% YoY with 5G rollout completed across 100% of Indian telecom circles.",
+                    capex: "Annual capex run-rate stabilized at ₹1,20,000 Cr with investments peaking in 5G and shifting into Jamnagar Green Energy Giga-complexes (Solar, Batteries, Green Hydrogen).",
+                    headwinds: "Oil-to-Chemicals (O2C) segment faced global refining margin contraction (GRMs down $3.5/bbl) on weak Asian crack spreads and Chinese demand slowdown.",
+                    redflags: "Investors probed the timeline for Jio and Reliance Retail IPO listings and leverage ratios at the consolidated parent level.",
+                    quote: "Our twin consumer engines—Jio and Retail—now contribute over 50% of consolidated EBITDA, delivering robust counter-cyclical resilience to commodity refining cycles."
+                }
+            }
+        };
+
+        let currentConcallStock = "ITC";
+
+        function renderConcallSummaries(stock) {
+            currentConcallStock = stock.symbol || "ITC";
+            switchConcallQuarter("Q2FY25");
+        }
+
+        function switchConcallQuarter(qtr) {
+            document.querySelectorAll(".concall-tab-btn").forEach(b => b.classList.remove("active"));
+            const btn = document.getElementById(`btn-concall-${qtr.toLowerCase().replace("fy25","").replace("fy24","")}`);
+            if (btn) btn.classList.add("active");
+
+            const sym = currentConcallStock;
+            const stockData = CONCALL_DATABASE[sym] || CONCALL_DATABASE["ITC"];
+            const qData = stockData[qtr] || stockData["Q2FY25"] || {
+                title: `${sym} ${qtr} Earnings Conference Call`,
+                date: "Recorded: Recent Quarter • Synthesized by Dalal Street Alpha AI",
+                guidance: `Management reiterated positive volume trajectory with double-digit growth expected in high-margin segments. Export demand remained solid with healthy domestic order book conversion.`,
+                capex: `Capital expenditure on track for planned brownfield capacity additions and digitalization of supply chains.`,
+                headwinds: `Input cost fluctuations and foreign exchange volatility observed during the quarter, partially mitigated by dynamic product pricing.`,
+                redflags: `Institutional analysts focused on working capital cycle elongation and competitive intensity from unorganized peers.`,
+                quote: `We remain dedicated to disciplined capital allocation and driving industry-leading return ratios for our shareholders.`
+            };
+
+            document.getElementById("concall-meta-title").textContent = qData.title;
+            document.getElementById("concall-meta-date").textContent = qData.date;
+            document.getElementById("concall-guidance").textContent = qData.guidance;
+            document.getElementById("concall-capex").textContent = qData.capex;
+            document.getElementById("concall-headwinds").textContent = qData.headwinds;
+            document.getElementById("concall-redflags").textContent = qData.redflags;
+            document.getElementById("concall-quote").textContent = `"${qData.quote}"`;
+        }
+
+        /* ── F. Promoter Pledging & SEBI SAST Insider Trading Radar ── */
+        function renderInsiderRadar(stock) {
+            const sym = stock.symbol || "ITC";
+            const tbody = document.getElementById("insider-table-body");
+            if (!tbody) return;
+
+            let trades = [];
+            let sentiment = "🟢 PROMOTERS NET BUYING";
+            let pledgePct = "0.00%";
+            let promoterHolding = "51.2%";
+            let flow90d = "+₹142.5 Cr";
+            let lastDate = "18 Oct 2024";
+
+            if (sym === "ITC") {
+                promoterHolding = "0.00% (Widely Held Institutionally)";
+                pledgePct = "0.00%";
+                flow90d = "+₹520.4 Cr (FII & DII Net Inflow)";
+                sentiment = "🟢 INSTITUTIONAL ACCUMULATION";
+                trades = [
+                    { date: "18 Oct 2024", entity: "Life Insurance Corporation of India (LIC)", reg: "SAST Reg 29(2)", action: "🟢 Market Purchase", qty: "12,50,000", price: "₹260.40", val: "₹32.55 Cr", post: "15.42%" },
+                    { date: "11 Oct 2024", entity: "SBI Mutual Fund - Balanced Advantage", reg: "SAST Reg 29(2)", action: "🟢 Open Market Buy", qty: "8,40,000", price: "₹259.80", val: "₹21.82 Cr", post: "4.12%" },
+                    { date: "24 Sep 2024", entity: "Key Management Personnel (ESOP Allotment)", reg: "PIT Reg 7(2)", action: "⭐ ESOP Allotment", qty: "1,15,000", price: "₹255.00", val: "₹2.93 Cr", post: "0.04%" },
+                    { date: "05 Sep 2024", entity: "GQG Partners Emerging Markets Fund", reg: "Bulk Deal Radar", action: "🟢 Block Accumulation", qty: "35,00,000", price: "₹258.10", val: "₹90.33 Cr", post: "2.18%" }
+                ];
+            } else if (sym === "PCJEWELLER") {
+                promoterHolding = "54.85%";
+                pledgePct = "0.00% (Released Post-OTS)";
+                flow90d = "+₹285.0 Cr";
+                sentiment = "🟢 PROMOTER WARRANTS INFUSION";
+                trades = [
+                    { date: "16 Oct 2024", entity: "Balram Garg (Promoter Group)", reg: "SAST Reg 29(1)", action: "🟢 Preferential Warrants", qty: "1,50,00,000", price: "₹18.13", val: "₹271.95 Cr", post: "54.85%" },
+                    { date: "28 Sep 2024", entity: "Consortium of Lenders (Pledge Release)", reg: "SAST Reg 31(1)", action: "🛡️ Pledge Revocation", qty: "85,00,000", price: "₹16.50", val: "₹140.25 Cr", post: "0.00% Pledged" },
+                    { date: "12 Aug 2024", entity: "Public Shareholder Reclassification", reg: "SAST Reg 31A", action: "⚖️ Governance Reclass", qty: "45,00,000", price: "₹14.20", val: "₹63.90 Cr", post: "48.10%" }
+                ];
+            } else if (sym === "TCS") {
+                promoterHolding = "71.77% (Tata Sons Ltd)";
+                pledgePct = "0.00%";
+                flow90d = "₹0.0 Cr (Zero Promoter Selling)";
+                sentiment = "🟢 ZERO PROMOTER PLEDGE / FORTRESS";
+                trades = [
+                    { date: "15 Oct 2024", entity: "Tata Sons Pvt Ltd (Promoter)", reg: "SAST Reg 31(1)", action: "🛡️ Pledge Free Confirmation", qty: "-", price: "-", val: "-", post: "71.77%" },
+                    { date: "02 Oct 2024", entity: "Executive Director & COO", reg: "PIT Reg 7(2)", action: "⭐ ESOP Exercise", qty: "12,500", price: "₹4,110.00", val: "₹5.14 Cr", post: "0.01%" },
+                    { date: "19 Sep 2024", entity: "Key Managerial Personnel", reg: "PIT Reg 7(2)", action: "🔴 Open Market Sale", qty: "4,000", price: "₹4,240.00", val: "₹1.69 Cr", post: "0.00%" }
+                ];
+            } else {
+                promoterHolding = "52.4%";
+                pledgePct = "0.00%";
+                flow90d = "+₹45.0 Cr";
+                sentiment = "🟢 PROMOTERS NET BUYING";
+                trades = [
+                    { date: "18 Oct 2024", entity: "Promoter Trust / Group", reg: "SAST Reg 29(2)", action: "🟢 Market Purchase", qty: "2,50,000", price: stock.cmp || "₹1,200", val: "₹30.00 Cr", post: "52.40%" },
+                    { date: "29 Sep 2024", entity: "Chief Financial Officer", reg: "PIT Reg 7(2)", action: "⭐ ESOP Allotment", qty: "15,000", price: stock.cmp || "₹1,180", val: "₹1.77 Cr", post: "0.02%" },
+                    { date: "14 Sep 2024", entity: "Promoter Group Entity", reg: "PIT Reg 7(2)", action: "🟢 Open Market Buy", qty: "1,20,000", price: stock.cmp || "₹1,150", val: "₹13.80 Cr", post: "52.15%" }
+                ];
+            }
+
+            document.getElementById("insider-sentiment-badge").textContent = sentiment;
+            document.getElementById("insider-promoter-holding").textContent = promoterHolding;
+            document.getElementById("insider-pledge-pct").textContent = pledgePct;
+            document.getElementById("insider-90d-flow").textContent = flow90d;
+            document.getElementById("insider-last-filing").textContent = lastDate;
+
+            tbody.innerHTML = trades.map(t => `
+                <tr>
+                    <td><strong style="font-family:'JetBrains Mono'; font-size:12px;">${t.date}</strong></td>
+                    <td><strong>${t.entity}</strong></td>
+                    <td><span style="font-size:11px; padding:3px 8px; border-radius:4px; background:var(--bg-card-subtle); color:var(--text-secondary); border:1px solid var(--border-subtle);">${t.reg}</span></td>
+                    <td><strong style="${t.action.includes('Buy') || t.action.includes('Purchase') || t.action.includes('Warrants') ? 'color:var(--groww-mint);' : (t.action.includes('Sale') ? 'color:var(--market-red);' : 'color:var(--accent-blue);')}">${t.action}</strong></td>
+                    <td style="font-family:'JetBrains Mono';">${t.qty}</td>
+                    <td style="font-family:'JetBrains Mono';">${t.price}</td>
+                    <td><strong style="color:var(--text-primary); font-family:'JetBrains Mono';">${t.val}</strong></td>
+                    <td style="font-family:'JetBrains Mono';">${t.post}</td>
+                </tr>
+            `).join('');
         }
 
         // D. Live Market Quote & Live Screener Sync

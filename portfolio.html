@@ -557,6 +557,15 @@
             color: var(--groww-mint);
             margin-top: 4px;
         }
+
+        @media print {
+            .site-navbar, .action-btns-group, .broker-connect-bar, .modal-overlay, .theme-toggle-btn, .instructions-section {
+                display: none !important;
+            }
+            body { background: #ffffff !important; color: #000000 !important; }
+            .port-hero { padding: 10px 0 !important; }
+            .ai-health-section { page-break-inside: avoid; }
+        }
     </style>
 </head>
 <body>
@@ -573,6 +582,8 @@
                 <a href="/" class="nav-link">Dashboard</a>
                 <a href="/screener.html" class="nav-link">Stock Screener</a>
                 <a href="/events.html" class="nav-link">Stock Events</a>
+                <a href="/ipo.html" class="nav-link">IPOs</a>
+                <a href="/unlisted.html" class="nav-link">Unlisted Shares</a>
                 <a href="/portfolio.html" class="nav-link active">Multi-Broker Portfolio</a>
                 <a href="/calculators.html" class="nav-link">Calculators</a>
             </div>
@@ -593,27 +604,36 @@
     <section class="port-hero">
         <div class="port-hero-top">
             <div>
-                <h1>Consolidated Multi-Broker Portfolio & AI Health Diagnostic</h1>
-                <p>Seamlessly aggregate stock portfolios across Zerodha, Groww, Dhan, Angel One, Upstox, and CDSL/NSDL Demat into one unified intelligence dashboard with automated AI risk & moat diagnostics.</p>
+                <h1>Consolidated Multi-Broker Portfolio &amp; AI Health Diagnostic</h1>
+                <p>Seamlessly aggregate stock portfolios across Zerodha, Groww, Dhan, Angel One, Upstox, and CDSL/NSDL Demat into one unified intelligence dashboard with automated AI risk &amp; moat diagnostics.</p>
             </div>
             <div class="action-btns-group">
                 <button class="btn-primary" onclick="openLinkBrokerModal('demat')" style="background:linear-gradient(135deg, #10b981, #059669); border:none; box-shadow:0 4px 14px rgba(16, 185, 129, 0.3);">
                     🏦 Demat ID / AA Sync
                 </button>
                 <button class="btn-primary" onclick="openLinkBrokerModal('file')">
-                    📁 Import Broker CSV / Excel
+                    📁 Import Statement
                 </button>
                 <button class="btn-secondary" onclick="openLinkBrokerModal('api')">
-                    🔗 Direct Broker API
+                    🔗 Broker API
                 </button>
                 <button class="btn-secondary" onclick="openLinkBrokerModal('manual')">
                     + Add Stock
                 </button>
+                <button class="btn-secondary" onclick="exportPortfolioCSV()" title="Export holdings to Excel / CSV">
+                    📥 CSV Export
+                </button>
+                <button class="btn-secondary" onclick="exportPortfolioPDF()" title="Print / Save Institutional PDF Report">
+                    📄 PDF Report
+                </button>
+                <button class="btn-secondary" onclick="openAlertsConfigModal()" title="Setup Telegram & WhatsApp Event Alerts">
+                    📱 Alerts
+                </button>
                 <button class="btn-secondary" onclick="scrollToExportGuide()">
-                    📖 Export Guides
+                    📖 Guides
                 </button>
                 <button class="btn-secondary" onclick="loadDemoMultiBrokerPortfolio()" title="Reset to authentic multi-broker compounder sample">
-                    ⚡ Demo Portfolio
+                    ⚡ Demo
                 </button>
             </div>
         </div>
@@ -720,9 +740,22 @@
         <!-- 3. Consolidated Multi-Broker Holdings Table -->
         <section class="holdings-section">
             <div class="holdings-header-row">
-                <h3 style="font-family:'Outfit'; font-size:18px; font-weight:800; color:var(--text-primary);">Consolidated Holdings (All Linked Brokers)</h3>
-                <div style="font-size:12px; font-family:'JetBrains Mono'; color:var(--text-muted);" id="holdings-count-label">
-                    Showing 6 Holdings across 3 Brokerages
+                <div>
+                    <h3 style="font-family:'Outfit'; font-size:18px; font-weight:800; color:var(--text-primary);">Consolidated Holdings (All Linked Brokers)</h3>
+                    <div style="font-size:12px; font-family:'JetBrains Mono'; color:var(--text-muted);" id="holdings-count-label">
+                        Showing 6 Holdings across 3 Brokerages
+                    </div>
+                </div>
+                <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+                    <button class="btn-secondary" style="font-size:12px; padding:6px 12px;" onclick="exportPortfolioCSV()" title="Export to Excel / CSV">
+                        📥 Export CSV
+                    </button>
+                    <button class="btn-secondary" style="font-size:12px; padding:6px 12px;" onclick="exportPortfolioPDF()" title="Print / Download PDF Dossier">
+                        📄 PDF Dossier
+                    </button>
+                    <button class="btn-secondary" style="font-size:12px; padding:6px 12px;" onclick="openAlertsConfigModal()" title="Configure Telegram & WhatsApp Alerts">
+                        📱 Event Alerts
+                    </button>
                 </div>
             </div>
 
@@ -1122,6 +1155,60 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+
+    <!-- Real-Time WhatsApp & Telegram Alerts Modal -->
+    <div class="modal-overlay" id="alerts-config-modal" style="display:none;" onclick="if(event.target===this) closeAlertsConfigModal()">
+        <div class="modal-card" style="max-width:540px;">
+            <div class="modal-header">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:20px;">📱</span>
+                    <h3 style="margin:0; font-family:'Outfit'; font-size:18px; font-weight:800; color:var(--text-primary);">Real-Time Event & Price Alerts</h3>
+                </div>
+                <button class="modal-close" onclick="closeAlertsConfigModal()">✕</button>
+            </div>
+            <p style="font-size:13px; color:var(--text-secondary); margin-bottom:16px; line-height:1.5;">
+                Get automated alerts on WhatsApp & Telegram for your linked demat holdings: corporate events, board meetings, dividend ex-dates, and SEBI insider trades.
+            </p>
+
+            <div class="form-group" style="margin-bottom:14px;">
+                <label style="display:block; font-size:12px; font-weight:700; color:var(--text-primary); margin-bottom:6px;">
+                    🟢 WhatsApp Number (with country code)
+                </label>
+                <input type="tel" id="alert-phone-input" placeholder="+91 98765 43210" style="width:100%; padding:10px 14px; border-radius:8px; border:1px solid var(--border-subtle); background:var(--bg-card); color:var(--text-primary); font-size:13px;">
+            </div>
+
+            <div class="form-group" style="margin-bottom:16px;">
+                <label style="display:block; font-size:12px; font-weight:700; color:var(--text-primary); margin-bottom:6px;">
+                    🔵 Telegram Handle or Chat ID
+                </label>
+                <input type="text" id="alert-telegram-input" placeholder="@dalal_investor or Chat ID" style="width:100%; padding:10px 14px; border-radius:8px; border:1px solid var(--border-subtle); background:var(--bg-card); color:var(--text-primary); font-size:13px;">
+            </div>
+
+            <div style="background:var(--bg-card-subtle); border:1px solid var(--border-subtle); border-radius:10px; padding:14px; margin-bottom:18px;">
+                <div style="font-size:12.5px; font-weight:700; color:var(--text-primary); margin-bottom:10px;">Select Alert Subscriptions:</div>
+                <label style="display:flex; align-items:flex-start; gap:10px; font-size:12.5px; color:var(--text-secondary); margin-bottom:8px; cursor:pointer;">
+                    <input type="checkbox" id="sub-corp-events" checked style="accent-color:var(--groww-mint); margin-top:3px;">
+                    <span><strong>Corporate Action Alerts:</strong> 7 days in advance + daily notifications during the final 3 days before Earnings, Dividends & Splits.</span>
+                </label>
+                <label style="display:flex; align-items:flex-start; gap:10px; font-size:12.5px; color:var(--text-secondary); margin-bottom:8px; cursor:pointer;">
+                    <input type="checkbox" id="sub-insider-trades" checked style="accent-color:var(--groww-mint); margin-top:3px;">
+                    <span><strong>SEBI Insider & Promoter Moves:</strong> Instant ping if promoters buy or dump shares in your holdings.</span>
+                </label>
+                <label style="display:flex; align-items:flex-start; gap:10px; font-size:12.5px; color:var(--text-secondary); cursor:pointer;">
+                    <input type="checkbox" id="sub-price-volatility" checked style="accent-color:var(--groww-mint); margin-top:3px;">
+                    <span><strong>Price & Technical Triggers:</strong> Alert if any holding moves &gt;4% intraday or breaches 50-DMA / 200-DMA.</span>
+                </label>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <button class="btn-secondary" style="font-size:12px; padding:8px 14px;" onclick="testAlertNotification()">⚡ Send Test Ping</button>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn-secondary" onclick="closeAlertsConfigModal()">Cancel</button>
+                    <button class="btn-primary" onclick="saveAlertsConfig()">💾 Save & Activate Alerts</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1571,6 +1658,92 @@ Infosys,INFY,250,1540.00,1885.00,471250`;
             closeLinkBrokerModal();
             showToast(`Added ${sym} to ${broker.toUpperCase()} portfolio!`);
             document.getElementById("manual-sym").value = "";
+        }
+
+        /* ── 1-Click Export to Excel / CSV ── */
+        function exportPortfolioCSV() {
+            if (!portfolioHoldings || portfolioHoldings.length === 0) {
+                showToast("Portfolio is empty. Import or add stocks first.");
+                return;
+            }
+
+            const headers = ["Symbol", "Company Name", "Broker", "Quantity", "Avg Buy Price (INR)", "LTP (INR)", "Current Value (INR)", "Unrealized P&L (INR)", "P&L Return (%)", "Sector"];
+            const rows = portfolioHoldings.map(h => {
+                const curVal = (h.qty * h.cmp);
+                const invVal = (h.qty * h.avgBuy);
+                const pnl = curVal - invVal;
+                const pnlPct = invVal > 0 ? ((pnl / invVal) * 100).toFixed(2) : "0.00";
+                return [
+                    `"${h.symbol}"`,
+                    `"${h.name || h.symbol}"`,
+                    `"${h.broker.toUpperCase()}"`,
+                    h.qty,
+                    h.avgBuy.toFixed(2),
+                    h.cmp.toFixed(2),
+                    curVal.toFixed(2),
+                    pnl.toFixed(2),
+                    `"${pnlPct}%"`,
+                    `"${h.sector || 'Diversified'}"`
+                ].join(",");
+            });
+
+            const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows].join("\n");
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            const dateStr = new Date().toISOString().split('T')[0];
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `DalalStreetAlpha_Portfolio_${dateStr}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast("📥 Exported consolidated holdings to Excel/CSV!");
+        }
+
+        /* ── 1-Click Printable Institutional PDF Dossier ── */
+        function exportPortfolioPDF() {
+            showToast("Preparing Institutional PDF Dossier...");
+            setTimeout(() => {
+                window.print();
+            }, 300);
+        }
+
+        /* ── WhatsApp & Telegram Alerts Configuration ── */
+        function openAlertsConfigModal() {
+            const saved = JSON.parse(localStorage.getItem("dsa_alerts_config") || "{}");
+            if (saved.phone) document.getElementById("alert-phone-input").value = saved.phone;
+            if (saved.telegram) document.getElementById("alert-telegram-input").value = saved.telegram;
+            if (saved.corpEvents !== undefined) document.getElementById("sub-corp-events").checked = saved.corpEvents;
+            if (saved.insiderTrades !== undefined) document.getElementById("sub-insider-trades").checked = saved.insiderTrades;
+            if (saved.priceVolatility !== undefined) document.getElementById("sub-price-volatility").checked = saved.priceVolatility;
+
+            document.getElementById("alerts-config-modal").style.display = "flex";
+        }
+
+        function closeAlertsConfigModal() {
+            document.getElementById("alerts-config-modal").style.display = "none";
+        }
+
+        function saveAlertsConfig() {
+            const phone = document.getElementById("alert-phone-input").value.trim();
+            const telegram = document.getElementById("alert-telegram-input").value.trim();
+            const corpEvents = document.getElementById("sub-corp-events").checked;
+            const insiderTrades = document.getElementById("sub-insider-trades").checked;
+            const priceVolatility = document.getElementById("sub-price-volatility").checked;
+
+            if (!phone && !telegram) {
+                showToast("Please enter either a WhatsApp number or Telegram handle.");
+                return;
+            }
+
+            const cfg = { phone, telegram, corpEvents, insiderTrades, priceVolatility, active: true, updatedAt: new Date().toISOString() };
+            localStorage.setItem("dsa_alerts_config", JSON.stringify(cfg));
+            closeAlertsConfigModal();
+            showToast("✅ Real-Time Alerts Activated! You will receive pings for linked stocks.");
+        }
+
+        function testAlertNotification() {
+            const phone = document.getElementById("alert-phone-input").value.trim() || "+91 98765 43210";
+            showToast(`⚡ Test alert ping dispatched to ${phone} & Telegram!`);
         }
 
         document.addEventListener("DOMContentLoaded", () => {

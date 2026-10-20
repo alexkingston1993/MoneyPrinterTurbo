@@ -450,3 +450,219 @@
 .dsa-toast.show {
     bottom: 30px;
 }
+
+/* ==============================================================================
+   PORTFOLIO STOCK EVENTS ALERT NOTIFICATION SYSTEM
+   ============================================================================== */
+.nav-alert-wrapper {
+    position: relative;
+    display: inline-block;
+}
+.nav-alert-btn {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--bg-card-hover);
+    border: 1px solid var(--border-subtle);
+    border-radius: 50%;
+    cursor: pointer;
+    color: var(--text-primary);
+    font-size: 14px;
+    transition: all 0.2s ease;
+}
+.nav-alert-btn:hover {
+    border-color: var(--groww-mint);
+    background: var(--groww-mint-soft);
+}
+.nav-alert-badge {
+    position: absolute;
+    top: -3px;
+    right: -3px;
+    background: var(--market-red);
+    color: #ffffff;
+    font-size: 9.5px;
+    font-weight: 800;
+    min-width: 16px;
+    height: 16px;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 3px;
+    border: 2px solid var(--bg-surface);
+    animation: pulseBadge 2.2s infinite;
+}
+@keyframes pulseBadge {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+/* Alert Dropdown Panel */
+.alert-dropdown-panel {
+    position: absolute;
+    top: calc(100% + 10px);
+    right: 0;
+    width: 360px;
+    max-width: 90vw;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 14px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.25);
+    z-index: 2500;
+    display: none;
+    overflow: hidden;
+    animation: fadeInDown 0.2s ease-out;
+}
+.alert-dropdown-panel.show { display: block; }
+.alert-panel-header {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--bg-card-subtle);
+}
+.alert-panel-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.alert-panel-list {
+    max-height: 360px;
+    overflow-y: auto;
+}
+.alert-item {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    text-decoration: none;
+    color: inherit;
+}
+.alert-item:hover {
+    background: var(--bg-card-hover);
+}
+.alert-item:last-child { border-bottom: none; }
+.alert-icon-box {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+}
+.alert-icon-box.earnings { background: rgba(59, 130, 246, 0.12); color: #2563eb; }
+.alert-icon-box.dividend { background: var(--groww-mint-soft); color: var(--groww-mint); }
+.alert-icon-box.split { background: rgba(147, 51, 234, 0.12); color: #9333ea; }
+.alert-icon-box.board { background: rgba(217, 119, 6, 0.12); color: #d97706; }
+
+/* Slide-in Event Alert Popup Banner */
+.dsa-event-alert-popup {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    width: 380px;
+    max-width: calc(100vw - 32px);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-left: 4px solid var(--groww-mint);
+    border-radius: 12px;
+    box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+    z-index: 2900;
+    transform: translateY(140%);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 18px;
+}
+.dsa-event-alert-popup.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+.dsa-alert-pop-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+.dsa-alert-badge-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+.dsa-alert-badge-tag.earnings { background: rgba(59, 130, 246, 0.12); color: #2563eb; }
+.dsa-alert-badge-tag.dividend { background: var(--groww-mint-soft); color: var(--groww-mint); }
+.dsa-alert-badge-tag.split { background: rgba(147, 51, 234, 0.12); color: #9333ea; }
+.dsa-alert-badge-tag.board { background: rgba(217, 119, 6, 0.12); color: #d97706; }
+.dsa-alert-days-pill {
+    background: rgba(220, 38, 38, 0.12);
+    color: var(--market-red);
+    font-weight: 700;
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 9999px;
+}
+.dsa-alert-pop-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+}
+.dsa-alert-pop-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 14px;
+}
+.dsa-alert-pop-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+}
+.dsa-alert-btn-dismiss {
+    background: none;
+    border: none;
+    font-size: 12px;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px 8px;
+}
+.dsa-alert-btn-dismiss:hover { color: var(--text-primary); }
+.dsa-alert-btn-cal {
+    padding: 6px 12px;
+    font-size: 11.5px;
+    font-weight: 600;
+    border-radius: 6px;
+    background: var(--bg-card-hover);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    cursor: pointer;
+    text-decoration: none;
+}
+.dsa-alert-btn-view {
+    padding: 6px 14px;
+    font-size: 11.5px;
+    font-weight: 700;
+    border-radius: 6px;
+    background: var(--groww-mint);
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    text-decoration: none;
+}

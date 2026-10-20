@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indian Unlisted Shares & Pre-IPO Equity Intelligence, Prices & Imminent IPO Radar | Dalal Street Alpha</title>
+    <meta name="description" content="Research authentic unlisted shares in India including NSE India, Reliance Retail, HDB Financial, Swiggy pre-IPO, and CSK. Comprehensive investor guide, SEBI ICDR lock-in rules, and imminent IPO alerts.">
+    <link rel="canonical" href="https://dalal-street-alpha.vercel.app/unlisted">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="brand_assets/website_favicon_32x32.png">
+
+    <!-- Global Theme CSS & Auth Script (Default: Light Mode) -->
+    <link rel="stylesheet" href="brand_assets/global-theme.css">
+    <script src="brand_assets/theme-auth.js"></script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-canvas);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            line-height: 1.55;
+            -webkit-font-smoothing: antialiased;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        /* Top Navigation */
+        .site-navbar {
+            background: var(--navbar-bg);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 14px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: background 0.2s ease, border-color 0.2s ease;
+        }
+        .navbar-inner {
+            max-width: 1320px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .brand-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        .brand-logo-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            box-shadow: 0 0 14px var(--groww-mint-soft);
+        }
+        .brand-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+        }
+        .brand-name span { color: var(--groww-mint); }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            flex-wrap: wrap;
+        }
+        .nav-link {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.15s ease;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: var(--groww-mint);
+        }
+
+        /* Hero */
+        .unlisted-hero {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 32px 20px 16px;
+        }
+        .unlisted-hero-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .unlisted-hero h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 32px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+        .unlisted-hero p {
+            font-size: 14.5px;
+            color: var(--text-secondary);
+            max-width: 760px;
+        }
+
+        /* Educational Guide Banner */
+        .edu-guide-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 28px;
+            box-shadow: var(--card-shadow);
+        }
+        .edu-guide-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .edu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+        .edu-card {
+            background: var(--bg-card-hover);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 16px;
+        }
+        .edu-card-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--groww-mint);
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 800;
+            margin-bottom: 8px;
+        }
+        .edu-card-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        .edu-card-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Disclaimer Notice */
+        .disclaimer-banner {
+            background: rgba(220, 38, 38, 0.05);
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            border-left: 4px solid var(--market-red);
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin-top: 16px;
+            font-size: 12.5px;
+            color: var(--text-secondary);
+            line-height: 1.55;
+        }
+        .disclaimer-banner strong { color: var(--market-red); }
+
+        /* Filter Bar */
+        .unlisted-tabs-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 10px 16px;
+            margin-bottom: 24px;
+            box-shadow: var(--card-shadow);
+        }
+        .unlisted-nav-tabs {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .unlisted-tab-btn {
+            background: none;
+            border: none;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            padding: 7px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .unlisted-tab-btn:hover {
+            color: var(--text-primary);
+            background: var(--bg-card-hover);
+        }
+        .unlisted-tab-btn.active {
+            background: var(--groww-mint-soft);
+            color: var(--groww-mint);
+            font-weight: 700;
+        }
+        .unlisted-tab-btn.imminent-tab {
+            color: #dc2626;
+            font-weight: 700;
+        }
+        .unlisted-tab-btn.imminent-tab.active {
+            background: rgba(220, 38, 38, 0.10);
+            color: #dc2626;
+        }
+
+        .unlisted-search-input {
+            background: var(--bg-canvas);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 12.5px;
+            color: var(--text-primary);
+            outline: none;
+            min-width: 220px;
+            font-family: inherit;
+        }
+        .unlisted-search-input:focus { border-color: var(--groww-mint); }
+
+        /* Unlisted Cards Grid */
+        .unlisted-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 18px;
+            margin-bottom: 40px;
+        }
+        .unlisted-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+        .unlisted-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--groww-mint);
+        }
+        .unlisted-card.imminent-highlight {
+            border-color: #dc2626;
+            background: linear-gradient(180deg, rgba(220, 38, 38, 0.02) 0%, var(--bg-card) 100%);
+        }
+        .imminent-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #dc2626;
+            color: #ffffff;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 4px;
+            letter-spacing: 0.4px;
+            margin-bottom: 10px;
+            width: fit-content;
+        }
+
+        .unlisted-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .unlisted-card-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.3;
+        }
+        .unlisted-sector-tag {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--bg-card-hover);
+            padding: 2px 7px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .price-highlight-bar {
+            background: var(--groww-mint-soft);
+            border: 1px solid var(--groww-mint);
+            border-radius: 10px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+        .price-hl-label { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+        .price-hl-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--groww-mint);
+        }
+
+        .unlisted-table {
+            width: 100%;
+            margin-bottom: 16px;
+            font-size: 12px;
+            border-collapse: collapse;
+        }
+        .unlisted-table td {
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .unlisted-table td:last-child {
+            text-align: right;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .table-label { color: var(--text-secondary); }
+
+        .unlisted-card-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 12px;
+            border-top: 1px solid var(--border-subtle);
+        }
+        .lot-tag { font-size: 11.5px; color: var(--text-muted); font-family: 'JetBrains Mono'; }
+        .btn-enquire {
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 700;
+            border-radius: 6px;
+            background: var(--bg-card-hover);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-enquire:hover {
+            background: var(--groww-mint);
+            color: #ffffff;
+            border-color: var(--groww-mint);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            width: 680px;
+            max-width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 28px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+        }
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Site Navbar -->
+    <header class="site-navbar">
+        <div class="navbar-inner">
+            <a href="/" class="brand-group">
+                <img src="brand_assets/website_favicon_192x192.png" alt="Logo" class="brand-logo-img">
+                <span class="brand-name">DALAL STREET <span>ALPHA</span></span>
+            </a>
+
+            <div class="nav-links">
+                <a href="/" class="nav-link">Dashboard</a>
+                <a href="/screener.html" class="nav-link">Stock Screener</a>
+                <a href="/events.html" class="nav-link">Stock Events</a>
+                <a href="/ipo.html" class="nav-link">IPOs</a>
+                <a href="/unlisted.html" class="nav-link active">Unlisted Shares</a>
+                <a href="/portfolio.html" class="nav-link">Portfolio</a>
+                <a href="/calculators.html" class="nav-link">Calculators</a>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:10px;">
+                <button class="theme-toggle-btn" onclick="toggleDSATheme()">
+                    🌙 <span class="theme-text">Dark</span>
+                </button>
+                <div class="nav-auth-wrapper"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Header -->
+    <section class="unlisted-hero">
+        <div class="unlisted-hero-top">
+            <div>
+                <h1>Indian Unlisted Shares &amp; Pre-IPO Equities Intelligence</h1>
+                <p>Track secondary market prices, balance sheet fundamentals, pre-IPO market valuations, and SEBI DRHP filing radars for prestigious unlisted Indian companies before they hit public stock exchanges.</p>
+            </div>
+            <div>
+                <button class="btn-primary" style="background:var(--groww-mint); color:#ffffff; padding:10px 18px; border:none; border-radius:8px; font-weight:700; cursor:pointer;" onclick="filterImminentOnly()">
+                    🚀 View Imminent IPO Candidates
+                </button>
+            </div>
+        </div>
+
+        <!-- 1. Educational Guide: What is an Unlisted Share? -->
+        <div class="edu-guide-card">
+            <div class="edu-guide-title">
+                <span>📚</span> Understanding Unlisted Shares &amp; Pre-IPO Investments in India
+            </div>
+            <p style="font-size:13.5px; color:var(--text-secondary); line-height:1.6;">
+                <strong style="color:var(--text-primary);">What is an Unlisted Share?</strong> Unlisted shares represent equity ownership in companies that are registered as private or unlisted public companies and are not yet formally traded on the NSE or BSE order books. Investing in unlisted equities allows institutions and high-net-worth investors to participate in profitable market monopolies (like NSE Ltd) or late-stage unicorns before public listing discovery.
+            </p>
+
+            <div class="edu-grid">
+                <div class="edu-card">
+                    <div class="edu-card-num">1</div>
+                    <div class="edu-card-title">Depository Crediting</div>
+                    <div class="edu-card-desc">Transferred directly into your existing CDSL or NSDL Demat account via off-market DIS / e-DIS transfer. Shares hold the same legal status as public equity.</div>
+                </div>
+                <div class="edu-card">
+                    <div class="edu-card-num">2</div>
+                    <div class="edu-card-title">SEBI 6-Month Lock-in Rule</div>
+                    <div class="edu-card-desc">Under SEBI (ICDR) regulations, all pre-IPO equity shares held by non-promoters are subject to a mandatory <strong>6-month lock-in period</strong> from the official exchange listing date.</div>
+                </div>
+                <div class="edu-card">
+                    <div class="edu-card-num">3</div>
+                    <div class="edu-card-title">Taxation Treatment</div>
+                    <div class="edu-card-desc">Holding period &gt; 24 months qualifies for Long-Term Capital Gains (LTCG) taxed at 12.5% (post-2024 budget). Holding &lt; 24 months is taxed at applicable income tax slab rates.</div>
+                </div>
+            </div>
+
+            <!-- Mandatory Regulatory Disclaimer -->
+            <div class="disclaimer-banner">
+                <strong>⚠️ Regulatory Notice &amp; Risk Disclosure:</strong> Unlisted equities carry liquidity risk as there is no formal exchange-governed order matching mechanism. Price discovery is determined bilaterally based on secondary market supply and demand. Past pre-IPO price appreciation is not a guarantee of listing day gains. Dalal Street Alpha displays this financial intelligence purely for educational, analytical, and comparative benchmarking purposes.
+            </div>
+        </div>
+
+        <!-- 2. Segmented Filters & Search Bar -->
+        <div class="unlisted-tabs-bar">
+            <div class="unlisted-nav-tabs">
+                <button class="unlisted-tab-btn active" id="tab-all" onclick="filterCategory('all')">All Unlisted (10)</button>
+                <button class="unlisted-tab-btn imminent-tab" id="tab-imminent" onclick="filterCategory('imminent')">🚀 Imminent IPO / DRHP Filed (3)</button>
+                <button class="unlisted-tab-btn" id="tab-exchanges" onclick="filterCategory('exchanges')">Exchanges &amp; Finance (4)</button>
+                <button class="unlisted-tab-btn" id="tab-consumer" onclick="filterCategory('consumer')">Consumer &amp; Tech (3)</button>
+            </div>
+            <input type="text" id="unlisted-search" class="unlisted-search-input" placeholder="Search company or sector..." oninput="handleUnlistedSearch(this.value)">
+        </div>
+
+        <!-- 3. Cards Grid -->
+        <div class="unlisted-grid" id="unlisted-cards-container">
+            <!-- Rendered by JS -->
+        </div>
+
+    </section>
+
+    <!-- Unlisted Stock Detail Modal -->
+    <div class="modal-overlay" id="unlisted-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <div>
+                    <h2 id="modal-unlisted-name" style="font-family:'Outfit'; font-size:22px; font-weight:800; color:var(--text-primary);">NSE India Ltd</h2>
+                    <span id="modal-unlisted-tag" style="font-size:12px; color:var(--text-muted); font-family:'JetBrains Mono';">National Stock Exchange • Pre-IPO</span>
+                </div>
+                <button class="modal-close" onclick="closeUnlistedModal()">✕</button>
+            </div>
+            <div id="modal-unlisted-body">
+                <!-- Rendered dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script -->
+    <script>
+        const UNLISTED_STOCKS = [
+            {
+                id: "nse-india",
+                name: "National Stock Exchange of India (NSE)",
+                category: "exchanges",
+                sector: "Financial Exchange",
+                price: "₹6,450",
+                range52w: "₹3,150 - ₹6,800",
+                lotSize: "50 Shares (₹3,22,500)",
+                marketCap: "₹3,19,275 Cr",
+                peRatio: "38.2x",
+                roe: "34.2%",
+                revenue: "₹14,780 Cr",
+                pat: "₹8,306 Cr",
+                imminentIpo: false,
+                ipoStatus: "Pending SEBI NOC (Expected FY26)",
+                description: "World's largest derivatives exchange by contract volume and India's premier stock exchange controlling 93% of equity cash market turnover. High operating leverage and dividend yield.",
+                moat: "Complete regulatory and technological natural monopoly. Zero debt and 56% operating margin."
+            },
+            {
+                id: "hdb-financial",
+                name: "HDB Financial Services Ltd",
+                category: "imminent",
+                sector: "NBFC / Retail Lending",
+                price: "₹795",
+                range52w: "₹620 - ₹850",
+                lotSize: "100 Shares (₹79,500)",
+                marketCap: "₹63,200 Cr",
+                peRatio: "25.8x",
+                roe: "17.4%",
+                revenue: "₹14,171 Cr",
+                pat: "₹2,460 Cr",
+                imminentIpo: true,
+                ipoStatus: "🚀 DRHP FILED / ₹2,500 Cr Fresh + OFS Approved by HDFC Bank",
+                description: "Premier non-banking retail financing subsidiary of HDFC Bank with 1,680+ branches across 27 Indian states. Strong asset quality with GNPA under 2.2%.",
+                moat: "AAA rating backing from HDFC Bank parentage providing ultra-low cost of borrowing."
+            },
+            {
+                id: "swiggy-unlisted",
+                name: "Swiggy Ltd (Pre-IPO)",
+                category: "imminent",
+                sector: "Consumer Tech / Quick Commerce",
+                price: "₹420",
+                range52w: "₹280 - ₹460",
+                lotSize: "100 Shares (₹42,000)",
+                marketCap: "₹94,500 Cr",
+                peRatio: "N/A (Turnaround)",
+                roe: "N/A",
+                revenue: "₹11,247 Cr",
+                pat: "-₹2,350 Cr",
+                imminentIpo: true,
+                ipoStatus: "🚀 IPO LAUNCHING NOV 06, 2026 (Price Band ₹371 - ₹390)",
+                description: "India's pioneer food delivery and quick commerce (Instamart) ecosystem. Pre-IPO valuation trading at modest premium to IPO price band.",
+                moat: "Over 1.4 crore monthly transacting users and dense dark store network."
+            },
+            {
+                id: "hero-fincorp",
+                name: "Hero Fincorp Ltd",
+                category: "imminent",
+                sector: "NBFC / Auto & SME",
+                price: "₹1,280",
+                range52w: "₹950 - ₹1,380",
+                lotSize: "50 Shares (₹64,000)",
+                marketCap: "₹16,380 Cr",
+                peRatio: "22.4x",
+                roe: "14.2%",
+                revenue: "₹4,420 Cr",
+                pat: "₹730 Cr",
+                imminentIpo: true,
+                ipoStatus: "🚀 DRHP FILED WITH SEBI (₹3,668 Cr Public Issue)",
+                description: "Two-wheeler and retail vehicle financing arm of Hero MotoCorp. Servicing over 9.5 million customers across semi-urban and rural India.",
+                moat: "Exclusive captive dealership access to Hero MotoCorp's pan-India showroom network."
+            },
+            {
+                id: "reliance-retail",
+                name: "Reliance Retail Ventures Ltd (RRVL)",
+                category: "consumer",
+                sector: "Omnichannel Retail",
+                price: "₹1,340",
+                range52w: "₹1,120 - ₹1,450",
+                lotSize: "50 Shares (₹67,000)",
+                marketCap: "₹11,15,000 Cr",
+                peRatio: "98.2x",
+                roe: "9.8%",
+                revenue: "₹3,06,786 Cr",
+                pat: "₹11,101 Cr",
+                imminentIpo: false,
+                ipoStatus: "IPO Targeted for 2026-2027 by RIL",
+                description: "Largest retail chain in India operating 18,700+ stores across grocery, consumer electronics, fashion, and pharma (JioMart, Trends, Digital).",
+                moat: "Unsurpassed scale, backend supply chain integration, and backing by Qatar Investment Authority and KKR."
+            },
+            {
+                id: "csk-cricket",
+                name: "Chennai Super Kings Cricket Ltd (CSK)",
+                category: "consumer",
+                sector: "Sports Franchise",
+                price: "₹205",
+                range52w: "₹155 - ₹230",
+                lotSize: "500 Shares (₹1,02,500)",
+                marketCap: "₹6,350 Cr",
+                peRatio: "42.1x",
+                roe: "26.4%",
+                revenue: "₹676 Cr",
+                pat: "₹151 Cr",
+                imminentIpo: false,
+                ipoStatus: "No Immediate Public Listing Planned",
+                description: "India's only publicly tradeable premier sports franchise entity. 5-time IPL champion brand with multi-year sponsorships and media rights annuity.",
+                moat: "Fanatical fan equity, high media rights revenue share from BCCI, and zero debt capital structure."
+            },
+            {
+                id: "sbi-funds",
+                name: "SBI Funds Management Ltd (SBI Mutual Fund)",
+                category: "exchanges",
+                sector: "Asset Management",
+                price: "₹2,480",
+                range52w: "₹1,850 - ₹2,720",
+                lotSize: "25 Shares (₹62,000)",
+                marketCap: "₹62,400 Cr",
+                peRatio: "36.5x",
+                roe: "32.1%",
+                revenue: "₹2,840 Cr",
+                pat: "₹1,710 Cr",
+                imminentIpo: false,
+                ipoStatus: "Joint Venture of SBI & Amundi (IPO Pipeline)",
+                description: "India's #1 Asset Management Company with ₹10+ Lakh Crore in Average AUM. Over 15% overall mutual fund market share.",
+                moat: "Unrivalled branch distribution via State Bank of India's 22,000+ branch network."
+            },
+            {
+                id: "boat-lifestyle",
+                name: "Imagine Marketing Ltd (boAt)",
+                category: "consumer",
+                sector: "Consumer Electronics",
+                price: "₹725",
+                range52w: "₹620 - ₹840",
+                lotSize: "100 Shares (₹72,500)",
+                marketCap: "₹6,150 Cr",
+                peRatio: "N/A",
+                roe: "N/A",
+                revenue: "₹3,380 Cr",
+                pat: "-₹101 Cr",
+                imminentIpo: false,
+                ipoStatus: "Fresh DRHP in Preparation for FY26",
+                description: "Leading consumer audio and smartwatch D2C brand commanding over 35% domestic earwear market share. Transitioned 70% production to Make-In-India.",
+                moat: "High youth brand recall and offline retail penetration in 1,00,000+ points of sale."
+            },
+            {
+                id: "oravel-oyo",
+                name: "Oravel Stays Ltd (OYO Rooms)",
+                category: "consumer",
+                sector: "Hospitality Tech",
+                price: "₹48.50",
+                range52w: "₹32 - ₹58",
+                lotSize: "1,000 Shares (₹48,500)",
+                marketCap: "₹32,100 Cr",
+                peRatio: "142x",
+                roe: "Turnaround",
+                revenue: "₹5,388 Cr",
+                pat: "₹229 Cr (First Profitable Year FY24)",
+                imminentIpo: false,
+                ipoStatus: "Refinanced $450M Debt; IPO Planned Post Refinancing",
+                description: "Global travel technology platform servicing 18,000+ storefront hotels across India, Southeast Asia, and Europe. Turned net profit positive.",
+                moat: "Proprietary pricing algorithm and hotel patron distribution engine."
+            },
+            {
+                id: "pharmeasy",
+                name: "API Holdings Ltd (PharmEasy)",
+                category: "consumer",
+                sector: "Healthtech & Digital Pharma",
+                price: "₹14.80",
+                range52w: "₹8.50 - ₹18.00",
+                lotSize: "5,000 Shares (₹74,000)",
+                marketCap: "₹18,400 Cr",
+                peRatio: "N/A",
+                roe: "N/A",
+                revenue: "₹5,840 Cr",
+                pat: "-₹2,530 Cr",
+                imminentIpo: false,
+                ipoStatus: "Restructured Balance Sheet via Rights Issue",
+                description: "Integrated digital healthcare platform owning Thyrocare and retail pharmacy delivery network across 1,000+ Indian cities.",
+                moat: "Pan-India medicine distribution cold chain and Thyrocare diagnostic lab footprint."
+            }
+        ];
+
+        let activeFilter = 'all';
+        let searchQuery = '';
+
+        function filterCategory(cat) {
+            activeFilter = cat;
+            document.querySelectorAll('.unlisted-tab-btn').forEach(b => b.classList.remove('active'));
+            const btn = document.getElementById(`tab-${cat}`);
+            if (btn) btn.classList.add('active');
+            renderUnlisted();
+        }
+
+        function filterImminentOnly() {
+            filterCategory('imminent');
+            document.getElementById('unlisted-cards-container').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function handleUnlistedSearch(val) {
+            searchQuery = val.toLowerCase().trim();
+            renderUnlisted();
+        }
+
+        function renderUnlisted() {
+            const container = document.getElementById('unlisted-cards-container');
+            const filtered = UNLISTED_STOCKS.filter(s => {
+                if (activeFilter === 'imminent') {
+                    if (!s.imminentIpo) return false;
+                } else if (activeFilter === 'exchanges') {
+                    if (s.category !== 'exchanges') return false;
+                } else if (activeFilter === 'consumer') {
+                    if (s.category !== 'consumer') return false;
+                }
+
+                if (!searchQuery) return true;
+                return s.name.toLowerCase().includes(searchQuery) || s.sector.toLowerCase().includes(searchQuery);
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 48px; color: var(--text-muted);">No unlisted stocks match your criteria.</div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(s => `
+                <div class="unlisted-card ${s.imminentIpo ? 'imminent-highlight' : ''}" onclick="openUnlistedModal('${s.id}')">
+                    <div>
+                        ${s.imminentIpo ? `<div class="imminent-badge">🚀 IMMINENT IPO / DRHP FILED</div>` : ''}
+                        <div class="unlisted-card-header">
+                            <div class="unlisted-card-name">${s.name}</div>
+                            <span class="unlisted-sector-tag">${s.sector}</span>
+                        </div>
+
+                        <div class="price-highlight-bar">
+                            <span class="price-hl-label">CURRENT UNLISTED CMP:</span>
+                            <span class="price-hl-val">${s.price}</span>
+                        </div>
+
+                        <table class="unlisted-table">
+                            <tr><td class="table-label">Estimated Market Cap</td><td>${s.marketCap}</td></tr>
+                            <tr><td class="table-label">52-Week Range</td><td>${s.range52w}</td></tr>
+                            <tr><td class="table-label">TTM Net Profit (PAT)</td><td>${s.pat}</td></tr>
+                            <tr><td class="table-label">Return on Equity (RoE)</td><td>${s.roe}</td></tr>
+                            <tr><td class="table-label">IPO Pipeline Status</td><td style="color:${s.imminentIpo ? '#dc2626' : 'var(--text-primary)'};">${s.ipoStatus}</td></tr>
+                        </table>
+                    </div>
+
+                    <div class="unlisted-card-footer">
+                        <span class="lot-tag">Min Lot: ${s.lotSize}</span>
+                        <button class="btn-enquire">Analyze Moat →</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openUnlistedModal(id) {
+            const stock = UNLISTED_STOCKS.find(x => x.id === id);
+            if (!stock) return;
+
+            document.getElementById('modal-unlisted-name').textContent = stock.name;
+            document.getElementById('modal-unlisted-tag').textContent = `${stock.sector.toUpperCase()} • PRE-IPO RESEARCH REPORT`;
+
+            const body = document.getElementById('modal-unlisted-body');
+            body.innerHTML = `
+                ${stock.imminentIpo ? `
+                    <div style="background:rgba(220,38,38,0.10); border:1px solid rgba(220,38,38,0.3); border-radius:10px; padding:12px 16px; margin-bottom:16px;">
+                        <strong style="color:#dc2626; font-size:13px;">🚨 Imminent IPO Pipeline Alert:</strong>
+                        <div style="font-size:12.5px; color:var(--text-primary); margin-top:2px;">${stock.ipoStatus}</div>
+                    </div>
+                ` : ''}
+                <div style="margin-bottom:18px; line-height:1.6; font-size:13.5px; color:var(--text-secondary);">
+                    ${stock.description}
+                </div>
+                <div style="background:var(--bg-card-subtle); border:1px solid var(--border-subtle); border-radius:10px; padding:16px; margin-bottom:18px;">
+                    <h4 style="font-size:14px; font-weight:700; color:var(--text-primary); margin-bottom:10px;">🛡️ Moat Analysis &amp; Competitive Dominance</h4>
+                    <p style="font-size:12.5px; color:var(--text-secondary); line-height:1.55;">${stock.moat}</p>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:12.5px; margin-bottom:20px;">
+                    <div style="background:var(--bg-card-hover); padding:10px; border-radius:8px;">
+                        <span style="color:var(--text-muted); display:block; font-size:11px;">REVENUE TTM</span>
+                        <strong style="font-size:14px; color:var(--text-primary);">${stock.revenue}</strong>
+                    </div>
+                    <div style="background:var(--bg-card-hover); padding:10px; border-radius:8px;">
+                        <span style="color:var(--text-muted); display:block; font-size:11px;">NET PROFIT (PAT)</span>
+                        <strong style="font-size:14px; color:var(--text-primary);">${stock.pat}</strong>
+                    </div>
+                    <div style="background:var(--bg-card-hover); padding:10px; border-radius:8px;">
+                        <span style="color:var(--text-muted); display:block; font-size:11px;">P/E RATIO</span>
+                        <strong style="font-size:14px; color:var(--text-primary);">${stock.peRatio}</strong>
+                    </div>
+                    <div style="background:var(--bg-card-hover); padding:10px; border-radius:8px;">
+                        <span style="color:var(--text-muted); display:block; font-size:11px;">RETURN ON EQUITY</span>
+                        <strong style="font-size:14px; color:var(--groww-mint);">${stock.roe}</strong>
+                    </div>
+                </div>
+                <div style="border-top:1px solid var(--border-subtle); padding-top:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                    <span style="font-size:11.5px; color:var(--text-muted);">Transferred to Demat via CDSL/NSDL e-DIS</span>
+                    <button class="btn-primary" style="background:var(--groww-mint); color:#ffffff; padding:8px 16px; border:none; border-radius:8px; font-size:12.5px; font-weight:700; cursor:pointer;" onclick="showToast('Inquiry request logged for ${stock.name}. Pre-IPO desk will connect with accredited investor credentials.')">
+                        📩 Request Share Availability
+                    </button>
+                </div>
+            `;
+
+            document.getElementById('unlisted-modal').classList.add('active');
+        }
+
+        function closeUnlistedModal() {
+            document.getElementById('unlisted-modal').classList.remove('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderUnlisted();
+        });
+    </script>
+</body>
+</html>

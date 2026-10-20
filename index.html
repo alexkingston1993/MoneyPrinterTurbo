@@ -1213,6 +1213,8 @@
                 <a href="#movers-section" class="nav-link-item" onclick="switchDashboardTab('movers')">Movers</a>
                 <a href="/screener.html" class="nav-link-item">Stock Screener</a>
                 <a href="/events.html" class="nav-link-item">Stock Events</a>
+                <a href="/ipo.html" class="nav-link-item">IPOs</a>
+                <a href="/unlisted.html" class="nav-link-item">Unlisted Shares</a>
                 <a href="/portfolio.html" class="nav-link-item">Portfolio</a>
                 <a href="/calculators.html" class="nav-link-item">Calculators</a>
                 <a href="#research-section" class="nav-link-item" onclick="switchDashboardTab('research')">Research</a>
@@ -1309,15 +1311,14 @@
             <a href="/events.html" class="seg-tab-btn" id="btn-tab-events" style="text-decoration:none;">
                 <span>📅</span> Stock Events
             </a>
+            <a href="/ipo.html" class="seg-tab-btn" id="btn-tab-ipo" style="text-decoration:none;">
+                <span>🚀</span> IPO Radar
+            </a>
+            <a href="/unlisted.html" class="seg-tab-btn" id="btn-tab-unlisted" style="text-decoration:none;">
+                <span>🏛️</span> Unlisted Shares
+            </a>
             <button class="seg-tab-btn" id="btn-tab-sectors" onclick="switchDashboardTab('sectors')">
-                <span>📊</span> Sectors & Heatmap
-            </button>
-            <button class="seg-tab-btn" id="btn-tab-research" onclick="switchDashboardTab('research')">
-                <span>📖</span> Research Dossiers
-            </button>
-        </div>
-            <button class="seg-tab-btn" id="btn-tab-sectors" onclick="switchDashboardTab('sectors')">
-                <span>📊</span> Sectors & Heatmap
+                <span>📊</span> Sectors &amp; Heatmap
             </button>
             <button class="seg-tab-btn" id="btn-tab-research" onclick="switchDashboardTab('research')">
                 <span>📖</span> Research Dossiers
@@ -1436,10 +1437,121 @@
                 <h3 class="panel-title"><span>📖</span> Institutional Research Dossiers & Video Library</h3>
                 <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);">Dedicated Standalone Pages</span>
             </div>
-            <div class="reports-grid" id="reports-grid">
-                <!-- Populated dynamically -->
+        <!-- Section 6A: Indian IPO Radar Preview Section -->
+        <section class="home-market-section" style="margin-top: 36px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 24px; box-shadow: var(--card-shadow);">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom: 20px;">
+                <div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-size:20px;">🚀</span>
+                        <h3 style="font-family:var(--font-display); font-size:18px; font-weight:800; color:var(--text-primary);">
+                            Indian IPO Radar &amp; Live Grey Market Premium (GMP)
+                        </h3>
+                    </div>
+                    <p style="font-size:12.5px; color:var(--text-secondary); margin-top:4px;">
+                        Upcoming mainboard issues, live bidding subscription multiples, and estimated listing pop.
+                    </p>
+                </div>
+                <a href="/ipo.html" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:700; color:#ffffff; background:var(--groww-mint); padding:8px 16px; border-radius:8px;">
+                    View Complete IPO Dashboard →
+                </a>
             </div>
-        </div>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">
+                <div style="background:var(--bg-card-hover); border:1px solid var(--border-subtle); border-radius:12px; padding:18px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <strong style="font-size:15px; color:var(--text-primary);">Hyundai Motor India</strong>
+                        <span style="font-family:var(--font-mono); font-size:10px; font-weight:700; background:rgba(59,130,246,0.12); color:#2563eb; padding:2px 6px; border-radius:4px;">₹27,870 CR</span>
+                    </div>
+                    <div style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">Price Band: ₹1,865 - ₹1,960 • Lot: 7 Shares</div>
+                    <div style="background:var(--groww-mint-soft); border:1px solid var(--groww-mint); border-radius:6px; padding:8px 12px; display:flex; justify-content:space-between; font-size:12px;">
+                        <span style="font-weight:600; color:var(--groww-mint);">Live GMP:</span>
+                        <strong style="color:var(--groww-mint); font-family:var(--font-mono);">+₹65 (+3.3%)</strong>
+                    </div>
+                </div>
+
+                <div style="background:var(--bg-card-hover); border:1px solid var(--border-subtle); border-radius:12px; padding:18px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <strong style="font-size:15px; color:var(--text-primary);">Waaree Energies Ltd</strong>
+                        <span style="font-family:var(--font-mono); font-size:10px; font-weight:700; background:rgba(0,135,90,0.12); color:var(--groww-mint); padding:2px 6px; border-radius:4px;">₹4,321 CR</span>
+                    </div>
+                    <div style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">Price Band: ₹1,427 - ₹1,503 • Lot: 9 Shares</div>
+                    <div style="background:var(--groww-mint-soft); border:1px solid var(--groww-mint); border-radius:6px; padding:8px 12px; display:flex; justify-content:space-between; font-size:12px;">
+                        <span style="font-weight:600; color:var(--groww-mint);">Live GMP:</span>
+                        <strong style="color:var(--groww-mint); font-family:var(--font-mono);">+₹1,475 (+98.1%)</strong>
+                    </div>
+                </div>
+
+                <div style="background:var(--bg-card-hover); border:1px solid var(--border-subtle); border-radius:12px; padding:18px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                        <strong style="font-size:15px; color:var(--text-primary);">Swiggy Ltd</strong>
+                        <span style="font-family:var(--font-mono); font-size:10px; font-weight:700; background:rgba(59,130,246,0.12); color:#2563eb; padding:2px 6px; border-radius:4px;">₹11,300 CR</span>
+                    </div>
+                    <div style="font-size:12px; color:var(--text-muted); margin-bottom:10px;">Price Band: ₹371 - ₹390 • Lot: 38 Shares</div>
+                    <div style="background:var(--groww-mint-soft); border:1px solid var(--groww-mint); border-radius:6px; padding:8px 12px; display:flex; justify-content:space-between; font-size:12px;">
+                        <span style="font-weight:600; color:var(--groww-mint);">Live GMP:</span>
+                        <strong style="color:var(--groww-mint); font-family:var(--font-mono);">+₹25 (+6.4%)</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 6B: Unlisted Shares & Pre-IPO Radar Preview Section -->
+        <section class="home-market-section" style="margin-top: 24px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 24px; box-shadow: var(--card-shadow);">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom: 20px;">
+                <div>
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <span style="font-size:20px;">🏛️</span>
+                        <h3 style="font-family:var(--font-display); font-size:18px; font-weight:800; color:var(--text-primary);">
+                            Unlisted Shares &amp; Pre-IPO Equities Terminal
+                        </h3>
+                    </div>
+                    <p style="font-size:12.5px; color:var(--text-secondary); margin-top:4px;">
+                        Secondary market unlisted shares, SEBI 6-month lock-in guidelines, and imminent IPO candidates.
+                    </p>
+                </div>
+                <a href="/unlisted.html" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; font-size:12.5px; font-weight:700; color:var(--groww-mint); background:var(--groww-mint-soft); padding:8px 16px; border-radius:8px; border:1px solid var(--groww-mint);">
+                    Explore All Unlisted Equities →
+                </a>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">
+                <div style="background:var(--bg-card-hover); border:1px solid var(--border-subtle); border-radius:12px; padding:18px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                        <strong style="font-size:15px; color:var(--text-primary);">NSE India Ltd</strong>
+                        <span style="font-family:var(--font-mono); font-size:10.5px; color:var(--text-muted);">MONOPOLY</span>
+                    </div>
+                    <div style="font-size:12px; color:var(--text-secondary); margin-bottom:12px;">Market Cap: ~₹3,19,000 Cr • RoE: 34.2%</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; border-top:1px solid var(--border-subtle);">
+                        <span style="font-size:11.5px; color:var(--text-muted);">Unlisted CMP</span>
+                        <strong style="font-family:var(--font-mono); font-size:15px; color:var(--groww-mint);">₹6,450 / share</strong>
+                    </div>
+                </div>
+
+                <div style="background:linear-gradient(180deg, rgba(220,38,38,0.03) 0%, var(--bg-card-hover) 100%); border:1px solid #dc2626; border-radius:12px; padding:18px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                        <strong style="font-size:15px; color:var(--text-primary);">HDB Financial Services</strong>
+                        <span style="font-family:var(--font-mono); font-size:9.5px; font-weight:800; background:#dc2626; color:#ffffff; padding:2px 6px; border-radius:4px;">🚀 DRHP FILED</span>
+                    </div>
+                    <div style="font-size:12px; color:var(--text-secondary); margin-bottom:12px;">HDFC Bank Subsidiary • ₹2,500 Cr IPO Approved</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; border-top:1px solid var(--border-subtle);">
+                        <span style="font-size:11.5px; color:var(--text-muted);">Unlisted CMP</span>
+                        <strong style="font-family:var(--font-mono); font-size:15px; color:var(--groww-mint);">₹795 / share</strong>
+                    </div>
+                </div>
+
+                <div style="background:var(--bg-card-hover); border:1px solid var(--border-subtle); border-radius:12px; padding:18px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                        <strong style="font-size:15px; color:var(--text-primary);">Reliance Retail Ventures</strong>
+                        <span style="font-family:var(--font-mono); font-size:10.5px; color:var(--text-muted);">RETAIL BEHEMOTH</span>
+                    </div>
+                    <div style="font-size:12px; color:var(--text-secondary); margin-bottom:12px;">Market Cap: ~₹11,15,000 Cr • 18,700+ Stores</div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; border-top:1px solid var(--border-subtle);">
+                        <span style="font-size:11.5px; color:var(--text-muted);">Unlisted CMP</span>
+                        <strong style="font-family:var(--font-mono); font-size:15px; color:var(--groww-mint);">₹1,340 / share</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- 6. Slide-Over Drawer for Index Constituents -->
