@@ -14,6 +14,14 @@
       "destination": "/stock.html"
     },
     {
+      "source": "/portfolio",
+      "destination": "/portfolio.html"
+    },
+    {
+      "source": "/calculators",
+      "destination": "/calculators.html"
+    },
+    {
       "source": "/article/:slug",
       "destination": "/article.html"
     },

@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Calculators & Wealth Compounding Suite | Dalal Street Alpha</title>
+    <meta name="description" content="Institutional financial calculators for Mutual Funds SIP compound interest, Stock CAGR estimations, Loan EMIs, Bond Yield to Maturity, and Lumpsum wealth projections.">
+    <link rel="canonical" href="https://dalal-street-alpha.vercel.app/calculators">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="brand_assets/website_favicon_32x32.png">
+
+    <!-- Global Theme CSS & Auth Script -->
+    <link rel="stylesheet" href="brand_assets/global-theme.css">
+    <script src="brand_assets/theme-auth.js"></script>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background-color: var(--bg-canvas);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            line-height: 1.55;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        /* Top Navigation */
+        .site-navbar {
+            background: var(--navbar-bg);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 12px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        .navbar-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+        .brand-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+        .brand-logo-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+        }
+        .brand-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--text-primary);
+            letter-spacing: -0.3px;
+        }
+        .brand-name span { color: var(--groww-mint); }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        .nav-link {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.15s ease;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: var(--groww-mint);
+        }
+
+        /* Hero */
+        .calc-hero {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 36px 20px 20px;
+            text-align: center;
+        }
+        .calc-hero h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+        }
+        .calc-hero p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        /* Calculator Switcher Tabs */
+        .calc-nav-tabs {
+            max-width: 1280px;
+            margin: 20px auto 30px;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .calc-tab-btn {
+            padding: 8px 16px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-secondary);
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .calc-tab-btn:hover {
+            color: var(--text-primary);
+            border-color: var(--border-hover);
+        }
+        .calc-tab-btn.active {
+            background: var(--groww-mint);
+            color: #ffffff;
+            border-color: var(--groww-mint);
+            box-shadow: 0 4px 14px rgba(0, 135, 90, 0.25);
+        }
+
+        /* Calculator Viewport */
+        .calc-container {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding: 0 20px 60px;
+        }
+        .calc-panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 32px 30px;
+            box-shadow: var(--card-shadow);
+            display: none;
+            grid-template-columns: 1fr 1fr;
+            gap: 36px;
+        }
+        .calc-panel.active {
+            display: grid;
+            animation: fadeIn 0.25s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Left: Form Inputs */
+        .calc-inputs-col {
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .input-label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .input-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .input-val-box {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--groww-mint);
+            background: var(--bg-card-subtle);
+            padding: 4px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border-subtle);
+        }
+        input[type="range"] {
+            width: 100%;
+            height: 6px;
+            border-radius: 9999px;
+            background: var(--border-subtle);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: var(--groww-mint);
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 135, 90, 0.4);
+        }
+
+        /* Right: Results Outputs */
+        .calc-results-col {
+            background: var(--bg-card-subtle);
+            border: 1px solid var(--border-subtle);
+            border-radius: 14px;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .res-metric {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        .res-metric-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .res-metric-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .res-metric.highlight .res-metric-val {
+            font-size: 26px;
+            color: var(--groww-mint);
+        }
+
+        /* Breakdown Progress Bar */
+        .breakdown-bar-wrapper {
+            margin-top: 14px;
+        }
+        .breakdown-bar {
+            height: 12px;
+            border-radius: 9999px;
+            background: #e2e8f0;
+            display: flex;
+            overflow: hidden;
+        }
+        .bar-segment-invested {
+            background: #94a3b8;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        .bar-segment-returns {
+            background: var(--groww-mint);
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+        .bar-legend {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 11.5px;
+            font-family: 'JetBrains Mono', monospace;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 800px) {
+            .calc-panel { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Site Navbar -->
+    <header class="site-navbar">
+        <div class="navbar-inner">
+            <a href="/" class="brand-group">
+                <img src="brand_assets/website_favicon_192x192.png" alt="Logo" class="brand-logo-img">
+                <span class="brand-name">DALAL STREET <span>ALPHA</span></span>
+            </a>
+
+            <div class="nav-links">
+                <a href="/" class="nav-link">Dashboard</a>
+                <a href="/stock.html?symbol=ITC" class="nav-link">Stock Screener</a>
+                <a href="/portfolio.html" class="nav-link">Multi-Broker Portfolio</a>
+                <a href="/calculators.html" class="nav-link active">Calculators</a>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:10px;">
+                <!-- Light / Dark Mode Toggle Button (Top Right on Every Page) -->
+                <button class="theme-toggle-btn" onclick="toggleDSATheme()">
+                    🌙 <span class="theme-text">Dark</span>
+                </button>
+
+                <!-- Google Sign-In & Watchlist Wrapper -->
+                <div class="nav-auth-wrapper"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Header -->
+    <section class="calc-hero">
+        <h1>Institutional Financial Calculators Suite</h1>
+        <p>Compound interest algorithms, stock CAGR projections, debt amortization, and fixed income yield models designed for intelligent Indian investors and traders.</p>
+    </section>
+
+    <!-- Calculator Switcher Tabs -->
+    <div class="calc-nav-tabs">
+        <button class="calc-tab-btn active" onclick="switchCalc('sip')">📈 Mutual Funds & SIP Compounder</button>
+        <button class="calc-tab-btn" onclick="switchCalc('cagr')">📊 Stock CAGR & Return Estimator</button>
+        <button class="calc-tab-btn" onclick="switchCalc('loan')">🏦 Loan EMI & Interest Calculator</button>
+        <button class="calc-tab-btn" onclick="switchCalc('bond')">📜 Bond & Debt Yield to Maturity</button>
+        <button class="calc-tab-btn" onclick="switchCalc('lumpsum')">💰 Lumpsum Wealth Compounder</button>
+    </div>
+
+    <!-- Main Container -->
+    <main class="calc-container">
+
+        <!-- 1. SIP & Mutual Funds Compound Interest Calculator -->
+        <div id="panel-sip" class="calc-panel active">
+            <div class="calc-inputs-col">
+                <h3 style="font-family:'Outfit'; font-size:20px;">SIP Compound Interest Calculator</h3>
+                <div class="input-group">
+                    <div class="input-label-row">
+                        <span class="input-label">Monthly Investment (₹)</span>
+                        <span class="input-val-box" id="sip-amount-val">₹25,000</span>
+                    </div>
+                    <input type="range" id="sip-amount" min="1000" max="500000" step="1000" value="25000" oninput="calculateSIP()">
+                </div>
+
+                <div class="input-group">
+                    <div class="input-label-row">
+                        <span class="input-label">Expected Return Rate (p.a. %)</span>
+                        <span class="input-val-box" id="sip-rate-val">14.0%</span>
+                    </div>
+                    <input type="range" id="sip-rate" min="5" max="30" step="0.5" value="14.0" oninput="calculateSIP()">
+                </div>
+
+                <div class="input-group">
+                    <div class="input-label-row">
+                        <span class="input-label">Investment Time Horizon</span>
+                        <span class="input-val-box" id="sip-years-val">15 Years</span>
+                    </div>
+                    <input type="range" id="sip-years" min="1" max="35" step="1" value="15" oninput="calculateSIP()">
+                </div>
+
+                <div class="input-group">
+                    <div class="input-label-row">
+                        <span class="input-label">Annual Step-Up SIP (%)</span>
+                        <span class="input-val-box" id="sip-stepup-val">10%</span>
+                    </div>
+                    <input type="range" id="sip-stepup" min="0" max="25" step="1" value="10" oninput="calculateSIP()">
+                </div>
+            </div>
+
+            <div class="calc-results-col">
+                <div>
+                    <h4 style="font-size:14px; text-transform:uppercase; color:var(--text-muted); font-family:'JetBrains Mono'; margin-bottom:12px;">ESTIMATED MATURITY WEALTH</h4>
+                    <div class="res-metric highlight">
+                        <span class="res-metric-label">Total Maturity Value:</span>
+                        <span class="res-metric-val" id="sip-total-val">₹2,84,65,420</span>
+                    </div>
+                    <div class="res-metric">
+                        <span class="res-metric-label">Total Amount Invested:</span>
+                        <span class="res-metric-val" id="sip-invested-val">₹95,31,745</span>
+                    </div>
+                    <div class="res-metric">
+                        <span class="res-metric-label">Estimated Wealth Generated:</span>
+                        <span class="res-metric-val" id="sip-gains-val" style="color:var(--groww-mint);">+₹1,89,33,675</span>
+                    </div>
+                </div>
+
+                <div class="breakdown-bar-wrapper">
+                    <div class="breakdown-bar">
+                        <div class="bar-segment-invested" id="sip-bar-invested" style="width: 33%;"></div>
+                        <div class="bar-segment-returns" id="sip-bar-returns" style="width: 67%;"></div>
+                    </div>
+                    <div class="bar-legend">
+                        <span>● Invested Capital</span>
+                        <span style="color:var(--groww-mint);">● Compound Returns</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Stock CAGR & Return Estimator -->
+        <div id="panel-cagr" class="calc-panel">
+            <div class="calc-inputs-col">
+                <h3 style="font-family:'Outfit'; font-size:20px;">Stock Return & CAGR Estimator</h3>
+                <div class="input-group">
+                    <div class="input-label-row">
+                        <span class="input-label">Purchase Price (₹)</span>
+                        <span class="input-val-box" id="cagr-buy-val">₹260</span>
+                    </div>
+                    <input type="range" id="cagr-buy" min="10" max="10000" step="10" value="260" oninput="calculateCAGR()">
+                </div>
+
+                <div class="input-group">
+                    <div class="input-label-row">
+                        <span class="input-label">Target / Expected Selling Price (₹)</span>
+                        <span class="input-val-box" id="cagr-target-val">₹650</span>
+                    </div>
+                    <input type="range" id="cagr-target" min="20" max="25000" step="20" value="650" oninput="calculateCAGR()">
+                </div>
+
+                <div class="input-group">
+                    <div class="input-label-row">
+                        <span class="input-label">Holding Period (Years)</span>
+                        <span class="input-val-box" id="cagr-years-val">5 Years</span>
+                    </div>
+                    <input type="range" id="cagr-years" min="1" max="20" step="1" value="5" oninput="calculateCAGR()">
+                </div>
+
+                <div class="input-group">
+                    <div class="input-label-row">
+                        <span class="input-label">Average Annual Dividend Yield (%)</span>
+                        <span class="input-val-box" id="cagr-div-val">4.5%</span>
+                    </div>
+                    <input type="range" id="cagr-div" min="0" max="10" step="0.5" value="4.5" oninput="calculateCAGR()">
+                </div>
+            </div>
+
+            <div class="calc-results-col">
+                <div>
+                    <h4 style="font-size:14px; text-transform:uppercase; color:var(--text-muted); font-family:'JetBrains Mono'; margin-bottom:12px;">ESTIMATED STOCK COMPOUNDING</h4>
+                    <div class="res-metric highlight">
+                        <span class="res-metric-label">Compounded CAGR (%):</span>
+                        <span class="res-metric-val" id="cagr-annual-val">24.57%</span>
+                    </div>
+                    <div class="res-metric">
+                        <span class="res-metric-label">Total Absolute Capital Return:</span>
+                        <span class="res-metric-val" id="cagr-total-pct">+150.0%</span>
+                    </div>
+                    <div class="res-metric">
+                        <span class="res-metric-label">Total Dividend Collected/Share:</span>
+                        <span class="res-metric-val" id="cagr-total-div" style="color:var(--accent-amber);">₹58.50</span>
+                    </div>
+                    <div class="res-metric">
+                        <span class="res-metric-label">Total Return including Dividends:</span>
+                        <span class="res-metric-val" id="cagr-with-div" style="color:var(--groww-mint);">+172.5%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Loan EMI & Interest Calculator -->
+        <div id="panel-loan" class="calc-panel">
+            <div class="calc-inputs-col">
+                <h3 style="font-family:'Outfit'; font-size:20px;">Loan EMI & Interest Calculator</h3>
+                <div class="input-group">
+                    <div class="input-label-row">
+                        <span class="input-label">Loan Amount (₹)</span>
+                        <span class="input-val-box" id="loan-amt-val">₹50,00,000</span>
+                    </div>
+                    <input type="range" id="loan-amt" min="100000" max="20000000" step="50000" value="5000000" oninput="calculateLoan()">
+                </div>
+
+                <div class="input-group">
+                    <div class="input-label-row">
+                        <span class="input-label">Interest Rate (% p.a.)</span>
+                        <span class="input-val-box" id="loan-rate-val">8.75%</span>
+                    </div>
+                    <input type="range" id="loan-rate" min="5" max="18" step="0.25" value="8.75" oninput="calculateLoan()">
+                </div>
+
+                <div class="input-group">
+                    <div class="input-label-row">
+                        <span class="input-label">Tenure (Years)</span>
+                        <span class="input-val-box" id="loan-tenure-val">20 Years</span>
+                    </div>
+                    <input type="range" id="loan-tenure" min="1" max="30" step="1" value="20" oninput="calculateLoan()">
+                </div>
+            </div>
+
+            <div class="calc-results-col">
+                <div>
+                    <h4 style="font-size:14px; text-transform:uppercase; color:var(--text-muted); font-family:'JetBrains Mono'; margin-bottom:12px;">MONTHLY EMI & AMORTIZATION</h4>
+                    <div class="res-metric highlight">
+                        <span class="res-metric-label">Monthly EMI:</span>
+                        <span class="res-metric-val" id="loan-emi-val">₹44,186</span>
+                    </div>
+                    <div class="res-metric">
+                        <span class="res-metric-label">Principal Loan Amount:</span>
+                        <span class="res-metric-val" id="loan-principal-val">₹50,00,000</span>
+                    </div>
+                    <div class="res-metric">
+                        <span class="res-metric-label">Total Interest Payable:</span>
+                        <span class="res-metric-val" id="loan-interest-val" style="color:var(--market-red);">₹56,04,534</span>
+                    </div>
+                    <div class="res-metric">
+                        <span class="res-metric-label">Total Payment (Principal + Interest):</span>
+                        <span class="res-metric-val" id="loan-total-val">₹1,06,04,534</span>
+                    </div>
+                </div>
+
+                <div class="breakdown-bar-wrapper">
+                    <div class="breakdown-bar">
+                        <div class="bar-segment-invested" id="loan-bar-principal" style="width: 47%;"></div>
+                        <div class="bar-segment-returns" id="loan-bar-interest" style="width: 53%; background:var(--market-red);"></div>
+                    </div>
+                    <div class="bar-legend">
+                        <span>● Principal (47%)</span>
+                        <span style="color:var(--market-red);">● Total Interest (53%)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Bond & Debt Yield to Maturity -->
+        <div id="panel-bond" class="calc-panel">
+            <div class="calc-inputs-col">
+                <h3 style="font-family:'Outfit'; font-size:20px;">Bond & Fixed Income Yield Calculator</h3>
+                <div class="input-group">
+                    <div class="input-label-row">
+                        <span class="input-label">Bond Face Value (₹)</span>
+                        <span class="input-val-box" id="bond-face-val">₹1,000</span>
+                    </div>
+                    <input type="range" id="bond-face" min="100" max="10000" step="100" value="1000" oninput="calculateBond()">
+                </div>
+
+                <div class="input-group">
+                    <div class="input-label-row">
+                        <span class="input-label">Annual Coupon Rate (%)</span>
+                        <span class="input-val-box" id="bond-coupon-val">7.80%</span>
+                    </div>
+                    <input type="range" id="bond-coupon" min="3" max="15" step="0.1" value="7.80" oninput="calculateBond()">
+                </div>
+
+                <div class="input-group">
+                    <div class="input-label-row">
+                        <span class="input-label">Current Market Price (₹)</span>
+                        <span class="input-val-box" id="bond-price-val">₹975</span>
+                    </div>
+                    <input type="range" id="bond-price" min="500" max="2000" step="5" value="975" oninput="calculateBond()">
+                </div>
+
+                <div class="input-group">
+                    <div class="input-label-row">
+                        <span class="input-label">Years to Maturity</span>
+                        <span class="input-val-box" id="bond-years-val">7 Years</span>
+                    </div>
+                    <input type="range" id="bond-years" min="1" max="30" step="1" value="7" oninput="calculateBond()">
+                </div>
+            </div>
+
+            <div class="calc-results-col">
+                <div>
+                    <h4 style="font-size:14px; text-transform:uppercase; color:var(--text-muted); font-family:'JetBrains Mono'; margin-bottom:12px;">BOND YIELD METRICS</h4>
+                    <div class="res-metric highlight">
+                        <span class="res-metric-label">Yield to Maturity (YTM):</span>
+                        <span class="res-metric-val" id="bond-ytm-val">8.26%</span>
+                    </div>
+                    <div class="res-metric">
+                        <span class="res-metric-label">Current Yield (%):</span>
+                        <span class="res-metric-val" id="bond-curr-yield">8.00%</span>
+                    </div>
+                    <div class="res-metric">
+                        <span class="res-metric-label">Annual Coupon Cash Inflow:</span>
+                        <span class="res-metric-val" id="bond-annual-inflow" style="color:var(--groww-mint);">₹78.00</span>
+                    </div>
+                    <div class="res-metric">
+                        <span class="res-metric-label">Capital Gain/Loss at Maturity:</span>
+                        <span class="res-metric-val" id="bond-cap-gain" style="color:var(--groww-mint);">+₹25.00 (Discount)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Lumpsum Wealth Compounder -->
+        <div id="panel-lumpsum" class="calc-panel">
+            <div class="calc-inputs-col">
+                <h3 style="font-family:'Outfit'; font-size:20px;">Lumpsum Wealth Compounder</h3>
+                <div class="input-group">
+                    <div class="input-label-row">
+                        <span class="input-label">One-Time Capital Invested (₹)</span>
+                        <span class="input-val-box" id="lump-amt-val">₹5,00,000</span>
+                    </div>
+                    <input type="range" id="lump-amt" min="10000" max="10000000" step="10000" value="500000" oninput="calculateLumpsum()">
+                </div>
+
+                <div class="input-group">
+                    <div class="input-label-row">
+                        <span class="input-label">Expected Annual Return Rate (%)</span>
+                        <span class="input-val-box" id="lump-rate-val">15.0%</span>
+                    </div>
+                    <input type="range" id="lump-rate" min="5" max="30" step="0.5" value="15.0" oninput="calculateLumpsum()">
+                </div>
+
+                <div class="input-group">
+                    <div class="input-label-row">
+                        <span class="input-label">Time Period (Years)</span>
+                        <span class="input-val-box" id="lump-years-val">20 Years</span>
+                    </div>
+                    <input type="range" id="lump-years" min="1" max="40" step="1" value="20" oninput="calculateLumpsum()">
+                </div>
+            </div>
+
+            <div class="calc-results-col">
+                <div>
+                    <h4 style="font-size:14px; text-transform:uppercase; color:var(--text-muted); font-family:'JetBrains Mono'; margin-bottom:12px;">ESTIMATED COMPOUNDED WEALTH</h4>
+                    <div class="res-metric highlight">
+                        <span class="res-metric-label">Total Maturity Value:</span>
+                        <span class="res-metric-val" id="lump-total-val">₹81,83,269</span>
+                    </div>
+                    <div class="res-metric">
+                        <span class="res-metric-label">Initial Capital Invested:</span>
+                        <span class="res-metric-val" id="lump-invested-val">₹5,00,000</span>
+                    </div>
+                    <div class="res-metric">
+                        <span class="res-metric-label">Total Compounded Wealth Gained:</span>
+                        <span class="res-metric-val" id="lump-gains-val" style="color:var(--groww-mint);">+₹76,83,269 (16.3x)</span>
+                    </div>
+                </div>
+
+                <div class="breakdown-bar-wrapper">
+                    <div class="breakdown-bar">
+                        <div class="bar-segment-invested" id="lump-bar-invested" style="width: 6%;"></div>
+                        <div class="bar-segment-returns" id="lump-bar-returns" style="width: 94%;"></div>
+                    </div>
+                    <div class="bar-legend">
+                        <span>● Invested Capital</span>
+                        <span style="color:var(--groww-mint);">● Compound Returns</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        function switchCalc(calcKey) {
+            document.querySelectorAll('.calc-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.calc-tab-btn').forEach(b => b.classList.remove('active'));
+
+            const panel = document.getElementById(`panel-${calcKey}`);
+            if (panel) panel.classList.add('active');
+
+            const btn = event.target;
+            if (btn) btn.classList.add('active');
+        }
+
+        // 1. SIP Calculator Calculation
+        function calculateSIP() {
+            const p = parseFloat(document.getElementById('sip-amount').value);
+            const r = parseFloat(document.getElementById('sip-rate').value) / 100 / 12;
+            const y = parseInt(document.getElementById('sip-years').value);
+            const stepUp = parseFloat(document.getElementById('sip-stepup').value) / 100;
+
+            document.getElementById('sip-amount-val').textContent = '₹' + p.toLocaleString('en-IN');
+            document.getElementById('sip-rate-val').textContent = (r * 12 * 100).toFixed(1) + '%';
+            document.getElementById('sip-years-val').textContent = y + ' Years';
+            document.getElementById('sip-stepup-val').textContent = (stepUp * 100) + '%';
+
+            let totalInvested = 0;
+            let currentP = p;
+            let totalMaturity = 0;
+
+            for (let year = 1; year <= y; year++) {
+                for (let month = 1; month <= 12; month++) {
+                    totalInvested += currentP;
+                    const remainingMonths = (y * 12) - ((year - 1) * 12 + month);
+                    totalMaturity += currentP * Math.pow(1 + r, remainingMonths + 1);
+                }
+                currentP = currentP * (1 + stepUp);
+            }
+
+            const gains = totalMaturity - totalInvested;
+            document.getElementById('sip-total-val').textContent = '₹' + Math.round(totalMaturity).toLocaleString('en-IN');
+            document.getElementById('sip-invested-val').textContent = '₹' + Math.round(totalInvested).toLocaleString('en-IN');
+            document.getElementById('sip-gains-val').textContent = '+₹' + Math.round(gains).toLocaleString('en-IN');
+
+            const investedPct = Math.round((totalInvested / totalMaturity) * 100);
+            document.getElementById('sip-bar-invested').style.width = investedPct + '%';
+            document.getElementById('sip-bar-returns').style.width = (100 - investedPct) + '%';
+        }
+
+        // 2. Stock CAGR Calculator
+        function calculateCAGR() {
+            const buy = parseFloat(document.getElementById('cagr-buy').value);
+            const target = parseFloat(document.getElementById('cagr-target').value);
+            const y = parseFloat(document.getElementById('cagr-years').value);
+            const divYield = parseFloat(document.getElementById('cagr-div').value) / 100;
+
+            document.getElementById('cagr-buy-val').textContent = '₹' + buy.toLocaleString('en-IN');
+            document.getElementById('cagr-target-val').textContent = '₹' + target.toLocaleString('en-IN');
+            document.getElementById('cagr-years-val').textContent = y + ' Years';
+            document.getElementById('cagr-div-val').textContent = (divYield * 100).toFixed(1) + '%';
+
+            const cagr = (Math.pow(target / buy, 1 / y) - 1) * 100;
+            const absReturn = ((target - buy) / buy) * 100;
+            const totalDiv = buy * divYield * y;
+            const totalReturnWithDiv = ((target + totalDiv - buy) / buy) * 100;
+
+            document.getElementById('cagr-annual-val').textContent = cagr.toFixed(2) + '%';
+            document.getElementById('cagr-total-pct').textContent = (absReturn >= 0 ? '+' : '') + absReturn.toFixed(1) + '%';
+            document.getElementById('cagr-total-div').textContent = '₹' + totalDiv.toFixed(2);
+            document.getElementById('cagr-with-div').textContent = '+' + totalReturnWithDiv.toFixed(1) + '%';
+        }
+
+        // 3. Loan EMI Calculator
+        function calculateLoan() {
+            const p = parseFloat(document.getElementById('loan-amt').value);
+            const r = parseFloat(document.getElementById('loan-rate').value) / 100 / 12;
+            const n = parseInt(document.getElementById('loan-tenure').value) * 12;
+
+            document.getElementById('loan-amt-val').textContent = '₹' + p.toLocaleString('en-IN');
+            document.getElementById('loan-rate-val').textContent = (r * 12 * 100).toFixed(2) + '%';
+            document.getElementById('loan-tenure-val').textContent = (n / 12) + ' Years';
+
+            const emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+            const totalPayment = emi * n;
+            const totalInterest = totalPayment - p;
+
+            document.getElementById('loan-emi-val').textContent = '₹' + Math.round(emi).toLocaleString('en-IN');
+            document.getElementById('loan-principal-val').textContent = '₹' + p.toLocaleString('en-IN');
+            document.getElementById('loan-interest-val').textContent = '₹' + Math.round(totalInterest).toLocaleString('en-IN');
+            document.getElementById('loan-total-val').textContent = '₹' + Math.round(totalPayment).toLocaleString('en-IN');
+
+            const principalPct = Math.round((p / totalPayment) * 100);
+            document.getElementById('loan-bar-principal').style.width = principalPct + '%';
+            document.getElementById('loan-bar-interest').style.width = (100 - principalPct) + '%';
+        }
+
+        // 4. Bond YTM Calculator
+        function calculateBond() {
+            const face = parseFloat(document.getElementById('bond-face').value);
+            const couponRate = parseFloat(document.getElementById('bond-coupon').value) / 100;
+            const price = parseFloat(document.getElementById('bond-price').value);
+            const n = parseFloat(document.getElementById('bond-years').value);
+
+            document.getElementById('bond-face-val').textContent = '₹' + face.toLocaleString('en-IN');
+            document.getElementById('bond-coupon-val').textContent = (couponRate * 100).toFixed(2) + '%';
+            document.getElementById('bond-price-val').textContent = '₹' + price.toLocaleString('en-IN');
+            document.getElementById('bond-years-val').textContent = n + ' Years';
+
+            const c = face * couponRate;
+            const ytm = ((c + ((face - price) / n)) / ((face + price) / 2)) * 100;
+            const currentYield = (c / price) * 100;
+            const diff = face - price;
+
+            document.getElementById('bond-ytm-val').textContent = ytm.toFixed(2) + '%';
+            document.getElementById('bond-curr-yield').textContent = currentYield.toFixed(2) + '%';
+            document.getElementById('bond-annual-inflow').textContent = '₹' + c.toFixed(2);
+            document.getElementById('bond-cap-gain').textContent = (diff >= 0 ? '+' : '') + '₹' + diff.toFixed(2) + (diff >= 0 ? ' (Discount)' : ' (Premium)');
+        }
+
+        // 5. Lumpsum Calculator
+        function calculateLumpsum() {
+            const p = parseFloat(document.getElementById('lump-amt').value);
+            const r = parseFloat(document.getElementById('lump-rate').value) / 100;
+            const y = parseInt(document.getElementById('lump-years').value);
+
+            document.getElementById('lump-amt-val').textContent = '₹' + p.toLocaleString('en-IN');
+            document.getElementById('lump-rate-val').textContent = (r * 100).toFixed(1) + '%';
+            document.getElementById('lump-years-val').textContent = y + ' Years';
+
+            const total = p * Math.pow(1 + r, y);
+            const gains = total - p;
+            const mult = (total / p).toFixed(1);
+
+            document.getElementById('lump-total-val').textContent = '₹' + Math.round(total).toLocaleString('en-IN');
+            document.getElementById('lump-invested-val').textContent = '₹' + p.toLocaleString('en-IN');
+            document.getElementById('lump-gains-val').textContent = '+₹' + Math.round(gains).toLocaleString('en-IN') + ` (${mult}x)`;
+
+            const investedPct = Math.max(2, Math.round((p / total) * 100));
+            document.getElementById('lump-bar-invested').style.width = investedPct + '%';
+            document.getElementById('lump-bar-returns').style.width = (100 - investedPct) + '%';
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            calculateSIP();
+            calculateCAGR();
+            calculateLoan();
+            calculateBond();
+            calculateLumpsum();
+        });
+    </script>
+</body>
+</html>

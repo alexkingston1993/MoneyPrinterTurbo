@@ -27,23 +27,21 @@
     <!-- Lenis Smooth Scrolling Library -->
     <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
 
+    <!-- Global Theme CSS & Auth System (Default: Light Mode) -->
+    <link rel="stylesheet" href="brand_assets/global-theme.css">
+    <script src="brand_assets/theme-auth.js"></script>
+
     <!-- Stylesheets -->
     <link rel="stylesheet" href="styles.css">
 
     <style>
         :root {
-            --bg-canvas: #070b14;
-            --bg-card: #0e1526;
-            --bg-card-hover: #131d35;
-            --border-card: rgba(255, 255, 255, 0.08);
-            --border-focus: rgba(0, 208, 156, 0.4);
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            --accent-mint: #00d09c;
-            --accent-blue: #3b82f6;
-            --accent-gold: #f59e0b;
-            --accent-rose: #f43f5e;
+            --border-card: var(--border-subtle, rgba(255, 255, 255, 0.08));
+            --border-focus: rgba(0, 135, 90, 0.4);
+            --accent-mint: var(--groww-mint, #00875a);
+            --accent-blue: var(--accent-blue, #0284c7);
+            --accent-gold: var(--accent-amber, #d97706);
+            --accent-rose: var(--market-red, #dc2626);
             --font-display: 'Outfit', sans-serif;
             --font-body: 'Plus Jakarta Sans', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
@@ -57,6 +55,7 @@
             padding: 0;
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
+            transition: background-color 0.2s ease, color 0.2s ease;
         }
 
         /* Top Reading Progress Bar */
@@ -76,14 +75,14 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            background: rgba(7, 11, 20, 0.85);
+            background: var(--navbar-bg);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid var(--border-card);
             padding: 14px 24px;
         }
         .article-nav-container {
-            max-width: 1200px;
+            max-width: 1240px;
             margin: 0 auto;
             display: flex;
             align-items: center;
@@ -106,29 +105,41 @@
             font-family: var(--font-display);
             font-size: 17px;
             font-weight: 800;
-            color: #ffffff;
+            color: var(--text-primary);
             letter-spacing: -0.3px;
         }
         .nav-brand-title span {
             color: var(--accent-mint);
         }
-        .nav-back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+        .nav-link-item {
             font-size: 13.5px;
             font-weight: 600;
             color: var(--text-secondary);
             text-decoration: none;
-            padding: 8px 16px;
+            padding: 6px 12px;
+            border-radius: 6px;
+            transition: all 0.15s ease;
+        }
+        .nav-link-item:hover {
+            color: var(--accent-mint);
+            background: var(--bg-card-hover);
+        }
+        .nav-back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 6px 14px;
             border-radius: 8px;
-            background: rgba(255, 255, 255, 0.04);
+            background: var(--bg-card-hover);
             border: 1px solid var(--border-card);
             transition: all 0.2s ease;
         }
         .nav-back-btn:hover {
-            color: #ffffff;
-            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-primary);
             border-color: var(--accent-mint);
         }
 
@@ -435,8 +446,19 @@
                 <img src="brand_assets/website_favicon_192x192.png" alt="Dalal Street Alpha Logo" class="nav-brand-logo">
                 <span class="nav-brand-title">DALAL STREET <span>ALPHA</span></span>
             </a>
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <a href="/" class="nav-back-btn">← Back to Market Explorer</a>
+            <div style="display: flex; align-items: center; gap: 14px;">
+                <a href="/" class="nav-link-item">Market Explorer</a>
+                <a href="/stock.html?symbol=ITC" class="nav-link-item">Screener</a>
+                <a href="/portfolio.html" class="nav-link-item">Portfolio</a>
+                <a href="/calculators.html" class="nav-link-item">Calculators</a>
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <!-- Theme Toggle Button -->
+                <button class="theme-toggle-btn" onclick="toggleDSATheme()">
+                    🌙 <span class="theme-text">Dark</span>
+                </button>
+                <!-- Google Auth & Watchlist Wrapper -->
+                <div class="nav-auth-wrapper"></div>
             </div>
         </div>
     </nav>

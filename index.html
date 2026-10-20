@@ -35,27 +35,13 @@
     <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
 
     <!-- Official TradingView Library for Interactive Charting -->
-    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <!-- Global Theme CSS & Auth System (Default: Light Mode) -->
+    <link rel="stylesheet" href="brand_assets/global-theme.css">
+    <script src="brand_assets/theme-auth.js"></script>
 
     <style>
         :root {
-            --bg-canvas: #07090e;
-            --bg-surface: #0c101a;
-            --bg-card: #101624;
-            --bg-card-hover: #151d30;
-            --border-subtle: rgba(255, 255, 255, 0.08);
-            --border-hover: rgba(0, 208, 156, 0.4);
-            --text-primary: #f8fafc;
-            --text-secondary: #94a3b8;
-            --text-muted: #64748b;
-            --groww-mint: #00d09c;
-            --groww-mint-soft: rgba(0, 208, 156, 0.10);
-            --groww-mint-glow: rgba(0, 208, 156, 0.25);
-            --market-red: #f43f5e;
-            --market-red-soft: rgba(244, 63, 94, 0.10);
-            --accent-blue: #38bdf8;
-            --accent-blue-soft: rgba(56, 189, 248, 0.10);
-            --accent-gold: #fbbf24;
+            --groww-mint-glow: rgba(0, 135, 90, 0.25);
             --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
             --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
@@ -1164,16 +1150,24 @@
 
             <nav class="header-nav-links">
                 <a href="#movers-section" class="nav-link-item" onclick="switchDashboardTab('movers')">Movers</a>
-                <a href="#screener-section" class="nav-link-item" onclick="switchDashboardTab('screener')">Screener</a>
+                <a href="/stock.html?symbol=ITC" class="nav-link-item">Stock Screener</a>
+                <a href="/portfolio.html" class="nav-link-item">Portfolio</a>
+                <a href="/calculators.html" class="nav-link-item">Calculators</a>
                 <a href="#chart-section" class="nav-link-item" onclick="switchDashboardTab('chart')">Chart Studio</a>
                 <a href="#research-section" class="nav-link-item" onclick="switchDashboardTab('research')">Research</a>
             </nav>
 
-            <div class="header-utility">
+            <div class="header-utility" style="display:flex; align-items:center; gap:10px;">
                 <div class="live-status-pill">
                     <span class="status-pulse-dot"></span>
                     <span>LIVE · <span id="clock-ist">12:30 IST</span></span>
                 </div>
+                <!-- Theme Toggle Button -->
+                <button class="theme-toggle-btn" onclick="toggleDSATheme()">
+                    🌙 <span class="theme-text">Dark</span>
+                </button>
+                <!-- Google Sign-in & Shortlist -->
+                <div class="nav-auth-wrapper"></div>
             </div>
         </div>
     </header>
