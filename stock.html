@@ -704,10 +704,10 @@
             </div>
 
             <div class="stock-hero-price-block">
-                <div class="hero-ltp" id="hero-ltp">₹260.80</div>
-                <div class="hero-chg-badge down" id="hero-chg">-1.02% (-2.70)</div>
-                <div class="hero-feed-status">
-                    <span class="live-dot"></span> <span id="feed-status-text">NSE Institutional Feed (Live)</span>
+                <div class="hero-ltp" id="hero-ltp">--</div>
+                <div class="hero-chg-badge" id="hero-chg" style="display:none;"></div>
+                <div class="hero-feed-status" onclick="triggerLiveRefresh()" title="Click to refresh live feed" style="cursor:pointer;">
+                    <span class="live-dot"></span> <span id="feed-status-text">NSE Institutional Feed (Live)</span> <span style="font-size:11px; margin-left:3px;">↻</span>
                 </div>
             </div>
         </div>
@@ -1367,6 +1367,7 @@
                     const chgBadge = document.getElementById("hero-chg");
                     chgBadge.textContent = `${chgSign}${chgPct}% (${chgSign}${chgAmt})`;
                     chgBadge.className = `hero-chg-badge ${data.change >= 0 ? 'up' : 'down'}`;
+                    chgBadge.style.display = 'inline-flex';
 
                     const formattedLow = "₹" + data.low52.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
                     const formattedHigh = "₹" + data.high52.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
