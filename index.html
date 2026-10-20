@@ -779,11 +779,39 @@
             color: inherit;
             transition: all 0.22s ease;
             box-shadow: var(--card-shadow);
+            cursor: pointer;
         }
         .screen-card:hover {
             border-color: var(--groww-mint);
             background: var(--bg-card-hover);
             transform: translateY(-2px);
+        }
+        .screen-card.active {
+            border-color: var(--groww-mint);
+            background: var(--groww-mint-soft);
+            box-shadow: 0 0 0 2px var(--groww-mint);
+        }
+        .trend-filter-chip {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            font-size: 11.5px;
+            font-family: var(--font-mono);
+            font-weight: 600;
+            padding: 4px 11px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .trend-filter-chip:hover {
+            border-color: var(--groww-mint);
+            color: var(--groww-mint);
+        }
+        .trend-filter-chip.active {
+            background: var(--groww-mint-soft);
+            border-color: var(--groww-mint);
+            color: var(--groww-mint);
+            font-weight: 700;
         }
         .screen-title {
             font-family: var(--font-display);
@@ -1184,9 +1212,9 @@
             <nav class="header-nav-links">
                 <a href="#movers-section" class="nav-link-item" onclick="switchDashboardTab('movers')">Movers</a>
                 <a href="/screener.html" class="nav-link-item">Stock Screener</a>
+                <a href="/events.html" class="nav-link-item">Stock Events</a>
                 <a href="/portfolio.html" class="nav-link-item">Portfolio</a>
                 <a href="/calculators.html" class="nav-link-item">Calculators</a>
-                <a href="#chart-section" class="nav-link-item" onclick="switchDashboardTab('chart')">Chart Studio</a>
                 <a href="#research-section" class="nav-link-item" onclick="switchDashboardTab('research')">Research</a>
             </nav>
 
@@ -1249,112 +1277,22 @@
         </div>
     </section>
 
-    <!-- 4. Benchmark Titan Cards -->
+    <!-- 4. Dynamic Top Trending Stocks (No Favorites - Live Rotating) -->
     <section class="featured-stocks-container">
-        <div class="featured-stocks-grid">
-            <a href="/stock.html?symbol=RELIANCE" class="stock-quick-card">
-                <div class="stock-quick-header">
-                    <div class="stock-quick-avatar stock-avatar-reliance">RE</div>
-                    <div>
-                        <div class="stock-quick-title">Reliance Industries</div>
-                        <div class="stock-quick-ticker">NSE: RELIANCE</div>
-                    </div>
-                </div>
-                <div class="stock-quick-sparkline">
-                    <svg width="100%" height="28" viewBox="0 0 120 28" preserveAspectRatio="none">
-                        <defs>
-                            <linearGradient id="grad-rel" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stop-color="#00d09c" stop-opacity="0.3"/>
-                                <stop offset="100%" stop-color="#00d09c" stop-opacity="0.0"/>
-                            </linearGradient>
-                        </defs>
-                        <polygon fill="url(#grad-rel)" points="0,28 0,22 20,18 45,20 70,10 95,14 120,4 120,28" />
-                        <polyline fill="none" stroke="#00d09c" stroke-width="2" points="0,22 20,18 45,20 70,10 95,14 120,4" />
-                    </svg>
-                </div>
-                <div class="stock-quick-bottom">
-                    <div class="stock-quick-price">₹2,688.00</div>
-                    <span class="stock-quick-badge up">+0.42%</span>
-                </div>
-            </a>
-
-            <a href="/stock.html?symbol=HDFCBANK" class="stock-quick-card">
-                <div class="stock-quick-header">
-                    <div class="stock-quick-avatar stock-avatar-hdfc">HD</div>
-                    <div>
-                        <div class="stock-quick-title">HDFC Bank</div>
-                        <div class="stock-quick-ticker">NSE: HDFCBANK</div>
-                    </div>
-                </div>
-                <div class="stock-quick-sparkline">
-                    <svg width="100%" height="28" viewBox="0 0 120 28" preserveAspectRatio="none">
-                        <defs>
-                            <linearGradient id="grad-hdfc" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stop-color="#00d09c" stop-opacity="0.3"/>
-                                <stop offset="100%" stop-color="#00d09c" stop-opacity="0.0"/>
-                            </linearGradient>
-                        </defs>
-                        <polygon fill="url(#grad-hdfc)" points="0,28 0,24 25,20 50,16 75,18 95,10 120,4 120,28" />
-                        <polyline fill="none" stroke="#00d09c" stroke-width="2" points="0,24 25,20 50,16 75,18 95,10 120,4" />
-                    </svg>
-                </div>
-                <div class="stock-quick-bottom">
-                    <div class="stock-quick-price">₹1,642.50</div>
-                    <span class="stock-quick-badge up">+0.85%</span>
-                </div>
-            </a>
-
-            <a href="/stock.html?symbol=TCS" class="stock-quick-card">
-                <div class="stock-quick-header">
-                    <div class="stock-quick-avatar stock-avatar-tcs">TC</div>
-                    <div>
-                        <div class="stock-quick-title">Tata Consultancy Services</div>
-                        <div class="stock-quick-ticker">NSE: TCS</div>
-                    </div>
-                </div>
-                <div class="stock-quick-sparkline">
-                    <svg width="100%" height="28" viewBox="0 0 120 28" preserveAspectRatio="none">
-                        <defs>
-                            <linearGradient id="grad-tcs" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stop-color="#f43f5e" stop-opacity="0.3"/>
-                                <stop offset="100%" stop-color="#f43f5e" stop-opacity="0.0"/>
-                            </linearGradient>
-                        </defs>
-                        <polygon fill="url(#grad-tcs)" points="0,28 0,8 25,12 50,10 75,20 100,18 120,24 120,28" />
-                        <polyline fill="none" stroke="#f43f5e" stroke-width="2" points="0,8 25,12 50,10 75,20 100,18 120,24" />
-                    </svg>
-                </div>
-                <div class="stock-quick-bottom">
-                    <div class="stock-quick-price">₹4,120.00</div>
-                    <span class="stock-quick-badge down">-0.45%</span>
-                </div>
-            </a>
-
-            <a href="/stock.html?symbol=INFY" class="stock-quick-card">
-                <div class="stock-quick-header">
-                    <div class="stock-quick-avatar stock-avatar-infy">IN</div>
-                    <div>
-                        <div class="stock-quick-title">Infosys Ltd</div>
-                        <div class="stock-quick-ticker">NSE: INFY</div>
-                    </div>
-                </div>
-                <div class="stock-quick-sparkline">
-                    <svg width="100%" height="28" viewBox="0 0 120 28" preserveAspectRatio="none">
-                        <defs>
-                            <linearGradient id="grad-infy" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="0%" stop-color="#00d09c" stop-opacity="0.3"/>
-                                <stop offset="100%" stop-color="#00d09c" stop-opacity="0.0"/>
-                            </linearGradient>
-                        </defs>
-                        <polygon fill="url(#grad-infy)" points="0,28 0,24 30,18 55,20 80,12 100,14 120,4 120,28" />
-                        <polyline fill="none" stroke="#00d09c" stroke-width="2" points="0,24 30,18 55,20 80,12 100,14 120,4" />
-                    </svg>
-                </div>
-                <div class="stock-quick-bottom">
-                    <div class="stock-quick-price">₹1,885.00</div>
-                    <span class="stock-quick-badge up">+1.20%</span>
-                </div>
-            </a>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:10px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:16px;">🔥</span>
+                <span style="font-family:var(--font-display); font-size:13.5px; font-weight:800; color:var(--text-primary); text-transform:uppercase; letter-spacing:0.5px;">Top Trending Equities</span>
+                <span style="font-family:var(--font-mono); font-size:11px; color:var(--groww-mint); background:var(--groww-mint-soft); padding:2px 8px; border-radius:9999px; font-weight:700;" id="trending-status-badge">Live Momentum</span>
+            </div>
+            <div style="display:flex; gap:6px; align-items:center;">
+                <button class="trend-filter-chip active" id="trend-gainers-btn" onclick="switchTrendingMode('gainers')">Top Gainers</button>
+                <button class="trend-filter-chip" id="trend-active-btn" onclick="switchTrendingMode('active')">Most Active Volume</button>
+                <button class="trend-filter-chip" id="trend-breakout-btn" onclick="switchTrendingMode('breakout')">52W Breakouts</button>
+            </div>
+        </div>
+        <div class="featured-stocks-grid" id="trending-stocks-grid">
+            <!-- Populated dynamically via JS -->
         </div>
     </section>
 
@@ -1368,9 +1306,16 @@
             <button class="seg-tab-btn" id="btn-tab-screener" onclick="switchDashboardTab('screener')">
                 <span>⚡</span> Stock Screener
             </button>
-            <button class="seg-tab-btn" id="btn-tab-chart" onclick="switchDashboardTab('chart')">
-                <span>📈</span> Live Chart Studio
+            <a href="/events.html" class="seg-tab-btn" id="btn-tab-events" style="text-decoration:none;">
+                <span>📅</span> Stock Events
+            </a>
+            <button class="seg-tab-btn" id="btn-tab-sectors" onclick="switchDashboardTab('sectors')">
+                <span>📊</span> Sectors & Heatmap
             </button>
+            <button class="seg-tab-btn" id="btn-tab-research" onclick="switchDashboardTab('research')">
+                <span>📖</span> Research Dossiers
+            </button>
+        </div>
             <button class="seg-tab-btn" id="btn-tab-sectors" onclick="switchDashboardTab('sectors')">
                 <span>📊</span> Sectors & Heatmap
             </button>
@@ -1411,28 +1356,28 @@
         <!-- Tab 2: Stock Screener -->
         <div id="view-screener" class="tab-panel" style="display: none;">
             <div class="screens-grid">
-                <a href="/screener.html?screen=roce" class="screen-card">
+                <div class="screen-card active" id="home-screen-roce" onclick="selectHomepageScreen('roce', this)">
                     <div class="screen-title">🚀 High ROCE & Low Debt</div>
                     <p class="screen-desc">Companies generating > 25% ROCE with debt-to-equity ratio under 0.20.</p>
-                </a>
-                <a href="/screener.html?screen=fii" class="screen-card">
+                </div>
+                <div class="screen-card" id="home-screen-fii" onclick="selectHomepageScreen('fii', this)">
                     <div class="screen-title">💎 FII Institutional Inflows</div>
                     <p class="screen-desc">Equities experiencing consecutive quarterly institutional accumulation.</p>
-                </a>
-                <a href="/screener.html?screen=52w" class="screen-card">
+                </div>
+                <div class="screen-card" id="home-screen-52w" onclick="selectHomepageScreen('52w', this)">
                     <div class="screen-title">📈 52-Week High Breakouts</div>
                     <p class="screen-desc">Stocks breaking out above multi-month consolidation with volume expansion.</p>
-                </a>
-                <a href="/screener.html?screen=dividend" class="screen-card">
+                </div>
+                <div class="screen-card" id="home-screen-dividend" onclick="selectHomepageScreen('dividend', this)">
                     <div class="screen-title">💰 Dividend Compounders</div>
                     <p class="screen-desc">Consistent dividend payouts for 10+ years with strong free cash flows.</p>
-                </a>
+                </div>
             </div>
 
             <div class="panel-header-row">
-                <h3 class="panel-title"><span>📊</span> Audited Fundamental Scorecard</h3>
+                <h3 class="panel-title" id="home-scorecard-title"><span>📊</span> Audited Fundamental Scorecard — High ROCE & Low Debt</h3>
                 <div style="display:flex; align-items:center; gap:12px;">
-                    <a href="/screener.html" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:var(--groww-mint); background:var(--groww-mint-soft); padding:6px 14px; border-radius:6px; border:1px solid var(--groww-mint);">⚡ Open Full Screener Dashboard →</a>
+                    <a id="home-open-screener-btn" href="/screener.html?screen=roce" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:var(--groww-mint); background:var(--groww-mint-soft); padding:6px 14px; border-radius:6px; border:1px solid var(--groww-mint);">⚡ Open Full Screener Dashboard →</a>
                     <span style="font-family: var(--font-mono); font-size: 11px; color: var(--text-muted);">Consolidated TTM Data</span>
                 </div>
             </div>
@@ -1441,7 +1386,7 @@
                 <table class="groww-table">
                     <thead>
                         <tr>
-                            <th>Ticker</th>
+                            <th>Ticker & Company</th>
                             <th>Sector</th>
                             <th>Market Cap</th>
                             <th>P/E Ratio</th>
@@ -1458,25 +1403,19 @@
             </div>
         </div>
 
-        <!-- Tab 3: Live Chart Studio -->
+        <!-- Tab 3: Stock Events & Corporate Actions -->
         <div id="view-chart" class="tab-panel" style="display: none;">
             <div class="panel-header-row">
                 <div class="panel-title">
-                    <span style="color:var(--groww-mint);">●</span>
-                    <span id="chart-studio-title">TradingView Candlestick Order-Flow Terminal</span>
+                    <span style="color:var(--groww-mint);">📅</span>
+                    <span>Upcoming Corporate Actions & Board Meetings</span>
                 </div>
-                <div class="filter-pill-group">
-                    <button class="filter-pill active" onclick="loadStudioChart('BSE:RELIANCE', 'Reliance Industries Ltd (RELIANCE)')">RELIANCE</button>
-                    <button class="filter-pill" onclick="loadStudioChart('BSE:HDFCBANK', 'HDFC Bank Ltd (HDFCBANK)')">HDFCBANK</button>
-                    <button class="filter-pill" onclick="loadStudioChart('BSE:TCS', 'Tata Consultancy Services (TCS)')">TCS</button>
-                    <button class="filter-pill" onclick="loadStudioChart('BSE:INFY', 'Infosys Ltd (INFY)')">INFY</button>
-                    <button class="filter-pill" onclick="loadStudioChart('BSE:ICICIBANK', 'ICICI Bank Ltd (ICICIBANK)')">ICICIBANK</button>
-                    <button class="filter-pill" onclick="loadStudioChart('BSE:TATAMOTORS', 'Tata Motors Ltd (TATAMOTORS)')">TATAMOTORS</button>
-                    <button class="filter-pill" onclick="loadStudioChart('BSE:SENSEX', 'BSE SENSEX Index')">SENSEX</button>
-                </div>
+                <a href="/events.html" style="text-decoration:none; display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:var(--groww-mint); background:var(--groww-mint-soft); padding:6px 14px; border-radius:6px; border:1px solid var(--groww-mint);">
+                    ⚡ Open Interactive Calendar & Event Terminal →
+                </a>
             </div>
-            <div class="chart-studio-box" id="chart-studio-container">
-                <!-- TradingView embedded directly here -->
+            <div id="home-events-preview-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(310px, 1fr)); gap:16px; margin-top:14px;">
+                <!-- Populated dynamically via JS -->
             </div>
         </div>
 
@@ -1871,56 +1810,205 @@
             }).join('');
         }
 
-        // Screener Fundamental Scorecard Data
-        const SCREENER_STOCKS = [
-            { symbol: "TCS", sector: "IT Services", mcap: "₹14,90,000 Cr", pe: "30.4", roce: "58.2%", roe: "51.4%", de: "0.00" },
-            { symbol: "INFY", sector: "IT Services", mcap: "₹7,80,000 Cr", pe: "29.1", roce: "41.5%", roe: "32.0%", de: "0.08" },
-            { symbol: "HINDUNILVR", sector: "FMCG", mcap: "₹6,28,000 Cr", pe: "58.6", roce: "27.4%", roe: "20.5%", de: "0.02" },
-            { symbol: "ITC", sector: "FMCG", mcap: "₹6,15,000 Cr", pe: "29.8", roce: "39.1%", roe: "29.4%", de: "0.00" },
-            { symbol: "LT", sector: "Infrastructure", mcap: "₹4,88,000 Cr", pe: "36.2", roce: "17.8%", roe: "15.3%", de: "0.85" },
-            { symbol: "TITAN", sector: "Consumer", mcap: "₹3,05,000 Cr", pe: "88.4", roce: "25.1%", roe: "29.8%", de: "0.78" },
-            { symbol: "RELIANCE", sector: "Energy & Retail", mcap: "₹19,84,200 Cr", pe: "26.8", roce: "11.2%", roe: "9.8%", de: "0.38" },
-            { symbol: "HDFCBANK", sector: "Private Bank", mcap: "₹12,48,000 Cr", pe: "18.5", roce: "16.4%", roe: "15.8%", de: "N/A" }
-        ];
+        // 1. Dynamic Top Trending Equities Pools (No Favorites - Real Momentum)
+        const TRENDING_POOLS = {
+            gainers: [
+                { symbol: "TRENT", name: "Trent Ltd", ltp: "₹7,450.00", chg: "+3.26%", up: true, tag: "Retail Titan", avatar: "TR", bg: "#10b981", points: "0,22 20,18 45,20 70,12 95,14 120,4" },
+                { symbol: "M&M", name: "Mahindra & Mahindra", ltp: "₹2,950.00", chg: "+2.46%", up: true, tag: "SUV & Farm Tech", avatar: "MM", bg: "#3b82f6", points: "0,24 25,20 50,16 75,18 95,10 120,4" },
+                { symbol: "BEL", name: "Bharat Electronics", ltp: "₹308.40", chg: "+2.15%", up: true, tag: "Defence Radars", avatar: "BE", bg: "#8b5cf6", points: "0,22 25,18 50,16 75,14 100,10 120,4" },
+                { symbol: "PCJEWELLER", name: "PC Jeweller Ltd", ltp: "₹174.60", chg: "+1.85%", up: true, tag: "Debt Turnaround", avatar: "PC", bg: "#f59e0b", points: "0,25 25,22 50,18 75,14 100,8 120,4" }
+            ],
+            active: [
+                { symbol: "RELIANCE", name: "Reliance Industries", ltp: "₹2,688.00", chg: "+0.42%", up: true, tag: "₹1,420 Cr Turnover", avatar: "RE", bg: "#2563eb", points: "0,22 20,18 45,20 70,10 95,14 120,4" },
+                { symbol: "HDFCBANK", name: "HDFC Bank", ltp: "₹1,642.50", chg: "+0.85%", up: true, tag: "Banking Anchor", avatar: "HD", bg: "#0d9488", points: "0,24 25,20 50,16 75,18 95,10 120,4" },
+                { symbol: "TATAMOTORS", name: "Tata Motors Ltd", ltp: "₹968.20", chg: "+1.45%", up: true, tag: "JLR Commercials", avatar: "TM", bg: "#6366f1", points: "0,20 25,22 50,15 75,12 100,10 120,4" },
+                { symbol: "ITC", name: "ITC Ltd", ltp: "₹260.80", chg: "+0.75%", up: true, tag: "Cash Compounder", avatar: "IT", bg: "#059669", points: "0,24 25,20 50,18 75,14 100,12 120,6" }
+            ],
+            breakout: [
+                { symbol: "TRENT", name: "Trent Ltd", ltp: "₹7,450.00", chg: "+3.26%", up: true, tag: "All-Time High", avatar: "TR", bg: "#10b981", points: "0,22 20,18 45,20 70,12 95,14 120,4" },
+                { symbol: "TITAN", name: "Titan Company", ltp: "₹3,410.00", chg: "+1.60%", up: true, tag: "Jewellery Surge", avatar: "TI", bg: "#ec4899", points: "0,22 25,18 50,14 75,16 100,8 120,4" },
+                { symbol: "BHARTIARTL", name: "Bharti Airtel", ltp: "₹1,685.00", chg: "+1.25%", up: true, tag: "ARPU Expansion", avatar: "BA", bg: "#ef4444", points: "0,24 25,20 50,16 75,12 100,10 120,5" },
+                { symbol: "INFY", name: "Infosys Ltd", ltp: "₹1,885.00", chg: "+1.20%", up: true, tag: "BFSI Multi-Month", avatar: "IN", bg: "#0284c7", points: "0,24 30,18 55,20 80,12 100,14 120,4" }
+            ]
+        };
 
-        function renderScreenerTable() {
+        let currentTrendingMode = 'gainers';
+
+        function renderTrendingStocks(mode) {
+            currentTrendingMode = mode || currentTrendingMode;
+            const container = document.getElementById('trending-stocks-grid');
+            if (!container) return;
+
+            const pool = TRENDING_POOLS[currentTrendingMode] || TRENDING_POOLS.gainers;
+            container.innerHTML = pool.map(s => `
+                <a href="/stock.html?symbol=${s.symbol}" class="stock-quick-card">
+                    <div class="stock-quick-header">
+                        <div class="stock-quick-avatar" style="background:${s.bg}; color:#ffffff; font-weight:800; font-size:12px; width:34px; height:34px; border-radius:8px; display:flex; align-items:center; justify-content:center;">${s.avatar}</div>
+                        <div>
+                            <div class="stock-quick-title">${s.name}</div>
+                            <div class="stock-quick-ticker" style="display:flex; align-items:center; gap:6px;">
+                                <span>NSE: ${s.symbol}</span>
+                                <span style="font-size:10px; color:var(--groww-mint); background:var(--groww-mint-soft); padding:1px 5px; border-radius:4px;">${s.tag}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="stock-quick-sparkline">
+                        <svg width="100%" height="28" viewBox="0 0 120 28" preserveAspectRatio="none">
+                            <defs>
+                                <linearGradient id="grad-trend-${s.symbol}" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stop-color="${s.up ? '#00d09c' : '#f43f5e'}" stop-opacity="0.3"/>
+                                    <stop offset="100%" stop-color="${s.up ? '#00d09c' : '#f43f5e'}" stop-opacity="0.0"/>
+                                </linearGradient>
+                            </defs>
+                            <polygon fill="url(#grad-trend-${s.symbol})" points="0,28 ${s.points} 120,28" />
+                            <polyline fill="none" stroke="${s.up ? '#00d09c' : '#f43f5e'}" stroke-width="2" points="${s.points}" />
+                        </svg>
+                    </div>
+                    <div class="stock-quick-bottom">
+                        <div class="stock-quick-price">${s.ltp}</div>
+                        <span class="stock-quick-badge ${s.up ? 'up' : 'down'}">${s.chg}</span>
+                    </div>
+                </a>
+            `).join('');
+        }
+
+        function switchTrendingMode(mode) {
+            currentTrendingMode = mode;
+            document.querySelectorAll('.trend-filter-chip').forEach(btn => btn.classList.remove('active'));
+            const activeBtn = document.getElementById(`trend-${mode}-btn`);
+            if (activeBtn) activeBtn.classList.add('active');
+
+            const badge = document.getElementById('trending-status-badge');
+            if (badge) {
+                badge.textContent = mode === 'gainers' ? 'Top Gainers' : mode === 'active' ? 'High Volume Cash' : '52W Breakouts';
+            }
+            renderTrendingStocks(mode);
+        }
+
+        // Auto-rotate trending stocks pool every 14 seconds to ensure fair non-stop live momentum
+        setInterval(() => {
+            const modes = ['gainers', 'active', 'breakout'];
+            const nextIdx = (modes.indexOf(currentTrendingMode) + 1) % modes.length;
+            switchTrendingMode(modes[nextIdx]);
+        }, 14000);
+
+        // 2. Interactive Multi-Screen Fundamental Scorecard Data
+        const HOMEPAGE_SCREENS = {
+            roce: {
+                title: "Audited Fundamental Scorecard — High ROCE & Low Debt",
+                screenId: "roce",
+                stocks: [
+                    { symbol: "ITC", name: "ITC Ltd", sector: "Diversified FMCG", mcap: "₹3,26,832 Cr", pe: "16.6", roce: "38.9%", roe: "29.3%", de: "0.03" },
+                    { symbol: "TCS", name: "Tata Consultancy Services", sector: "IT Services", mcap: "₹14,90,375 Cr", pe: "30.4", roce: "58.2%", roe: "51.4%", de: "0.00" },
+                    { symbol: "INFY", name: "Infosys Ltd", sector: "IT Services", mcap: "₹7,58,869 Cr", pe: "29.1", roce: "40.0%", roe: "31.9%", de: "0.08" },
+                    { symbol: "TRENT", name: "Trent Ltd", sector: "Apparel Retail", mcap: "₹2,64,189 Cr", pe: "84.3", roce: "28.3%", roe: "27.7%", de: "0.25" },
+                    { symbol: "HINDUNILVR", name: "Hindustan Unilever", sector: "FMCG Consumer", mcap: "₹6,28,450 Cr", pe: "58.6", roce: "27.4%", roe: "20.5%", de: "0.02" }
+                ]
+            },
+            fii: {
+                title: "Audited Fundamental Scorecard — FII Institutional Inflows",
+                screenId: "fii",
+                stocks: [
+                    { symbol: "HDFCBANK", name: "HDFC Bank Ltd", sector: "Private Banking", mcap: "₹12,48,500 Cr", pe: "18.5", roce: "16.4%", roe: "15.8%", de: "N/A" },
+                    { symbol: "ICICIBANK", name: "ICICI Bank Ltd", sector: "Private Banking", mcap: "₹8,92,400 Cr", pe: "17.8", roce: "17.2%", roe: "18.6%", de: "N/A" },
+                    { symbol: "RELIANCE", name: "Reliance Industries", sector: "Conglomerate & Energy", mcap: "₹19,84,200 Cr", pe: "26.8", roce: "11.2%", roe: "9.8%", de: "0.38" },
+                    { symbol: "BHARTIARTL", name: "Bharti Airtel Ltd", sector: "Telecom & Cloud", mcap: "₹9,85,600 Cr", pe: "48.2", roce: "14.5%", roe: "18.2%", de: "1.42" },
+                    { symbol: "TATAMOTORS", name: "Tata Motors Ltd", sector: "Automobiles & EV", mcap: "₹3,56,800 Cr", pe: "9.4", roce: "21.6%", roe: "28.4%", de: "0.82" }
+                ]
+            },
+            "52w": {
+                title: "Audited Fundamental Scorecard — 52-Week High Breakouts",
+                screenId: "52w",
+                stocks: [
+                    { symbol: "TRENT", name: "Trent Ltd", sector: "Apparel Retail", mcap: "₹2,64,189 Cr", pe: "84.3", roce: "28.3%", roe: "27.7%", de: "0.25" },
+                    { symbol: "BEL", name: "Bharat Electronics", sector: "Defence Electronics", mcap: "₹2,25,400 Cr", pe: "44.6", roce: "34.2%", roe: "26.8%", de: "0.00" },
+                    { symbol: "M&M", name: "Mahindra & Mahindra", sector: "Automobiles & Tractors", mcap: "₹3,52,100 Cr", pe: "28.4", roce: "19.8%", roe: "21.2%", de: "0.32" },
+                    { symbol: "SUNPHARMA", name: "Sun Pharma Industries", sector: "Pharmaceuticals", mcap: "₹4,28,900 Cr", pe: "38.2", roce: "17.5%", roe: "15.4%", de: "0.08" },
+                    { symbol: "TITAN", name: "Titan Company", sector: "Consumer & Jewellery", mcap: "₹3,02,800 Cr", pe: "88.4", roce: "25.1%", roe: "29.8%", de: "0.78" }
+                ]
+            },
+            dividend: {
+                title: "Audited Fundamental Scorecard — Dividend Compounders (>2.5%)",
+                screenId: "dividend",
+                stocks: [
+                    { symbol: "ITC", name: "ITC Ltd (5.56% Yield)", sector: "Diversified FMCG", mcap: "₹3,26,832 Cr", pe: "16.6", roce: "38.9%", roe: "29.3%", de: "0.03" },
+                    { symbol: "COALINDIA", name: "Coal India Ltd (6.20% Yield)", sector: "Mining & Energy", mcap: "₹2,84,600 Cr", pe: "7.8", roce: "54.1%", roe: "45.2%", de: "0.08" },
+                    { symbol: "VEDL", name: "Vedanta Ltd (7.10% Yield)", sector: "Metals & Mining", mcap: "₹1,78,200 Cr", pe: "12.4", roce: "32.4%", roe: "24.6%", de: "1.10" },
+                    { symbol: "TCS", name: "TCS (2.60% Yield)", sector: "IT Services", mcap: "₹14,90,375 Cr", pe: "30.4", roce: "58.2%", roe: "51.4%", de: "0.00" },
+                    { symbol: "HCLTECH", name: "HCL Technologies (3.40% Yield)", sector: "IT Services", mcap: "₹4,62,100 Cr", pe: "26.2", roce: "29.8%", roe: "24.2%", de: "0.12" }
+                ]
+            }
+        };
+
+        let currentActiveScreen = 'roce';
+
+        function selectHomepageScreen(screenKey, el) {
+            currentActiveScreen = screenKey;
+            document.querySelectorAll('.screens-grid .screen-card').forEach(c => c.classList.remove('active'));
+            if (el) el.classList.add('active');
+
+            const screen = HOMEPAGE_SCREENS[screenKey] || HOMEPAGE_SCREENS.roce;
+            const titleEl = document.getElementById('home-scorecard-title');
+            if (titleEl) titleEl.innerHTML = `<span>📊</span> ${screen.title}`;
+
+            const linkBtn = document.getElementById('home-open-screener-btn');
+            if (linkBtn) linkBtn.href = `/screener.html?screen=${screen.screenId}`;
+
+            renderScreenerTable(screenKey);
+        }
+
+        function renderScreenerTable(screenKey) {
+            const key = screenKey || currentActiveScreen || 'roce';
+            const screen = HOMEPAGE_SCREENS[key] || HOMEPAGE_SCREENS.roce;
             const tbody = document.getElementById('screener-tbody');
-            tbody.innerHTML = SCREENER_STOCKS.map(s => `
-                <tr onclick="window.location.href='/stock.html?symbol=${s.symbol}'">
+            if (!tbody) return;
+
+            tbody.innerHTML = screen.stocks.map(s => `
+                <tr onclick="window.location.href='/stock.html?symbol=${s.symbol}'" style="cursor:pointer;">
                     <td>
-                        <strong style="color:#ffffff;">${s.symbol}</strong>
+                        <strong style="color:var(--text-primary); font-family:var(--font-display); font-size:14px;">${s.symbol}</strong>
+                        <div style="font-size:11.5px; color:var(--text-muted); font-family:var(--font-body);">${s.name}</div>
                     </td>
-                    <td><span style="color:var(--text-secondary);">${s.sector}</span></td>
-                    <td style="font-family:var(--font-mono); color:#ffffff;">${s.mcap}</td>
-                    <td style="font-family:var(--font-mono); color:#ffffff;">${s.pe}</td>
+                    <td><span style="color:var(--text-secondary); font-size:12.5px;">${s.sector}</span></td>
+                    <td style="font-family:var(--font-mono); color:var(--text-primary); font-weight:600;">${s.mcap}</td>
+                    <td style="font-family:var(--font-mono); color:var(--text-primary);">${s.pe}</td>
                     <td style="font-family:var(--font-mono); color:var(--groww-mint); font-weight:700;">${s.roce}</td>
                     <td style="font-family:var(--font-mono); color:var(--groww-mint); font-weight:700;">${s.roe}</td>
-                    <td style="font-family:var(--font-mono); color:#ffffff;">${s.de}</td>
+                    <td style="font-family:var(--font-mono); color:var(--text-secondary);">${s.de}</td>
                     <td style="text-align:right;"><span class="row-hover-arrow">→</span></td>
                 </tr>
             `).join('');
         }
 
-        // Live Chart Studio
-        function loadStudioChart(symbol, title) {
-            document.getElementById('chart-studio-title').textContent = title;
-            const container = document.getElementById('chart-studio-container');
-            container.innerHTML = '<div id="tv_studio_inner" style="height:100%;width:100%;"></div>';
-            if (typeof TradingView !== 'undefined') {
-                new TradingView.widget({
-                    "autosize": true,
-                    "symbol": symbol,
-                    "interval": "D",
-                    "timezone": "Asia/Kolkata",
-                    "theme": "dark",
-                    "style": "1",
-                    "locale": "en",
-                    "toolbar_bg": "#080c16",
-                    "enable_publishing": false,
-                    "allow_symbol_change": true,
-                    "container_id": "tv_studio_inner"
-                });
-            }
+        // 3. Corporate Events Preview
+        function loadHomeEventsPreview() {
+            const container = document.getElementById('home-events-preview-grid');
+            if (!container) return;
+
+            const events = [
+                { symbol: "ITC", name: "ITC Ltd", type: "Interim Dividend", date: "24 OCT 2026", desc: "Interim Dividend of ₹7.50/share (Face Value ₹1.00). Record Date: 25 Oct 2026.", badgeBg: "var(--groww-mint-soft)", badgeColor: "var(--groww-mint)" },
+                { symbol: "TCS", name: "Tata Consultancy Services", type: "Q2 FY26 Earnings", date: "26 OCT 2026", desc: "Board Meeting to approve un-audited Q2 FY26 financial results & declaration of 2nd interim dividend.", badgeBg: "rgba(99, 102, 241, 0.12)", badgeColor: "#6366f1" },
+                { symbol: "TRENT", name: "Trent Ltd", type: "Stock Split (Sub-Division)", date: "29 OCT 2026", desc: "Share Split from ₹10 Face Value to ₹1.00 Face Value to enhance retail liquidity.", badgeBg: "rgba(245, 158, 11, 0.12)", badgeColor: "#f59e0b" },
+                { symbol: "RELIANCE", name: "Reliance Industries", type: "Board Meeting", date: "31 OCT 2026", desc: "Consideration of strategic investments in New Energy giga-factories & retail demerger update.", badgeBg: "rgba(59, 130, 246, 0.12)", badgeColor: "#3b82f6" }
+            ];
+
+            container.innerHTML = events.map(e => `
+                <div style="background:var(--bg-card); border:1px solid var(--border-subtle); border-radius:var(--radius-sm); padding:16px 18px; box-shadow:var(--card-shadow); cursor:pointer;" onclick="window.location.href='/events.html'">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <span style="font-size:11px; font-family:var(--font-mono); font-weight:700; color:${e.badgeColor}; background:${e.badgeBg}; padding:3px 8px; border-radius:4px;">${e.type}</span>
+                        <span style="font-family:var(--font-mono); font-size:11px; font-weight:700; color:var(--text-muted);">📅 ${e.date}</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                        <strong style="color:var(--text-primary); font-family:var(--font-display); font-size:15px;">${e.name}</strong>
+                        <span style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted);">NSE: ${e.symbol}</span>
+                    </div>
+                    <p style="font-size:12.5px; color:var(--text-secondary); line-height:1.5; margin-bottom:12px;">${e.desc}</p>
+                    <div style="display:flex; justify-content:space-between; align-items:center; font-size:11.5px; color:var(--groww-mint); font-weight:700;">
+                        <span>View Corporate Action Dossier</span>
+                        <span>→</span>
+                    </div>
+                </div>
+            `).join('');
         }
 
         // Research Dossiers Loading
@@ -1990,7 +2078,7 @@
             searchDropdown.innerHTML = matches.map(s => `
                 <a href="/stock.html?symbol=${s.symbol}" class="search-dropdown-item">
                     <div>
-                        <strong style="color:#ffffff;">${s.name}</strong>
+                        <strong style="color:var(--text-primary);">${s.name}</strong>
                         <div style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted);">${s.symbol} · ${s.sector || 'Equities'}</div>
                     </div>
                     <span class="row-hover-arrow">→</span>
@@ -2018,9 +2106,11 @@
         document.addEventListener('DOMContentLoaded', () => {
             loadIndexData();
             loadNseStocks();
+            renderTrendingStocks('gainers');
             filterMoversTable('gainers');
             renderSectorsGrid();
-            renderScreenerTable();
+            renderScreenerTable('roce');
+            loadHomeEventsPreview();
             loadResearchReports();
         });
     </script>

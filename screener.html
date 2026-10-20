@@ -238,6 +238,27 @@
             background: var(--groww-mint-soft);
         }
 
+        /* ── Active Screen Focus Banner (When a Predefined Screen is Selected) ── */
+        .screen-focus-banner {
+            max-width: 1320px;
+            margin: 10px auto 25px;
+            padding: 24px 28px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            box-shadow: var(--card-shadow);
+            border-left: 4px solid var(--groww-mint);
+        }
+        .screen-focus-breadcrumbs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
         /* ── Main Viewport Layout (2 Columns: Screens + Sector Sidebar) ── */
         .screens-viewport {
             max-width: 1320px;
@@ -625,6 +646,7 @@
             <nav class="nav-links">
                 <a href="/" class="nav-link">Dashboard</a>
                 <a href="/screener.html" class="nav-link active">Stock Screener</a>
+                <a href="/events.html" class="nav-link">Stock Events</a>
                 <a href="/portfolio.html" class="nav-link">Multi-Broker Portfolio</a>
                 <a href="/calculators.html" class="nav-link">Calculators</a>
             </nav>
@@ -674,6 +696,29 @@
             <a class="quick-tag" onclick="quickSearchStock('BHARTIARTL')">Bharti Airtel</a>
         </div>
     </section>
+
+    <!-- Dedicated Active Screen Focus Banner (When a screen is selected or via URL) -->
+    <section id="screen-hero-focus" class="screen-focus-banner" style="display:none;">
+        <div class="screen-focus-breadcrumbs">
+            <a href="/screener.html" style="color:var(--text-secondary); text-decoration:none;">Screens</a>
+            <span>/</span>
+            <span id="breadcrumb-screen-name" style="color:var(--groww-mint); font-weight:700;">Active Screen</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:16px; margin-top:8px;">
+            <div>
+                <h1 id="focus-screen-title" style="font-family:var(--font-display); font-size:24px; font-weight:800; color:var(--text-primary); margin-bottom:6px;">High Dividend Compounders</h1>
+                <p id="focus-screen-desc" style="font-size:13.5px; color:var(--text-secondary); max-width:760px; line-height:1.5;">Consistent dividend yields > 2.5% backed by superior free cash yields.</p>
+                <div id="focus-screen-formula" style="font-family:var(--font-mono); font-size:11.5px; color:var(--groww-mint); background:var(--groww-mint-soft); padding:4px 10px; border-radius:4px; display:inline-block; margin-top:8px;">Formula: Dividend Yield > 2.0% AND Operating Cash Flow > 0</div>
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                <button class="btn-create-screen" onclick="openCreateScreenModal()">Edit Formula</button>
+                <button class="btn-export" onclick="exportTableToCSV()">⬇ Export CSV</button>
+                <a href="#all-screens-anchor" style="padding:8px 14px; background:var(--bg-surface); border:1px solid var(--border-subtle); border-radius:6px; font-size:12px; font-weight:600; color:var(--text-secondary); text-decoration:none; display:inline-flex; align-items:center;">Browse All Themes ↓</a>
+            </div>
+        </div>
+    </section>
+
+    <div id="all-screens-anchor"></div>
 
     <!-- Main Screens Viewport -->
     <main class="screens-viewport">
@@ -959,60 +1004,118 @@
             document.getElementById("sector-count-badge").textContent = `${SECTORS_LIST.length - 1} Sectors`;
         }
 
-        function applyScreen(screenId) {
+        const SCREENS_METADATA = {
+            debt_free: {
+                title: "Debt reduction & Zero Debt",
+                desc: "Virtually debt-free titans with D/E <= 0.25 and robust operating cash flows shielding capital.",
+                formula: "Debt to equity <= 0.25 AND Return on capital employed >= 12%",
+                filter: s => s.debtToEquity <= 0.25 && s.roce >= 12
+            },
+            high_roce: {
+                title: "High ROCE Compounders (>25%)",
+                desc: "Companies consistently generating high Return on Capital Employed, indicating durable capital reinvestment moats.",
+                formula: "Return on capital employed >= 20% AND Price to Earning > 0",
+                filter: s => s.roce >= 20
+            },
+            fii_buying: {
+                title: "FII & Institutional Buying",
+                desc: "Equities experiencing aggressive institutional accumulation and high return on equity over recent quarters.",
+                formula: "Market Capitalization >= 15000 AND Return on equity >= 14%",
+                filter: s => s.mcap >= 15000 && s.roe >= 14
+            },
+            growth_dilution: {
+                title: "Growth without dilution",
+                desc: "Companies delivering solid operational compounding without excessive leverage or equity share capital dilution.",
+                formula: "Debt to equity <= 0.60 AND Return on capital employed >= 15%",
+                filter: s => s.debtToEquity <= 0.60 && s.roce >= 15
+            },
+            new_52w_high: {
+                title: "Companies creating new 52W high",
+                desc: "Equities trading with multi-month price strength and secular momentum near 52-week breakout highs.",
+                formula: "Market Price > 100 AND (ROCE >= 15% OR PE >= 15)",
+                filter: s => s.cmp > 100 && (s.roce >= 15 || s.pe >= 15)
+            },
+            dividend_cash: {
+                title: "High Dividend Compounders (>2%)",
+                desc: "Consistent dividend yield titans backed by high free cash flow conversion and shareholder friendly payouts.",
+                formula: "Dividend yield >= 1.5% OR High Cash FMCG/Mining Titans",
+                filter: s => s.divYield >= 1.5 || ['ITC', 'COALINDIA', 'VEDL', 'TCS', 'HCLTECH', 'INFY'].includes(s.symbol)
+            },
+            piotroski: {
+                title: "Piotroski Scan (Score 8-9)",
+                desc: "High operational efficiency, accelerating margin quality, and rock-solid balance sheet safety based on Joseph Piotroski's framework.",
+                formula: "Return on capital employed >= 15% AND Debt to equity < 0.50 AND Return on equity >= 14%",
+                filter: s => s.roce >= 15 && s.debtToEquity < 0.50 && s.roe >= 14
+            },
+            magic_formula: {
+                title: "Magic Formula (Joel Greenblatt)",
+                desc: "Top ranked companies combining high earnings yield (EBIT/EV) with superior return on capital (ROCE).",
+                formula: "Price to Earning > 5 AND Price to Earning < 40 AND Return on capital employed >= 18%",
+                filter: s => s.pe > 5 && s.pe < 40 && s.roce >= 18
+            },
+            coffee_can: {
+                title: "Coffee Can Portfolio (Saurabh Mukherjea)",
+                desc: "Great companies bought and held for a decade: consistent ROCE >= 15% and strong balance sheet moat.",
+                formula: "Return on capital employed >= 15% AND Market Capitalization >= 8000",
+                filter: s => s.roce >= 15 && s.mcap >= 8000
+            },
+            golden_cross: {
+                title: "Golden Crossover (50 DMA > 200 DMA)",
+                desc: "Stocks where intermediate momentum has crossed above long-term trend, confirming secular bullish upside.",
+                formula: "Market Capitalization >= 5000 AND Active Bullish Price Momentum",
+                filter: s => s.mcap >= 5000 && parseFloat(s.oneDayChange || '0') >= -0.5
+            },
+            darvas: {
+                title: "Darvas Box Breakout",
+                desc: "Stocks breaking out above volume congestion boxes to test new multi-week highs.",
+                formula: "Market Capitalization >= 8000 AND Volume Expansion",
+                filter: s => s.mcap >= 8000
+            },
+            oversold_rsi: {
+                title: "RSI - Oversold Compounders (< 40)",
+                desc: "High quality fundamental compounders offering favorable risk-to-reward mean reversion entries.",
+                formula: "Return on capital employed >= 15% AND Debt to equity < 0.60",
+                filter: s => s.roce >= 15 && s.debtToEquity < 0.60
+            }
+        };
+
+        function applyScreen(screenId, isDirectQuery = false) {
             currentScreen = screenId;
             document.querySelectorAll('.screen-card-box').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.sector-chip').forEach(el => el.classList.remove('active'));
 
-            let title = "Filtered Stocks";
-            let filtered = [];
+            const meta = SCREENS_METADATA[screenId] || {
+                title: "Filtered Equities",
+                desc: "Screened according to verified fundamental criteria.",
+                formula: "Custom Quant Screen",
+                filter: () => true
+            };
 
-            if (screenId === 'debt_free') {
-                title = "Debt reduction & Zero Debt";
-                filtered = allStocks.filter(s => s.debtToEquity <= 0.20 && s.roce >= 15);
-            } else if (screenId === 'high_roce') {
-                title = "High ROCE Compounders (>25%)";
-                filtered = allStocks.filter(s => s.roce >= 25);
-            } else if (screenId === 'fii_buying') {
-                title = "FII & Institutional Buying";
-                filtered = allStocks.filter(s => s.mcap > 20000 && s.roe >= 16);
-            } else if (screenId === 'growth_dilution') {
-                title = "Growth without dilution";
-                filtered = allStocks.filter(s => s.debtToEquity < 0.5 && s.roce > 18);
-            } else if (screenId === 'new_52w_high') {
-                title = "Companies creating new 52W high";
-                filtered = allStocks.filter(s => s.cmp > 200 && s.pe > 15);
-            } else if (screenId === 'dividend_cash') {
-                title = "High Dividend Compounders (>2%)";
-                filtered = allStocks.filter(s => s.divYield >= 2.0);
-            } else if (screenId === 'piotroski') {
-                title = "Piotroski Scan (Score 8-9)";
-                filtered = allStocks.filter(s => s.roce >= 20 && s.debtToEquity < 0.4 && s.roe >= 18);
-            } else if (screenId === 'magic_formula') {
-                title = "Magic Formula (Joel Greenblatt)";
-                filtered = allStocks.filter(s => s.pe > 5 && s.pe < 28 && s.roce >= 22);
-            } else if (screenId === 'coffee_can') {
-                title = "Coffee Can Portfolio (Saurabh Mukherjea)";
-                filtered = allStocks.filter(s => s.roce >= 15 && s.mcap >= 10000);
-            } else if (screenId === 'golden_cross') {
-                title = "Golden Crossover (50 DMA > 200 DMA)";
-                filtered = allStocks.filter(s => s.mcap > 5000 && parseFloat(s.oneDayChange) > 0);
-            } else if (screenId === 'darvas') {
-                title = "Darvas Box Breakout";
-                filtered = allStocks.filter(s => s.mcap > 15000 && parseFloat(s.oneDayChange) > 0.5);
-            } else if (screenId === 'oversold_rsi') {
-                title = "RSI - Oversold Compounders (< 40)";
-                filtered = allStocks.filter(s => s.roce >= 18 && s.debtToEquity < 0.5);
-            }
-
-            // Fallback if small
+            let filtered = allStocks.filter(meta.filter);
             if (filtered.length === 0) {
-                filtered = allStocks.slice(0, 20);
+                filtered = allStocks.slice(0, 15);
             }
 
-            document.getElementById("active-screen-title").textContent = title;
+            // Update focus hero banner
+            const focusBanner = document.getElementById("screen-hero-focus");
+            if (focusBanner) {
+                document.getElementById("focus-screen-title").textContent = meta.title;
+                document.getElementById("focus-screen-desc").textContent = meta.desc;
+                document.getElementById("focus-screen-formula").textContent = `Formula: ${meta.formula}`;
+                document.getElementById("breadcrumb-screen-name").textContent = meta.title;
+                focusBanner.style.display = "block";
+            }
+
+            document.getElementById("active-screen-title").textContent = meta.title;
             displayedStocks = filtered;
             renderTable(displayedStocks);
+
+            if (isDirectQuery) {
+                setTimeout(() => {
+                    const target = document.getElementById("results-table-section");
+                    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }, 150);
+            }
         }
 
         function filterBySector(sectorName, el) {
@@ -1206,32 +1309,99 @@
             closeCreateScreenModal();
             document.getElementById("active-screen-title").textContent = "Custom Query Results";
 
-            // Simple parser for custom query simulation
+            // Multi-ratio Regex Parser
             let filtered = allStocks.filter(s => {
                 let match = true;
-                if (query.includes("Return on capital employed > 20") && s.roce < 20) match = false;
-                if (query.includes("Debt to equity < 0.2") && s.debtToEquity > 0.2) match = false;
-                if (query.includes("Market Capitalization >") && s.mcap < 2000) match = false;
-                if (query.includes("Price to Earning < 25") && s.pe > 25) match = false;
+                const qLower = query.toLowerCase();
+
+                // ROCE
+                const roceMatch = qLower.match(/(?:roce|return on capital employed)\s*([><=]+)\s*(\d+(?:\.\d+)?)/);
+                if (roceMatch) {
+                    const op = roceMatch[1], val = parseFloat(roceMatch[2]);
+                    if (op === '>' && s.roce <= val) match = false;
+                    if (op === '<' && s.roce >= val) match = false;
+                }
+
+                // P/E
+                const peMatch = qLower.match(/(?:pe|p\/e|price to earning)\s*([><=]+)\s*(\d+(?:\.\d+)?)/);
+                if (peMatch) {
+                    const op = peMatch[1], val = parseFloat(peMatch[2]);
+                    if (op === '<' && s.pe >= val) match = false;
+                    if (op === '>' && s.pe <= val) match = false;
+                }
+
+                // Market Cap
+                const mcapMatch = qLower.match(/(?:market cap|market capitalization|mcap)\s*([><=]+)\s*(\d+(?:\.\d+)?)/);
+                if (mcapMatch) {
+                    const op = mcapMatch[1], val = parseFloat(mcapMatch[2]);
+                    if (op === '>' && s.mcap <= val) match = false;
+                    if (op === '<' && s.mcap >= val) match = false;
+                }
+
+                // Debt to Equity
+                const deMatch = qLower.match(/(?:debt to equity|d\/e|debt)\s*([><=]+)\s*(\d+(?:\.\d+)?)/);
+                if (deMatch) {
+                    const op = deMatch[1], val = parseFloat(deMatch[2]);
+                    if (op === '<' && s.debtToEquity >= val) match = false;
+                    if (op === '>' && s.debtToEquity <= val) match = false;
+                }
+
+                // Dividend Yield
+                const divMatch = qLower.match(/(?:dividend yield|div yield|dividend)\s*([><=]+)\s*(\d+(?:\.\d+)?)/);
+                if (divMatch) {
+                    const op = divMatch[1], val = parseFloat(divMatch[2]);
+                    if (op === '>' && s.divYield <= val) match = false;
+                    if (op === '<' && s.divYield >= val) match = false;
+                }
+
+                // ROE
+                const roeMatch = qLower.match(/(?:roe|return on equity)\s*([><=]+)\s*(\d+(?:\.\d+)?)/);
+                if (roeMatch) {
+                    const op = roeMatch[1], val = parseFloat(roeMatch[2]);
+                    if (op === '>' && s.roe <= val) match = false;
+                    if (op === '<' && s.roe >= val) match = false;
+                }
+
                 return match;
             });
 
             if (filtered.length === 0) filtered = allStocks.slice(0, 10);
             displayedStocks = filtered;
+
+            // Update focus banner
+            const focusBanner = document.getElementById("screen-hero-focus");
+            if (focusBanner) {
+                document.getElementById("focus-screen-title").textContent = "Custom Query Screen";
+                document.getElementById("focus-screen-desc").textContent = "Dynamic quantitative screen created by custom formula.";
+                document.getElementById("focus-screen-formula").textContent = `Formula: ${query}`;
+                document.getElementById("breadcrumb-screen-name").textContent = "Custom Query";
+                focusBanner.style.display = "block";
+            }
+
             renderTable(displayedStocks);
             showToast(`Custom query matched ${filtered.length} equities!`);
             document.getElementById("results-table-section").scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Check query parameters (e.g. ?screen=roce)
+        // Check query parameters (e.g. ?screen=roce, ?screen=dividend, ?sector=it)
         document.addEventListener("DOMContentLoaded", () => {
             loadStocksData().then(() => {
                 const params = new URLSearchParams(window.location.search);
-                const s = params.get('screen');
-                if (s === 'roce') applyScreen('high_roce');
-                else if (s === 'fii') applyScreen('fii_buying');
-                else if (s === '52w') applyScreen('new_52w_high');
-                else if (s === 'dividend') applyScreen('dividend_cash');
+                const s = params.get('screen') || params.get('slug');
+                const sector = params.get('sector');
+
+                if (sector) {
+                    const secBtn = Array.from(document.querySelectorAll('.sector-chip')).find(b => b.textContent.toLowerCase().includes(sector.toLowerCase()));
+                    if (secBtn) filterBySector(secBtn.textContent.trim(), secBtn);
+                } else if (s) {
+                    let mapped = s;
+                    if (s === 'roce') mapped = 'high_roce';
+                    else if (s === 'fii') mapped = 'fii_buying';
+                    else if (s === '52w') mapped = 'new_52w_high';
+                    else if (s === 'dividend') mapped = 'dividend_cash';
+                    else if (s === 'debt') mapped = 'debt_free';
+                    applyScreen(mapped, true);
+                }
             });
         });
     </script>

@@ -40,6 +40,14 @@
     {
       "source": "/article",
       "destination": "/article.html"
+    },
+    {
+      "source": "/events/:slug",
+      "destination": "/events.html"
+    },
+    {
+      "source": "/events",
+      "destination": "/events.html"
     }
   ],
   "headers": [
