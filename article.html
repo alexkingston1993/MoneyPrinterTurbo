@@ -24,6 +24,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+    <!-- Lenis Smooth Scrolling Library -->
+    <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
+
     <!-- Stylesheets -->
     <link rel="stylesheet" href="styles.css">
 
@@ -512,6 +515,20 @@
 
     <!-- Dynamic Article Loader Script -->
     <script>
+        // Initialize Lenis Buttery Smooth Scrolling
+        const lenis = new Lenis({
+            duration: 1.2,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smoothWheel: true,
+            wheelMultiplier: 1.05,
+            touchMultiplier: 1.5
+        });
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+
         // Reading Progress Bar
         window.addEventListener('scroll', () => {
             const docHeight = document.documentElement.scrollHeight - window.innerHeight;

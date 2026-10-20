@@ -4,13 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="page-title">NSE Stock Intelligence & Fundamental Screener | Dalal Street Alpha</title>
-    <meta name="description" id="page-desc" content="Institutional equity research, Screener.in fundamentals, and TradingView technical setups for Indian equities. Strictly educational.">
+    <meta name="description" id="page-desc" content="Institutional equity research, Screener fundamentals, and TradingView technical setups for Indian equities. Strictly educational.">
     <meta name="robots" content="index, follow">
     <link rel="canonical" id="canonical-url" href="https://dalal-street-alpha.vercel.app/stock.html">
 
     <!-- Open Graph -->
     <meta property="og:title" id="og-title" content="NSE Stock Intelligence & Screener | Dalal Street Alpha">
-    <meta property="og:description" id="og-desc" content="Comprehensive Screener.in fundamental ratios, TradingView candlestick setups, and balance sheet compounding scorecards.">
+    <meta property="og:description" content="Comprehensive fundamental ratios, TradingView candlestick setups, and balance sheet compounding scorecards.">
     <meta property="og:type" content="article">
     <meta property="og:image" content="https://dalal-street-alpha.vercel.app/brand_assets/opengraph_social_card_1200x630.png">
     <meta name="twitter:card" content="summary_large_image">
@@ -22,7 +22,7 @@
     <!-- Google Fonts: Plus Jakarta Sans (UI Body), Outfit (Display & Numbers), JetBrains Mono (Financial) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- Lenis Smooth Scroll -->
     <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
@@ -32,25 +32,29 @@
 
     <style>
         :root {
-            --bg-canvas: #070a12;
-            --bg-surface: #0c111f;
-            --bg-card: #10172a;
-            --bg-card-hover: #151e36;
-            --border-subtle: rgba(255, 255, 255, 0.08);
-            --border-hover: rgba(0, 208, 156, 0.4);
+            --bg-canvas: #090c15;
+            --bg-surface: #0e1320;
+            --bg-card: #121826;
+            --bg-card-hover: #161e30;
+            --border-subtle: rgba(255, 255, 255, 0.07);
+            --border-hover: rgba(0, 208, 156, 0.35);
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --text-muted: #64748b;
             --groww-mint: #00d09c;
-            --groww-mint-soft: rgba(0, 208, 156, 0.12);
+            --groww-mint-soft: rgba(0, 208, 156, 0.10);
             --market-red: #f43f5e;
-            --market-red-soft: rgba(244, 63, 94, 0.12);
+            --market-red-soft: rgba(244, 63, 94, 0.10);
             --accent-blue: #3b82f6;
-            --accent-blue-soft: rgba(59, 130, 246, 0.12);
-            --font-display: 'Outfit', sans-serif;
-            --font-body: 'Plus Jakarta Sans', sans-serif;
+            --accent-blue-soft: rgba(59, 130, 246, 0.10);
+            --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
             --ease-apple: cubic-bezier(0.16, 1, 0.3, 1);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-full: 9999px;
         }
 
         * {
@@ -69,23 +73,23 @@
             font-family: var(--font-body);
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
             overflow-x: hidden;
             background-image: 
-                radial-gradient(circle at 50% 0%, rgba(0, 208, 156, 0.05) 0%, transparent 55%),
-                radial-gradient(circle at 85% 15%, rgba(59, 130, 246, 0.04) 0%, transparent 45%);
+                radial-gradient(ellipse 70% 35% at 50% 0%, rgba(0, 208, 156, 0.05) 0%, transparent 70%);
             background-attachment: fixed;
         }
 
         /* Top Navigation Header */
         .stock-navbar {
-            background: rgba(12, 17, 31, 0.95);
+            background: rgba(14, 19, 32, 0.88);
             border-bottom: 1px solid var(--border-subtle);
-            padding: 12px 20px;
+            padding: 14px 20px;
             position: sticky;
             top: 0;
             z-index: 1000;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
         }
         .navbar-inner {
             max-width: 1320px;
@@ -98,13 +102,14 @@
         .brand-group {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
             text-decoration: none;
         }
         .brand-logo-img {
-            width: 32px;
-            height: 32px;
+            width: 34px;
+            height: 34px;
             border-radius: 8px;
+            box-shadow: 0 0 12px rgba(0, 208, 156, 0.25);
         }
         .brand-name {
             font-family: var(--font-display);
@@ -120,31 +125,32 @@
         /* Quick Search */
         .nav-search-box {
             position: relative;
-            width: 340px;
+            width: 360px;
             max-width: 100%;
         }
         .nav-search-input {
             width: 100%;
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.035);
             border: 1px solid var(--border-subtle);
-            border-radius: 8px;
-            padding: 7px 12px 7px 32px;
+            border-radius: var(--radius-sm);
+            padding: 8px 14px 8px 36px;
             color: #ffffff;
             font-size: 13px;
             outline: none;
+            font-family: var(--font-body);
             transition: all 0.2s ease;
         }
         .nav-search-input:focus {
             border-color: var(--groww-mint);
-            background: rgba(255, 255, 255, 0.07);
+            background: rgba(255, 255, 255, 0.06);
             box-shadow: 0 0 0 3px rgba(0, 208, 156, 0.15);
         }
         .nav-search-icon {
             position: absolute;
-            left: 10px;
+            left: 12px;
             top: 50%;
             transform: translateY(-50%);
-            font-size: 12px;
+            font-size: 13px;
             color: var(--text-muted);
         }
 
@@ -156,8 +162,8 @@
             font-weight: 600;
             color: var(--text-secondary);
             text-decoration: none;
-            padding: 6px 12px;
-            border-radius: 7px;
+            padding: 7px 14px;
+            border-radius: var(--radius-sm);
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid var(--border-subtle);
             transition: all 0.2s ease;
@@ -165,12 +171,14 @@
         .back-home-btn:hover {
             color: #ffffff;
             border-color: var(--groww-mint);
+            background: rgba(0, 208, 156, 0.08);
+            transform: translateY(-1px);
         }
 
         /* Stock Hero Header */
         .stock-hero {
             max-width: 1320px;
-            margin: 24px auto 16px auto;
+            margin: 28px auto 20px auto;
             padding: 0 20px;
         }
         .stock-hero-top {
@@ -186,32 +194,33 @@
             font-weight: 800;
             color: #ffffff;
             letter-spacing: -0.4px;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
         .stock-pills-row {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             flex-wrap: wrap;
         }
         .stock-pill {
             font-family: var(--font-mono);
             font-size: 11px;
             font-weight: 600;
-            padding: 3px 8px;
+            padding: 3px 9px;
             border-radius: 4px;
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.05);
             color: var(--text-secondary);
+            border: 1px solid var(--border-subtle);
         }
         .stock-pill-primary {
-            background: rgba(0, 208, 156, 0.12);
+            background: var(--groww-mint-soft);
             color: var(--groww-mint);
-            border: 1px solid rgba(0, 208, 156, 0.25);
+            border-color: rgba(0, 208, 156, 0.3);
         }
         .stock-pill-sector {
-            background: rgba(59, 130, 246, 0.12);
+            background: var(--accent-blue-soft);
             color: #60a5fa;
-            border: 1px solid rgba(59, 130, 246, 0.25);
+            border-color: rgba(59, 130, 246, 0.3);
         }
 
         /* Live Price Hero Block */
@@ -228,16 +237,16 @@
         }
         .hero-ltp {
             font-family: var(--font-mono);
-            font-size: 26px;
+            font-size: 28px;
             font-weight: 800;
             color: #ffffff;
             font-variant-numeric: tabular-nums;
         }
         .hero-chg-badge {
             font-family: var(--font-mono);
-            font-size: 12px;
+            font-size: 12.5px;
             font-weight: 700;
-            padding: 3px 8px;
+            padding: 3px 9px;
             border-radius: 4px;
             display: inline-flex;
             align-items: center;
@@ -255,14 +264,14 @@
 
         /* 52W Range Progress Track */
         .range-track-card {
-            background: rgba(16, 23, 42, 0.6);
+            background: var(--bg-card);
             border: 1px solid var(--border-subtle);
-            border-radius: 8px;
-            padding: 12px 16px;
-            margin-top: 14px;
+            border-radius: var(--radius-sm);
+            padding: 14px 18px;
+            margin-top: 18px;
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 16px;
             flex-wrap: wrap;
         }
         .range-label {
@@ -270,10 +279,11 @@
             font-size: 11px;
             color: var(--text-muted);
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .range-bar-wrapper {
             flex: 1;
-            min-width: 180px;
+            min-width: 200px;
             position: relative;
             height: 6px;
             background: rgba(255, 255, 255, 0.08);
@@ -287,20 +297,21 @@
         }
         .range-pin {
             position: absolute;
-            top: -3px;
-            width: 12px;
-            height: 12px;
+            top: -4px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
             background: #ffffff;
             border: 2px solid var(--groww-mint);
-            box-shadow: 0 0 6px var(--groww-mint);
+            box-shadow: 0 0 8px var(--groww-mint);
             transform: translateX(-50%);
         }
         .range-values {
             font-family: var(--font-mono);
-            font-size: 11.5px;
+            font-size: 12px;
             color: var(--text-secondary);
             font-variant-numeric: tabular-nums;
+            font-weight: 600;
         }
 
         /* ── Main Viewport ── */
@@ -310,12 +321,12 @@
             padding: 0 20px;
         }
 
-        /* Screener.in 9-Ratio Key Matrix Grid (Balanced 3x3 Grid) */
+        /* 9-Ratio Key Matrix Grid (Balanced 3x3 Grid) */
         .ratios-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 22px;
+            gap: 12px;
+            margin-bottom: 24px;
         }
         @media (max-width: 768px) {
             .ratios-grid {
@@ -330,15 +341,16 @@
         .ratio-card {
             background: var(--bg-card);
             border: 1px solid var(--border-subtle);
-            border-radius: 8px;
-            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            padding: 14px 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             transition: all 0.2s ease;
         }
         .ratio-card:hover {
-            border-color: var(--border-hover);
+            border-color: var(--groww-mint);
+            background: var(--bg-card-hover);
             transform: translateY(-1px);
         }
         .ratio-label {
@@ -346,7 +358,7 @@
             font-size: 11px;
             color: var(--text-muted);
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
         }
         .ratio-val {
             font-family: var(--font-mono);
@@ -360,12 +372,12 @@
         .stock-tab-bar {
             display: flex;
             align-items: center;
-            gap: 4px;
-            background: rgba(16, 23, 42, 0.7);
+            gap: 6px;
+            background: rgba(14, 19, 32, 0.7);
             border: 1px solid var(--border-subtle);
-            border-radius: 10px;
-            padding: 4px;
-            margin-bottom: 20px;
+            border-radius: var(--radius-md);
+            padding: 5px;
+            margin-bottom: 22px;
             overflow-x: auto;
             scrollbar-width: none;
         }
@@ -374,47 +386,57 @@
         }
         .stock-tab-btn {
             background: transparent;
-            border: none;
-            border-radius: 7px;
-            padding: 8px 14px;
-            font-size: 12.5px;
+            border: 1px solid transparent;
+            border-radius: 9px;
+            padding: 9px 16px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--text-secondary);
             cursor: pointer;
-            transition: all 0.2s var(--ease-apple);
+            transition: all 0.22s var(--ease-apple);
             white-space: nowrap;
             font-family: var(--font-body);
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
         .stock-tab-btn:hover {
             color: #ffffff;
+            background: rgba(255, 255, 255, 0.04);
         }
         .stock-tab-btn.active {
-            background: #141c30;
+            background: #151d30;
             color: var(--groww-mint);
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
-            border: 1px solid rgba(0, 208, 156, 0.3);
+            border-color: rgba(0, 208, 156, 0.35);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25), 0 0 12px -2px rgba(0, 208, 156, 0.2);
         }
 
         /* Tab Content Panel */
         .stock-tab-panel {
             background: var(--bg-card);
             border: 1px solid var(--border-subtle);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            animation: fadeIn 0.25s var(--ease-apple);
+            border-radius: var(--radius-md);
+            padding: 24px;
+            box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3);
+            animation: butterySlideUp 0.28s var(--ease-apple) forwards;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes butterySlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .panel-heading {
             font-family: var(--font-display);
-            font-size: 16px;
+            font-size: 17px;
             font-weight: 700;
             color: #ffffff;
-            margin-bottom: 14px;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -424,9 +446,9 @@
         .chart-box {
             background: #080c16;
             border: 1px solid var(--border-subtle);
-            border-radius: 8px;
+            border-radius: var(--radius-sm);
             overflow: hidden;
-            height: 520px;
+            height: 540px;
             width: 100%;
         }
 
@@ -434,19 +456,19 @@
         .pros-cons-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 16px;
+            gap: 18px;
         }
         .pros-card {
             background: rgba(0, 208, 156, 0.04);
             border: 1px solid rgba(0, 208, 156, 0.2);
-            border-radius: 8px;
-            padding: 18px;
+            border-radius: var(--radius-sm);
+            padding: 20px;
         }
         .pros-card h3 {
             color: var(--groww-mint);
-            font-size: 14px;
+            font-size: 14.5px;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             gap: 6px;
@@ -454,26 +476,26 @@
         .cons-card {
             background: rgba(244, 63, 94, 0.04);
             border: 1px solid rgba(244, 63, 94, 0.2);
-            border-radius: 8px;
-            padding: 18px;
+            border-radius: var(--radius-sm);
+            padding: 20px;
         }
         .cons-card h3 {
             color: var(--market-red);
-            font-size: 14px;
+            font-size: 14.5px;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             display: flex;
             align-items: center;
             gap: 6px;
         }
         .bullet-list {
-            padding-left: 18px;
-            font-size: 13px;
+            padding-left: 20px;
+            font-size: 13.5px;
             color: #cbd5e1;
-            line-height: 1.65;
+            line-height: 1.7;
         }
         .bullet-list li {
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         /* Tables (Screener.in Style) */
@@ -481,17 +503,17 @@
             width: 100%;
             overflow-x: auto;
             border: 1px solid var(--border-subtle);
-            border-radius: 8px;
+            border-radius: var(--radius-sm);
         }
         .screener-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 13px;
+            font-size: 13.5px;
             text-align: left;
         }
         .screener-table th {
-            background: rgba(8, 12, 22, 0.8);
-            padding: 10px 14px;
+            background: rgba(8, 12, 22, 0.75);
+            padding: 12px 16px;
             font-family: var(--font-mono);
             font-size: 11px;
             color: var(--text-muted);
@@ -501,40 +523,42 @@
             white-space: nowrap;
         }
         .screener-table td {
-            padding: 11px 14px;
+            padding: 13px 16px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             color: #cbd5e1;
             white-space: nowrap;
+            transition: background 0.15s ease;
         }
         .screener-table tr:hover td {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.035);
         }
 
         /* Compounding Scorecard */
         .scorecard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 12px;
+            gap: 14px;
         }
         .scorecard-item {
             background: rgba(8, 12, 22, 0.6);
             border: 1px solid var(--border-subtle);
-            border-radius: 8px;
-            padding: 14px;
+            border-radius: var(--radius-sm);
+            padding: 16px;
         }
         .scorecard-title {
             font-family: var(--font-mono);
-            font-size: 11.5px;
+            font-size: 12px;
             font-weight: 700;
             color: #60a5fa;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
         .scorecard-row {
             display: flex;
             justify-content: space-between;
-            font-size: 12px;
-            padding: 4px 0;
+            font-size: 12.5px;
+            padding: 5px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            font-family: var(--font-mono);
         }
 
         /* Companion Research Box */
@@ -543,8 +567,8 @@
             padding-bottom: 56.25%;
             height: 0;
             overflow: hidden;
-            border-radius: 8px;
-            margin: 14px 0;
+            border-radius: var(--radius-sm);
+            margin: 16px 0;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
         }
         .yt-video-wrapper iframe {
@@ -560,7 +584,7 @@
         .site-footer {
             border-top: 1px solid var(--border-subtle);
             padding: 36px 20px;
-            background: #050811;
+            background: #060913;
             font-size: 12.5px;
             color: var(--text-muted);
             text-align: center;
@@ -619,7 +643,7 @@
 
     <!-- 3. Main Stock Content Viewport -->
     <main class="stock-viewport">
-        <!-- 3.1 Screener.in 9-Ratio Key Matrix Grid (Balanced 3x3) -->
+        <!-- 3.1 9-Ratio Key Matrix Grid (Balanced 3x3) -->
         <section class="ratios-grid">
             <div class="ratio-card">
                 <span class="ratio-label">Market Cap</span>
@@ -661,12 +685,24 @@
 
         <!-- 3.2 Interactive Workspace Tab Bar -->
         <div class="stock-tab-bar">
-            <button class="stock-tab-btn active" id="tab-btn-chart" onclick="switchStockTab('chart')">📈 Interactive Chart</button>
-            <button class="stock-tab-btn" id="tab-btn-pros-cons" onclick="switchStockTab('pros-cons')">⚖️ Strengths & Risks</button>
-            <button class="stock-tab-btn" id="tab-btn-peers" onclick="switchStockTab('peers')">📊 Sector Peers</button>
-            <button class="stock-tab-btn" id="tab-btn-growth" onclick="switchStockTab('growth')">📈 10-Yr Compounding</button>
-            <button class="stock-tab-btn" id="tab-btn-shareholding" onclick="switchStockTab('shareholding')">👥 Shareholding Pattern</button>
-            <button class="stock-tab-btn" id="tab-btn-research" onclick="switchStockTab('research')" style="display:none;">🎬 Research Dossier</button>
+            <button class="stock-tab-btn active" id="tab-btn-chart" onclick="switchStockTab('chart')">
+                <span>📈</span> Interactive Chart
+            </button>
+            <button class="stock-tab-btn" id="tab-btn-pros-cons" onclick="switchStockTab('pros-cons')">
+                <span>⚖️</span> Strengths & Risks
+            </button>
+            <button class="stock-tab-btn" id="tab-btn-peers" onclick="switchStockTab('peers')">
+                <span>📊</span> Sector Peers
+            </button>
+            <button class="stock-tab-btn" id="tab-btn-growth" onclick="switchStockTab('growth')">
+                <span>📈</span> 10-Yr Compounding
+            </button>
+            <button class="stock-tab-btn" id="tab-btn-shareholding" onclick="switchStockTab('shareholding')">
+                <span>👥</span> Shareholding Pattern
+            </button>
+            <button class="stock-tab-btn" id="tab-btn-research" onclick="switchStockTab('research')" style="display:none;">
+                <span>🎬</span> Research Dossier
+            </button>
         </div>
 
         <!-- Tab 1: Interactive TradingView Chart -->
@@ -806,11 +842,13 @@
 
     <!-- 5. Scripts & Binding -->
     <script>
-        // Initialize Lenis
+        // Initialize Lenis Buttery Smooth Scrolling
         const lenis = new Lenis({
-            duration: 1.1,
+            duration: 1.2,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            smoothWheel: true
+            smoothWheel: true,
+            wheelMultiplier: 1.05,
+            touchMultiplier: 1.5
         });
         function raf(time) {
             lenis.raf(time);
@@ -863,7 +901,7 @@
         document.getElementById("scr-roe").textContent = stockData.roe;
         document.getElementById("scr-de").textContent = stockData.de;
 
-        // Switch Workspace Tabs
+        // Switch Workspace Tabs with Smooth Animation
         function switchStockTab(tabName) {
             const tabs = ['chart', 'pros-cons', 'peers', 'growth', 'shareholding', 'research'];
             tabs.forEach(t => {
@@ -871,7 +909,12 @@
                 const panel = document.getElementById(`stock-view-${t}`);
                 if (t === tabName) {
                     if (btn) btn.classList.add('active');
-                    if (panel) panel.style.display = 'block';
+                    if (panel) {
+                        panel.style.display = 'block';
+                        panel.style.animation = 'none';
+                        void panel.offsetWidth;
+                        panel.style.animation = 'butterySlideUp 0.28s var(--ease-apple) forwards';
+                    }
                 } else {
                     if (btn) btn.classList.remove('active');
                     if (panel) panel.style.display = 'none';
@@ -879,7 +922,7 @@
             });
         }
 
-        // Initialize Official TradingView Widget (BSE ticker for 100% universal access)
+        // Initialize Official TradingView Widget (BSE ticker for universal access)
         if (typeof TradingView !== 'undefined') {
             new TradingView.widget({
                 "autosize": true,
@@ -927,7 +970,7 @@
                 });
 
                 if (matched) {
-                    document.getElementById("tab-btn-research").style.display = "inline-block";
+                    document.getElementById("tab-btn-research").style.display = "inline-flex";
                     document.getElementById("post-title").textContent = matched.title;
                     document.getElementById("post-date").textContent = `Published: ${matched.date || '2026-10-20'}`;
 
