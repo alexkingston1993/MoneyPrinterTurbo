@@ -270,6 +270,291 @@
             50% { opacity: 0.35; transform: scale(0.85); }
         }
 
+        /* ── Animated Green Bull Hero Centerpiece ── */
+        .hero-bull-container {
+            position: relative;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 auto 20px auto;
+            cursor: pointer;
+            user-select: none;
+            padding: 18px 24px 10px 24px;
+        }
+
+        /* 1. Ambient Emerald Nebula Glow */
+        .bull-glow-backdrop {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 240px;
+            height: 240px;
+            background: radial-gradient(circle, rgba(0, 208, 156, 0.38) 0%, rgba(0, 208, 156, 0.1) 45%, transparent 70%);
+            border-radius: 50%;
+            filter: blur(28px);
+            pointer-events: none;
+            animation: ambientPulse 3.6s ease-in-out infinite alternate;
+        }
+        [data-theme="light"] .bull-glow-backdrop {
+            background: radial-gradient(circle, rgba(0, 208, 156, 0.28) 0%, rgba(0, 208, 156, 0.06) 45%, transparent 70%);
+        }
+
+        @keyframes ambientPulse {
+            0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.65; }
+            100% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+        }
+
+        /* 2. Concentric Orbit Blueprint Radar Rings */
+        .radar-ring {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+        .radar-ring-1 {
+            width: 155px;
+            height: 155px;
+            border: 1px dashed rgba(0, 208, 156, 0.35);
+            animation: rotateRing 22s linear infinite;
+        }
+        .radar-ring-2 {
+            width: 195px;
+            height: 195px;
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            border-left-color: transparent;
+            border-right-color: transparent;
+            animation: rotateRingRev 28s linear infinite;
+        }
+        .radar-ring-3 {
+            width: 235px;
+            height: 235px;
+            border: 1px dotted rgba(0, 208, 156, 0.18);
+            animation: rotateRing 40s linear infinite;
+        }
+
+        @keyframes rotateRing {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+        @keyframes rotateRingRev {
+            from { transform: translate(-50%, -50%) rotate(360deg); }
+            to { transform: translate(-50%, -50%) rotate(0deg); }
+        }
+
+        /* 3. Expanding Sonic Radar Waves */
+        .radar-wave {
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(0, 208, 156, 0.65);
+            pointer-events: none;
+            animation: radarExpand 3.2s cubic-bezier(0.1, 0.7, 0.2, 1) infinite;
+        }
+        .radar-wave:nth-child(2) {
+            animation-delay: 1.6s;
+        }
+        @keyframes radarExpand {
+            0% { width: 60px; height: 60px; opacity: 0.9; }
+            100% { width: 250px; height: 250px; opacity: 0; }
+        }
+
+        /* 4. The Bull Emblem Centerpiece Card */
+        .bull-emblem-card {
+            position: relative;
+            width: 118px;
+            height: 118px;
+            border-radius: 26px;
+            background: linear-gradient(135deg, rgba(18, 24, 36, 0.95), rgba(11, 14, 20, 0.98));
+            border: 2px solid rgba(0, 208, 156, 0.45);
+            box-shadow: 
+                0 10px 30px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(0, 208, 156, 0.22),
+                inset 0 0 16px rgba(0, 208, 156, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            animation: bullLevitate 3.8s ease-in-out infinite alternate;
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 3;
+        }
+
+        .hero-bull-container:hover .bull-emblem-card,
+        .hero-bull-container.hyper-charge .bull-emblem-card {
+            transform: scale(1.08) translateY(-5px);
+            border-color: #00D09C;
+            box-shadow: 
+                0 18px 44px rgba(0, 0, 0, 0.6),
+                0 0 36px rgba(0, 208, 156, 0.55),
+                inset 0 0 25px rgba(0, 208, 156, 0.25);
+        }
+
+        @keyframes bullLevitate {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-5px) rotate(0.4deg); }
+            100% { transform: translateY(-9px) rotate(-0.4deg); }
+        }
+
+        /* 5. Holographic Laser Scanning Beam */
+        .scan-beam {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 2.5px;
+            background: linear-gradient(90deg, transparent 5%, rgba(0, 208, 156, 0.9) 30%, #ffffff 50%, rgba(0, 208, 156, 0.9) 70%, transparent 95%);
+            box-shadow: 0 0 10px #00D09C, 0 0 20px #00D09C;
+            animation: scanMotion 2.6s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 6;
+        }
+
+        @keyframes scanMotion {
+            0% { top: -10%; opacity: 0; }
+            15% { opacity: 1; }
+            85% { opacity: 1; }
+            100% { top: 110%; opacity: 0; }
+        }
+
+        /* 6. Blueprint Grid Overlay */
+        .blueprint-grid {
+            position: absolute;
+            inset: 0;
+            background-image: 
+                linear-gradient(rgba(0, 208, 156, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 208, 156, 0.08) 1px, transparent 1px);
+            background-size: 12px 12px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* 7. Bull Image with Breathing Glow */
+        .bull-emblem-img {
+            width: 94px;
+            height: 94px;
+            object-fit: cover;
+            border-radius: 18px;
+            filter: drop-shadow(0 0 10px rgba(0, 208, 156, 0.6));
+            position: relative;
+            z-index: 2;
+            transition: transform 0.3s ease, filter 0.3s ease;
+            animation: bullBreathing 3.8s ease-in-out infinite alternate;
+        }
+
+        .hero-bull-container:hover .bull-emblem-img,
+        .hero-bull-container.hyper-charge .bull-emblem-img {
+            transform: scale(1.04);
+            filter: drop-shadow(0 0 18px rgba(0, 208, 156, 0.9));
+        }
+
+        @keyframes bullBreathing {
+            0% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(0, 208, 156, 0.45)); }
+            100% { transform: scale(1.03); filter: drop-shadow(0 0 16px rgba(0, 208, 156, 0.8)); }
+        }
+
+        /* 8. Orbiting Telemetry Chips */
+        .telemetry-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 14px;
+            position: relative;
+            z-index: 4;
+        }
+
+        .telemetry-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10.5px;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            background: var(--bg-surface);
+            border: 1px solid rgba(0, 208, 156, 0.35);
+            backdrop-filter: blur(10px);
+            color: var(--text-primary);
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+            transition: all 0.25s ease;
+        }
+
+        .telemetry-pill .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--groww-mint);
+            box-shadow: 0 0 8px var(--groww-mint);
+            animation: dotBlink 1.4s infinite;
+        }
+
+        @keyframes dotBlink {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.3; transform: scale(0.7); }
+        }
+
+        .telemetry-pill.gold {
+            border-color: rgba(212, 175, 55, 0.4);
+        }
+        .telemetry-pill.gold .dot {
+            background: #D4AF37;
+            box-shadow: 0 0 8px #D4AF37;
+        }
+
+        .hero-bull-container:hover .telemetry-pill {
+            border-color: var(--groww-mint);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 208, 156, 0.25);
+        }
+
+        /* Spark particle animation on click */
+        .bull-spark {
+            position: absolute;
+            pointer-events: none;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #00D09C;
+            box-shadow: 0 0 10px #00D09C, 0 0 20px #00D09C;
+            animation: flyUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            z-index: 10;
+        }
+
+        @keyframes flyUp {
+            0% { transform: translate(0, 0) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(0); opacity: 0; }
+        }
+
+        @media (max-width: 768px) {
+            .hero-bull-container {
+                margin: 0 auto 14px auto;
+                padding: 10px 14px 6px 14px;
+            }
+            .bull-emblem-card {
+                width: 92px;
+                height: 92px;
+                border-radius: 20px;
+            }
+            .bull-emblem-img {
+                width: 76px;
+                height: 76px;
+                border-radius: 14px;
+            }
+            .radar-ring-1 { width: 120px; height: 120px; }
+            .radar-ring-2 { width: 150px; height: 150px; }
+            .radar-ring-3 { width: 180px; height: 180px; }
+            .radar-wave { width: 50px; height: 50px; }
+            .bull-glow-backdrop { width: 180px; height: 180px; }
+            .telemetry-row { gap: 6px; margin-top: 10px; }
+            .telemetry-pill { font-size: 9.5px; padding: 3px 8px; }
+        }
+
         /* ── 3. Focused Hero & Command Search Bar ── */
         .platform-hero {
             max-width: 1280px;
@@ -1394,6 +1679,33 @@
 
     <!-- 3. Focused Hero & Command Search Bar -->
     <section class="platform-hero">
+        <!-- Animated Green Bull Blueprint Emblem -->
+        <div class="hero-bull-container" onclick="triggerBullCharge(event)" title="The Bull Print Engine • Click to activate momentum radar">
+            <div class="bull-glow-backdrop"></div>
+            <div class="radar-ring radar-ring-1"></div>
+            <div class="radar-ring radar-ring-2"></div>
+            <div class="radar-ring radar-ring-3"></div>
+            <div class="radar-wave"></div>
+            <div class="radar-wave"></div>
+
+            <div class="bull-emblem-card">
+                <div class="blueprint-grid"></div>
+                <div class="scan-beam"></div>
+                <img src="brand_assets/logo_master_1024x1024.png" alt="The Bull Print Animated Logo" class="bull-emblem-img">
+            </div>
+
+            <div class="telemetry-row">
+                <div class="telemetry-pill">
+                    <span class="dot"></span>
+                    <span>BULL PRINT • LIVE RADAR</span>
+                </div>
+                <div class="telemetry-pill gold">
+                    <span class="dot"></span>
+                    <span>ALPHA +1.42%</span>
+                </div>
+            </div>
+        </div>
+
         <h1 class="hero-title">Institutional <span>Indian Equity</span> Intelligence</h1>
         <p class="hero-subtitle">Live index constituent weights, fundamental compounding metrics, and TradingView technical setups.</p>
 
@@ -2370,6 +2682,38 @@
                 searchDropdown.style.display = 'none';
             }
         });
+
+        // Interactive Green Bull Hyper-Charge Particle FX
+        window.triggerBullCharge = function(e) {
+            const container = document.querySelector('.hero-bull-container');
+            if (container) {
+                container.classList.add('hyper-charge');
+                setTimeout(() => container.classList.remove('hyper-charge'), 1200);
+
+                // Spawn 12 radiant green sparks
+                const rect = container.getBoundingClientRect();
+                for (let i = 0; i < 12; i++) {
+                    const spark = document.createElement('div');
+                    spark.className = 'bull-spark';
+                    spark.style.left = `${rect.width / 2}px`;
+                    spark.style.top = `${rect.height / 2}px`;
+                    const angle = (Math.PI * 2 * i) / 12 + (Math.random() - 0.5);
+                    const dist = 50 + Math.random() * 60;
+                    spark.style.setProperty('--tx', `${Math.cos(angle) * dist}px`);
+                    spark.style.setProperty('--ty', `${Math.sin(angle) * dist - 30}px`);
+                    container.appendChild(spark);
+                    setTimeout(() => spark.remove(), 1000);
+                }
+            }
+            if (typeof window.showToast === 'function') {
+                window.showToast("⚡ The Bull Print Radar Active — Search 114+ NSE equities");
+            }
+            const search = document.getElementById('global-search');
+            if (search) {
+                search.focus();
+                search.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        };
 
         // Initialize Everything on DOM Load
         document.addEventListener('DOMContentLoaded', () => {
