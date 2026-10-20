@@ -12,6 +12,14 @@
     {
       "source": "/stocks",
       "destination": "/stock.html"
+    },
+    {
+      "source": "/article/:slug",
+      "destination": "/article.html"
+    },
+    {
+      "source": "/article",
+      "destination": "/article.html"
     }
   ],
   "headers": [

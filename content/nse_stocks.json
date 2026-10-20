@@ -1,0 +1,914 @@
+[
+  {
+    "symbol": "RELIANCE",
+    "name": "Reliance Industries Ltd",
+    "sector": "Energy & Conglomerate",
+    "category": "Large Cap",
+    "isin": "INE002A01018",
+    "moat": "Dominant digital (Jio) and retail presence with expanding green energy capex."
+  },
+  {
+    "symbol": "TCS",
+    "name": "Tata Consultancy Services Ltd",
+    "sector": "Information Technology",
+    "category": "Large Cap",
+    "isin": "INE467B01029",
+    "moat": "Zero-debt enterprise technology titan with industry-leading free cash flow."
+  },
+  {
+    "symbol": "HDFCBANK",
+    "name": "HDFC Bank Ltd",
+    "sector": "Financial Services",
+    "category": "Large Cap",
+    "isin": "INE040A01034",
+    "moat": "Premier private banking network with low cost of funds and strong asset quality."
+  },
+  {
+    "symbol": "INFY",
+    "name": "Infosys Ltd",
+    "sector": "Information Technology",
+    "category": "Large Cap",
+    "isin": "INE009A01021",
+    "moat": "Global cloud and AI software consulting with high return on capital employed."
+  },
+  {
+    "symbol": "ICICIBANK",
+    "name": "ICICI Bank Ltd",
+    "sector": "Financial Services",
+    "category": "Large Cap",
+    "isin": "INE090A01021",
+    "moat": "Fast-growing retail credit engine with digital banking leadership and expanding margins."
+  },
+  {
+    "symbol": "HINDUNILVR",
+    "name": "Hindustan Unilever Ltd",
+    "sector": "Fast Moving Consumer Goods",
+    "category": "Large Cap",
+    "isin": "INE030A01027",
+    "moat": "Unmatched FMCG rural and urban distribution network reaching 9 out of 10 households."
+  },
+  {
+    "symbol": "SBIN",
+    "name": "State Bank of India",
+    "sector": "Public Banking",
+    "category": "Large Cap",
+    "isin": "INE062A01020",
+    "moat": "India's largest public sector lender with sovereign deposit trust and vast national footprint."
+  },
+  {
+    "symbol": "BHARTIARTL",
+    "name": "Bharti Airtel Ltd",
+    "sector": "Telecommunications",
+    "category": "Large Cap",
+    "isin": "INE397D01024",
+    "moat": "Effective telecom duopoly beneficiary with steadily rising ARPU and enterprise 5G moats."
+  },
+  {
+    "symbol": "KOTAKBANK",
+    "name": "Kotak Mahindra Bank Ltd",
+    "sector": "Financial Services",
+    "category": "Large Cap",
+    "isin": "INE237A01028",
+    "moat": "High CASA ratio, conservative lending philosophy, and disciplined capital allocation."
+  },
+  {
+    "symbol": "LT",
+    "name": "Larsen & Toubro Ltd",
+    "sector": "Infrastructure & Engineering",
+    "category": "Large Cap",
+    "isin": "INE018A01030",
+    "moat": "Unmatched engineering excellence and record infrastructure order book visibility."
+  },
+  {
+    "symbol": "ITC",
+    "name": "ITC Ltd",
+    "sector": "Consumer Goods & Hotels",
+    "category": "Large Cap",
+    "isin": "INE154A01025",
+    "moat": "Exceptional free cash generation with expanding non-cigarette FMCG and paper margins."
+  },
+  {
+    "symbol": "AXISBANK",
+    "name": "Axis Bank Ltd",
+    "sector": "Financial Services",
+    "category": "Large Cap",
+    "isin": "INE238A01034",
+    "moat": "Strengthened balance sheet following Citi India acquisition with granular retail focus."
+  },
+  {
+    "symbol": "BAJFINANCE",
+    "name": "Bajaj Finance Ltd",
+    "sector": "Financial Services (NBFC)",
+    "category": "Large Cap",
+    "isin": "INE296A01024",
+    "moat": "Dominant consumer durable financing franchise with proprietary cross-sell algorithms."
+  },
+  {
+    "symbol": "MARUTI",
+    "name": "Maruti Suzuki India Ltd",
+    "sector": "Automobile",
+    "category": "Large Cap",
+    "isin": "INE585B01010",
+    "moat": "Market share leadership in passenger vehicles backed by Suzuki technology and hybrid drive."
+  },
+  {
+    "symbol": "TITAN",
+    "name": "Titan Company Ltd",
+    "sector": "Consumer Durables & Jewellery",
+    "category": "Large Cap",
+    "isin": "INE280A01028",
+    "moat": "Tanishq brand equity capturing market share from unorganized jewellery sector."
+  },
+  {
+    "symbol": "SUNPHARMA",
+    "name": "Sun Pharmaceutical Industries Ltd",
+    "sector": "Healthcare & Pharma",
+    "category": "Large Cap",
+    "isin": "INE044A01036",
+    "moat": "Global specialty pharmaceutical portfolio with strong domestic market leadership."
+  },
+  {
+    "symbol": "TATAMOTORS",
+    "name": "Tata Motors Ltd",
+    "sector": "Automobile & EV",
+    "category": "Large Cap",
+    "isin": "INE155A01022",
+    "moat": "India EV market pioneer and luxury global resurgence via Jaguar Land Rover."
+  },
+  {
+    "symbol": "ULTRACEMCO",
+    "name": "UltraTech Cement Ltd",
+    "sector": "Construction Materials",
+    "category": "Large Cap",
+    "isin": "INE481G01011",
+    "moat": "Largest cement manufacturer in India with unmatched scale and freight cost optimization."
+  },
+  {
+    "symbol": "NTPC",
+    "name": "NTPC Ltd",
+    "sector": "Power Generation",
+    "category": "Large Cap",
+    "isin": "INE733E01010",
+    "moat": "Critical baseload power generator rapidly transitioning into green hydrogen and solar."
+  },
+  {
+    "symbol": "WIPRO",
+    "name": "Wipro Ltd",
+    "sector": "Information Technology",
+    "category": "Large Cap",
+    "isin": "INE075A01022",
+    "moat": "Global enterprise software services with strong enterprise consulting relationships."
+  },
+  {
+    "symbol": "ADANIENT",
+    "name": "Adani Enterprises Ltd",
+    "sector": "Metals & Mining / Energy",
+    "category": "Large Cap",
+    "isin": "INE423A01024",
+    "moat": "Incubator of large-scale infrastructure, airport, and green hydrogen projects."
+  },
+  {
+    "symbol": "HCLTECH",
+    "name": "HCL Technologies Ltd",
+    "sector": "Information Technology",
+    "category": "Large Cap",
+    "isin": "INE860A01027",
+    "moat": "Resilient digital engineering and product software business with steady payout ratio."
+  },
+  {
+    "symbol": "ASIANPAINT",
+    "name": "Asian Paints Ltd",
+    "sector": "Consumer Paints & Decor",
+    "category": "Large Cap",
+    "isin": "INE021A01026",
+    "moat": "Proprietary supply chain algorithm and distribution network with pricing leadership."
+  },
+  {
+    "symbol": "DMART",
+    "name": "Avenue Supermarts Ltd (DMart)",
+    "sector": "Retail",
+    "category": "Large Cap",
+    "isin": "INE192R01011",
+    "moat": "Lowest-cost grocery operator with store ownership model and inventory turn efficiency."
+  },
+  {
+    "symbol": "NESTLEIND",
+    "name": "Nestle India Ltd",
+    "sector": "FMCG & Nutrition",
+    "category": "Large Cap",
+    "isin": "INE239A01016",
+    "moat": "Iconic household brand power across Maggi, Nescafe, and infant nutrition."
+  },
+  {
+    "symbol": "POWERGRID",
+    "name": "Power Grid Corporation of India",
+    "sector": "Power Transmission",
+    "category": "Large Cap",
+    "isin": "INE752E01010",
+    "moat": "Monopoly interstate power transmission network with regulated 15.5% return on equity."
+  },
+  {
+    "symbol": "M&M",
+    "name": "Mahindra & Mahindra Ltd",
+    "sector": "Automobile & Tractors",
+    "category": "Large Cap",
+    "isin": "INE101A01026",
+    "moat": "Dominant SUV market share and undisputed national leadership in farm mechanization."
+  },
+  {
+    "symbol": "BAJAJFINSV",
+    "name": "Bajaj Finserv Ltd",
+    "sector": "Financial Services",
+    "category": "Large Cap",
+    "isin": "INE918I01018",
+    "moat": "Comprehensive financial ecosystem spanning consumer credit, life, and general insurance."
+  },
+  {
+    "symbol": "ONGC",
+    "name": "Oil & Natural Gas Corporation",
+    "sector": "Oil & Gas Exploration",
+    "category": "Large Cap",
+    "isin": "INE213A01029",
+    "moat": "National crude oil exploration champion with upstream production capacity."
+  },
+  {
+    "symbol": "COALINDIA",
+    "name": "Coal India Ltd",
+    "sector": "Metals & Mining",
+    "category": "Large Cap",
+    "isin": "INE522F01014",
+    "moat": "Quasi-monopoly supplier of thermal coal fueling 70%+ of India's electricity grid."
+  },
+  {
+    "symbol": "TATASTEEL",
+    "name": "Tata Steel Ltd",
+    "sector": "Metals & Steel",
+    "category": "Large Cap",
+    "isin": "INE081A01020",
+    "moat": "Captive iron ore mines providing the lowest cost steel production base in India."
+  },
+  {
+    "symbol": "JSWSTEEL",
+    "name": "JSW Steel Ltd",
+    "sector": "Metals & Steel",
+    "category": "Large Cap",
+    "isin": "INE019A01038",
+    "moat": "Rapidly expanding capacity with efficient port-based and inland brownfield execution."
+  },
+  {
+    "symbol": "ADANIPORTS",
+    "name": "Adani Ports & SEZ Ltd",
+    "sector": "Port Infrastructure",
+    "category": "Large Cap",
+    "isin": "INE742F01042",
+    "moat": "Handles 25%+ of India's commercial maritime cargo with high operating cash margins."
+  },
+  {
+    "symbol": "GRASIM",
+    "name": "Grasim Industries Ltd",
+    "sector": "Diversified Chemicals / Paints",
+    "category": "Large Cap",
+    "isin": "INE047A01021",
+    "moat": "Global viscose staple fiber leader and new entrant in decorative paints (Birla Opus)."
+  },
+  {
+    "symbol": "HINDALCO",
+    "name": "Hindalco Industries Ltd",
+    "sector": "Metals & Aluminium",
+    "category": "Large Cap",
+    "isin": "INE038A01020",
+    "moat": "World's largest flat-rolled aluminum recycler through US-based Novelis subsidiary."
+  },
+  {
+    "symbol": "TECHM",
+    "name": "Tech Mahindra Ltd",
+    "sector": "Information Technology",
+    "category": "Large Cap",
+    "isin": "INE669C01036",
+    "moat": "Global leadership in telecom 5G software integration and enterprise AI services."
+  },
+  {
+    "symbol": "DIVISLAB",
+    "name": "Divi's Laboratories Ltd",
+    "sector": "Healthcare & API",
+    "category": "Large Cap",
+    "isin": "INE361B01024",
+    "moat": "Global custom synthesis and active pharmaceutical ingredient supplier to big pharma."
+  },
+  {
+    "symbol": "CIPLA",
+    "name": "Cipla Ltd",
+    "sector": "Healthcare & Pharma",
+    "category": "Large Cap",
+    "isin": "INE059A01026",
+    "moat": "Respiratory and inhalation therapy powerhouse in India, South Africa, and the US."
+  },
+  {
+    "symbol": "DRREDDY",
+    "name": "Dr. Reddy's Laboratories Ltd",
+    "sector": "Healthcare & Generics",
+    "category": "Large Cap",
+    "isin": "INE089A01023",
+    "moat": "Diverse generic pipeline across US, Europe, and emerging market health systems."
+  },
+  {
+    "symbol": "EICHERMOT",
+    "name": "Eicher Motors Ltd",
+    "sector": "Automobile & Motorcycles",
+    "category": "Large Cap",
+    "isin": "INE066A01021",
+    "moat": "Royal Enfield cult brand commanding 90%+ share in premium middleweight motorcycles."
+  },
+  {
+    "symbol": "BRITANNIA",
+    "name": "Britannia Industries Ltd",
+    "sector": "FMCG & Bakery",
+    "category": "Large Cap",
+    "isin": "INE216A01030",
+    "moat": "Iconic household biscuit brand commanding deep penetration across tier-2/3 India."
+  },
+  {
+    "symbol": "SBILIFE",
+    "name": "SBI Life Insurance Co Ltd",
+    "sector": "Life Insurance",
+    "category": "Large Cap",
+    "isin": "INE123W01016",
+    "moat": "Bancassurance access to SBI's 500M+ account holder base driving lowest cost of acquisition."
+  },
+  {
+    "symbol": "HDFCLIFE",
+    "name": "HDFC Life Insurance Co Ltd",
+    "sector": "Life Insurance",
+    "category": "Large Cap",
+    "isin": "INE795G01014",
+    "moat": "Innovative non-participating protection products with disciplined actuarial underwriting."
+  },
+  {
+    "symbol": "BPCL",
+    "name": "Bharat Petroleum Corporation Ltd",
+    "sector": "Oil Refining & Marketing",
+    "category": "Large Cap",
+    "isin": "INE029A01011",
+    "moat": "Extensive nationwide retail fuel pump stations and LPG distribution infrastructure."
+  },
+  {
+    "symbol": "TATACONSUM",
+    "name": "Tata Consumer Products Ltd",
+    "sector": "FMCG & Beverages",
+    "category": "Large Cap",
+    "isin": "INE192A01025",
+    "moat": "Tata Tea and Tata Salt anchors expanding into packaged foods, cereals, and Starbucks JV."
+  },
+  {
+    "symbol": "APOLLOHOSP",
+    "name": "Apollo Hospitals Enterprise Ltd",
+    "sector": "Healthcare & Hospitals",
+    "category": "Large Cap",
+    "isin": "INE437A01024",
+    "moat": "India's premier private hospital network paired with 24/7 digital omni-channel pharmacy."
+  },
+  {
+    "symbol": "SHRIRAMFIN",
+    "name": "Shriram Finance Ltd",
+    "sector": "Financial Services",
+    "category": "Large Cap",
+    "isin": "INE721A01013",
+    "moat": "Specialized commercial vehicle and SME lending with unmatched rural customer relationships."
+  },
+  {
+    "symbol": "BAJAJ-AUTO",
+    "name": "Bajaj Auto Ltd",
+    "sector": "Automobile & 2-Wheelers",
+    "category": "Large Cap",
+    "isin": "INE917I01010",
+    "moat": "World's favorite Indian two-wheeler exporter with dominance in 3-wheelers and Chetak EV."
+  },
+  {
+    "symbol": "HEROMOTOCO",
+    "name": "Hero MotoCorp Ltd",
+    "sector": "Automobile & 2-Wheelers",
+    "category": "Large Cap",
+    "isin": "INE158A01026",
+    "moat": "World's largest volume two-wheeler maker with unmatched rural economy penetration."
+  },
+  {
+    "symbol": "BEL",
+    "name": "Bharat Electronics Ltd",
+    "sector": "Aerospace & Defence",
+    "category": "Large Cap",
+    "isin": "INE263A01024",
+    "moat": "Navratna PSU defense electronic systems monopoly supplying radar and avionics to armed forces."
+  },
+  {
+    "symbol": "HAL",
+    "name": "Hindustan Aeronautics Ltd",
+    "sector": "Aerospace & Defence",
+    "category": "Large Cap",
+    "isin": "INE866R01028",
+    "moat": "Indigenous defense aerospace monopoly manufacturing Tejas fighter jets and helicopters."
+  },
+  {
+    "symbol": "ZOMATO",
+    "name": "Zomato Ltd",
+    "sector": "Internet & Consumer Tech",
+    "category": "Large Cap",
+    "isin": "INE758T01015",
+    "moat": "Food delivery duopoly and Blinkit quick-commerce dominance transforming urban retail."
+  },
+  {
+    "symbol": "JIOFIN",
+    "name": "Jio Financial Services Ltd",
+    "sector": "Financial Technology & AMC",
+    "category": "Large Cap",
+    "isin": "INE758E01017",
+    "moat": "Reliance balance sheet backing with BlackRock JV targeting asset management & digital credit."
+  },
+  {
+    "symbol": "VEDL",
+    "name": "Vedanta Ltd",
+    "sector": "Metals & Natural Resources",
+    "category": "Large Cap",
+    "isin": "INE205A01025",
+    "moat": "Low-cost zinc, aluminum, and oil extraction assets generating robust dividend yields."
+  },
+  {
+    "symbol": "TRENT",
+    "name": "Trent Ltd",
+    "sector": "Apparel Retail & Lifestyle",
+    "category": "Large Cap",
+    "isin": "INE849A01020",
+    "moat": "Zudio value-fashion hyper-expansion and Westside brand driving industry-leading store metrics."
+  },
+  {
+    "symbol": "PNB",
+    "name": "Punjab National Bank",
+    "sector": "Public Banking",
+    "category": "Mid Cap",
+    "isin": "INE160A01022",
+    "moat": "Second-largest public sector bank with massive CASA franchise and improving asset quality."
+  },
+  {
+    "symbol": "BANKBARODA",
+    "name": "Bank of Baroda",
+    "sector": "Public Banking",
+    "category": "Large Cap",
+    "isin": "INE028A01039",
+    "moat": "Top-tier PSU bank with strong digital adoption via BoB World and international loan book."
+  },
+  {
+    "symbol": "CANBK",
+    "name": "Canara Bank",
+    "sector": "Public Banking",
+    "category": "Mid Cap",
+    "isin": "INE476A01014",
+    "moat": "Robust retail, agriculture, and MSME loan book with consistent return on assets."
+  },
+  {
+    "symbol": "INDUSINDBK",
+    "name": "IndusInd Bank Ltd",
+    "sector": "Financial Services",
+    "category": "Large Cap",
+    "isin": "INE095A01012",
+    "moat": "Specialized commercial vehicle financing and microfinance retail lending footprint."
+  },
+  {
+    "symbol": "IDFCFIRSTB",
+    "name": "IDFC First Bank Ltd",
+    "sector": "Financial Services",
+    "category": "Mid Cap",
+    "isin": "INE092T01019",
+    "moat": "High retail deposit growth engine built on consumer-first technology and credit cards."
+  },
+  {
+    "symbol": "MUTHOOTFIN",
+    "name": "Muthoot Finance Ltd",
+    "sector": "Financial Services (Gold NBFC)",
+    "category": "Large Cap",
+    "isin": "INE414G01012",
+    "moat": "Undisputed national market leader in collateralized gold loans with short-cycle liquidity."
+  },
+  {
+    "symbol": "CHOLAFIN",
+    "name": "Cholamandalam Investment and Finance",
+    "sector": "Financial Services (Vehicle NBFC)",
+    "category": "Large Cap",
+    "isin": "INE121A01024",
+    "moat": "Premier vehicle and home equity loan provider backed by the Murugappa Group."
+  },
+  {
+    "symbol": "POONAWALLA",
+    "name": "Poonawalla Fincorp Ltd",
+    "sector": "Financial Services (Fintech NBFC)",
+    "category": "Mid Cap",
+    "isin": "INE511C01022",
+    "moat": "Digital-first retail consumer and SME lender with high capital adequacy."
+  },
+  {
+    "symbol": "LTIM",
+    "name": "LTIMindtree Ltd",
+    "sector": "Information Technology",
+    "category": "Large Cap",
+    "isin": "INE214T01019",
+    "moat": "Scale tier-1 IT consulting powerhouse under Larsen & Toubro group backing."
+  },
+  {
+    "symbol": "PERSISTENT",
+    "name": "Persistent Systems Ltd",
+    "sector": "Information Technology",
+    "category": "Mid Cap",
+    "isin": "INE262H01013",
+    "moat": "Leader in digital engineering and enterprise software architecture services."
+  },
+  {
+    "symbol": "COFORGE",
+    "name": "Coforge Ltd",
+    "sector": "Information Technology",
+    "category": "Mid Cap",
+    "isin": "INE591G01017",
+    "moat": "Deep domain specialization across insurance, travel, and public sector cloud migrations."
+  },
+  {
+    "symbol": "MPHASIS",
+    "name": "Mphasis Ltd",
+    "sector": "Information Technology",
+    "category": "Mid Cap",
+    "isin": "INE356A01018",
+    "moat": "Architectural cloud modernization for tier-1 North American investment banks."
+  },
+  {
+    "symbol": "KPITTECH",
+    "name": "KPIT Technologies Ltd",
+    "sector": "Automotive Software",
+    "category": "Mid Cap",
+    "isin": "INE04QT01022",
+    "moat": "Pure-play software partner to global automotive OEMs for electric and autonomous mobility."
+  },
+  {
+    "symbol": "TATAELXSI",
+    "name": "Tata Elxsi Ltd",
+    "sector": "Design & Technology",
+    "category": "Mid Cap",
+    "isin": "INE670A01012",
+    "moat": "Industrial design and AI engineering across automotive, healthcare, and broadcast media."
+  },
+  {
+    "symbol": "TVSMOTOR",
+    "name": "TVS Motor Company Ltd",
+    "sector": "Automobile & 2-Wheelers",
+    "category": "Large Cap",
+    "isin": "INE494B01023",
+    "moat": "Engineering innovation leader with rapid growth in iQube electric scooters and premium bikes."
+  },
+  {
+    "symbol": "BOSCHLTD",
+    "name": "Bosch Ltd",
+    "sector": "Automotive Components",
+    "category": "Large Cap",
+    "isin": "INE323A01026",
+    "moat": "Undisputed technology supplier of electronic fuel injection, ABS, and sensor systems in India."
+  },
+  {
+    "symbol": "SAMVARDHANA",
+    "name": "Samvardhana Motherson International Ltd",
+    "sector": "Automotive Components",
+    "category": "Large Cap",
+    "isin": "INE775A01035",
+    "moat": "Global automotive exterior mirror and wiring harness conglomerate with worldwide OEM relationships."
+  },
+  {
+    "symbol": "BHARATFORG",
+    "name": "Bharat Forge Ltd",
+    "sector": "Forging & Defence",
+    "category": "Large Cap",
+    "isin": "INE465A01025",
+    "moat": "World-class automotive and aerospace forging titan with rising domestic artillery orders."
+  },
+  {
+    "symbol": "MRF",
+    "name": "MRF Ltd",
+    "sector": "Tyres & Rubber",
+    "category": "Large Cap",
+    "isin": "INE883A01011",
+    "moat": "India's premier tyre manufacturer with unmatched brand equity and commercial pricing power."
+  },
+  {
+    "symbol": "APOLLOTYRE",
+    "name": "Apollo Tyres Ltd",
+    "sector": "Tyres & Rubber",
+    "category": "Mid Cap",
+    "isin": "INE438A01022",
+    "moat": "European (Vredestein) and Indian commercial vehicle tyre leader focusing on capital discipline."
+  },
+  {
+    "symbol": "LUPIN",
+    "name": "Lupin Ltd",
+    "sector": "Healthcare & Pharma",
+    "category": "Large Cap",
+    "isin": "INE326A01037",
+    "moat": "Global generic formulations champion with complex respiratory inhalation breakthroughs in the US."
+  },
+  {
+    "symbol": "AUROPHARMA",
+    "name": "Aurobindo Pharma Ltd",
+    "sector": "Healthcare & Generics",
+    "category": "Large Cap",
+    "isin": "INE406A01037",
+    "moat": "High-volume vertically integrated generic active pharmaceutical ingredients and injectables."
+  },
+  {
+    "symbol": "ALKEM",
+    "name": "Alkem Laboratories Ltd",
+    "sector": "Healthcare & Domestic Formulations",
+    "category": "Large Cap",
+    "isin": "INE540L01014",
+    "moat": "Market leadership in acute therapy antibiotics and pain management across India."
+  },
+  {
+    "symbol": "TORNTPHARM",
+    "name": "Torrent Pharmaceuticals Ltd",
+    "sector": "Healthcare & Chronic Formulations",
+    "category": "Large Cap",
+    "isin": "INE685A01028",
+    "moat": "High-margin cardiovascular and central nervous system domestic chronic therapy franchise."
+  },
+  {
+    "symbol": "MANKIND",
+    "name": "Mankind Pharma Ltd",
+    "sector": "Healthcare & Consumer Health",
+    "category": "Large Cap",
+    "isin": "INE634S01028",
+    "moat": "Massive distribution power across tier-2/3 India and consumer health powerhouses (Prega News, Manforce)."
+  },
+  {
+    "symbol": "ZYDUSLIFE",
+    "name": "Zydus Lifesciences Ltd",
+    "sector": "Healthcare & Biosimilars",
+    "category": "Large Cap",
+    "isin": "INE010B01027",
+    "moat": "Strong US generic cash flows funding complex biosimilar and novel chemical entity R&D."
+  },
+  {
+    "symbol": "BIOCON",
+    "name": "Biocon Ltd",
+    "sector": "Healthcare & Biologics",
+    "category": "Mid Cap",
+    "isin": "INE376G01013",
+    "moat": "Pioneering global biosimilar platform with deep commercialization reach across oncology and insulins."
+  },
+  {
+    "symbol": "JINDALSTEL",
+    "name": "Jindal Steel & Power Ltd",
+    "sector": "Metals & Steel",
+    "category": "Large Cap",
+    "isin": "INE749A01030",
+    "moat": "Captive thermal coal blocks and high-margin rail track and structural steel capacity."
+  },
+  {
+    "symbol": "NMDC",
+    "name": "NMDC Ltd",
+    "sector": "Mining (Iron Ore)",
+    "category": "Large Cap",
+    "isin": "INE584A01023",
+    "moat": "India's largest iron ore miner benefiting from state-mandated domestic infrastructure buildouts."
+  },
+  {
+    "symbol": "SAIL",
+    "name": "Steel Authority of India Ltd",
+    "sector": "Metals & Steel",
+    "category": "Mid Cap",
+    "isin": "INE114A01011",
+    "moat": "Government-owned integrated steel maker with massive iron ore reserves and railway track monopoly."
+  },
+  {
+    "symbol": "NATIONALUM",
+    "name": "National Aluminium Company (NALCO)",
+    "sector": "Metals & Aluminium",
+    "category": "Mid Cap",
+    "isin": "INE139A01034",
+    "moat": "Lowest-cost bauxite mining and alumina refinery operations in the global metals industry."
+  },
+  {
+    "symbol": "GAIL",
+    "name": "GAIL (India) Ltd",
+    "sector": "Natural Gas Transmission",
+    "category": "Large Cap",
+    "isin": "INE129A01019",
+    "moat": "National gas grid monopoly transmitting over 60% of India's piped natural gas."
+  },
+  {
+    "symbol": "PETRONET",
+    "name": "Petronet LNG Ltd",
+    "sector": "Natural Gas Terminal",
+    "category": "Mid Cap",
+    "isin": "INE348B01021",
+    "moat": "Largest LNG regasification terminal operator in India with long-term take-or-pay volume contracts."
+  },
+  {
+    "symbol": "IOC",
+    "name": "Indian Oil Corporation Ltd",
+    "sector": "Oil Refining & Marketing",
+    "category": "Large Cap",
+    "isin": "INE242A01010",
+    "moat": "India's largest refiner and fuel marketing distributor controlling over 40% of national market share."
+  },
+  {
+    "symbol": "IGL",
+    "name": "Indraprastha Gas Ltd",
+    "sector": "City Gas Distribution",
+    "category": "Mid Cap",
+    "isin": "INE203G01027",
+    "moat": "Sole city gas distributor in Delhi NCR expanding into Haryana and western Uttar Pradesh."
+  },
+  {
+    "symbol": "MGL",
+    "name": "Mahanagar Gas Ltd",
+    "sector": "City Gas Distribution",
+    "category": "Mid Cap",
+    "isin": "INE002S01010",
+    "moat": "High-margin city gas infrastructure across Greater Mumbai, Thane, and Raigad."
+  },
+  {
+    "symbol": "TATAPOWER",
+    "name": "Tata Power Company Ltd",
+    "sector": "Power & Solar Utility",
+    "category": "Large Cap",
+    "isin": "INE245A01021",
+    "moat": "Comprehensive power utility integrating renewable generation, rooftop solar, and national EV charging."
+  },
+  {
+    "symbol": "ADANIPOWER",
+    "name": "Adani Power Ltd",
+    "sector": "Thermal Power Utility",
+    "category": "Large Cap",
+    "isin": "INE814H01011",
+    "moat": "India's largest private thermal power producer with long-term sovereign state PPA visibility."
+  },
+  {
+    "symbol": "ADANIGREEN",
+    "name": "Adani Green Energy Ltd",
+    "sector": "Renewable Energy Generation",
+    "category": "Large Cap",
+    "isin": "INE364U01010",
+    "moat": "Utility-scale solar and wind developer operating one of the world's largest renewable installations."
+  },
+  {
+    "symbol": "JSWENERGY",
+    "name": "JSW Energy Ltd",
+    "sector": "Power & Clean Energy",
+    "category": "Large Cap",
+    "isin": "INE121E01018",
+    "moat": "Aggressive capital transition from thermal to wind, hydro, and battery energy storage systems."
+  },
+  {
+    "symbol": "NHPC",
+    "name": "NHPC Ltd",
+    "sector": "Hydroelectric Power",
+    "category": "Mid Cap",
+    "isin": "INE848E01016",
+    "moat": "Premier government hydroelectric utility generating emission-free baseload power with high cash flow."
+  },
+  {
+    "symbol": "SUZLON",
+    "name": "Suzlon Energy Ltd",
+    "sector": "Wind Energy Turbines",
+    "category": "Mid Cap",
+    "isin": "INE040H01021",
+    "moat": "Turnaround pioneer with 33%+ domestic market share in wind turbine generator manufacturing."
+  },
+  {
+    "symbol": "MAZDOCK",
+    "name": "Mazagon Dock Shipbuilders Ltd",
+    "sector": "Defense Shipbuilding",
+    "category": "Large Cap",
+    "isin": "INE249Z01012",
+    "moat": "Premier defense shipyard constructing Scorpene submarines and stealth destroyers for the Indian Navy."
+  },
+  {
+    "symbol": "COCHINSHIP",
+    "name": "Cochin Shipyard Ltd",
+    "sector": "Defense Shipbuilding",
+    "category": "Large Cap",
+    "isin": "INE704P01017",
+    "moat": "Builder of India's first indigenous aircraft carrier (INS Vikrant) and coastal defense vessels."
+  },
+  {
+    "symbol": "IRFC",
+    "name": "Indian Railway Finance Corporation",
+    "sector": "Railway Financing",
+    "category": "Large Cap",
+    "isin": "INE053F01010",
+    "moat": "Zero NPA sovereign borrowing arm of Indian Railways financing rolling stock and railway infrastructure."
+  },
+  {
+    "symbol": "RVNL",
+    "name": "Rail Vikas Nigam Ltd",
+    "sector": "Railway Infrastructure",
+    "category": "Large Cap",
+    "isin": "INE415G01027",
+    "moat": "Specialized executing agency for national high-speed railway track doubling, electrification, and metro lines."
+  },
+  {
+    "symbol": "BDL",
+    "name": "Bharat Dynamics Ltd",
+    "sector": "Defense Missiles",
+    "category": "Mid Cap",
+    "isin": "INE171Z01018",
+    "moat": "Exclusive manufacturing agency for surface-to-air missiles and torpedoes for the armed forces."
+  },
+  {
+    "symbol": "VARUN",
+    "name": "Varun Beverages Ltd",
+    "sector": "FMCG & Beverages",
+    "category": "Large Cap",
+    "isin": "INE200M01013",
+    "moat": "Exclusive PepsiCo bottler in India and Africa with compound volume growth and rapid distribution."
+  },
+  {
+    "symbol": "COLPAL",
+    "name": "Colgate-Palmolive (India) Ltd",
+    "sector": "FMCG & Oral Care",
+    "category": "Large Cap",
+    "isin": "INE259A01022",
+    "moat": "Undisputed oral care monopoly commanding 50%+ domestic toothpaste market share."
+  },
+  {
+    "symbol": "DABUR",
+    "name": "Dabur India Ltd",
+    "sector": "FMCG & Ayurveda",
+    "category": "Large Cap",
+    "isin": "INE016A01026",
+    "moat": "Pioneer in natural Ayurvedic healthcare, hair care, and real fruit juices with vast rural reach."
+  },
+  {
+    "symbol": "MARICO",
+    "name": "Marico Ltd",
+    "sector": "FMCG & Personal Care",
+    "category": "Large Cap",
+    "isin": "INE196A01026",
+    "moat": "Dominant market share in coconut hair oils (Parachute) and value-added foods (Saffola)."
+  },
+  {
+    "symbol": "GODREJCP",
+    "name": "Godrej Consumer Products Ltd",
+    "sector": "FMCG & Home Care",
+    "category": "Large Cap",
+    "isin": "INE102D01028",
+    "moat": "Category leadership in household insecticides and personal wash across India and emerging markets."
+  },
+  {
+    "symbol": "JUBLFOOD",
+    "name": "Jubilant FoodWorks Ltd",
+    "sector": "QSR & Food Services",
+    "category": "Mid Cap",
+    "isin": "INE797F01012",
+    "moat": "Dominos Pizza master franchisee in India with deep supply chain optimization and digital orders."
+  },
+  {
+    "symbol": "PIDILITIND",
+    "name": "Pidilite Industries Ltd",
+    "sector": "Specialty Chemicals & Adhesives",
+    "category": "Large Cap",
+    "isin": "INE318A01026",
+    "moat": "Fevicol brand monopoly commanding near-total dominance of the Indian wood adhesive market."
+  },
+  {
+    "symbol": "SRF",
+    "name": "SRF Ltd",
+    "sector": "Specialty Chemicals & Fluorochemicals",
+    "category": "Large Cap",
+    "isin": "INE647A01010",
+    "moat": "High-entry-barrier fluorochemical manufacturer supplying refrigerants and agrochemical intermediates."
+  },
+  {
+    "symbol": "DEEPAKNTR",
+    "name": "Deepak Nitrite Ltd",
+    "sector": "Industrial Chemicals & Phenolics",
+    "category": "Mid Cap",
+    "isin": "INE288B01029",
+    "moat": "Lowest-cost domestic producer of sodium nitrite, phenolics, and basic chemicals."
+  },
+  {
+    "symbol": "DLF",
+    "name": "DLF Ltd",
+    "sector": "Real Estate Development",
+    "category": "Large Cap",
+    "isin": "INE271C01023",
+    "moat": "India's largest real estate developer commanding premium land reserves across Gurgaon and Delhi NCR."
+  },
+  {
+    "symbol": "GODREJPROP",
+    "name": "Godrej Properties Ltd",
+    "sector": "Real Estate Development",
+    "category": "Large Cap",
+    "isin": "INE484J01027",
+    "moat": "Top-selling residential real estate brand with aggressive land acquisition and joint development model."
+  },
+  {
+    "symbol": "LODHA",
+    "name": "Macrotech Developers Ltd (Lodha)",
+    "sector": "Real Estate Development",
+    "category": "Large Cap",
+    "isin": "INE670K01012",
+    "moat": "Dominant Mumbai metropolitan residential developer with expanding warehousing footprint."
+  }
+]

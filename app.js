@@ -197,23 +197,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const modalContentBody = document.getElementById("modal-content-body");
 
     function openReaderModal(post) {
-        if (!modal || !modalContentBody) return;
-        modalContentBody.innerHTML = `
-            <div style="margin-bottom:24px; border-bottom:1px solid var(--border-subtle); padding-bottom:18px;">
-                <span style="font-size:11.5px; font-weight:700; color:#3b82f6; font-family:var(--font-mono); text-transform:uppercase; letter-spacing:0.5px;">
-                    ${(post.categories || []).join(" • ")}
-                </span>
-                <h1 style="font-size:28px; line-height:1.3; margin:12px 0 14px 0; color:#ffffff; font-weight:800;">
-                    ${post.title}
-                </h1>
-                <div style="font-size:12px; color:#64748b; font-family:var(--font-mono);">
-                    Published by Dalal Street Alpha Desk • ${post.date || "Live"} IST
-                </div>
-            </div>
-            ${post.html || post.excerpt}
-        `;
-        modal.classList.remove("hidden");
-        document.body.style.overflow = "hidden";
+        if (post && post.slug) {
+            window.location.href = `/article?slug=${post.slug}`;
+        }
     }
 
     function closeModal() {
