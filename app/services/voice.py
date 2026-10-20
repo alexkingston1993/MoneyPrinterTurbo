@@ -350,6 +350,9 @@ Gender: Male
 Name: en-IE-EmilyNeural
 Gender: Female
 
+Name: en-IN-ArjunNeural
+Gender: Male
+
 Name: en-IN-NeerjaExpressiveNeural
 Gender: Female
 
@@ -1176,7 +1179,7 @@ def get_language_from_voice(voice_name: str) -> str:
 
 
 MULTILINGUAL_EDGE_VOICES = {
-    "en": {"voice": "en-US-JennyNeural", "locale": "en-US"},
+    "en": {"voice": "en-IN-ArjunNeural", "locale": "en-IN"},
     "ta": {"voice": "ta-IN-PallaviNeural", "locale": "ta-IN"},
     "hi": {"voice": "hi-IN-SwaraNeural", "locale": "hi-IN"},
     "te": {"voice": "te-IN-ShrutiNeural", "locale": "te-IN"},

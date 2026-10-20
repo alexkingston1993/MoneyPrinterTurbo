@@ -1115,7 +1115,7 @@ frame_rate = 30
 ## 18. Monetization & Growth Architecture (2026 Engine)
 
 ### 18.1 Active Voice Persona
-- **Default Production Voice**: `kokoro:af_heart` (American Female — #1 Rated Naturalness in Open TTS, studio prosody & natural breathing). Configured in `config.toml`, `generate_series.py`, and `app/services/kokoro_voice.py`.
+- **Default Production Voice**: `en-IN-ArjunNeural-Male` (Studio-grade Indian English neural voice via Microsoft Azure / Edge TTS). Configured in `config.toml`, `app/services/voice.py`, and autonomous pipelines.
 
 ### 18.2 Assigned User Tasks (Action Tracking)
 1. **Demat Brokerage & Partner Affiliate Engine**:
@@ -1127,6 +1127,17 @@ frame_rate = 30
 3. **Website Revamp & Conversion Hub**:
    - Institutional redesign of Dalal Street Alpha portal live at `https://dalal-street-alpha.vercel.app`.
    - Incorporating "The Trader's Arsenal" (`/tools`), 24-Month RevShare Growth Simulator, and Fee & Slippage Impact Calculator.
+4. **Regional YouTube Channels Activation (Hindi & Tamil)**:
+   - **Step 1**: Create YouTube Brand Channels under your primary Google Account for:
+     - *The Compounder Hindi* (Target: Massive Hindi belt equity retail audience)
+     - *The Compounder Tamil* (Target: High-literacy Tamil Nadu equity & mutual fund demographic)
+   - **Step 2**: Run a 1-minute OAuth authorization flow to generate tokens:
+     - `youtube_token_hi.pickle` (placed in `data/youtube_tokens/`)
+     - `youtube_token_ta.pickle` (placed in `data/youtube_tokens/`)
+   - **Step 3**: Store base64 encoded tokens as GitHub Actions Secrets:
+     - `YOUTUBE_TOKEN_HI`
+     - `YOUTUBE_TOKEN_TA`
+   - **Outcome**: Unlocks 15 uploads/day across 3 channels without hitting YouTube's 10/day single-channel quota, tripling organic reach with 100% asset reuse.
 
 ### 18.3 Three-Tier Brokerage & SaaS Monetization Strategy
 1. **Indian Stock Brokers (SEBI Regulated / Lifetime RevShare)**:
