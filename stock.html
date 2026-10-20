@@ -895,34 +895,10 @@
             </div>
 
             <!-- Compounding Growth Cards -->
-            <div class="scorecard-grid">
+            <div class="scorecard-grid" id="compounding-cards-grid">
                 <div class="scorecard-item">
                     <div class="scorecard-title">COMPOUNDED SALES GROWTH</div>
-                    <div class="scorecard-row"><span>10 Years:</span><strong>10%</strong></div>
-                    <div class="scorecard-row"><span>5 Years:</span><strong>12%</strong></div>
-                    <div class="scorecard-row"><span>3 Years:</span><strong>14%</strong></div>
-                    <div class="scorecard-row"><span>TTM:</span><strong style="color:var(--groww-mint);">9%</strong></div>
-                </div>
-                <div class="scorecard-item">
-                    <div class="scorecard-title">COMPOUNDED PROFIT GROWTH</div>
-                    <div class="scorecard-row"><span>10 Years:</span><strong>11%</strong></div>
-                    <div class="scorecard-row"><span>5 Years:</span><strong>13%</strong></div>
-                    <div class="scorecard-row"><span>3 Years:</span><strong>15%</strong></div>
-                    <div class="scorecard-row"><span>TTM:</span><strong style="color:var(--groww-mint);">11%</strong></div>
-                </div>
-                <div class="scorecard-item">
-                    <div class="scorecard-title">STOCK PRICE CAGR</div>
-                    <div class="scorecard-row"><span>10 Years:</span><strong>13%</strong></div>
-                    <div class="scorecard-row"><span>5 Years:</span><strong>19%</strong></div>
-                    <div class="scorecard-row"><span>3 Years:</span><strong>24%</strong></div>
-                    <div class="scorecard-row"><span>1 Year:</span><strong style="color:var(--groww-mint);">-1.0%</strong></div>
-                </div>
-                <div class="scorecard-item">
-                    <div class="scorecard-title">RETURN ON EQUITY (ROE)</div>
-                    <div class="scorecard-row"><span>10 Years:</span><strong>25%</strong></div>
-                    <div class="scorecard-row"><span>5 Years:</span><strong>27%</strong></div>
-                    <div class="scorecard-row"><span>3 Years:</span><strong>28%</strong></div>
-                    <div class="scorecard-row"><span>Last Year:</span><strong style="color:var(--groww-mint);">28.5%</strong></div>
+                    <div class="scorecard-row"><span>10 Years:</span><strong>Loading...</strong></div>
                 </div>
             </div>
         </section>
@@ -1141,18 +1117,25 @@
 
             renderFullStockPage(globalStockData);
             fetchLiveQuote(cleanSymbol);
+            fetchLiveScreenerData(cleanSymbol);
             setupLazyLoaders();
             updateShortlistButtonState();
+
+            // Set up real-time live ticker polling every 5 seconds for live market movements
+            setInterval(() => {
+                fetchLiveQuote(cleanSymbol);
+            }, 5000);
         }
 
         // C. Render Complete Screener.in Grade Stock Page
         function renderFullStockPage(stock) {
-            document.getElementById("page-title").textContent = `${stock.name} (${stock.symbol}) Fundamentals & Financials | Dalal Street Alpha`;
+            if (!stock) return;
+            document.getElementById("page-title").textContent = `${stock.name} (${stock.symbol}) Fundamentals & Real-Time Screener | Dalal Street Alpha`;
             document.getElementById("page-desc").textContent = `Complete 10-year financial statements, quarterly results, balance sheet, and live quotes for ${stock.name}.`;
             document.getElementById("stock-name").textContent = stock.name;
             document.getElementById("stock-symbol-badge").textContent = `NSE: ${stock.symbol}`;
-            document.getElementById("stock-sector-badge").textContent = stock.sector.toUpperCase();
-            document.getElementById("stock-isin-badge").textContent = `ISIN: ${stock.isin}`;
+            if (stock.sector) document.getElementById("stock-sector-badge").textContent = stock.sector.toUpperCase();
+            if (stock.isin) document.getElementById("stock-isin-badge").textContent = `ISIN: ${stock.isin}`;
 
             if (stock.websiteUrl) {
                 const webBtn = document.getElementById("stock-website-btn");
@@ -1167,19 +1150,43 @@
             }
 
             // Key Ratios
-            document.getElementById("scr-mcap").textContent = stock.mcap;
-            document.getElementById("scr-pe").textContent = stock.pe;
-            document.getElementById("scr-bv").textContent = stock.bv;
-            document.getElementById("scr-div").textContent = stock.divYield;
-            document.getElementById("scr-roce").textContent = stock.roce;
-            document.getElementById("scr-roe").textContent = stock.roe;
-            document.getElementById("scr-fv").textContent = stock.faceValue;
+            if (stock.mcap) document.getElementById("scr-mcap").textContent = stock.mcap;
+            if (stock.cmp) document.getElementById("scr-price").textContent = stock.cmp;
+            if (stock.highLow) document.getElementById("scr-high-low").textContent = stock.highLow;
+            if (stock.pe) document.getElementById("scr-pe").textContent = stock.pe;
+            if (stock.bv) document.getElementById("scr-bv").textContent = stock.bv;
+            if (stock.divYield) document.getElementById("scr-div").textContent = stock.divYield;
+            if (stock.roce) document.getElementById("scr-roce").textContent = stock.roce;
+            if (stock.roe) document.getElementById("scr-roe").textContent = stock.roe;
+            if (stock.faceValue) document.getElementById("scr-fv").textContent = stock.faceValue;
 
             // Pros & Cons
             const prosList = document.getElementById("pros-list");
             const consList = document.getElementById("cons-list");
-            prosList.innerHTML = (stock.pros || stock.strengths || []).map(p => `<li>${p}</li>`).join('');
-            consList.innerHTML = (stock.cons || stock.risks || []).map(c => `<li>${c}</li>`).join('');
+            if (prosList && stock.pros) {
+                prosList.innerHTML = stock.pros.map(p => `<li>${p}</li>`).join('');
+            }
+            if (consList && stock.cons) {
+                consList.innerHTML = stock.cons.map(c => `<li>${c}</li>`).join('');
+            }
+
+            // Compounding Growth Cards
+            if (stock.compoundingGrowth) {
+                const grid = document.getElementById("compounding-cards-grid");
+                if (grid) {
+                    grid.innerHTML = Object.entries(stock.compoundingGrowth).map(([title, metrics]) => `
+                        <div class="scorecard-item">
+                            <div class="scorecard-title">${title.toUpperCase()}</div>
+                            ${Object.entries(metrics).map(([k, v]) => `
+                                <div class="scorecard-row">
+                                    <span>${k}:</span>
+                                    <strong style="${v.startsWith('-') ? 'color:var(--market-red);' : 'color:var(--groww-mint);'}">${v}</strong>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `).join('');
+                }
+            }
 
             // Render Financial Tables
             renderFinancialTable("head-quarterly", "body-quarterly", stock.quarterlyResults);
@@ -1198,20 +1205,22 @@
             // Executive Intelligence
             if (stock.executiveSummary) {
                 const ex = stock.executiveSummary;
-                document.getElementById("dos-what").textContent = ex.whatIsIt;
-                document.getElementById("dos-revenue").textContent = ex.revenueEngines;
-                document.getElementById("dos-real-world").textContent = ex.realWorldValue;
-                document.getElementById("dos-moats").textContent = ex.economicMoats;
-                document.getElementById("dos-key-owners").textContent = `Major Stakeholders: ${ex.ownershipAndPromoterIntegrity.keyStakeholders}`;
-                document.getElementById("dos-governance").textContent = ex.ownershipAndPromoterIntegrity.governanceAudit;
-                document.getElementById("dos-investor").textContent = ex.investorThesis;
-                document.getElementById("dos-trader").textContent = ex.traderThesis;
+                if (ex.whatIsIt) document.getElementById("dos-what").textContent = ex.whatIsIt;
+                if (ex.revenueEngines) document.getElementById("dos-revenue").textContent = ex.revenueEngines;
+                if (ex.realWorldValue) document.getElementById("dos-real-world").textContent = ex.realWorldValue;
+                if (ex.economicMoats) document.getElementById("dos-moats").textContent = ex.economicMoats;
+                if (ex.ownershipAndPromoterIntegrity) {
+                    document.getElementById("dos-key-owners").textContent = `Major Stakeholders: ${ex.ownershipAndPromoterIntegrity.keyStakeholders || ''}`;
+                    document.getElementById("dos-governance").textContent = ex.ownershipAndPromoterIntegrity.governanceAudit || '';
+                }
+                if (ex.investorThesis) document.getElementById("dos-investor").textContent = ex.investorThesis;
+                if (ex.traderThesis) document.getElementById("dos-trader").textContent = ex.traderThesis;
             }
         }
 
         // Generic Table Renderer
         function renderFinancialTable(headId, bodyId, tableData) {
-            if (!tableData) return;
+            if (!tableData || !tableData.columns || !tableData.rows) return;
             const head = document.getElementById(headId);
             const body = document.getElementById(bodyId);
             if (!head || !body) return;
@@ -1225,23 +1234,40 @@
             `).join('');
         }
 
-        function renderPeers(peerKeys) {
+        function renderPeers(peerList) {
             const tbody = document.getElementById("peers-tbody");
-            if (!peerKeys) peerKeys = ["ITC", "TCS", "RELIANCE", "HDFCBANK", "INFY"];
+            if (!tbody) return;
+            if (!peerList || !peerList.length) peerList = ["ITC", "TCS", "RELIANCE", "HDFCBANK", "INFY"];
 
-            tbody.innerHTML = peerKeys.map(pk => {
-                const p = globalStocksDb[pk] || { name: `${pk} Ltd`, mcap: "₹1,20,000+ Cr", pe: "24.5x", divYield: "1.20%", roce: "18.5%", debtToEquity: "0.20" };
+            tbody.innerHTML = peerList.map((p, idx) => {
+                if (typeof p === 'object' && p.name) {
+                    return `
+                        <tr>
+                            <td style="text-align:left;">
+                                <strong style="color:var(--text-primary);">${p.name}</strong>
+                            </td>
+                            <td>₹${p.cmp}</td>
+                            <td>${p.pe}</td>
+                            <td>₹${p.mcap} Cr</td>
+                            <td style="color:var(--accent-amber);">${p.divYield}%</td>
+                            <td style="color:var(--groww-mint);">${p.roce}%</td>
+                            <td>-</td>
+                        </tr>
+                    `;
+                }
+                const pk = p;
+                const sp = globalStocksDb[pk] || { name: `${pk} Ltd`, mcap: "₹1,20,000+ Cr", pe: "24.5x", divYield: "1.20%", roce: "18.5%", debtToEquity: "0.20" };
                 return `
                     <tr onclick="window.location.href='/stock.html?symbol=${pk}'" style="cursor:pointer;">
                         <td style="text-align:left;">
-                            <strong style="color:var(--text-primary);">${p.name}</strong> <span style="font-family:'JetBrains Mono'; font-size:11px; color:var(--accent-blue);">(${pk})</span>
+                            <strong style="color:var(--text-primary);">${sp.name}</strong> <span style="font-family:'JetBrains Mono'; font-size:11px; color:var(--accent-blue);">(${pk})</span>
                         </td>
-                        <td>${p.price || '₹' + p.mcap.split(' ')[0]}</td>
-                        <td>${p.pe}</td>
-                        <td>${p.mcap}</td>
-                        <td style="color:var(--accent-amber);">${p.divYield}</td>
-                        <td style="color:var(--groww-mint);">${p.roce}</td>
-                        <td>${p.debtToEquity}</td>
+                        <td>${sp.cmp || sp.price || '₹' + (sp.mcap || '').split(' ')[0]}</td>
+                        <td>${sp.pe}</td>
+                        <td>${sp.mcap}</td>
+                        <td style="color:var(--accent-amber);">${sp.divYield}</td>
+                        <td style="color:var(--groww-mint);">${sp.roce}</td>
+                        <td>${sp.debtToEquity || '-'}</td>
                     </tr>
                 `;
             }).join('');
@@ -1253,29 +1279,29 @@
             const annRep = document.getElementById("docs-annual");
             const rat = document.getElementById("docs-ratings");
 
-            if (docs.announcements) {
+            if (docs.announcements && ann) {
                 ann.innerHTML = docs.announcements.map(a => `
                     <div class="doc-item">
                         <div>
                             <div><strong>${a.title}</strong></div>
-                            <div style="font-size:11px; color:var(--text-muted);">${a.date} • ${a.source}</div>
+                            <div style="font-size:11px; color:var(--text-muted);">${a.date || a.meta || ''}</div>
                         </div>
-                        <a href="#" onclick="showToast('Downloading regulatory disclosure PDF...'); return false;">PDF</a>
+                        <a href="${a.url || '#'}" ${a.url ? 'target="_blank" rel="noopener"' : 'onclick="showToast(\'Downloading regulatory disclosure PDF...\'); return false;"'}>PDF</a>
                     </div>
                 `).join('');
             }
-            if (docs.annualReports) {
+            if (docs.annualReports && annRep) {
                 annRep.innerHTML = docs.annualReports.map(r => `
                     <div class="doc-item">
                         <div>
                             <div><strong>${r.year}</strong></div>
                             <div style="font-size:11px; color:var(--text-muted);">${r.title} (${r.size})</div>
                         </div>
-                        <a href="#" onclick="showToast('Downloading ${r.year} Annual Report...'); return false;">Download</a>
+                        <a href="${r.url || '#'}" ${r.url ? 'target="_blank" rel="noopener"' : 'onclick="showToast(\'Downloading ' + r.year + ' Annual Report...\'); return false;"'}>Download</a>
                     </div>
                 `).join('');
             }
-            if (docs.creditRatings) {
+            if (docs.creditRatings && rat) {
                 rat.innerHTML = docs.creditRatings.map(c => `
                     <div class="doc-item">
                         <div>
@@ -1288,7 +1314,8 @@
             }
         }
 
-        // D. Live Market Quote
+        // D. Live Market Quote & Live Screener Sync
+        let lastKnownPrice = null;
         async function fetchLiveQuote(ticker) {
             try {
                 const res = await fetch(`/api/quote?symbol=${encodeURIComponent(ticker)}`);
@@ -1296,7 +1323,18 @@
                 const data = await res.json();
                 if (data.success && typeof data.price === 'number') {
                     const priceStr = "₹" + data.price.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                    document.getElementById("hero-ltp").textContent = priceStr;
+                    const ltpEl = document.getElementById("hero-ltp");
+                    
+                    // Flash animation if price changed
+                    if (lastKnownPrice !== null && lastKnownPrice !== data.price) {
+                        const isUp = data.price > lastKnownPrice;
+                        ltpEl.style.transition = 'color 0.3s ease';
+                        ltpEl.style.color = isUp ? 'var(--groww-mint)' : 'var(--market-red)';
+                        setTimeout(() => { ltpEl.style.color = 'var(--text-primary)'; }, 800);
+                    }
+                    lastKnownPrice = data.price;
+
+                    ltpEl.textContent = priceStr;
                     document.getElementById("scr-price").textContent = priceStr;
 
                     const chgSign = data.change >= 0 ? "+" : "";
@@ -1316,13 +1354,54 @@
                     document.getElementById("range-fill").style.width = `${pct}%`;
                     document.getElementById("range-pin").style.left = `${pct}%`;
 
+                    // Recalculate live P/E dynamically
+                    if (globalStockData && globalStockData.pe) {
+                        const basePe = parseFloat(String(globalStockData.pe).replace(/[^0-9.]/g, ''));
+                        const basePrice = parseFloat(String(globalStockData.cmp || globalStockData.price || data.price).replace(/[^0-9.]/g, ''));
+                        if (basePe > 0 && basePrice > 0) {
+                            const livePe = ((data.price / basePrice) * basePe).toFixed(1);
+                            document.getElementById("scr-pe").textContent = `${livePe}x`;
+                        }
+                    }
+
+                    // Recalculate live Market Cap dynamically
+                    if (globalStockData && globalStockData.mcap) {
+                        const mcapNum = parseFloat(String(globalStockData.mcap).replace(/[^0-9.]/g, ''));
+                        const basePrice = parseFloat(String(globalStockData.cmp || globalStockData.price || data.price).replace(/[^0-9.]/g, ''));
+                        if (mcapNum > 0 && basePrice > 0) {
+                            const liveMcap = Math.round((data.price / basePrice) * mcapNum);
+                            document.getElementById("scr-mcap").textContent = `₹ ${liveMcap.toLocaleString('en-IN')} Cr.`;
+                        }
+                    }
+
                     const dateStr = new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-                    document.getElementById("feed-status-text").textContent = `NSE Real-Time (${dateStr})`;
+                    document.getElementById("feed-status-text").textContent = `● LIVE NSE Stream (${dateStr})`;
                 }
             } catch (e) {
                 console.log("Live quote fallback active", e);
             }
         }
+
+        async function fetchLiveScreenerData(ticker) {
+            try {
+                const res = await fetch(`/api/screener?symbol=${encodeURIComponent(ticker)}`);
+                if (!res.ok) return;
+                const data = await res.json();
+                if (data.success) {
+                    console.log(`[+] Live Screener API updated for ${ticker}`);
+                    globalStockData = Object.assign({}, globalStockData, data);
+                    renderFullStockPage(globalStockData);
+                }
+            } catch (e) {
+                console.log("Live screener API fallback active", e);
+            }
+        }
+
+        window.triggerLiveRefresh = function() {
+            showToast("Syncing live NSE ticks and Screener fundamentals...");
+            fetchLiveQuote(cleanSymbol);
+            fetchLiveScreenerData(cleanSymbol);
+        };
 
         // E. Lazy Load TradingView Chart
         let tvWidgetLoaded = false;
