@@ -6,7 +6,7 @@
     <title id="page-title">NSE Stock Intelligence & Fundamental Screener | Dalal Street Alpha</title>
     <meta name="description" id="page-desc" content="Institutional equity research, Screener fundamentals, and TradingView technical setups for Indian equities. Strictly educational.">
     <meta name="robots" content="index, follow">
-    <link rel="canonical" id="canonical-url" href="https://dalal-street-alpha.vercel.app/stock.html">
+    <link rel="canonical" id="canonical-url" href="https://dalal-street-alpha.vercel.app/stock">
 
     <!-- Open Graph -->
     <meta property="og:title" id="og-title" content="NSE Stock Intelligence & Screener | Dalal Street Alpha">
@@ -19,7 +19,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="brand_assets/website_favicon_32x32.png">
     <link rel="apple-touch-icon" sizes="192x192" href="brand_assets/website_favicon_192x192.png">
 
-    <!-- Google Fonts: Plus Jakarta Sans (UI Body), Outfit (Display & Numbers), JetBrains Mono (Financial) -->
+    <!-- Google Fonts: Plus Jakarta Sans, Outfit, JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -27,17 +27,17 @@
     <!-- Lenis Smooth Scroll -->
     <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
 
-    <!-- Official TradingView Library for Reliable Interactive Charting -->
+    <!-- Official TradingView Library for Interactive Charting -->
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 
     <style>
         :root {
-            --bg-canvas: #090c15;
-            --bg-surface: #0e1320;
-            --bg-card: #121826;
-            --bg-card-hover: #161e30;
-            --border-subtle: rgba(255, 255, 255, 0.07);
-            --border-hover: rgba(0, 208, 156, 0.35);
+            --bg-canvas: #07090e;
+            --bg-surface: #0c101a;
+            --bg-card: #101624;
+            --bg-card-hover: #151d30;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(0, 208, 156, 0.4);
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --text-muted: #64748b;
@@ -45,8 +45,8 @@
             --groww-mint-soft: rgba(0, 208, 156, 0.10);
             --market-red: #f43f5e;
             --market-red-soft: rgba(244, 63, 94, 0.10);
-            --accent-blue: #3b82f6;
-            --accent-blue-soft: rgba(59, 130, 246, 0.10);
+            --accent-blue: #38bdf8;
+            --accent-blue-soft: rgba(56, 189, 248, 0.10);
             --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
             --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
@@ -76,13 +76,13 @@
             -moz-osx-font-smoothing: grayscale;
             overflow-x: hidden;
             background-image: 
-                radial-gradient(ellipse 70% 35% at 50% 0%, rgba(0, 208, 156, 0.05) 0%, transparent 70%);
+                radial-gradient(ellipse 80% 40% at 50% -10%, rgba(0, 208, 156, 0.06) 0%, transparent 70%);
             background-attachment: fixed;
         }
 
         /* Top Navigation Header */
         .stock-navbar {
-            background: rgba(14, 19, 32, 0.88);
+            background: rgba(10, 14, 24, 0.85);
             border-bottom: 1px solid var(--border-subtle);
             padding: 14px 20px;
             position: sticky;
@@ -92,7 +92,7 @@
             -webkit-backdrop-filter: blur(20px);
         }
         .navbar-inner {
-            max-width: 1320px;
+            max-width: 1280px;
             margin: 0 auto;
             display: flex;
             align-items: center;
@@ -106,10 +106,10 @@
             text-decoration: none;
         }
         .brand-logo-img {
-            width: 34px;
-            height: 34px;
+            width: 32px;
+            height: 32px;
             border-radius: 8px;
-            box-shadow: 0 0 12px rgba(0, 208, 156, 0.25);
+            box-shadow: 0 0 14px rgba(0, 208, 156, 0.25);
         }
         .brand-name {
             font-family: var(--font-display);
@@ -125,12 +125,12 @@
         /* Quick Search */
         .nav-search-box {
             position: relative;
-            width: 360px;
+            width: 340px;
             max-width: 100%;
         }
         .nav-search-input {
             width: 100%;
-            background: rgba(255, 255, 255, 0.035);
+            background: rgba(255, 255, 255, 0.04);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-sm);
             padding: 8px 14px 8px 36px;
@@ -177,8 +177,8 @@
 
         /* Stock Hero Header */
         .stock-hero {
-            max-width: 1320px;
-            margin: 28px auto 20px auto;
+            max-width: 1280px;
+            margin: 32px auto 20px auto;
             padding: 0 20px;
         }
         .stock-hero-top {
@@ -220,7 +220,7 @@
         .stock-pill-sector {
             background: var(--accent-blue-soft);
             color: #60a5fa;
-            border-color: rgba(59, 130, 246, 0.3);
+            border-color: rgba(56, 189, 248, 0.3);
         }
 
         /* Live Price Hero Block */
@@ -237,7 +237,7 @@
         }
         .hero-ltp {
             font-family: var(--font-mono);
-            font-size: 28px;
+            font-size: 30px;
             font-weight: 800;
             color: #ffffff;
             font-variant-numeric: tabular-nums;
@@ -292,7 +292,7 @@
         .range-bar-fill {
             position: absolute;
             height: 100%;
-            background: linear-gradient(90deg, #3b82f6, var(--groww-mint));
+            background: linear-gradient(90deg, #38bdf8, var(--groww-mint));
             border-radius: 3px;
         }
         .range-pin {
@@ -316,12 +316,12 @@
 
         /* ── Main Viewport ── */
         .stock-viewport {
-            max-width: 1320px;
+            max-width: 1280px;
             margin: 0 auto 60px auto;
             padding: 0 20px;
         }
 
-        /* 9-Ratio Key Matrix Grid (Balanced 3x3 Grid) */
+        /* 9-Ratio Key Matrix Grid */
         .ratios-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -448,7 +448,7 @@
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-sm);
             overflow: hidden;
-            height: 540px;
+            height: 560px;
             width: 100%;
         }
 
@@ -498,7 +498,7 @@
             margin-bottom: 8px;
         }
 
-        /* Tables (Screener.in Style) */
+        /* Screener Table */
         .table-responsive {
             width: 100%;
             overflow-x: auto;
@@ -561,7 +561,7 @@
             font-family: var(--font-mono);
         }
 
-        /* Companion Research Box */
+        /* Companion Video */
         .yt-video-wrapper {
             position: relative;
             padding-bottom: 56.25%;
@@ -584,7 +584,7 @@
         .site-footer {
             border-top: 1px solid var(--border-subtle);
             padding: 36px 20px;
-            background: #060913;
+            background: #05070c;
             font-size: 12.5px;
             color: var(--text-muted);
             text-align: center;
@@ -601,18 +601,18 @@
                 <span class="brand-name">DALAL STREET <span>ALPHA</span></span>
             </a>
 
-            <!-- Quick Search -->
+            <!-- Quick Search Input -->
             <div class="nav-search-box">
                 <span class="nav-search-icon">🔍</span>
-                <input type="text" id="ticker-search" class="nav-search-input" placeholder="Search 114+ NSE tickers (e.g. INFY, TCS)...">
+                <input type="text" id="ticker-search" class="nav-search-input" placeholder="Search another ticker (e.g. INFY, TCS)..." autocomplete="off">
             </div>
 
             <a href="/" class="back-home-btn">← Back to Dashboard</a>
         </div>
     </header>
 
-    <!-- 2. Stock Hero Header -->
-    <div class="stock-hero">
+    <!-- 2. Stock Header Hero -->
+    <section class="stock-hero">
         <div class="stock-hero-top">
             <div class="stock-title-group">
                 <h1 id="stock-name">Reliance Industries Ltd</h1>
@@ -620,16 +620,17 @@
                     <span class="stock-pill stock-pill-primary" id="stock-symbol-badge">NSE: RELIANCE</span>
                     <span class="stock-pill stock-pill-sector" id="stock-sector-badge">ENERGY & CONGLOMERATE</span>
                     <span class="stock-pill" id="stock-isin-badge">ISIN: INE002A01018</span>
-                    <span class="stock-pill" style="color:var(--groww-mint);">● F&O ACTIVE</span>
+                    <span class="stock-pill" style="color:var(--groww-mint); border-color:rgba(0,208,156,0.3);">● F&O ACTIVE</span>
                 </div>
             </div>
+
             <div class="stock-hero-price-block">
                 <div class="hero-ltp" id="hero-ltp">₹2,688.00</div>
-                <div class="hero-chg-badge up" id="hero-chg">+0.42% (+₹11.20)</div>
+                <div class="hero-chg-badge up" id="hero-chg">+0.42% (+11.20)</div>
             </div>
         </div>
 
-        <!-- 52W High-Low Progress Slider -->
+        <!-- 52W Range Progress Track -->
         <div class="range-track-card">
             <span class="range-label">52W Range:</span>
             <span class="range-values" id="range-low">₹2,220.30</span>
@@ -639,12 +640,12 @@
             </div>
             <span class="range-values" id="range-high">₹3,217.90</span>
         </div>
-    </div>
+    </section>
 
-    <!-- 3. Main Stock Content Viewport -->
+    <!-- 3. Key Fundamental Ratios Matrix & Multi-Tab Workspace -->
     <main class="stock-viewport">
-        <!-- 3.1 9-Ratio Key Matrix Grid (Balanced 3x3) -->
-        <section class="ratios-grid">
+        <!-- 9-Ratio Key Matrix Grid -->
+        <div class="ratios-grid">
             <div class="ratio-card">
                 <span class="ratio-label">Market Cap</span>
                 <span class="ratio-val" id="scr-mcap">₹19,84,200 Cr</span>
@@ -681,9 +682,9 @@
                 <span class="ratio-label">Debt to Equity</span>
                 <span class="ratio-val" id="scr-de">0.38</span>
             </div>
-        </section>
+        </div>
 
-        <!-- 3.2 Interactive Workspace Tab Bar -->
+        <!-- Interactive Stock Workspace Tab Bar -->
         <div class="stock-tab-bar">
             <button class="stock-tab-btn active" id="tab-btn-chart" onclick="switchStockTab('chart')">
                 <span>📈</span> Interactive Chart
@@ -705,36 +706,34 @@
             </button>
         </div>
 
-        <!-- Tab 1: Interactive TradingView Chart -->
+        <!-- Tab 1: Interactive TradingView Candlestick Chart -->
         <div id="stock-view-chart" class="stock-tab-panel">
             <div class="panel-heading">
-                <span style="color:var(--groww-mint);">●</span>
-                <span id="chart-title">TradingView Candlestick Order-Flow Setup</span>
+                <span style="color:var(--groww-mint);">●</span> TradingView Candlestick Order-Flow Setup
             </div>
             <div class="chart-box" id="tv-stock-chart-container">
-                <!-- TradingView Constructor Injected Here -->
+                <!-- TradingView embedded directly here -->
             </div>
         </div>
 
-        <!-- Tab 2: Pros & Cons -->
+        <!-- Tab 2: Strengths & Risks Analysis -->
         <div id="stock-view-pros-cons" class="stock-tab-panel" style="display:none;">
-            <div class="panel-heading"><span>⚖️</span> Institutional Strengths & Risk Factors</div>
             <div class="pros-cons-grid">
                 <div class="pros-card">
-                    <h3><span>✓</span> PROS (Institutional Moat)</h3>
-                    <ul class="bullet-list" id="scr-pros-list">
-                        <li>Company maintains a disciplined capital return and dividend payout history.</li>
-                        <li>High operating cash generation reinvested into high-margin digital & retail streams.</li>
-                        <li>Dominant market share across core businesses providing strong pricing power.</li>
-                        <li>Robust liquidity buffers and manageable balance sheet gearing.</li>
+                    <h3><span>🛡️</span> Key Fundamental Moats & Strengths</h3>
+                    <ul class="bullet-list">
+                        <li>Dominant domestic market share across core operating divisions (telecom, retail, energy).</li>
+                        <li>Robust operating cash flow generation with expanding EBITDA margins.</li>
+                        <li>Consistent track record of dividend distribution for over a decade.</li>
+                        <li>Strong institutional ownership with increasing foreign and domestic mutual fund backing.</li>
                     </ul>
                 </div>
                 <div class="cons-card">
-                    <h3><span>⚠</span> CONS (Risk Considerations)</h3>
-                    <ul class="bullet-list" id="scr-cons-list">
-                        <li>Trading at a premium multiple relative to 10-year historical valuation band.</li>
-                        <li>Global cyclical volatility in petrochemical and refining margins.</li>
-                        <li>Sustained high capex cycles require flawless long-term execution.</li>
+                    <h3><span>⚠️</span> Operational Headwinds & Key Risks</h3>
+                    <ul class="bullet-list">
+                        <li>Capital allocation discipline in ongoing multi-year renewable energy CAPEX.</li>
+                        <li>Global crude refining margin fluctuations impacting consolidated energy earnings.</li>
+                        <li>Regulatory scrutiny and tariff structure updates in telecom/retail verticals.</li>
                     </ul>
                 </div>
             </div>
@@ -742,58 +741,58 @@
 
         <!-- Tab 3: Sector Peer Comparison -->
         <div id="stock-view-peers" class="stock-tab-panel" style="display:none;">
-            <div class="panel-heading"><span>📊</span> Sector Peer Comparison</div>
+            <div class="panel-heading"><span>📊</span> Comparative Valuation vs Industry Peers</div>
             <div class="table-responsive">
                 <table class="screener-table">
                     <thead>
                         <tr>
-                            <th>Peer Company</th>
-                            <th>CMP (₹)</th>
+                            <th>Company</th>
+                            <th>Current Price</th>
                             <th>P/E</th>
                             <th>Market Cap</th>
-                            <th>Div Yield %</th>
+                            <th>Div Yield</th>
                             <th>ROCE %</th>
-                            <th>Net Profit Qtr</th>
+                            <th>Quarterly Profit</th>
                         </tr>
                     </thead>
                     <tbody id="scr-peers-tbody">
-                        <!-- Populated dynamically via JS -->
+                        <!-- Populated dynamically -->
                     </tbody>
                 </table>
             </div>
         </div>
 
-        <!-- Tab 4: 10-Year Compounding Scorecard -->
+        <!-- Tab 4: 10-Year Compounding Growth Scorecard -->
         <div id="stock-view-growth" class="stock-tab-panel" style="display:none;">
-            <div class="panel-heading"><span>📈</span> 10-Year Compounded Growth Scorecard</div>
+            <div class="panel-heading"><span>📈</span> Long-Term Compounded Growth Rates</div>
             <div class="scorecard-grid">
                 <div class="scorecard-item">
-                    <div class="scorecard-title">Compounded Sales Growth</div>
-                    <div class="scorecard-row"><span>10 Years:</span> <strong>14%</strong></div>
-                    <div class="scorecard-row"><span>5 Years:</span> <strong>17%</strong></div>
-                    <div class="scorecard-row"><span>3 Years:</span> <strong>21%</strong></div>
-                    <div class="scorecard-row"><span>TTM:</span> <strong style="color:var(--groww-mint);">16%</strong></div>
+                    <div class="scorecard-title">COMPOUND SALES GROWTH</div>
+                    <div class="scorecard-row"><span>10 Years:</span><strong>14%</strong></div>
+                    <div class="scorecard-row"><span>5 Years:</span><strong>18%</strong></div>
+                    <div class="scorecard-row"><span>3 Years:</span><strong>21%</strong></div>
+                    <div class="scorecard-row"><span>TTM:</span><strong style="color:var(--groww-mint);">12%</strong></div>
                 </div>
                 <div class="scorecard-item">
-                    <div class="scorecard-title">Compounded Profit Growth</div>
-                    <div class="scorecard-row"><span>10 Years:</span> <strong>12%</strong></div>
-                    <div class="scorecard-row"><span>5 Years:</span> <strong>15%</strong></div>
-                    <div class="scorecard-row"><span>3 Years:</span> <strong>18%</strong></div>
-                    <div class="scorecard-row"><span>TTM:</span> <strong style="color:var(--groww-mint);">14%</strong></div>
+                    <div class="scorecard-title">COMPOUND PROFIT GROWTH</div>
+                    <div class="scorecard-row"><span>10 Years:</span><strong>12%</strong></div>
+                    <div class="scorecard-row"><span>5 Years:</span><strong>16%</strong></div>
+                    <div class="scorecard-row"><span>3 Years:</span><strong>15%</strong></div>
+                    <div class="scorecard-row"><span>TTM:</span><strong style="color:var(--groww-mint);">9%</strong></div>
                 </div>
                 <div class="scorecard-item">
-                    <div class="scorecard-title">Stock Price CAGR</div>
-                    <div class="scorecard-row"><span>10 Years:</span> <strong>18%</strong></div>
-                    <div class="scorecard-row"><span>5 Years:</span> <strong>22%</strong></div>
-                    <div class="scorecard-row"><span>3 Years:</span> <strong>19%</strong></div>
-                    <div class="scorecard-row"><span>1 Year:</span> <strong style="color:var(--groww-mint);">24%</strong></div>
+                    <div class="scorecard-title">STOCK PRICE CAGR</div>
+                    <div class="scorecard-row"><span>10 Years:</span><strong>21%</strong></div>
+                    <div class="scorecard-row"><span>5 Years:</span><strong>17%</strong></div>
+                    <div class="scorecard-row"><span>3 Years:</span><strong>14%</strong></div>
+                    <div class="scorecard-row"><span>1 Year:</span><strong style="color:var(--groww-mint);">11%</strong></div>
                 </div>
                 <div class="scorecard-item">
-                    <div class="scorecard-title">Return on Equity (ROE)</div>
-                    <div class="scorecard-row"><span>10 Years:</span> <strong>13%</strong></div>
-                    <div class="scorecard-row"><span>5 Years:</span> <strong>14%</strong></div>
-                    <div class="scorecard-row"><span>3 Years:</span> <strong>15%</strong></div>
-                    <div class="scorecard-row"><span>Last Year:</span> <strong style="color:var(--groww-mint);">15%</strong></div>
+                    <div class="scorecard-title">RETURN ON EQUITY (ROE)</div>
+                    <div class="scorecard-row"><span>10 Years:</span><strong>11%</strong></div>
+                    <div class="scorecard-row"><span>5 Years:</span><strong>10%</strong></div>
+                    <div class="scorecard-row"><span>3 Years:</span><strong>10%</strong></div>
+                    <div class="scorecard-row"><span>Last Year:</span><strong style="color:var(--groww-mint);">9.8%</strong></div>
                 </div>
             </div>
         </div>
@@ -844,10 +843,10 @@
     <script>
         // Initialize Lenis Buttery Smooth Scrolling
         const lenis = new Lenis({
-            duration: 1.2,
+            duration: 1.1,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             smoothWheel: true,
-            wheelMultiplier: 1.05,
+            wheelMultiplier: 1.0,
             touchMultiplier: 1.5
         });
         function raf(time) {
@@ -922,7 +921,7 @@
             });
         }
 
-        // Initialize Official TradingView Widget (BSE ticker for universal access)
+        // Initialize TradingView Widget
         if (typeof TradingView !== 'undefined') {
             new TradingView.widget({
                 "autosize": true,

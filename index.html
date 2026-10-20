@@ -7,8 +7,8 @@
     <!-- Primary SEO Meta Tags -->
     <title>Dalal Street Alpha — Institutional Indian Equity Intelligence & Screener</title>
     <meta name="title" content="Dalal Street Alpha — Institutional Indian Equity Intelligence & Screener">
-    <meta name="description" content="Simple, buttery smooth Indian equity intelligence platform. Live index constituent weights, Groww-style top movers, Screener fundamentals, and institutional video dossiers.">
-    <meta name="keywords" content="Nifty 50 live constituents, Bank Nifty stock list, Indian stock market dashboard, Screener in alternative, stock fundamentals, FII DII data, Dalal Street Alpha">
+    <meta name="description" content="Simple, buttery smooth Indian equity intelligence platform. Live index constituent weights, top market movers, fundamental screener, and institutional research dossiers.">
+    <meta name="keywords" content="Nifty 50 live constituents, Bank Nifty stock weights, Indian stock market dashboard, Screener in alternative, stock fundamentals, FII DII data, Dalal Street Alpha">
     <meta name="author" content="Dalal Street Alpha Research Desk">
     <meta name="robots" content="index, follow">
 
@@ -16,7 +16,7 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://dalal-street-alpha.vercel.app">
     <meta property="og:title" content="Dalal Street Alpha — Institutional Indian Equity Intelligence">
-    <meta property="og:description" content="Live index constituent split-up, Groww-style top movers, Screener fundamentals, and institutional video dossiers.">
+    <meta property="og:description" content="Live index constituent weights, top market movers, fundamental screener, and institutional research dossiers.">
     <meta property="og:image" content="brand_assets/opengraph_social_card_1200x630.png">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="brand_assets/opengraph_social_card_1200x630.png">
@@ -26,7 +26,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="brand_assets/website_favicon_32x32.png">
     <link rel="apple-touch-icon" sizes="192x192" href="brand_assets/website_favicon_192x192.png">
 
-    <!-- Google Fonts: Plus Jakarta Sans (UI Body), Outfit (Display & Numbers), JetBrains Mono (Financial) -->
+    <!-- Google Fonts: Plus Jakarta Sans, Outfit, JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -34,17 +34,17 @@
     <!-- Lenis Smooth Scrolling Library -->
     <script src="https://unpkg.com/lenis@1.1.20/dist/lenis.min.js"></script>
 
-    <!-- Official TradingView Library for Reliable Interactive Charting -->
+    <!-- Official TradingView Library for Interactive Charting -->
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 
     <style>
         :root {
-            --bg-canvas: #090c15;
-            --bg-surface: #0e1320;
-            --bg-card: #121826;
-            --bg-card-hover: #161e30;
-            --border-subtle: rgba(255, 255, 255, 0.07);
-            --border-hover: rgba(0, 208, 156, 0.35);
+            --bg-canvas: #07090e;
+            --bg-surface: #0c101a;
+            --bg-card: #101624;
+            --bg-card-hover: #151d30;
+            --border-subtle: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(0, 208, 156, 0.4);
             --text-primary: #f8fafc;
             --text-secondary: #94a3b8;
             --text-muted: #64748b;
@@ -53,9 +53,9 @@
             --groww-mint-glow: rgba(0, 208, 156, 0.25);
             --market-red: #f43f5e;
             --market-red-soft: rgba(244, 63, 94, 0.10);
-            --accent-blue: #3b82f6;
-            --accent-blue-soft: rgba(59, 130, 246, 0.10);
-            --accent-gold: #f59e0b;
+            --accent-blue: #38bdf8;
+            --accent-blue-soft: rgba(56, 189, 248, 0.10);
+            --accent-gold: #fbbf24;
             --font-display: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
             --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
@@ -86,13 +86,13 @@
             -moz-osx-font-smoothing: grayscale;
             overflow-x: hidden;
             background-image: 
-                radial-gradient(ellipse 70% 35% at 50% 0%, rgba(0, 208, 156, 0.05) 0%, transparent 70%);
+                radial-gradient(ellipse 80% 40% at 50% -10%, rgba(0, 208, 156, 0.06) 0%, transparent 70%);
             background-attachment: fixed;
         }
 
-        /* ── 1. Top Live Indices Ribbon (Groww Style) ── */
+        /* ── 1. Top Indices Ribbon (Sleek Ticker Tape) ── */
         .indices-strip {
-            background: rgba(10, 14, 23, 0.88);
+            background: rgba(8, 11, 18, 0.90);
             border-bottom: 1px solid var(--border-subtle);
             padding: 8px 0;
             position: sticky;
@@ -102,7 +102,7 @@
             -webkit-backdrop-filter: blur(20px);
         }
         .indices-container {
-            max-width: 1320px;
+            max-width: 1280px;
             margin: 0 auto;
             padding: 0 20px;
             display: flex;
@@ -118,28 +118,28 @@
         .index-pill {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            background: rgba(18, 24, 38, 0.7);
+            gap: 10px;
+            background: rgba(16, 22, 36, 0.7);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-sm);
             padding: 7px 14px;
             cursor: pointer;
-            transition: all 0.22s var(--ease-apple);
+            transition: all 0.24s var(--ease-apple);
             white-space: nowrap;
             user-select: none;
         }
         .index-pill:hover {
             border-color: var(--groww-mint);
-            background: rgba(22, 32, 50, 0.95);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 14px rgba(0, 208, 156, 0.12);
+            background: rgba(21, 30, 48, 0.95);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(0, 208, 156, 0.15);
         }
         .index-title {
             font-family: var(--font-display);
             font-size: 12.5px;
             font-weight: 700;
             color: var(--text-secondary);
-            letter-spacing: 0.2px;
+            letter-spacing: 0.3px;
         }
         .index-val {
             font-family: var(--font-mono);
@@ -164,28 +164,20 @@
             color: var(--market-red);
             background: var(--market-red-soft);
         }
-        .index-split-tag {
-            font-size: 10px;
-            font-family: var(--font-mono);
-            font-weight: 600;
+        .index-split-icon {
+            font-size: 11px;
             color: var(--groww-mint);
-            background: var(--groww-mint-soft);
-            border: 1px solid rgba(0, 208, 156, 0.25);
-            padding: 2px 7px;
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            gap: 3px;
-            transition: all 0.2s ease;
+            opacity: 0.7;
+            transition: transform 0.2s ease, opacity 0.2s ease;
         }
-        .index-pill:hover .index-split-tag {
-            background: rgba(0, 208, 156, 0.22);
-            border-color: var(--groww-mint);
+        .index-pill:hover .index-split-icon {
+            opacity: 1;
+            transform: translate(2px, -2px);
         }
 
-        /* ── 2. Sleek Main Header Navigation ── */
+        /* ── 2. Sleek Minimal Navigation Bar ── */
         .main-navbar {
-            background: rgba(14, 19, 32, 0.85);
+            background: rgba(10, 14, 24, 0.75);
             border-bottom: 1px solid var(--border-subtle);
             padding: 14px 20px;
             position: relative;
@@ -194,7 +186,7 @@
             -webkit-backdrop-filter: blur(16px);
         }
         .navbar-inner {
-            max-width: 1320px;
+            max-width: 1280px;
             margin: 0 auto;
             display: flex;
             align-items: center;
@@ -208,10 +200,10 @@
             text-decoration: none;
         }
         .brand-logo-img {
-            width: 34px;
-            height: 34px;
+            width: 32px;
+            height: 32px;
             border-radius: 8px;
-            box-shadow: 0 0 12px rgba(0, 208, 156, 0.25);
+            box-shadow: 0 0 14px rgba(0, 208, 156, 0.25);
         }
         .brand-name {
             font-family: var(--font-display);
@@ -221,7 +213,7 @@
             letter-spacing: -0.3px;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         .brand-name span {
             color: var(--groww-mint);
@@ -231,87 +223,29 @@
             font-size: 9px;
             font-weight: 700;
             letter-spacing: 0.5px;
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.05);
             color: var(--text-secondary);
             padding: 2px 7px;
             border-radius: 4px;
             border: 1px solid var(--border-subtle);
         }
 
-        /* Search Input */
-        .search-container {
-            position: relative;
-            width: 380px;
-            max-width: 100%;
-        }
-        .search-input-box {
+        .header-nav-links {
             display: flex;
             align-items: center;
-            background: rgba(255, 255, 255, 0.035);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-sm);
-            padding: 8px 14px;
-            gap: 10px;
-            transition: all 0.2s var(--ease-apple);
-            cursor: text;
+            gap: 20px;
         }
-        .search-input-box:focus-within {
-            border-color: var(--groww-mint);
-            background: rgba(255, 255, 255, 0.06);
-            box-shadow: 0 0 0 3px rgba(0, 208, 156, 0.15);
-        }
-        .search-input-box input {
-            background: transparent;
-            border: none;
-            outline: none;
-            color: #ffffff;
-            font-size: 13px;
-            width: 100%;
-            font-family: var(--font-body);
-        }
-        .search-input-box input::placeholder {
-            color: var(--text-muted);
-        }
-        .search-shortcut {
-            font-family: var(--font-mono);
-            font-size: 10.5px;
-            color: var(--text-muted);
-            background: rgba(255, 255, 255, 0.06);
-            padding: 2px 6px;
-            border-radius: 4px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        /* Search Dropdown Results */
-        .search-dropdown {
-            position: absolute;
-            top: calc(100% + 6px);
-            left: 0;
-            right: 0;
-            background: #0f1628;
-            border: 1px solid var(--border-hover);
-            border-radius: 8px;
-            max-height: 320px;
-            overflow-y: auto;
-            z-index: 1000;
-            display: none;
-            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
-        }
-        .search-dropdown-item {
-            padding: 10px 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        .nav-link-item {
+            color: var(--text-secondary);
             text-decoration: none;
-            color: inherit;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            transition: background 0.15s ease;
+            font-size: 13px;
+            font-weight: 600;
+            transition: color 0.2s ease;
         }
-        .search-dropdown-item:hover {
-            background: rgba(0, 208, 156, 0.1);
+        .nav-link-item:hover {
+            color: #ffffff;
         }
 
-        /* Header Right Utility */
         .header-utility {
             display: flex;
             align-items: center;
@@ -320,7 +254,7 @@
         .live-status-pill {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
+            gap: 8px;
             font-family: var(--font-mono);
             font-size: 11.5px;
             font-weight: 600;
@@ -344,73 +278,147 @@
             50% { opacity: 0.35; transform: scale(0.85); }
         }
 
-        /* ── 3. Quick Focus / Platform Hero (Clean & Focused) ── */
+        /* ── 3. Focused Hero & Command Search Bar ── */
         .platform-hero {
-            max-width: 1320px;
-            margin: 32px auto 20px auto;
+            max-width: 1280px;
+            margin: 40px auto 24px auto;
             padding: 0 20px;
+            text-align: center;
+        }
+        .hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(28px, 4.2vw, 42px);
+            font-weight: 800;
+            color: #ffffff;
+            letter-spacing: -0.8px;
+            line-height: 1.15;
+            margin-bottom: 10px;
+        }
+        .hero-title span {
+            background: linear-gradient(135deg, #ffffff 30%, var(--groww-mint) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero-subtitle {
+            font-size: clamp(14px, 1.8vw, 16px);
+            color: var(--text-secondary);
+            max-width: 660px;
+            margin: 0 auto 24px auto;
+            line-height: 1.55;
+        }
+
+        /* Central Search Command Bar */
+        .hero-search-wrapper {
+            max-width: 640px;
+            margin: 0 auto;
+            position: relative;
+        }
+        .hero-search-box {
+            display: flex;
+            align-items: center;
+            background: rgba(16, 22, 36, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: var(--radius-md);
+            padding: 12px 18px;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+            transition: all 0.25s var(--ease-apple);
+        }
+        .hero-search-box:focus-within {
+            border-color: var(--groww-mint);
+            background: rgba(18, 26, 44, 0.98);
+            box-shadow: 0 12px 35px rgba(0, 208, 156, 0.18), 0 0 0 3px rgba(0, 208, 156, 0.15);
+            transform: translateY(-2px);
+        }
+        .hero-search-box input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #ffffff;
+            font-size: 14.5px;
+            width: 100%;
+            font-family: var(--font-body);
+        }
+        .hero-search-box input::placeholder {
+            color: var(--text-muted);
+        }
+        .search-shortcut {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.08);
+            padding: 3px 7px;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            white-space: nowrap;
+        }
+
+        /* Live Search Dropdown */
+        .search-dropdown {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            background: #0f1628;
+            border: 1px solid var(--border-hover);
+            border-radius: var(--radius-md);
+            max-height: 340px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, 0.75);
+            text-align: left;
+        }
+        .search-dropdown-item {
+            padding: 12px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 24px;
-            flex-wrap: wrap;
+            text-decoration: none;
+            color: inherit;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            transition: background 0.18s ease;
         }
-        .hero-left h1 {
-            font-family: var(--font-display);
-            font-size: clamp(22px, 3.2vw, 30px);
-            font-weight: 800;
-            color: #ffffff;
-            letter-spacing: -0.4px;
-            margin-bottom: 6px;
+        .search-dropdown-item:hover {
+            background: rgba(0, 208, 156, 0.12);
         }
-        .hero-left p {
-            font-size: 14px;
-            color: var(--text-secondary);
-            max-width: 650px;
-            line-height: 1.5;
-        }
-        .hero-chips-bar {
+
+        /* Live Market Pulse Bar */
+        .market-pulse-strip {
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
             flex-wrap: wrap;
-            margin-top: 14px;
+            gap: 16px;
+            margin: 22px auto 0 auto;
+            max-width: 900px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            color: var(--text-secondary);
         }
-        .hero-chip-btn {
+        .pulse-item {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-full);
-            padding: 5px 12px;
-            font-size: 12px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.2s var(--ease-apple);
         }
-        .hero-chip-btn:hover {
+        .pulse-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--groww-mint);
+        }
+        .pulse-val {
             color: #ffffff;
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.2);
-            transform: translateY(-1px);
+            font-weight: 700;
         }
-        .hero-chip-btn.highlight {
-            background: var(--groww-mint-soft);
+        .pulse-val.mint {
             color: var(--groww-mint);
-            border-color: rgba(0, 208, 156, 0.3);
-        }
-        .hero-chip-btn.highlight:hover {
-            background: rgba(0, 208, 156, 0.2);
-            border-color: var(--groww-mint);
         }
 
-        /* ── 4. Most Traded Benchmark Equities (Groww Benchmark Cards) ── */
+        /* ── 4. Benchmark Titan Cards (Fluid, Modern, Tactile) ── */
         .featured-stocks-container {
-            max-width: 1320px;
-            margin: 0 auto 28px auto;
+            max-width: 1280px;
+            margin: 32px auto 20px auto;
             padding: 0 20px;
         }
         .featured-stocks-grid {
@@ -418,12 +426,12 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 14px;
         }
-        @media (max-width: 900px) {
+        @media (max-width: 1024px) {
             .featured-stocks-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
-        @media (max-width: 520px) {
+        @media (max-width: 580px) {
             .featured-stocks-grid {
                 grid-template-columns: 1fr;
             }
@@ -432,20 +440,20 @@
             background: var(--bg-card);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-md);
-            padding: 16px;
+            padding: 16px 18px;
             text-decoration: none;
             color: inherit;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: all 0.22s var(--ease-apple);
             position: relative;
             overflow: hidden;
+            transition: all 0.25s var(--ease-apple);
         }
         .stock-quick-card:hover {
-            border-color: var(--groww-mint);
+            border-color: var(--border-hover);
             background: var(--bg-card-hover);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
             box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4), 0 0 16px -4px rgba(0, 208, 156, 0.15);
         }
         .stock-quick-header {
@@ -455,34 +463,40 @@
             margin-bottom: 12px;
         }
         .stock-quick-avatar {
-            width: 36px;
-            height: 36px;
+            width: 38px;
+            height: 38px;
             border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: var(--font-display);
-            font-weight: 800;
             font-size: 13px;
+            font-weight: 800;
             color: #ffffff;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            letter-spacing: 0.5px;
             flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
         .stock-avatar-reliance {
             background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+            border: 1px solid rgba(59, 130, 246, 0.4);
         }
         .stock-avatar-hdfc {
-            background: linear-gradient(135deg, #065f46, #00d09c);
+            background: linear-gradient(135deg, #064e3b, #10b981);
+            border: 1px solid rgba(16, 185, 129, 0.4);
         }
         .stock-avatar-tcs {
             background: linear-gradient(135deg, #4c1d95, #8b5cf6);
+            border: 1px solid rgba(139, 92, 246, 0.4);
         }
         .stock-avatar-infy {
             background: linear-gradient(135deg, #0e7490, #06b6d4);
+            border: 1px solid rgba(6, 182, 212, 0.4);
         }
         .stock-quick-title {
+            font-family: var(--font-display);
+            font-size: 14.5px;
             font-weight: 700;
-            font-size: 14px;
             color: #ffffff;
             white-space: nowrap;
             overflow: hidden;
@@ -494,14 +508,14 @@
             color: var(--text-muted);
         }
         .stock-quick-sparkline {
-            margin: 6px 0 12px 0;
-            display: flex;
-            align-items: center;
+            margin: 6px 0 10px 0;
+            height: 28px;
         }
         .stock-quick-bottom {
             display: flex;
-            align-items: flex-end;
+            align-items: baseline;
             justify-content: space-between;
+            margin-top: auto;
         }
         .stock-quick-price {
             font-family: var(--font-mono);
@@ -527,25 +541,26 @@
             background: var(--market-red-soft);
         }
 
-        /* ── 5. Main Full-Width Interactive Workspace ── */
+        /* ── 5. Main Clean Workspace (Unified & Buttery Smooth) ── */
         .workspace-viewport {
-            max-width: 1320px;
-            margin: 0 auto 60px auto;
+            max-width: 1280px;
+            margin: 16px auto 60px auto;
             padding: 0 20px;
         }
 
-        /* Segmented Animated Tab Bar */
+        /* Modern Segmented Tab Bar */
         .tab-segmented-bar {
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 6px;
             background: rgba(14, 19, 32, 0.7);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-md);
             padding: 5px;
             margin-bottom: 22px;
+            position: relative;
             overflow-x: auto;
             scrollbar-width: none;
+            max-width: 100%;
         }
         .tab-segmented-bar::-webkit-scrollbar {
             display: none;
@@ -554,8 +569,8 @@
             background: transparent;
             border: 1px solid transparent;
             border-radius: 9px;
-            padding: 9px 16px;
-            font-size: 13.5px;
+            padding: 9px 18px;
+            font-size: 13px;
             font-weight: 600;
             color: var(--text-secondary);
             cursor: pointer;
@@ -565,6 +580,8 @@
             display: flex;
             align-items: center;
             gap: 7px;
+            position: relative;
+            z-index: 2;
         }
         .seg-tab-btn:hover {
             color: #ffffff;
@@ -577,14 +594,13 @@
             box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25), 0 0 12px -2px rgba(0, 208, 156, 0.2);
         }
 
-        /* Tab Content Panel with Crossfade */
+        /* Tab Content Panel with Silky Transition */
         .tab-panel {
             background: var(--bg-card);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-md);
             padding: 24px;
             box-shadow: 0 12px 36px rgba(0, 0, 0, 0.3);
-            min-height: 480px;
         }
         .tab-panel.active-view {
             animation: butterySlideUp 0.28s var(--ease-apple) forwards;
@@ -604,15 +620,16 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
-            gap: 12px;
+            gap: 14px;
         }
         .panel-title {
             font-family: var(--font-display);
             font-size: 18px;
-            font-weight: 800;
+            font-weight: 700;
             color: #ffffff;
+            letter-spacing: -0.2px;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -623,46 +640,47 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            flex-wrap: wrap;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 4px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-subtle);
         }
         .filter-pill {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border-subtle);
-            border-radius: 16px;
-            padding: 5px 14px;
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
             font-size: 12px;
             font-weight: 600;
-            color: var(--text-secondary);
+            padding: 5px 12px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: all 0.18s ease;
+            transition: all 0.2s ease;
+            font-family: var(--font-body);
         }
         .filter-pill:hover {
             color: #ffffff;
-            border-color: rgba(255, 255, 255, 0.2);
         }
         .filter-pill.active {
-            background: var(--groww-mint-soft);
+            background: rgba(0, 208, 156, 0.15);
             color: var(--groww-mint);
-            border-color: rgba(0, 208, 156, 0.4);
-            box-shadow: 0 0 10px rgba(0, 208, 156, 0.15);
+            font-weight: 700;
         }
 
-        /* Data Tables (Groww Style) */
+        /* ── Elite Clean Tables ── */
         .groww-table-wrapper {
+            overflow-x: auto;
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-sm);
-            overflow: hidden;
-            overflow-x: auto;
         }
         .groww-table {
             width: 100%;
             border-collapse: collapse;
-            text-align: left;
             font-size: 13.5px;
+            text-align: left;
         }
         .groww-table th {
             background: rgba(8, 12, 22, 0.75);
-            padding: 12px 16px;
+            padding: 12px 18px;
             font-family: var(--font-mono);
             font-size: 11px;
             color: var(--text-muted);
@@ -672,18 +690,22 @@
             white-space: nowrap;
         }
         .groww-table td {
-            padding: 14px 16px;
+            padding: 14px 18px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             color: #cbd5e1;
             white-space: nowrap;
-            transition: background 0.15s ease;
+            transition: background 0.18s ease;
         }
         .groww-table tr {
             cursor: pointer;
-            transition: background 0.15s ease;
+            transition: background 0.18s ease;
         }
         .groww-table tr:hover td {
             background: rgba(255, 255, 255, 0.035);
+        }
+        .groww-table tr:hover .row-hover-arrow {
+            opacity: 1;
+            transform: translateX(4px);
         }
         .company-cell {
             display: flex;
@@ -694,97 +716,115 @@
             width: 32px;
             height: 32px;
             border-radius: 8px;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border-subtle);
+            background: rgba(255, 255, 255, 0.06);
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: var(--font-display);
+            font-size: 11px;
             font-weight: 700;
-            font-size: 11.5px;
-            color: var(--text-secondary);
+            color: #ffffff;
+            border: 1px solid var(--border-subtle);
             flex-shrink: 0;
         }
         .company-name {
-            font-weight: 600;
+            font-family: var(--font-display);
+            font-weight: 700;
             color: #ffffff;
-            display: block;
+            font-size: 13.5px;
         }
         .company-ticker {
             font-family: var(--font-mono);
             font-size: 11px;
             color: var(--text-muted);
+            display: block;
         }
         .price-cell {
             font-family: var(--font-mono);
             font-weight: 700;
             color: #ffffff;
             font-variant-numeric: tabular-nums;
-            font-size: 14px;
         }
-        .action-link {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            font-weight: 600;
+        .row-hover-arrow {
+            font-size: 13px;
             color: var(--groww-mint);
-            text-decoration: none;
-            padding: 4px 10px;
-            border-radius: 4px;
-            background: rgba(0, 208, 156, 0.08);
-            border: 1px solid rgba(0, 208, 156, 0.2);
+            opacity: 0.4;
             transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 3px;
-        }
-        .action-link:hover {
-            background: rgba(0, 208, 156, 0.22);
-            border-color: var(--groww-mint);
+            display: inline-block;
         }
 
-        /* Sector Ratio Bars */
+        /* Screener Cards */
+        .screens-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+        .screen-card {
+            background: rgba(10, 15, 26, 0.6);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-sm);
+            padding: 16px 18px;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.22s ease;
+        }
+        .screen-card:hover {
+            border-color: var(--groww-mint);
+            background: rgba(16, 24, 40, 0.9);
+            transform: translateY(-2px);
+        }
+        .screen-title {
+            font-family: var(--font-display);
+            font-size: 14.5px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+        .screen-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            line-height: 1.5;
+        }
+
+        /* Sectors Cards Grid */
         .sectors-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 14px;
         }
         .sector-card {
-            background: rgba(8, 12, 22, 0.5);
+            background: rgba(10, 15, 26, 0.6);
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-sm);
-            padding: 16px;
-            transition: all 0.2s ease;
-        }
-        .sector-card:hover {
-            border-color: var(--border-hover);
-            background: rgba(14, 21, 38, 0.8);
-            transform: translateY(-1px);
+            padding: 16px 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
         .sector-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 10px;
         }
         .sector-name {
-            font-weight: 700;
+            font-family: var(--font-display);
             font-size: 13.5px;
+            font-weight: 700;
             color: #ffffff;
         }
         .sector-pct {
             font-family: var(--font-mono);
+            font-size: 12px;
             font-weight: 700;
-            font-size: 12.5px;
-            font-variant-numeric: tabular-nums;
         }
         .ratio-bar-wrapper {
-            width: 100%;
             height: 6px;
+            width: 100%;
             background: rgba(255, 255, 255, 0.08);
             border-radius: 3px;
             overflow: hidden;
             display: flex;
-            margin-bottom: 8px;
         }
         .ratio-bar-green {
             background: var(--groww-mint);
@@ -799,104 +839,70 @@
             justify-content: space-between;
             font-family: var(--font-mono);
             font-size: 11px;
-            color: var(--text-muted);
         }
 
-        /* Screener Cards */
-        .screens-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 14px;
-            margin-bottom: 22px;
-        }
-        .screen-card {
-            background: rgba(8, 12, 22, 0.6);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-sm);
-            padding: 16px;
-            text-decoration: none;
-            color: inherit;
-            transition: all 0.2s var(--ease-apple);
-        }
-        .screen-card:hover {
-            border-color: var(--groww-mint);
-            background: rgba(14, 21, 38, 0.9);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
-        }
-        .screen-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #ffffff;
-            margin-bottom: 6px;
-        }
-        .screen-desc {
-            font-size: 12px;
-            color: var(--text-secondary);
-            line-height: 1.45;
-        }
-
-        /* Research Dossier Cards */
+        /* Research Reports Grid */
         .reports-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-            gap: 16px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 18px;
         }
         .report-card {
-            background: rgba(8, 12, 22, 0.6);
+            background: rgba(10, 15, 26, 0.6);
             border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-md);
+            border-radius: var(--radius-sm);
             padding: 20px;
             text-decoration: none;
             color: inherit;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
-            transition: all 0.22s var(--ease-apple);
+            transition: all 0.22s ease;
         }
         .report-card:hover {
             border-color: var(--groww-mint);
+            background: rgba(16, 24, 40, 0.95);
             transform: translateY(-2px);
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
         }
         .report-badge {
-            font-family: var(--font-mono);
-            font-size: 10.5px;
-            font-weight: 700;
-            color: var(--groww-mint);
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 6px;
+            font-family: var(--font-mono);
+            font-size: 10.5px;
+            color: var(--groww-mint);
+            background: var(--groww-mint-soft);
+            padding: 3px 8px;
+            border-radius: 4px;
+            margin-bottom: 12px;
         }
         .report-title {
             font-family: var(--font-display);
             font-size: 16px;
             font-weight: 700;
             color: #ffffff;
-            line-height: 1.4;
             margin-bottom: 8px;
+            line-height: 1.4;
         }
         .report-excerpt {
-            font-size: 12.5px;
+            font-size: 13px;
             color: var(--text-secondary);
-            line-height: 1.5;
+            line-height: 1.55;
             margin-bottom: 16px;
         }
         .report-footer {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            font-family: var(--font-mono);
-            font-size: 11px;
+            font-size: 11.5px;
             color: var(--text-muted);
             border-top: 1px solid rgba(255, 255, 255, 0.05);
             padding-top: 12px;
         }
         .report-link-btn {
             color: var(--groww-mint);
-            font-weight: 700;
+            font-weight: 600;
         }
 
         /* TradingView Studio Container */
@@ -905,11 +911,11 @@
             border: 1px solid var(--border-subtle);
             border-radius: var(--radius-sm);
             overflow: hidden;
-            height: 540px;
+            height: 560px;
             width: 100%;
         }
 
-        /* ── 6. Slide-Over Drawer for Index Constituents (Split ↗) ── */
+        /* ── 6. Slide-Over Drawer for Index Constituents ── */
         .drawer-backdrop {
             position: fixed;
             top: 0;
@@ -919,7 +925,7 @@
             width: 100vw;
             height: 100vh;
             height: 100dvh;
-            background: rgba(4, 7, 14, 0.75);
+            background: rgba(4, 7, 14, 0.80);
             backdrop-filter: blur(14px);
             -webkit-backdrop-filter: blur(14px);
             z-index: 9999;
@@ -952,34 +958,31 @@
             transform: translateX(0);
         }
         .drawer-header {
-            padding: 18px 24px;
-            background: #080d19;
+            padding: 20px 24px;
             border-bottom: 1px solid var(--border-subtle);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            background: rgba(14, 19, 32, 0.95);
         }
         .drawer-title-group h2 {
             font-family: var(--font-display);
-            font-size: 19px;
+            font-size: 20px;
             font-weight: 800;
             color: #ffffff;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            letter-spacing: -0.3px;
         }
         .drawer-title-group span {
-            font-family: var(--font-mono);
-            font-size: 11.5px;
-            color: var(--text-muted);
+            font-size: 12px;
+            color: var(--text-secondary);
         }
         .drawer-close-btn {
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-subtle);
             color: var(--text-secondary);
-            font-size: 15px;
-            width: 32px;
-            height: 32px;
+            font-size: 16px;
+            width: 34px;
+            height: 34px;
             border-radius: 8px;
             cursor: pointer;
             display: flex;
@@ -988,126 +991,123 @@
             transition: all 0.2s ease;
         }
         .drawer-close-btn:hover {
-            background: rgba(244, 63, 94, 0.15);
-            border-color: var(--market-red);
             color: #ffffff;
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--groww-mint);
         }
+
         .drawer-switcher {
             display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 12px 24px;
-            background: #0b101e;
+            padding: 10px 24px;
+            background: rgba(10, 14, 24, 0.7);
             border-bottom: 1px solid var(--border-subtle);
+            gap: 8px;
             overflow-x: auto;
             scrollbar-width: none;
         }
+        .drawer-switcher::-webkit-scrollbar {
+            display: none;
+        }
         .drawer-tab {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-sm);
-            padding: 6px 14px;
-            font-size: 12px;
-            font-weight: 600;
+            background: transparent;
+            border: 1px solid transparent;
+            padding: 6px 12px;
+            font-size: 11.5px;
+            font-weight: 700;
+            font-family: var(--font-display);
             color: var(--text-secondary);
+            border-radius: 6px;
             cursor: pointer;
             white-space: nowrap;
             transition: all 0.2s ease;
-            font-family: var(--font-body);
         }
         .drawer-tab:hover {
             color: #ffffff;
-            border-color: rgba(255, 255, 255, 0.2);
         }
         .drawer-tab.active {
             background: var(--groww-mint-soft);
             color: var(--groww-mint);
-            border-color: rgba(0, 208, 156, 0.4);
-            box-shadow: 0 0 10px rgba(0, 208, 156, 0.15);
+            border-color: rgba(0, 208, 156, 0.35);
         }
+
         .drawer-stats-strip {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            padding: 12px 24px;
-            background: rgba(14, 19, 32, 0.7);
+            padding: 14px 24px;
+            background: rgba(14, 20, 34, 0.6);
             border-bottom: 1px solid var(--border-subtle);
-        }
-        .drawer-stat-item {
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
+            gap: 10px;
         }
         .drawer-stat-item span {
+            display: block;
             font-family: var(--font-mono);
             font-size: 10px;
             color: var(--text-muted);
-            letter-spacing: 0.5px;
+            margin-bottom: 2px;
         }
         .drawer-stat-item strong {
             font-family: var(--font-mono);
-            font-size: 12.5px;
+            font-size: 13px;
             color: #ffffff;
+            font-weight: 700;
             font-variant-numeric: tabular-nums;
         }
+
         .drawer-search-bar {
             padding: 12px 24px;
-            background: #0d1222;
             border-bottom: 1px solid var(--border-subtle);
+            background: rgba(10, 14, 24, 0.5);
         }
         .drawer-search-bar input {
             width: 100%;
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-sm);
-            padding: 9px 14px;
+            border-radius: 6px;
+            padding: 8px 14px;
             color: #ffffff;
-            font-size: 13px;
+            font-size: 12.5px;
             outline: none;
             font-family: var(--font-body);
             transition: all 0.2s ease;
         }
         .drawer-search-bar input:focus {
             border-color: var(--groww-mint);
-            background: rgba(255, 255, 255, 0.07);
-            box-shadow: 0 0 0 3px rgba(0, 208, 156, 0.15);
+            background: rgba(255, 255, 255, 0.06);
         }
+
         .drawer-body {
             flex: 1;
             overflow-y: auto;
             padding: 0;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
-        }
-        .drawer-body::-webkit-scrollbar {
-            width: 6px;
-        }
-        .drawer-body::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 3px;
         }
 
         /* ── 7. Site Footer ── */
         .site-footer {
             border-top: 1px solid var(--border-subtle);
-            padding: 36px 20px 50px 20px;
-            background: #060913;
+            padding: 40px 20px;
+            background: #05070c;
             font-size: 12.5px;
             color: var(--text-muted);
         }
         .footer-inner {
-            max-width: 1320px;
+            max-width: 1280px;
             margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 14px;
+            text-align: center;
         }
         .footer-nav {
             display: flex;
-            gap: 18px;
-            margin-bottom: 14px;
+            gap: 20px;
             flex-wrap: wrap;
+            justify-content: center;
         }
         .footer-nav a {
             color: var(--text-secondary);
             text-decoration: none;
+            font-size: 13px;
             transition: color 0.2s ease;
         }
         .footer-nav a:hover {
@@ -1117,43 +1117,43 @@
 </head>
 <body>
 
-    <!-- 1. Top Live Indices Ribbon (Groww Style) -->
+    <!-- 1. Top Live Indices Ribbon -->
     <div class="indices-strip" aria-label="Live Indices">
         <div class="indices-container" id="indices-container">
             <div class="index-pill" onclick="openIndexDrawer('NIFTY_50')" title="Click to view NIFTY 50 stock weights & split">
                 <span class="index-title">NIFTY 50</span>
                 <span class="index-val">24,478.30</span>
                 <span class="index-chg up">+0.46%</span>
-                <span class="index-split-tag">Weights ↗</span>
+                <span class="index-split-icon">↗</span>
             </div>
             <div class="index-pill" onclick="openIndexDrawer('SENSEX')" title="Click to view SENSEX stock weights & split">
                 <span class="index-title">SENSEX</span>
                 <span class="index-val">80,519.34</span>
                 <span class="index-chg up">+0.48%</span>
-                <span class="index-split-tag">Weights ↗</span>
+                <span class="index-split-icon">↗</span>
             </div>
             <div class="index-pill" onclick="openIndexDrawer('BANK_NIFTY')" title="Click to view BANK NIFTY stock weights & split">
                 <span class="index-title">BANK NIFTY</span>
                 <span class="index-val">51,962.70</span>
                 <span class="index-chg down">-0.18%</span>
-                <span class="index-split-tag">Weights ↗</span>
+                <span class="index-split-icon">↗</span>
             </div>
             <div class="index-pill" onclick="openIndexDrawer('MIDCPNIFTY')" title="Click to view MIDCAP SELECT stock weights & split">
                 <span class="index-title">MIDCAP SELECT</span>
                 <span class="index-val">13,240.80</span>
                 <span class="index-chg up">+1.08%</span>
-                <span class="index-split-tag">Weights ↗</span>
+                <span class="index-split-icon">↗</span>
             </div>
             <div class="index-pill" onclick="openIndexDrawer('FINNIFTY')" title="Click to view FINNIFTY stock weights & split">
                 <span class="index-title">FINNIFTY</span>
                 <span class="index-val">23,890.60</span>
                 <span class="index-chg up">+0.19%</span>
-                <span class="index-split-tag">Weights ↗</span>
+                <span class="index-split-icon">↗</span>
             </div>
         </div>
     </div>
 
-    <!-- 2. Main Navigation Header -->
+    <!-- 2. Main Navigation Bar -->
     <header class="main-navbar">
         <div class="navbar-inner">
             <a href="/" class="brand-group">
@@ -1162,17 +1162,13 @@
                 <span class="brand-badge">INSTITUTIONAL DESK</span>
             </a>
 
-            <!-- Quick Stock & Dossier Search -->
-            <div class="search-container">
-                <div class="search-input-box">
-                    <span>🔍</span>
-                    <input type="text" id="global-search" placeholder="Search 114+ NSE tickers (e.g. RELIANCE, TCS)..." autocomplete="off">
-                    <span class="search-shortcut">⌘K</span>
-                </div>
-                <div id="search-dropdown-menu" class="search-dropdown"></div>
-            </div>
+            <nav class="header-nav-links">
+                <a href="#movers-section" class="nav-link-item" onclick="switchDashboardTab('movers')">Movers</a>
+                <a href="#screener-section" class="nav-link-item" onclick="switchDashboardTab('screener')">Screener</a>
+                <a href="#chart-section" class="nav-link-item" onclick="switchDashboardTab('chart')">Chart Studio</a>
+                <a href="#research-section" class="nav-link-item" onclick="switchDashboardTab('research')">Research</a>
+            </nav>
 
-            <!-- Header Right Live Status -->
             <div class="header-utility">
                 <div class="live-status-pill">
                     <span class="status-pulse-dot"></span>
@@ -1182,32 +1178,51 @@
         </div>
     </header>
 
-    <!-- 3. Platform Hero (Clear, Focused, Zero Clutter) -->
-    <div class="platform-hero">
-        <div class="hero-left">
-            <h1>Institutional Indian Equity Intelligence</h1>
-            <p>Real-time index constituent weights, TradingView order-flow setups, Screener fundamentals, and institutional video dossiers.</p>
-            <div class="hero-chips-bar">
-                <button class="hero-chip-btn highlight" onclick="openIndexDrawer('NIFTY_50');">
-                    <span>⚡</span> NIFTY 50 Split
-                </button>
-                <button class="hero-chip-btn" onclick="openIndexDrawer('SENSEX');">
-                    <span>⚡</span> SENSEX Split
-                </button>
-                <button class="hero-chip-btn" onclick="openIndexDrawer('BANK_NIFTY');">
-                    <span>🏦</span> BANK NIFTY
-                </button>
-                <button class="hero-chip-btn" onclick="switchDashboardTab('chart');">
-                    <span>📈</span> Live Chart Studio
-                </button>
-                <button class="hero-chip-btn" onclick="switchDashboardTab('breadth');">
-                    <span>🎯</span> Institutional Flow
-                </button>
+    <!-- 3. Focused Hero & Command Search Bar -->
+    <section class="platform-hero">
+        <h1 class="hero-title">Institutional <span>Indian Equity</span> Intelligence</h1>
+        <p class="hero-subtitle">Live index constituent weights, fundamental compounding metrics, and TradingView technical setups.</p>
+
+        <!-- Command Search Bar -->
+        <div class="hero-search-wrapper">
+            <div class="hero-search-box">
+                <span style="font-size:16px;">🔍</span>
+                <input type="text" id="global-search" placeholder="Search 114+ NSE tickers (e.g. RELIANCE, TCS, TRENT)..." autocomplete="off">
+                <span class="search-shortcut">⌘K</span>
+            </div>
+            <div id="search-dropdown-menu" class="search-dropdown"></div>
+        </div>
+
+        <!-- Live Market Pulse Ribbon -->
+        <div class="market-pulse-strip">
+            <div class="pulse-item">
+                <span class="pulse-dot"></span>
+                <span>NSE LIVE CASH</span>
+            </div>
+            <span>•</span>
+            <div class="pulse-item">
+                <span>Breadth:</span>
+                <span class="pulse-val mint">31 Adv</span> / <span class="pulse-val" style="color:var(--market-red);">19 Dec</span>
+            </div>
+            <span>•</span>
+            <div class="pulse-item">
+                <span>FII Net:</span>
+                <span class="pulse-val mint">+₹1,420 Cr</span>
+            </div>
+            <span>•</span>
+            <div class="pulse-item">
+                <span>DII Net:</span>
+                <span class="pulse-val mint">+₹2,150 Cr</span>
+            </div>
+            <span>•</span>
+            <div class="pulse-item">
+                <span>India VIX:</span>
+                <span class="pulse-val">13.40</span>
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- 4. Most Traded Benchmark Equities (Groww Benchmark Cards) -->
+    <!-- 4. Benchmark Titan Cards -->
     <section class="featured-stocks-container">
         <div class="featured-stocks-grid">
             <a href="/stock.html?symbol=RELIANCE" class="stock-quick-card">
@@ -1219,8 +1234,15 @@
                     </div>
                 </div>
                 <div class="stock-quick-sparkline">
-                    <svg width="100%" height="24" viewBox="0 0 120 24" preserveAspectRatio="none">
-                        <polyline fill="none" stroke="#00d09c" stroke-width="2" points="0,20 20,16 45,18 70,8 95,12 120,4" />
+                    <svg width="100%" height="28" viewBox="0 0 120 28" preserveAspectRatio="none">
+                        <defs>
+                            <linearGradient id="grad-rel" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#00d09c" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="#00d09c" stop-opacity="0.0"/>
+                            </linearGradient>
+                        </defs>
+                        <polygon fill="url(#grad-rel)" points="0,28 0,22 20,18 45,20 70,10 95,14 120,4 120,28" />
+                        <polyline fill="none" stroke="#00d09c" stroke-width="2" points="0,22 20,18 45,20 70,10 95,14 120,4" />
                     </svg>
                 </div>
                 <div class="stock-quick-bottom">
@@ -1228,6 +1250,7 @@
                     <span class="stock-quick-badge up">+0.42%</span>
                 </div>
             </a>
+
             <a href="/stock.html?symbol=HDFCBANK" class="stock-quick-card">
                 <div class="stock-quick-header">
                     <div class="stock-quick-avatar stock-avatar-hdfc">HD</div>
@@ -1237,8 +1260,15 @@
                     </div>
                 </div>
                 <div class="stock-quick-sparkline">
-                    <svg width="100%" height="24" viewBox="0 0 120 24" preserveAspectRatio="none">
-                        <polyline fill="none" stroke="#00d09c" stroke-width="2" points="0,22 25,18 50,14 75,16 95,8 120,4" />
+                    <svg width="100%" height="28" viewBox="0 0 120 28" preserveAspectRatio="none">
+                        <defs>
+                            <linearGradient id="grad-hdfc" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#00d09c" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="#00d09c" stop-opacity="0.0"/>
+                            </linearGradient>
+                        </defs>
+                        <polygon fill="url(#grad-hdfc)" points="0,28 0,24 25,20 50,16 75,18 95,10 120,4 120,28" />
+                        <polyline fill="none" stroke="#00d09c" stroke-width="2" points="0,24 25,20 50,16 75,18 95,10 120,4" />
                     </svg>
                 </div>
                 <div class="stock-quick-bottom">
@@ -1246,6 +1276,7 @@
                     <span class="stock-quick-badge up">+0.85%</span>
                 </div>
             </a>
+
             <a href="/stock.html?symbol=TCS" class="stock-quick-card">
                 <div class="stock-quick-header">
                     <div class="stock-quick-avatar stock-avatar-tcs">TC</div>
@@ -1255,8 +1286,15 @@
                     </div>
                 </div>
                 <div class="stock-quick-sparkline">
-                    <svg width="100%" height="24" viewBox="0 0 120 24" preserveAspectRatio="none">
-                        <polyline fill="none" stroke="#f43f5e" stroke-width="2" points="0,6 25,10 50,8 75,18 100,16 120,22" />
+                    <svg width="100%" height="28" viewBox="0 0 120 28" preserveAspectRatio="none">
+                        <defs>
+                            <linearGradient id="grad-tcs" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#f43f5e" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="#f43f5e" stop-opacity="0.0"/>
+                            </linearGradient>
+                        </defs>
+                        <polygon fill="url(#grad-tcs)" points="0,28 0,8 25,12 50,10 75,20 100,18 120,24 120,28" />
+                        <polyline fill="none" stroke="#f43f5e" stroke-width="2" points="0,8 25,12 50,10 75,20 100,18 120,24" />
                     </svg>
                 </div>
                 <div class="stock-quick-bottom">
@@ -1264,6 +1302,7 @@
                     <span class="stock-quick-badge down">-0.45%</span>
                 </div>
             </a>
+
             <a href="/stock.html?symbol=INFY" class="stock-quick-card">
                 <div class="stock-quick-header">
                     <div class="stock-quick-avatar stock-avatar-infy">IN</div>
@@ -1273,8 +1312,15 @@
                     </div>
                 </div>
                 <div class="stock-quick-sparkline">
-                    <svg width="100%" height="24" viewBox="0 0 120 24" preserveAspectRatio="none">
-                        <polyline fill="none" stroke="#00d09c" stroke-width="2" points="0,22 30,16 55,18 80,10 100,12 120,4" />
+                    <svg width="100%" height="28" viewBox="0 0 120 28" preserveAspectRatio="none">
+                        <defs>
+                            <linearGradient id="grad-infy" x1="0" y1="0" x2="0" y2="1">
+                                <stop offset="0%" stop-color="#00d09c" stop-opacity="0.3"/>
+                                <stop offset="100%" stop-color="#00d09c" stop-opacity="0.0"/>
+                            </linearGradient>
+                        </defs>
+                        <polygon fill="url(#grad-infy)" points="0,28 0,24 30,18 55,20 80,12 100,14 120,4 120,28" />
+                        <polyline fill="none" stroke="#00d09c" stroke-width="2" points="0,24 30,18 55,20 80,12 100,14 120,4" />
                     </svg>
                 </div>
                 <div class="stock-quick-bottom">
@@ -1285,12 +1331,12 @@
         </div>
     </section>
 
-    <!-- 5. Main Balanced Interactive Workspace -->
+    <!-- 5. Main Clean Workspace -->
     <main class="workspace-viewport">
         <!-- Segmented Tab Bar -->
         <div class="tab-segmented-bar">
             <button class="seg-tab-btn active" id="btn-tab-movers" onclick="switchDashboardTab('movers')">
-                <span>🔥</span> Top Movers Today
+                <span>🔥</span> Market Movers
             </button>
             <button class="seg-tab-btn" id="btn-tab-screener" onclick="switchDashboardTab('screener')">
                 <span>⚡</span> Stock Screener
@@ -1302,10 +1348,7 @@
                 <span>📊</span> Sectors & Heatmap
             </button>
             <button class="seg-tab-btn" id="btn-tab-research" onclick="switchDashboardTab('research')">
-                <span>📖</span> Research Dossiers & Videos
-            </button>
-            <button class="seg-tab-btn" id="btn-tab-breadth" onclick="switchDashboardTab('breadth')">
-                <span>🎯</span> Institutional Liquidity Flow
+                <span>📖</span> Research Dossiers
             </button>
         </div>
 
@@ -1328,7 +1371,7 @@
                             <th>Intraday Trend</th>
                             <th>Market Price</th>
                             <th>1D Change</th>
-                            <th>Analysis</th>
+                            <th style="width: 40px;"></th>
                         </tr>
                     </thead>
                     <tbody id="movers-tbody">
@@ -1375,7 +1418,7 @@
                             <th>ROCE %</th>
                             <th>ROE %</th>
                             <th>D/E Ratio</th>
-                            <th>Action</th>
+                            <th style="width: 40px;"></th>
                         </tr>
                     </thead>
                     <tbody id="screener-tbody">
@@ -1428,39 +1471,9 @@
                 <!-- Populated dynamically -->
             </div>
         </div>
-
-        <!-- Tab 6: Market Breadth & Flow -->
-        <div id="view-breadth" class="tab-panel" style="display: none;">
-            <div class="panel-header-row">
-                <h3 class="panel-title"><span>🎯</span> Market Breadth & Institutional Liquidity Flow</h3>
-                <span style="font-family: var(--font-mono); font-size: 11px; color: var(--groww-mint);">Net Cash Position</span>
-            </div>
-            <div class="screens-grid">
-                <div class="screen-card">
-                    <div style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono); margin-bottom:4px;">FII NET CASH FLOW</div>
-                    <div style="font-family:var(--font-mono); font-size:20px; font-weight:700; color:var(--groww-mint);">+₹1,420 Cr</div>
-                    <p class="screen-desc" style="margin-top:4px;">Foreign institutional investors turned net buyers in large-cap banking and IT.</p>
-                </div>
-                <div class="screen-card">
-                    <div style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono); margin-bottom:4px;">DII NET CASH FLOW</div>
-                    <div style="font-family:var(--font-mono); font-size:20px; font-weight:700; color:var(--groww-mint);">+₹2,150 Cr</div>
-                    <p class="screen-desc" style="margin-top:4px;">Domestic mutual funds and insurance capital providing steady liquidity support.</p>
-                </div>
-                <div class="screen-card">
-                    <div style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono); margin-bottom:4px;">NIFTY ADVANCE / DECLINE</div>
-                    <div style="font-family:var(--font-mono); font-size:20px; font-weight:700; color:#ffffff;">31 Adv / 19 Dec</div>
-                    <p class="screen-desc" style="margin-top:4px;">62% of Nifty constituents trading above previous session's close.</p>
-                </div>
-                <div class="screen-card">
-                    <div style="font-size:11px; color:var(--text-muted); font-family:var(--font-mono); margin-bottom:4px;">OVERALL SENTIMENT</div>
-                    <div style="font-family:var(--font-mono); font-size:20px; font-weight:700; color:var(--groww-mint);">BULLISH BIAS</div>
-                    <p class="screen-desc" style="margin-top:4px;">Momentum intact above 20-day exponential moving average.</p>
-                </div>
-            </div>
-        </div>
     </main>
 
-    <!-- 6. Slide-Over Drawer for Index Constituents (Split ↗) -->
+    <!-- 6. Slide-Over Drawer for Index Constituents -->
     <div id="drawer-backdrop" class="drawer-backdrop" onclick="closeIndexDrawerOnBackdrop(event)">
         <div class="drawer-panel" id="drawer-panel">
             <div class="drawer-header">
@@ -1514,7 +1527,7 @@
                             <th>Company & Symbol</th>
                             <th>Market Price</th>
                             <th>1D Change</th>
-                            <th>Action</th>
+                            <th style="width: 40px;"></th>
                         </tr>
                     </thead>
                     <tbody id="drawer-constituents-tbody">
@@ -1530,23 +1543,22 @@
         <div class="footer-inner">
             <div class="footer-nav">
                 <a href="/">Home</a>
-                <a href="/stocks">Stock Hub</a>
                 <a href="/disclaimer">SEBI Policy & Disclaimers</a>
                 <a href="/risk-disclosure">Risk Notice</a>
                 <a href="/privacy">Privacy Policy</a>
             </div>
-            <p>© 2026 Dalal Street Alpha Desk. Autonomous educational market intelligence and equity analytics.</p>
+            <p>© 2026 Dalal Street Alpha Desk. Strictly educational equity intelligence and observational analytics.</p>
         </div>
     </footer>
 
     <!-- 8. Application Logic & Data Binding -->
     <script>
-        // Initialize Lenis Buttery Smooth Scrolling
+        // Initialize Lenis Buttery Smooth Scrolling with Calibrated Inertia
         const lenis = new Lenis({
-            duration: 1.2,
+            duration: 1.1,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             smoothWheel: true,
-            wheelMultiplier: 1.05,
+            wheelMultiplier: 1.0,
             touchMultiplier: 1.5
         });
         function raf(time) {
@@ -1653,8 +1665,8 @@
                     <td>
                         <div style="display:flex; align-items:center; gap:8px;">
                             <span style="font-family:var(--font-mono); font-weight:700; color:var(--groww-mint);">${c.weight}</span>
-                            <div style="width:40px; height:4px; background:rgba(255,255,255,0.08); border-radius:2px; overflow:hidden;">
-                                <div style="width:${parseFloat(c.weight) * 3.5}%; height:100%; background:var(--groww-mint);"></div>
+                            <div style="width:36px; height:4px; background:rgba(255,255,255,0.08); border-radius:2px; overflow:hidden;">
+                                <div style="width:${parseFloat(c.weight) * 4}%; height:100%; background:var(--groww-mint);"></div>
                             </div>
                         </div>
                     </td>
@@ -1671,8 +1683,8 @@
                     <td>
                         <span class="index-chg ${c.positive ? 'up' : 'down'}">${c.change}</span>
                     </td>
-                    <td>
-                        <a href="/stock.html?symbol=${c.symbol}" class="action-link">Screener →</a>
+                    <td style="text-align:right;">
+                        <span class="row-hover-arrow">→</span>
                     </td>
                 </tr>
             `).join('');
@@ -1690,9 +1702,9 @@
             renderDrawerConstituents(filtered);
         }
 
-        // Switch Dashboard Tabs (Movers / Screener / Chart / Sectors / Research / Breadth)
+        // Switch Dashboard Tabs (Movers / Screener / Chart / Sectors / Research)
         function switchDashboardTab(tabName) {
-            const tabs = ['movers', 'screener', 'chart', 'sectors', 'research', 'breadth'];
+            const tabs = ['movers', 'screener', 'chart', 'sectors', 'research'];
             tabs.forEach(t => {
                 const btn = document.getElementById(`btn-tab-${t}`);
                 const view = document.getElementById(`view-${t}`);
@@ -1786,8 +1798,8 @@
                         <td>
                             <span class="index-chg ${isUp ? 'up' : 'down'}">${m.change}</span>
                         </td>
-                        <td>
-                            <a href="/stock.html?symbol=${m.symbol}" class="action-link">Screener →</a>
+                        <td style="text-align:right;">
+                            <span class="row-hover-arrow">→</span>
                         </td>
                     </tr>
                 `;
@@ -1854,7 +1866,7 @@
                     <td style="font-family:var(--font-mono); color:var(--groww-mint); font-weight:700;">${s.roce}</td>
                     <td style="font-family:var(--font-mono); color:var(--groww-mint); font-weight:700;">${s.roe}</td>
                     <td style="font-family:var(--font-mono); color:#ffffff;">${s.de}</td>
-                    <td><a href="/stock.html?symbol=${s.symbol}" class="action-link">Screener →</a></td>
+                    <td style="text-align:right;"><span class="row-hover-arrow">→</span></td>
                 </tr>
             `).join('');
         }
@@ -1940,7 +1952,7 @@
             ).slice(0, 6);
 
             if (matches.length === 0) {
-                searchDropdown.innerHTML = `<div style="padding:14px; text-align:center; color:var(--text-muted); font-size:12px;">No matching stocks found. Press Enter to view search.</div>`;
+                searchDropdown.innerHTML = `<div style="padding:14px; text-align:center; color:var(--text-muted); font-size:12px;">No matching stocks found. Press Enter to search.</div>`;
                 searchDropdown.style.display = 'block';
                 return;
             }
@@ -1951,7 +1963,7 @@
                         <strong style="color:#ffffff;">${s.name}</strong>
                         <div style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted);">${s.symbol} · ${s.sector || 'Equities'}</div>
                     </div>
-                    <span class="action-link">Screener →</span>
+                    <span class="row-hover-arrow">→</span>
                 </a>
             `).join('');
             searchDropdown.style.display = 'block';
@@ -1967,7 +1979,7 @@
         });
 
         document.addEventListener('click', (e) => {
-            if (!e.target.closest('.search-container')) {
+            if (!e.target.closest('.hero-search-wrapper')) {
                 searchDropdown.style.display = 'none';
             }
         });
