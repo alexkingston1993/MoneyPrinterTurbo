@@ -1121,7 +1121,7 @@
         <div class="platform-brief-text">
             <strong>Indian Equity Intelligence Desk</strong> — Live index constituent weights, Groww-style top movers, and Screener.in fundamentals.
         </div>
-        <button class="chart-terminal-btn" onclick="openChartModal('NSE:NIFTY', 'NIFTY 50 Candlestick Terminal')">
+        <button class="chart-terminal-btn" onclick="openChartModal('NSE:RELIANCE', 'Reliance Industries Ltd (RELIANCE) Candlestick Terminal')">
             <span>📈</span> Launch TradingView Chart ↗
         </button>
     </div>
@@ -1356,7 +1356,7 @@
                 <p style="font-size: 12.5px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 14px;">
                     Interactive multi-timeframe candlestick terminal with direct RSI, MACD, and volume profiles.
                 </p>
-                <button class="chart-terminal-btn" style="width: 100%; justify-content: center; padding: 10px;" onclick="openChartModal('NSE:NIFTY', 'NIFTY 50 Candlestick Terminal')">
+                <button class="chart-terminal-btn" style="width: 100%; justify-content: center; padding: 10px;" onclick="openChartModal('NSE:RELIANCE', 'Reliance Industries Ltd (RELIANCE) Candlestick Terminal')">
                     Open Full Terminal ↗
                 </button>
             </div>
@@ -1427,7 +1427,15 @@
                     <span style="color: var(--groww-mint);">●</span>
                     <span id="chart-modal-heading">TradingView Technical Candlestick Terminal</span>
                 </div>
-                <button class="drawer-close-btn" onclick="closeChartModal()" aria-label="Close Chart">✕</button>
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <div style="display:flex; gap:6px; margin-right:12px;">
+                        <button class="filter-pill active" onclick="switchModalChart('NSE:RELIANCE', 'Reliance Industries Ltd (RELIANCE)')" style="font-size:11px; padding:3px 10px;">RELIANCE</button>
+                        <button class="filter-pill" onclick="switchModalChart('NSE:HDFCBANK', 'HDFC Bank Ltd (HDFCBANK)')" style="font-size:11px; padding:3px 10px;">HDFCBANK</button>
+                        <button class="filter-pill" onclick="switchModalChart('NSE:TCS', 'Tata Consultancy Services (TCS)')" style="font-size:11px; padding:3px 10px;">TCS</button>
+                        <button class="filter-pill" onclick="switchModalChart('NSE:INFY', 'Infosys Ltd (INFY)')" style="font-size:11px; padding:3px 10px;">INFY</button>
+                    </div>
+                    <button class="drawer-close-btn" onclick="closeChartModal()" aria-label="Close Chart">✕</button>
+                </div>
             </div>
             <div class="chart-modal-body" id="tradingview-terminal-container">
                 <!-- TradingView Widget Instantiated Here -->
@@ -1749,13 +1757,34 @@
         }
 
         // TradingView Interactive Terminal Modal Controller
-        function openChartModal(symbol = 'NSE:NIFTY', title = 'TradingView Terminal') {
+        function openChartModal(symbol = 'NSE:RELIANCE', title = 'Reliance Industries Ltd (RELIANCE) Candlestick Terminal') {
             document.getElementById('chart-modal-heading').textContent = title;
             const container = document.getElementById('tradingview-terminal-container');
             container.innerHTML = '<div id="tv_chart_inner" style="height:100%;width:100%;"></div>';
             document.getElementById('chart-modal-backdrop').classList.add('active');
 
             // Initialize TradingView Widget using official Constructor
+            if (typeof TradingView !== 'undefined') {
+                new TradingView.widget({
+                    "autosize": true,
+                    "symbol": symbol,
+                    "interval": "D",
+                    "timezone": "Asia/Kolkata",
+                    "theme": "dark",
+                    "style": "1",
+                    "locale": "en",
+                    "toolbar_bg": "#080c16",
+                    "enable_publishing": false,
+                    "allow_symbol_change": true,
+                    "container_id": "tv_chart_inner"
+                });
+            }
+        }
+
+        function switchModalChart(symbol, title) {
+            document.getElementById('chart-modal-heading').textContent = title;
+            const container = document.getElementById('tradingview-terminal-container');
+            container.innerHTML = '<div id="tv_chart_inner" style="height:100%;width:100%;"></div>';
             if (typeof TradingView !== 'undefined') {
                 new TradingView.widget({
                     "autosize": true,
