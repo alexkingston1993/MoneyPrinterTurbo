@@ -910,5 +910,13 @@
     "category": "Large Cap",
     "isin": "INE670K01012",
     "moat": "Dominant Mumbai metropolitan residential developer with expanding warehousing footprint."
+  },
+  {
+    "symbol": "PCJEWELLER",
+    "name": "PC Jeweller Ltd",
+    "sector": "Consumer Durables & Jewellery",
+    "category": "Small Cap",
+    "isin": "INE785M01010",
+    "moat": "Established retail showroom presence across North India undergoing debt normalisation."
   }
 ]
