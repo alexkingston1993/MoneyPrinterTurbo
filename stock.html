@@ -937,6 +937,7 @@
             <div class="nav-center-group">
                 <a href="/" class="nav-link">Dashboard</a>
                 <a href="/screener.html" class="nav-link">Screener</a>
+                <a href="/articles.html" class="nav-link">Articles</a>
                 <a href="/fno.html" class="nav-link">F&O Radar</a>
                 <a href="/events.html" class="nav-link">Stock Events</a>
                 <a href="/unlisted.html" class="nav-link">Unlisted</a>
@@ -1678,11 +1679,15 @@
             // Pros & Cons
             const prosList = document.getElementById("pros-list");
             const consList = document.getElementById("cons-list");
-            if (prosList && stock.pros) {
-                prosList.innerHTML = stock.pros.map(p => `<li>${p}</li>`).join('');
+            
+            let displayPros = (stock.pros && stock.pros.length > 0) ? stock.pros : generateSyntheticPros(stock);
+            let displayCons = (stock.cons && stock.cons.length > 0) ? stock.cons : generateSyntheticCons(stock);
+
+            if (prosList) {
+                prosList.innerHTML = displayPros.map(p => `<li>${p}</li>`).join('');
             }
-            if (consList && stock.cons) {
-                consList.innerHTML = stock.cons.map(c => `<li>${c}</li>`).join('');
+            if (consList) {
+                consList.innerHTML = displayCons.map(c => `<li>${c}</li>`).join('');
             }
 
             // Compounding Growth Cards
@@ -2216,6 +2221,75 @@
             }
         }
 
+        function generateSyntheticPros(stock) {
+            const list = [];
+            if (!stock) return list;
+            const deNum = parseFloat(String(stock.debtToEquity || '0').replace(/[^0-9.]/g, ''));
+            const roceNum = parseFloat(String(stock.roce || '0').replace(/[^0-9.]/g, ''));
+            const roeNum = parseFloat(String(stock.roe || '0').replace(/[^0-9.]/g, ''));
+            const divNum = parseFloat(String(stock.divYield || '0').replace(/[^0-9.]/g, ''));
+            const peNum = parseFloat(String(stock.pe || '0').replace(/[^0-9.]/g, ''));
+
+            if (deNum <= 0.2) {
+                list.push("Company is virtually debt-free with strong balance sheet liquidity.");
+            } else if (deNum < 0.8) {
+                list.push(`Manageable debt-to-equity ratio (${deNum.toFixed(2)}) supported by stable operating cash flows.`);
+            }
+
+            if (roceNum >= 15) {
+                list.push(`Strong capital efficiency: Return on Capital Employed (ROCE) stands at a robust ${roceNum.toFixed(1)}%.`);
+            } else if (roceNum > 0) {
+                list.push(`Positive capital return track record with ROCE at ${roceNum.toFixed(1)}%.`);
+            }
+
+            if (roeNum >= 12) {
+                list.push(`Healthy Return on Equity (ROE: ${roeNum.toFixed(1)}%) reflecting disciplined shareholder capital deployment.`);
+            }
+
+            if (divNum >= 1.5) {
+                list.push(`Attractive dividend yield of ${divNum.toFixed(2)}% providing recurring investor cash yield.`);
+            }
+
+            if (peNum > 0 && peNum < 25) {
+                list.push(`Trading at a reasonable price-to-earnings valuation multiple of ${peNum.toFixed(1)}x.`);
+            }
+
+            if (list.length === 0) {
+                list.push(
+                    `Established brand presence in ${stock.sector || 'its target market'} with resilient customer demand.`,
+                    `Healthy operational track record with consistent institutional investor following.`,
+                    `Ongoing operational efficiency drives supporting future earnings visibility.`
+                );
+            }
+            return list;
+        }
+
+        function generateSyntheticCons(stock) {
+            const list = [];
+            if (!stock) return list;
+            const deNum = parseFloat(String(stock.debtToEquity || '0').replace(/[^0-9.]/g, ''));
+            const roceNum = parseFloat(String(stock.roce || '0').replace(/[^0-9.]/g, ''));
+            const peNum = parseFloat(String(stock.pe || '0').replace(/[^0-9.]/g, ''));
+            const divNum = parseFloat(String(stock.divYield || '0').replace(/[^0-9.]/g, ''));
+
+            if (peNum >= 40) {
+                list.push(`Stock is trading at an elevated earnings multiple of ${peNum.toFixed(1)}x, requiring sustained double-digit growth.`);
+            }
+            if (deNum > 1.0) {
+                list.push(`Elevated debt-to-equity ratio (${deNum.toFixed(2)}) warrants continuous tracking of interest coverage.`);
+            }
+            if (roceNum > 0 && roceNum < 12) {
+                list.push(`Subdued Return on Capital Employed (${roceNum.toFixed(1)}%) highlights need for margin expansion.`);
+            }
+            if (divNum === 0) {
+                list.push("Company does not currently pay out a regular dividend, reinvesting capital into business operations.");
+            }
+            list.push(`Earnings subject to input cost fluctuations and broader macroeconomic cyclicality in ${stock.sector || 'the sector'}.`);
+            list.push("Working capital cycle and competitive landscape require ongoing monitoring.");
+
+            return list.slice(0, 4);
+        }
+
         async function fetchLiveScreenerData(ticker) {
             try {
                 const res = await fetch(`/api/screener?symbol=${encodeURIComponent(ticker)}`);
@@ -2223,6 +2297,13 @@
                 const data = await res.json();
                 if (data.success) {
                     console.log(`[+] Live Screener API updated for ${ticker}`);
+                    // Don't overwrite rich existing fields if live screener returned empty arrays
+                    if (data.pros && data.pros.length === 0 && globalStockData?.pros?.length > 0) {
+                        delete data.pros;
+                    }
+                    if (data.cons && data.cons.length === 0 && globalStockData?.cons?.length > 0) {
+                        delete data.cons;
+                    }
                     globalStockData = Object.assign({}, globalStockData, data);
                     renderFullStockPage(globalStockData);
                 }

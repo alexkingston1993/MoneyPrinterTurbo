@@ -44,3 +44,4 @@ my audio/
 *.whl
 client_secret_*.json
 *.log
+scratch/

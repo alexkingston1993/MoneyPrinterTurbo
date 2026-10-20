@@ -371,12 +371,14 @@
             <div class="nav-links">
                 <a href="/" class="nav-link">Dashboard</a>
                 <a href="/screener.html" class="nav-link">Screener</a>
+                <a href="/articles.html" class="nav-link">Articles</a>
                 <a href="/fno.html" class="nav-link">F&O Radar</a>
                 <a href="/events.html" class="nav-link">Stock Events</a>
-                <a href="/unlisted.html" class="nav-link">Unlisted Shares</a>
+                <a href="/schemes.html" class="nav-link">Govt Schemes</a>
+                <a href="/unlisted.html" class="nav-link">Unlisted</a>
                 <a href="/portfolio.html" class="nav-link">Portfolio</a>
                 <a href="/insurance.html" class="nav-link active">Insurance Desk</a>
-                <a href="/crypto.html" class="nav-link">Crypto & Tax</a>
+                <a href="/crypto.html" class="nav-link">Crypto</a>
                 <a href="/calculators.html" class="nav-link">Calculators</a>
             </div>
             <div style="display:flex; align-items:center; gap:10px;">
@@ -393,8 +395,8 @@
         <div class="ins-hero">
             <div class="ins-hero-left">
                 <div class="spam-free-pill">🛡️ 100% SPAM-FREE GUARANTEE • ZERO SALES CALLS</div>
-                <h1>Unbiased Financial Protection Desk</h1>
-                <p>We believe financial protection should never begin with relentless spam calls. Compare authentic IRDAI claim settlement track records, audit hidden policy traps, and calculate your exact coverage needs without ever entering your phone number.</p>
+                <h1>Unbiased Financial Protection & Insurance Desk</h1>
+                <p>We believe financial protection should never begin with relentless spam calls. Compare authentic IRDAI claim settlement track records, audit hidden policy traps across Term, Health, Money-Back Endowment, and Accidental policies without ever entering your phone number.</p>
             </div>
             <div style="background:var(--bg-card); border:1px solid var(--border-subtle); padding:20px; border-radius:12px; text-align:center; min-width:220px;">
                 <div style="font-size:11.5px; font-weight:700; color:var(--text-muted); text-transform:uppercase;">IRDAI Claim Solvency</div>
@@ -403,10 +405,12 @@
             </div>
         </div>
 
-        <!-- Mode Switcher -->
+        <!-- 4-Pillar Mode Switcher -->
         <div class="ins-tab-row">
             <button class="ins-tab-btn active" id="tab-term" onclick="switchInsTab('term')">🛡️ Term Life Insurance</button>
             <button class="ins-tab-btn" id="tab-health" onclick="switchInsTab('health')">🏥 Comprehensive Health Cover</button>
+            <button class="ins-tab-btn" id="tab-moneyback" onclick="switchInsTab('moneyback')">💰 Money-Back & Endowment</button>
+            <button class="ins-tab-btn" id="tab-accidental" onclick="switchInsTab('accidental')">🚑 Personal Accidental & Disability</button>
         </div>
 
         <div class="ins-grid">
@@ -525,6 +529,35 @@
             { title: "Unlimited Restoration Benefit", badge: "ESSENTIAL FEATURE", color: "var(--groww-mint)", desc: "Ensure your policy recharges 100% of the sum insured for unrelated illnesses if the initial cover is exhausted in the policy year." }
         ];
 
+        const MONEYBACK_LEADERBOARD = [
+            { name: "HDFC Life Sanchay Plus", csr: "5.65% IRR", asr: "Guaranteed Payout", solvency: "1.92x", rating: "🟡 ENDOWMENT / LOW IRR" },
+            { name: "ICICI Pru Guaranteed Income", csr: "5.40% IRR", asr: "Tax-Free 10(10D)", solvency: "2.05x", rating: "🟡 LOCK-IN HEAVY" },
+            { name: "LIC Jeevan Labh (Table 936)", csr: "5.15% IRR", asr: "Bonus Dependent", solvency: "1.75x", rating: "🟡 INFLATION DRAG" },
+            { name: "Max Life Smart Wealth Plan", csr: "5.30% IRR", asr: "Guaranteed Additions", solvency: "2.14x", rating: "🟡 CAPITAL LOCK" },
+            { name: "Tata AIA Fortune Guarantee", csr: "5.45% IRR", asr: "Regular Cash Flow", solvency: "1.88x", rating: "🟡 LOW REAL RETURN" }
+        ];
+
+        const ACCIDENTAL_LEADERBOARD = [
+            { name: "HDFC ERGO My:Health Medisure PA", csr: "98.8%", asr: "150% PTD Multiplier", solvency: "1.95x", rating: "🟢 TOP COMPREHENSIVE PA" },
+            { name: "Care Health Assured Personal Accident", csr: "95.4%", asr: "Worldwide 24x7 Cover", solvency: "1.82x", rating: "🟢 HIGH RESTORATION" },
+            { name: "Tata AIG Accident Guard", csr: "96.5%", asr: "Accidental Medical Reimburse", solvency: "1.88x", rating: "🟢 COMPREHENSIVE PTD/TTD" },
+            { name: "Star Health Accident Care", csr: "92.1%", asr: "Child Education Grant", solvency: "1.74x", rating: "🟡 BASIC PA COVER" }
+        ];
+
+        const MONEYBACK_TRAPS = [
+            { title: "The 5% IRR Inflation Erosion", badge: "MATHEMATICAL REALITY", color: "var(--market-red)", desc: "Endowment and money-back plans yield only 4.5% to 5.5% annualized IRR. With headline inflation at 6%, your real purchasing power decays every year." },
+            { title: "The Unbundling Power Rule", badge: "WEALTH OPTIMIZATION", color: "var(--groww-mint)", desc: "Separating insurance from investment (buying Pure Term for ₹12,000/yr and investing the remaining ₹88,000 in Nifty 50 Index funds) generates 2.8x higher wealth over 20 years." },
+            { title: "Hefty Surrender Penalties", badge: "CAPITAL TRAP", color: "var(--market-red)", desc: "If you stop paying premiums in the first 2-3 years, traditional insurance companies retain 70% to 100% of your paid premiums as surrender charges." },
+            { title: "Budget 2023 ₹5 Lakh Premium Tax Cap", badge: "TAX OVERHANG", color: "var(--accent-amber)", desc: "Under Section 10(10D), maturity proceeds of non-ULIP policies with aggregate annual premiums exceeding ₹5 Lakhs are now fully taxable at your income slab." }
+        ];
+
+        const ACCIDENTAL_TRAPS = [
+            { title: "Permanent Partial vs Total Disability", badge: "FINE PRINT CRUCIAL", color: "var(--market-red)", desc: "Standard policies only pay for death or loss of both limbs (PTD). Insist on comprehensive Permanent Partial Disability (PPD) covering single eye, ear, or limb loss." },
+            { title: "Temporary Total Disability (TTD) Income", badge: "SALARY REPLACEMENT", color: "var(--groww-mint)", desc: "Ensure your policy includes a weekly income payout (up to ₹50,000/week for 100 weeks) if bedridden post-accident and unable to work." },
+            { title: "Adventure Sports & Intoxication Exclusion", badge: "STRICT EXCLUSION", color: "var(--accent-amber)", desc: "Injuries sustained while participating in extreme adventure sports, motor racing, or driving under the influence of alcohol void all accident claims." },
+            { title: "Loan Liability Shielding", badge: "RECOMMENDED BUFFER", color: "var(--accent-blue)", desc: "Ensure personal accident cover is at least 100x your monthly income + 100% of outstanding home and vehicle loans." }
+        ];
+
         let activeTab = 'term';
 
         function switchInsTab(tab) {
@@ -534,19 +567,35 @@
             if (btn) btn.classList.add("active");
 
             const tbody = document.getElementById("csr-table-body");
-            const data = tab === 'term' ? TERM_LEADERBOARD : HEALTH_LEADERBOARD;
+            let data = TERM_LEADERBOARD;
+            let traps = TERM_TRAPS;
+            let titleText = "🏆 IRDAI Term Life Claim Settlement Leaderboard";
+
+            if (tab === 'health') {
+                data = HEALTH_LEADERBOARD;
+                traps = HEALTH_TRAPS;
+                titleText = "🏥 Top Health Insurance Cashless Settlement Audit";
+            } else if (tab === 'moneyback') {
+                data = MONEYBACK_LEADERBOARD;
+                traps = MONEYBACK_TRAPS;
+                titleText = "💰 Traditional Money-Back & Endowment Policies (IRR Reality)";
+            } else if (tab === 'accidental') {
+                data = ACCIDENTAL_LEADERBOARD;
+                traps = ACCIDENTAL_TRAPS;
+                titleText = "🚑 Personal Accidental & Permanent Total Disability (PA) Audit";
+            }
+
             tbody.innerHTML = data.map(d => `
                 <tr>
                     <td><strong>${d.name}</strong></td>
                     <td style="font-family:var(--font-mono); font-weight:800; color:var(--groww-mint);">${d.csr}</td>
                     <td style="font-family:var(--font-mono);">${d.asr}</td>
                     <td style="font-family:var(--font-mono); font-size:12px; color:var(--text-secondary);">${d.solvency}</td>
-                    <td><span style="font-size:11px; font-weight:800; color:${d.rating.includes('PRISTINE') ? 'var(--groww-mint)' : 'var(--accent-amber)'};">${d.rating}</span></td>
+                    <td><span style="font-size:11px; font-weight:800; color:${d.rating.includes('PRISTINE') || d.rating.includes('TOP') ? 'var(--groww-mint)' : (d.rating.includes('LOW') || d.rating.includes('LOCK') ? 'var(--market-red)' : 'var(--accent-amber)')};">${d.rating}</span></td>
                 </tr>
             `).join('');
 
             const trapsContainer = document.getElementById("traps-container");
-            const traps = tab === 'term' ? TERM_TRAPS : HEALTH_TRAPS;
             trapsContainer.innerHTML = traps.map(t => `
                 <div class="trap-card">
                     <span class="trap-badge" style="background:rgba(0,0,0,0.06); color:${t.color};">${t.badge}</span>
@@ -555,9 +604,7 @@
                 </div>
             `).join('');
 
-            document.getElementById("table-title").textContent = tab === 'term' 
-                ? "🏆 IRDAI Term Life Claim Settlement Leaderboard" 
-                : "🏥 Top Health Insurance Cashless Settlement Audit";
+            document.getElementById("table-title").textContent = titleText;
         }
 
         function calculateHLV() {
@@ -568,7 +615,6 @@
             const existing = parseFloat(document.getElementById("hlv-existing").value) || 0;
 
             const workingYears = Math.max(5, retire - age);
-            // Rule of thumb: (Income * 15) + loans - existing
             const grossNeed = (income * 15) + loans;
             const netNeed = Math.max(income * 10, grossNeed - existing);
 
@@ -580,10 +626,66 @@
         }
 
         function downloadInsuranceDocket() {
-            showToast("Generating verified IRDAI Insurance Protection Audit Docket...");
-            setTimeout(() => {
-                showToast("✅ Protection Docket compiled! Ready for fiduciary consultation.");
-            }, 1200);
+            const income = document.getElementById("hlv-income").value;
+            const age = document.getElementById("hlv-age").value;
+            const loans = document.getElementById("hlv-loans").value;
+            const existing = document.getElementById("hlv-existing").value;
+            const sumAssured = document.getElementById("hlv-result").textContent;
+            const premEst = document.getElementById("hlv-premium-est").textContent;
+
+            const modalHtml = `
+                <div id="docket-modal-overlay" style="position:fixed; inset:0; background:rgba(0,0,0,0.75); backdrop-filter:blur(8px); z-index:9999; display:flex; align-items:center; justify-content:center; padding:20px;">
+                    <div style="background:var(--bg-card); border:1.5px solid var(--groww-mint); border-radius:16px; max-width:720px; width:100%; max-height:90vh; overflow-y:auto; padding:32px; box-shadow:0 24px 60px rgba(0,0,0,0.5);">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid var(--border-subtle); padding-bottom:16px; margin-bottom:20px;">
+                            <div>
+                                <span style="font-family:var(--font-mono); font-size:11px; font-weight:800; color:var(--groww-mint); letter-spacing:0.5px;">THE BULL PRINT • OFFICIAL PROTECTION AUDIT</span>
+                                <h2 style="font-family:var(--font-display); font-size:22px; margin:4px 0 0 0;">Personal Insurance Protection Audit Docket</h2>
+                                <span style="font-size:12px; color:var(--text-muted);">Docket Ref: TBP-HLV-${Date.now().toString().slice(-6)} · 100% Spam-Free Actuarial Evaluation</span>
+                            </div>
+                            <button onclick="document.getElementById('docket-modal-overlay').remove()" style="background:transparent; border:none; font-size:22px; cursor:pointer; color:var(--text-muted);">✕</button>
+                        </div>
+
+                        <div style="background:var(--bg-card-subtle); border:1px solid var(--border-subtle); border-radius:10px; padding:18px; margin-bottom:20px;">
+                            <h4 style="margin:0 0 10px 0; font-size:13px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase;">1. Client Actuarial Profile</h4>
+                            <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:12px; font-size:13.5px;">
+                                <div>Annual In-Hand Income: <strong>₹ ${parseInt(income).toLocaleString('en-IN')}</strong></div>
+                                <div>Current Age: <strong>${age} Years</strong></div>
+                                <div>Outstanding Liabilities / Debt: <strong>₹ ${parseInt(loans).toLocaleString('en-IN')}</strong></div>
+                                <div>Existing Investments & Cover: <strong>₹ ${parseInt(existing).toLocaleString('en-IN')}</strong></div>
+                            </div>
+                        </div>
+
+                        <div style="background:rgba(0, 208, 156, 0.08); border:1.5px solid var(--groww-mint); border-radius:10px; padding:20px; margin-bottom:20px;">
+                            <div style="font-size:11.5px; font-weight:800; color:var(--groww-mint); font-family:var(--font-mono); text-transform:uppercase;">2. Recommended Pure Life Coverage (Human Life Value Deficit)</div>
+                            <div style="font-family:var(--font-mono); font-size:32px; font-weight:900; color:var(--groww-mint); margin:6px 0;">${sumAssured}</div>
+                            <div style="font-size:13px; color:var(--text-secondary);">${premEst}</div>
+                        </div>
+
+                        <div style="margin-bottom:24px;">
+                            <h4 style="margin:0 0 10px 0; font-size:13px; font-family:var(--font-mono); color:var(--text-secondary); text-transform:uppercase;">3. Fiduciary Audit Directives (Strict Traps Avoidance)</h4>
+                            <ul style="padding-left:18px; margin:0; line-height:1.7; font-size:13px; color:var(--text-primary);">
+                                <li><strong>Never Buy Return of Premium (TROP):</strong> TROP plans charge 2.5x to 3x higher premiums to return unadjusted rupee capital 30 years later, eroding value to 6% inflation.</li>
+                                <li><strong>Unbundle Insurance from Investments:</strong> Avoid Money-Back & Endowment policies yielding only 4.5%-5.5% IRR. Buy pure term and channel surplus into Nifty index funds.</li>
+                                <li><strong>Health Cover Base + Super Top-up:</strong> Maintain ₹15 Lakhs base comprehensive health cover with 0% room rent capping + ₹50 Lakhs Super Top-Up (₹5,000/yr premium).</li>
+                                <li><strong>Mandatory MWPA Endorsement:</strong> Attach Married Women's Property Act rider to create an untouchable trust for spouse and children free from creditors.</li>
+                            </ul>
+                        </div>
+
+                        <div style="display:flex; justify-content:flex-end; gap:12px; border-top:1px solid var(--border-subtle); padding-top:16px;">
+                            <button onclick="window.print()" style="background:var(--bg-card-subtle); border:1px solid var(--border-subtle); color:var(--text-primary); padding:10px 18px; border-radius:8px; font-weight:700; cursor:pointer;">
+                                🖨️ Print / Save as PDF
+                            </button>
+                            <button onclick="document.getElementById('docket-modal-overlay').remove()" style="background:var(--groww-mint); border:none; color:#0b0e14; padding:10px 22px; border-radius:8px; font-weight:800; cursor:pointer;">
+                                Close Docket
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const existingModal = document.getElementById("docket-modal-overlay");
+            if (existingModal) existingModal.remove();
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
         }
 
         document.addEventListener("DOMContentLoaded", () => {

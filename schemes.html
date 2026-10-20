@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Government Schemes & Welfare Intelligence Portal | The Bull Print</title>
+    <meta name="description" content="Central and State Government Schemes directory. Step-by-step application procedures, precise eligibility criteria, who is NOT eligible, and direct claim portals.">
+    <link rel="canonical" href="https://the-bull-print.vercel.app/schemes.html">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Government Welfare Schemes Directory & Claim Portal | The Bull Print">
+    <meta property="og:description" content="Discover central and state government welfare schemes you qualify for. Detailed eligibility criteria and step-by-step claim guides.">
+    <meta property="og:image" content="brand_assets/opengraph_social_card_1200x630.png">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="brand_assets/website_favicon_32x32.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="brand_assets/website_favicon_192x192.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Global Theme CSS & Auth System -->
+    <link rel="stylesheet" href="brand_assets/global-theme.css">
+    <script src="brand_assets/theme-auth.js"></script>
+
+    <style>
+        :root {
+            --font-display: 'Outfit', sans-serif;
+            --font-body: 'Inter', -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --scheme-green: var(--groww-mint, #00D09C);
+            --scheme-red: var(--market-red, #dc2626);
+            --scheme-blue: var(--accent-blue, #0284c7);
+            --scheme-gold: var(--accent-amber, #d97706);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Top Navbar */
+        .site-navbar {
+            background: var(--navbar-bg);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .navbar-inner {
+            max-width: 1340px;
+            margin: 0 auto;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .brand-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .brand-logo-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+        }
+        .brand-name {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+            color: var(--text-primary);
+        }
+        .brand-name span { color: var(--groww-mint); }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            overflow-x: auto;
+        }
+        .nav-link {
+            padding: 7px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: var(--groww-mint);
+            background: var(--groww-mint-soft);
+        }
+
+        /* Container */
+        .schemes-container {
+            max-width: 1340px;
+            margin: 28px auto 80px;
+            padding: 0 24px;
+        }
+
+        /* Hero Banner with State Selector in Top Right */
+        .schemes-hero {
+            background: linear-gradient(135deg, rgba(0, 208, 156, 0.08) 0%, rgba(217, 119, 6, 0.06) 100%);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 32px;
+            margin-bottom: 28px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 24px;
+        }
+        .schemes-hero-left {
+            max-width: 760px;
+        }
+        .schemes-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            color: var(--groww-mint);
+            background: rgba(0, 208, 156, 0.12);
+            padding: 4px 10px;
+            border-radius: 9999px;
+            margin-bottom: 12px;
+        }
+        .schemes-hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(24px, 3.5vw, 36px);
+            font-weight: 900;
+            margin: 0 0 10px 0;
+            letter-spacing: -0.5px;
+        }
+        .schemes-hero-subtitle {
+            font-size: 14.5px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* State Selector Box on Top Right */
+        .state-selector-card {
+            background: var(--bg-card);
+            border: 1.5px solid var(--groww-mint);
+            border-radius: var(--radius-md);
+            padding: 16px 20px;
+            min-width: 280px;
+            box-shadow: 0 4px 20px rgba(0, 208, 156, 0.15);
+        }
+        .state-selector-label {
+            font-size: 11px;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .state-select-dropdown {
+            width: 100%;
+            background: var(--bg-card-subtle);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: var(--font-display);
+            outline: none;
+            cursor: pointer;
+        }
+        .state-select-dropdown:focus {
+            border-color: var(--groww-mint);
+        }
+
+        /* Filter Controls */
+        .schemes-filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .category-tabs {
+            display: flex;
+            gap: 6px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+        .cat-tab-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 700;
+            padding: 7px 14px;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .cat-tab-btn:hover { color: var(--text-primary); border-color: var(--border-focus); }
+        .cat-tab-btn.active {
+            background: var(--groww-mint);
+            color: #0b0e14;
+            border-color: var(--groww-mint);
+            box-shadow: 0 2px 10px rgba(0, 208, 156, 0.3);
+        }
+
+        .scheme-search-box {
+            position: relative;
+            min-width: 260px;
+        }
+        .scheme-search-input {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 9px 14px 9px 34px;
+            border-radius: 8px;
+            font-size: 13px;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .scheme-search-input:focus { border-color: var(--groww-mint); }
+        .scheme-search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 13px;
+        }
+
+        /* Schemes Grid */
+        .schemes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 24px;
+        }
+
+        .scheme-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+        }
+        .scheme-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--groww-mint);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+        }
+        [data-theme="dark"] .scheme-card:hover {
+            box-shadow: 0 12px 30px rgba(0, 208, 156, 0.12);
+        }
+
+        .scheme-card-header {
+            padding: 18px 22px 14px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+        }
+        .scheme-jurisdiction-badge {
+            font-size: 11px;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            color: var(--accent-blue);
+            background: rgba(2, 132, 199, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+        .scheme-benefit-pill {
+            font-size: 12.5px;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            color: var(--groww-mint);
+            background: rgba(0, 208, 156, 0.12);
+            border: 1px solid rgba(0, 208, 156, 0.3);
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .scheme-card-body {
+            padding: 20px 22px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .scheme-title {
+            font-family: var(--font-display);
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.35;
+            margin: 0;
+        }
+        .scheme-desc {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        /* Eligibility & Disqualification Blocks */
+        .eligibility-box {
+            background: rgba(0, 208, 156, 0.05);
+            border: 1px solid rgba(0, 208, 156, 0.2);
+            border-radius: 8px;
+            padding: 12px 14px;
+        }
+        .eligibility-title {
+            font-size: 11.5px;
+            font-weight: 800;
+            color: var(--groww-mint);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .eligibility-list {
+            padding-left: 18px;
+            margin: 0;
+            font-size: 12.5px;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .ineligible-box {
+            background: rgba(239, 68, 68, 0.05);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: 8px;
+            padding: 12px 14px;
+        }
+        .ineligible-title {
+            font-size: 11.5px;
+            font-weight: 800;
+            color: var(--scheme-red);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Step-by-Step Claim Flow */
+        .claim-steps-box {
+            background: var(--bg-card-subtle);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 14px;
+        }
+        .claim-steps-title {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .steps-ordered-list {
+            padding-left: 18px;
+            margin: 0;
+            font-size: 12.5px;
+            line-height: 1.65;
+            color: var(--text-secondary);
+        }
+        .steps-ordered-list li strong { color: var(--text-primary); }
+
+        .scheme-card-footer {
+            padding: 14px 22px;
+            background: var(--bg-card-subtle);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+        .scheme-portal-link {
+            background: var(--groww-mint);
+            color: #0b0e14;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: 800;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+        }
+        .scheme-portal-link:hover {
+            box-shadow: 0 0 12px rgba(0, 208, 156, 0.4);
+        }
+        .scheme-helpline {
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            font-size: 11.5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Top Navbar -->
+    <header class="site-navbar">
+        <div class="navbar-inner">
+            <a href="/" class="brand-group">
+                <img src="brand_assets/website_favicon_192x192.png" alt="Logo" class="brand-logo-img">
+                <span class="brand-name">THE BULL <span>PRINT</span></span>
+            </a>
+
+            <nav class="nav-links">
+                <a href="/" class="nav-link">Dashboard</a>
+                <a href="/screener.html" class="nav-link">Screener</a>
+                <a href="/articles.html" class="nav-link">Articles</a>
+                <a href="/fno.html" class="nav-link">F&O Radar</a>
+                <a href="/events.html" class="nav-link">Stock Events</a>
+                <a href="/schemes.html" class="nav-link active">Govt Schemes</a>
+                <a href="/unlisted.html" class="nav-link">Unlisted</a>
+                <a href="/portfolio.html" class="nav-link">Portfolio</a>
+                <a href="/insurance.html" class="nav-link">Insurance</a>
+                <a href="/crypto.html" class="nav-link">Crypto</a>
+                <a href="/calculators.html" class="nav-link">Calculators</a>
+            </nav>
+
+            <div style="display:flex; align-items:center; gap:10px;">
+                <button class="theme-toggle-btn" onclick="toggleDSATheme()">
+                    🌙 <span class="theme-text">Dark</span>
+                </button>
+                <div class="nav-auth-wrapper"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="schemes-container">
+        <!-- Hero Banner with State Selector on Top Right -->
+        <div class="schemes-hero">
+            <div class="schemes-hero-left">
+                <div class="schemes-badge">🇮🇳 CITIZEN EMPOWERMENT & WELFARE DESK</div>
+                <h1 class="schemes-hero-title">Government Schemes & Direct Benefits</h1>
+                <p class="schemes-hero-subtitle">
+                    Millions in direct subsidies, cash transfers, and medical covers remain unclaimed every year. 
+                    Select your state to discover all eligible central and state schemes, check explicit disqualification criteria, and follow step-by-step guides to claim benefits directly to your bank account.
+                </p>
+            </div>
+
+            <!-- State Selector Dropdown -->
+            <div class="state-selector-card">
+                <div class="state-selector-label">
+                    <span>📍 SELECT JURISDICTION</span>
+                    <span style="color:var(--groww-mint);">● STATE FILTER</span>
+                </div>
+                <select id="state-selector" class="state-select-dropdown" onchange="handleStateChange()">
+                    <option value="ALL">All India (Central Schemes)</option>
+                    <option value="MAHARASHTRA">Maharashtra</option>
+                    <option value="UTTAR_PRADESH">Uttar Pradesh</option>
+                    <option value="TAMIL_NADU">Tamil Nadu</option>
+                    <option value="KARNATAKA">Karnataka</option>
+                    <option value="GUJARAT">Gujarat</option>
+                    <option value="WEST_BENGAL">West Bengal</option>
+                    <option value="RAJASTHAN">Rajasthan</option>
+                    <option value="KERALA">Kerala</option>
+                    <option value="ANDHRA_PRADESH">Andhra Pradesh</option>
+                    <option value="TELANGANA">Telangana</option>
+                    <option value="BIHAR">Bihar</option>
+                    <option value="MADHYA_PRADESH">Madhya Pradesh</option>
+                    <option value="PUNJAB">Punjab</option>
+                    <option value="DELHI">Delhi (NCT)</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Filter Strip -->
+        <div class="schemes-filter-row">
+            <div class="category-tabs">
+                <button class="cat-tab-btn active" onclick="filterSchemeCategory('all', this)">All Welfare Vectors</button>
+                <button class="cat-tab-btn" onclick="filterSchemeCategory('Agriculture', this)">🌾 Farmers & Agri</button>
+                <button class="cat-tab-btn" onclick="filterSchemeCategory('Health', this)">🏥 Health & Medical</button>
+                <button class="cat-tab-btn" onclick="filterSchemeCategory('Women', this)">👩 Women & Child</button>
+                <button class="cat-tab-btn" onclick="filterSchemeCategory('MSME', this)">💼 MSME & Loans</button>
+                <button class="cat-tab-btn" onclick="filterSchemeCategory('Pension', this)">👴 Pension & Senior</button>
+                <button class="cat-tab-btn" onclick="filterSchemeCategory('Housing', this)">🏠 Housing (PMAY)</button>
+            </div>
+
+            <div class="scheme-search-box">
+                <span class="scheme-search-icon">🔍</span>
+                <input type="text" id="scheme-search" class="scheme-search-input" placeholder="Search PM-KISAN, Ayushman, Ladli..." oninput="handleSchemeSearch()">
+            </div>
+        </div>
+
+        <!-- Schemes Grid -->
+        <div class="schemes-grid" id="schemes-grid">
+            <!-- Populated via JavaScript -->
+        </div>
+    </main>
+
+    <footer style="padding:32px 24px; text-align:center; border-top:1px solid var(--border-subtle); color:var(--text-muted); font-size:12px;">
+        THE BULL PRINT • CITIZEN WELFARE & GOVERNMENT SCHEMES PORTAL • 100% UNBIASED & FREE PUBLIC INFORMATION
+    </footer>
+
+    <script>
+        // Comprehensive Schemes Database
+        const SCHEMES_DB = [
+            // Central Schemes
+            {
+                id: "pm-kisan",
+                name: "PM-KISAN (Pradhan Mantri Kisan Samman Nidhi)",
+                jurisdiction: "CENTRAL GOVT",
+                state: "ALL",
+                category: "Agriculture",
+                benefit: "₹6,000 / Year Cash",
+                desc: "Direct financial support for landholding farmer families to procure agricultural inputs and manage domestic farm expenses.",
+                eligible: [
+                    "Small and marginal farmer families holding cultivable land in revenue records.",
+                    "Both husband, wife, and minor children considered as one single beneficiary family unit."
+                ],
+                ineligible: [
+                    "Institutional landholders or farming on government leased forest lands.",
+                    "Farmer families where any member is or was a constitutional post holder, Minister, MP, MLA, Mayor.",
+                    "Retired or serving government employees (Central/State/PSU) with monthly pension > ₹10,000.",
+                    "All professionals (Doctors, Engineers, Lawyers, Chartered Accountants) and any person who paid Income Tax in the last assessment year."
+                ],
+                steps: [
+                    "<strong>Online Registration:</strong> Visit official portal (pmkisan.gov.in) and click 'New Farmer Registration'.",
+                    "<strong>e-KYC & Land Record:</strong> Enter Aadhaar number and upload Land Record of Rights (Khatauni / Patta) and active Bank Account Passbook.",
+                    "<strong>NPCI Aadhaar Seeding:</strong> Ensure your bank account is seeded with NPCI for Direct Benefit Transfer (DBT).",
+                    "<strong>Taluk Verification:</strong> Local Patwari/Revenue Inspector verifies land title. Funds credited in 3 equal installments of ₹2,000 every 4 months."
+                ],
+                portalUrl: "https://pmkisan.gov.in",
+                helpline: "Toll Free: 155261 / 011-24300606"
+            },
+            {
+                id: "pm-jay",
+                name: "Ayushman Bharat PM-JAY (Jan Arogya Yojana)",
+                jurisdiction: "CENTRAL GOVT",
+                state: "ALL",
+                category: "Health",
+                benefit: "₹5,00,000 / Family / Year",
+                desc: "The world's largest health assurance scheme providing cashless hospitalisation cover across 29,000+ empanelled government and private hospitals.",
+                eligible: [
+                    "Families identified under rural deprivation criteria or urban occupational worker categories in SECC 2011 database.",
+                    "Families holding BPL ration cards or Antyodaya Anna Yojana (AAY) cards.",
+                    "No cap on family size or age of family members."
+                ],
+                ineligible: [
+                    "Families owning mechanized 3/4 wheeler farming equipment or motorized 4-wheelers.",
+                    "Households with any family member currently employed as a government servant.",
+                    "Families paying Income Tax or Professional Tax.",
+                    "Households with Kisan Credit Card credit limit exceeding ₹50,000."
+                ],
+                steps: [
+                    "<strong>Check Name in Database:</strong> Visit mera.pmjay.gov.in or nearest Common Service Centre (CSC) with Ration Card and Aadhaar.",
+                    "<strong>Generate Ayushman Golden Card:</strong> Biometric fingerprint verification done at CSC or District Hospital Ayushman Kiosk.",
+                    "<strong>Cashless Admission:</strong> Show Ayushman Card at any empanelled hospital's 'Ayushman Mitra' desk. Entire surgery, ICU, diagnostics, and medicines up to ₹5 Lakhs are 100% cashless."
+                ],
+                portalUrl: "https://pmjay.gov.in",
+                helpline: "National Helpline: 14555"
+            },
+            {
+                id: "sukanya-samriddhi",
+                name: "Sukanya Samriddhi Yojana (SSY)",
+                jurisdiction: "CENTRAL GOVT",
+                state: "ALL",
+                category: "Women",
+                benefit: "8.2% Guaranteed Tax-Free Return",
+                desc: "Government-backed savings scheme for girl child with sovereign capital guarantee, highest small-savings interest rate, and complete EEE tax exemption under Section 80C.",
+                eligible: [
+                    "Legal parents or guardians of a girl child aged from birth up to 10 years.",
+                    "Maximum 2 accounts per family (exception for triplets/twins in second birth)."
+                ],
+                ineligible: [
+                    "Girl child who has already attained 10 years of age at the date of opening.",
+                    "Non-Resident Indians (NRIs) or foreign citizens.",
+                    "Male children."
+                ],
+                steps: [
+                    "<strong>Visit Post Office or PSU Bank:</strong> Obtain SSY Account Opening Form from any India Post Office, SBI, or authorized bank.",
+                    "<strong>Submit Documents:</strong> Girl child's official birth certificate, parent's Aadhaar & PAN card, and proof of address.",
+                    "<strong>Deposit Minimum ₹250:</strong> Account opened instantly. Deposit between ₹250 and ₹1,50,000 per financial year for 15 years.",
+                    "<strong>Maturity at 21 Years:</strong> Partial withdrawal (up to 50%) permitted for higher education after age 18. Full tax-free corpus matures at age 21."
+                ],
+                portalUrl: "https://www.indiapost.gov.in",
+                helpline: "Toll Free: 1800-266-6868"
+            },
+            {
+                id: "pm-mudra",
+                name: "Pradhan Mantri Mudra Yojana (PMMY)",
+                jurisdiction: "CENTRAL GOVT",
+                state: "ALL",
+                category: "MSME",
+                benefit: "Up to ₹20 Lakhs Collateral-Free",
+                desc: "Collateral-free business loans for non-corporate, non-farm small and micro enterprises across manufacturing, processing, trading, and services.",
+                eligible: [
+                    "Any Indian citizen with a viable business plan for a non-farm income-generating micro enterprise.",
+                    "Shishu: Loans up to ₹50,000 | Kishore: ₹50,000 to ₹5 Lakhs | Tarun: ₹5 Lakhs to ₹10 Lakhs | Tarun Plus: Up to ₹20 Lakhs."
+                ],
+                ineligible: [
+                    "Large corporations or public limited enterprises.",
+                    "Crop cultivation, land purchase, and primary agricultural activities.",
+                    "Borrowers with past willful default or compromised CIBIL credit score (< 650)."
+                ],
+                steps: [
+                    "<strong>Prepare Business Project Dossier:</strong> Quotation of machinery/tools, business plan, projected cash flows, and Udyam Registration number.",
+                    "<strong>Apply Online via UdyamiMitra:</strong> Visit udyamimitra.in and submit Mudra Application to selected commercial banks or NBFCs.",
+                    "<strong>Zero Processing Fee for Shishu:</strong> Bank sanctions loan without asking for collateral or third-party guarantee. Mudra Debit Card issued for working capital withdrawals."
+                ],
+                portalUrl: "https://www.mudra.org.in",
+                helpline: "National Mudra Toll Free: 1800-180-1111"
+            },
+            {
+                id: "atal-pension",
+                name: "Atal Pension Yojana (APY)",
+                jurisdiction: "CENTRAL GOVT",
+                state: "ALL",
+                category: "Pension",
+                benefit: "₹1,000 - ₹5,000 Guaranteed Monthly Pension",
+                desc: "Guaranteed monthly lifetime pension for unorganized sector workers administered by PFRDA with sovereign safety.",
+                eligible: [
+                    "Indian citizens aged between 18 and 40 years holding an active savings bank account or post office account."
+                ],
+                ineligible: [
+                    "Any individual who is or was an Income Tax payer as per Finance Ministry rules.",
+                    "Beneficiaries already covered under statutory social security schemes like EPF, NPS, or government pension."
+                ],
+                steps: [
+                    "<strong>Visit Bank or Netbanking Portal:</strong> Access APY registration section in your bank's mobile app or submit Form to your home branch.",
+                    "<strong>Select Pension Slab:</strong> Choose guaranteed monthly pension of ₹1,000, ₹2,000, ₹3,000, ₹4,000, or ₹5,000.",
+                    "<strong>Auto-Debit Consent:</strong> Premium (as low as ₹42/month at age 18) auto-debited monthly till age 60.",
+                    "<strong>Post-60 Pension:</strong> Monthly pension credited automatically to bank account. In case of demise, spouse receives pension, and nominee receives full corpus."
+                ],
+                portalUrl: "https://www.npscra.nsdl.co.in",
+                helpline: "PFRDA Helpline: 1800-110-069"
+            },
+            {
+                id: "pmay-urban",
+                name: "Pradhan Mantri Awas Yojana (PMAY - Urban / Gramin)",
+                jurisdiction: "CENTRAL GOVT",
+                state: "ALL",
+                category: "Housing",
+                benefit: "Up to ₹2.67 Lakhs Home Loan Subsidy",
+                desc: "Credit-Linked Subsidy Scheme (CLSS) providing upfront interest rate subsidies to build or purchase pucca residential homes.",
+                eligible: [
+                    "Economically Weaker Section (EWS, annual family income up to ₹3L) and Low Income Group (LIG, income up to ₹6L).",
+                    "The beneficiary family must not own a pucca house in their name anywhere in India.",
+                    "Female ownership or co-ownership mandatory for EWS/LIG categories."
+                ],
+                ineligible: [
+                    "Families already owning a permanent pucca house anywhere in India.",
+                    "Households that have previously availed central assistance under any housing scheme."
+                ],
+                steps: [
+                    "<strong>Apply via Primary Lending Institution:</strong> Inform your home loan bank/HFC that you wish to avail PMAY Credit-Linked Subsidy.",
+                    "<strong>Self-Declaration & Aadhaar:</strong> Submit affidavit confirming no existing pucca home and income certificate.",
+                    "<strong>Central Nodal Agency Review:</strong> Bank submits claim to NHB or HUDCO. Sanctioned subsidy is directly credited to your loan principal, reducing EMI."
+                ],
+                portalUrl: "https://pmaymis.gov.in",
+                helpline: "PMAY Toll Free: 1800-11-6163"
+            },
+
+            // Maharashtra State Schemes
+            {
+                id: "mh-ladki-bahin",
+                name: "Mukhyamantri Majhi Ladki Bahin Yojana",
+                jurisdiction: "STATE GOVT",
+                state: "MAHARASHTRA",
+                category: "Women",
+                benefit: "₹1,500 / Month Direct Cash",
+                desc: "Maharashtra flagship monthly financial assistance for women's nutritional, health, and economic empowerment.",
+                eligible: [
+                    "Resident women of Maharashtra aged between 21 and 65 years.",
+                    "Married, unmarried, widowed, divorced, or destitute women with annual family income less than ₹2.5 Lakhs.",
+                    "Holders of Yellow or Orange ration cards."
+                ],
+                ineligible: [
+                    "Households with any family member who is an income tax payer.",
+                    "Households with regular/permanent government employees or pensioners.",
+                    "Families owning a four-wheeler (excluding tractors).",
+                    "Women already receiving more than ₹1,500/month under other government DBT welfare schemes."
+                ],
+                steps: [
+                    "<strong>Nari Shakti Doot App:</strong> Download official Nari Shakti Doot mobile app or visit Setu Suvidha Kendra / Gram Panchayat.",
+                    "<strong>Upload Documents:</strong> Maharashtra Domicile Certificate (or 15-year old Ration Card/Voter ID), Aadhaar, Bank Passbook, and Income Certificate.",
+                    "<strong>Biometric e-KYC:</strong> Submit application. ₹1,500 credited monthly directly via DBT into Aadhaar-seeded bank account."
+                ],
+                portalUrl: "https://ladkibahin.maharashtra.gov.in",
+                helpline: "Maharashtra Helpline: 181"
+            },
+
+            // Tamil Nadu State Schemes
+            {
+                id: "tn-magalir-urimai",
+                name: "Kalaignar Magalir Urimai Thittam",
+                jurisdiction: "STATE GOVT",
+                state: "TAMIL_NADU",
+                category: "Women",
+                benefit: "₹1,000 / Month Universal Cash",
+                desc: "Tamil Nadu universal basic income grant recognizing women's unpaid domestic labor and economic autonomy.",
+                eligible: [
+                    "Female heads of family who are permanent residents of Tamil Nadu aged 21 years and above.",
+                    "Annual family income must be below ₹2.5 Lakhs.",
+                    "Family must own less than 5 acres of wetland or less than 10 acres of dryland."
+                ],
+                ineligible: [
+                    "Households consuming more than 3,600 units of domestic electricity per year.",
+                    "Families where any member files income tax returns or pays professional tax.",
+                    "Families of government employees, elected representatives, or owning a 4-wheeler."
+                ],
+                steps: [
+                    "<strong>Special Camp Application:</strong> Apply at special camps conducted at local fair price shops (Ration shops) with Smart Ration Card and Aadhaar.",
+                    "<strong>Field Verification:</strong> Revenue inspectors verify electricity consumption and land holding criteria.",
+                    "<strong>Monthly Credit:</strong> Sanctioned ₹1,000 transferred on the 15th of every month into beneficiary's bank account."
+                ],
+                portalUrl: "https://kmut.tn.gov.in",
+                helpline: "Tamil Nadu Toll Free: 1100"
+            },
+
+            // Karnataka State Schemes
+            {
+                id: "ka-gruha-lakshmi",
+                name: "Gruha Lakshmi Scheme",
+                jurisdiction: "STATE GOVT",
+                state: "KARNATAKA",
+                category: "Women",
+                benefit: "₹2,000 / Month Direct Cash",
+                desc: "Karnataka flagship guarantee scheme providing monthly financial dignity grants to women heads of households.",
+                eligible: [
+                    "Women listed as head of household in Antyodaya, BPL, or APL ration cards in Karnataka."
+                ],
+                ineligible: [
+                    "Women heads or their spouses who are income tax or GST payers.",
+                    "Government employees or pensioners."
+                ],
+                steps: [
+                    "<strong>Seva Sindhu Portal:</strong> Apply on sevasindhugs.karnataka.gov.in or visit Karnataka-One / Grama-One centers.",
+                    "<strong>Aadhaar Linked Phone Verification:</strong> Verify ration card number and submit husband's Aadhaar card.",
+                    "<strong>Direct DBT Credit:</strong> ₹2,000 credited automatically every month to Aadhaar-seeded bank account."
+                ],
+                portalUrl: "https://sevasindhugs.karnataka.gov.in",
+                helpline: "Karnataka Helpline: 1902"
+            },
+
+            // Uttar Pradesh State Schemes
+            {
+                id: "up-kanya-sumangala",
+                name: "Mukhyamantri Kanya Sumangala Yojana",
+                jurisdiction: "STATE GOVT",
+                state: "UTTAR_PRADESH",
+                category: "Women",
+                benefit: "₹25,000 Financial Grant",
+                desc: "Uttar Pradesh milestone-based grant for girl child health and education from birth through graduation.",
+                eligible: [
+                    "Residents of Uttar Pradesh with annual family income up to ₹3.0 Lakhs.",
+                    "Maximum 2 daughters per family."
+                ],
+                ineligible: [
+                    "Families with annual income exceeding ₹3 Lakhs.",
+                    "Families having more than 2 biological daughters (except in case of twins in second pregnancy)."
+                ],
+                steps: [
+                    "<strong>Online Portal Registration:</strong> Visit mksy.up.gov.in and create Citizen Portal account.",
+                    "<strong>Milestone Claims:</strong> Stage 1 (Birth ₹5,000), Stage 2 (Vaccination ₹2,000), Stage 3 (Class 1 admission ₹3,000), Stage 4 (Class 6 ₹3,000), Stage 5 (Class 9 ₹5,000), Stage 6 (Degree/Diploma admission ₹7,000).",
+                    "<strong>School & BDO Verification:</strong> Block Development Officer verifies admission slip, grant transferred to girl child's account."
+                ],
+                portalUrl: "https://mksy.up.gov.in",
+                helpline: "UP Women Helpline: 1090 / 181"
+            },
+
+            // Rajasthan State Schemes
+            {
+                id: "rj-chiranjeevi",
+                name: "Mukhyamantri Ayushman Arogya (Chiranjeevi) Yojana",
+                jurisdiction: "STATE GOVT",
+                state: "RAJASTHAN",
+                category: "Health",
+                benefit: "₹25,00,000 Cashless Health Cover",
+                desc: "Rajasthan state universal cashless health insurance cover providing up to ₹25 Lakhs hospitalization per family.",
+                eligible: [
+                    "All families of Rajasthan possessing a Jan Aadhaar card.",
+                    "Free for NFSA beneficiaries, SECC categories, small/marginal farmers, and contractual workers."
+                ],
+                ineligible: [
+                    "Central/State government employees covered under Rajasthan State Government Health Scheme (RGHS)."
+                ],
+                steps: [
+                    "<strong>Jan Aadhaar Integration:</strong> Check insurance status on chiranjeevi.rajasthan.gov.in using Jan Aadhaar number.",
+                    "<strong>Nominal ₹850 Premium (For General):</strong> Non-exempt families pay ₹850 annual premium at e-Mitra kiosks.",
+                    "<strong>Hospital Treatment:</strong> Cashless coverage across 1,800+ treatments in all empanelled private and government hospitals."
+                ],
+                portalUrl: "https://chiranjeevi.rajasthan.gov.in",
+                helpline: "Toll Free: 181"
+            },
+
+            // Delhi State Schemes
+            {
+                id: "dl-free-power",
+                name: "Delhi Domestic Electricity Subsidy Scheme",
+                jurisdiction: "STATE GOVT",
+                state: "DELHI",
+                category: "Housing",
+                benefit: "Up to 200 Units 100% Free Power",
+                desc: "Complete 100% waiver of electricity charges up to 200 units monthly and 50% subsidy up to 400 units for domestic consumers in Delhi.",
+                eligible: [
+                    "All domestic electricity consumers registered with BSES Rajdhani, BSES Yamuna, or TPDDL in Delhi.",
+                    "Active opt-in consent submitted via designated channels."
+                ],
+                ineligible: [
+                    "Commercial, industrial, and agricultural electricity connections.",
+                    "Consumers who have not submitted opt-in consent form."
+                ],
+                steps: [
+                    "<strong>Opt-in via Missed Call / WhatsApp:</strong> Give missed call to 7011311111 from registered mobile number.",
+                    "<strong>Fill CA Number Form:</strong> Enter Consumer Account (CA) number mentioned on electricity bill.",
+                    "<strong>Subsidy Applied to Bill:</strong> Bills showing consumption up to 200 units generated as ₹0 zero bill."
+                ],
+                portalUrl: "https://delhi.gov.in",
+                helpline: "Helpline: 19124 (BSES) / 19122 (TPDDL)"
+            }
+        ];
+
+        let selectedState = "ALL";
+        let selectedCategory = "all";
+
+        function renderSchemes() {
+            const grid = document.getElementById('schemes-grid');
+            if (!grid) return;
+
+            let filtered = SCHEMES_DB;
+
+            // Filter by State
+            if (selectedState !== "ALL") {
+                filtered = filtered.filter(s => s.state === "ALL" || s.state === selectedState);
+            }
+
+            // Filter by Category
+            if (selectedCategory !== "all") {
+                filtered = filtered.filter(s => s.category.toLowerCase().includes(selectedCategory.toLowerCase()));
+            }
+
+            // Filter by Search Query
+            const q = document.getElementById('scheme-search')?.value.toLowerCase().trim();
+            if (q) {
+                filtered = filtered.filter(s => 
+                    s.name.toLowerCase().includes(q) || 
+                    s.desc.toLowerCase().includes(q) ||
+                    s.benefit.toLowerCase().includes(q) ||
+                    s.category.toLowerCase().includes(q)
+                );
+            }
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column:1/-1; padding:60px 20px; text-align:center; color:var(--text-muted); background:var(--bg-card); border-radius:12px; border:1px solid var(--border-subtle);">
+                        <div style="font-size:36px; margin-bottom:10px;">📋</div>
+                        <h3 style="margin:0 0 8px 0; color:var(--text-primary);">No government schemes found matching your filters</h3>
+                        <p style="margin:0; font-size:14px;">Try changing the jurisdiction state or clearing the search query.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(s => `
+                <div class="scheme-card">
+                    <div class="scheme-card-header">
+                        <span class="scheme-jurisdiction-badge">${s.jurisdiction} · ${s.state === 'ALL' ? 'ALL INDIA' : s.state}</span>
+                        <span class="scheme-benefit-pill">${s.benefit}</span>
+                    </div>
+                    <div class="scheme-card-body">
+                        <h2 class="scheme-title">${s.name}</h2>
+                        <p class="scheme-desc">${s.desc}</p>
+
+                        <!-- Explicit Eligibility Criteria -->
+                        <div class="eligibility-box">
+                            <div class="eligibility-title">
+                                <span>🟢</span> WHO IS ELIGIBLE (QUALIFICATION CRITERIA)
+                            </div>
+                            <ul class="eligibility-list">
+                                ${s.eligible.map(e => `<li>${e}</li>`).join('')}
+                            </ul>
+                        </div>
+
+                        <!-- Explicit Ineligible Disqualifications -->
+                        <div class="ineligible-box">
+                            <div class="ineligible-title">
+                                <span>🔴</span> WHO IS NOT ELIGIBLE (STRICT DISQUALIFICATIONS)
+                            </div>
+                            <ul class="eligibility-list" style="color:var(--text-secondary);">
+                                ${s.ineligible.map(ie => `<li>${ie}</li>`).join('')}
+                            </ul>
+                        </div>
+
+                        <!-- Step-by-Step Claim Flow -->
+                        <div class="claim-steps-box">
+                            <div class="claim-steps-title">
+                                <span>📌</span> STEP-BY-STEP CLAIM & APPLICATION PROCEDURE:
+                            </div>
+                            <ol class="steps-ordered-list">
+                                ${s.steps.map(st => `<li>${st}</li>`).join('')}
+                            </ol>
+                        </div>
+                    </div>
+                    <div class="scheme-card-footer">
+                        <span class="scheme-helpline">📞 ${s.helpline}</span>
+                        <a href="${s.portalUrl}" target="_blank" rel="noopener noreferrer" class="scheme-portal-link">
+                            Apply on Official Portal ↗
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function handleStateChange() {
+            selectedState = document.getElementById('state-selector').value;
+            renderSchemes();
+        }
+
+        function filterSchemeCategory(cat, btn) {
+            selectedCategory = cat;
+            if (btn) {
+                document.querySelectorAll('.cat-tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
+            renderSchemes();
+        }
+
+        function handleSchemeSearch() {
+            renderSchemes();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderSchemes();
+        });
+    </script>
+</body>
+</html>

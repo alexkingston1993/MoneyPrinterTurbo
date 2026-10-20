@@ -412,6 +412,30 @@ Trying to load the model directly from the local cache, if it exists.
 
 Solution: [Click to see how to manually download the model from netdisk](#subtitle-generation-)
 
+## 📡 Autonomous Video Publishing Schedule (Shorts & Long Format)
+
+**The Bull Print** operates a closed-loop multi-modal media engine synchronized with **Indian Standard Time (IST = UTC + 5:30)** trading hours. The autonomous scheduler (`app/services/autonomous_scheduler.py` & `.github/workflows/market_publisher.yml`) orchestrates both high-velocity **YouTube Shorts (9:16 vertical)** and comprehensive **Long-Format Research Dossiers (16:9 landscape)**.
+
+### ⏱️ Video Release Schedule
+
+| Slot / Time (IST) | Days | Format | Dimensions | Target Length | Focus & Scope |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **09:00 AM IST** | Mon – Fri | **Short** | 9:16 (1080×1920) | 45 – 60s | **Pre-Market Opening Bell**: Gift Nifty trends, Asian market cues, gap-up / gap-down sentiment, and key Nifty 50 support/resistance pivot levels. |
+| **11:00 AM IST** | Mon – Fri | **Short** | 9:16 (1080×1920) | 45 – 60s | **Morning Momentum & Sector Rotation**: Top sectoral gainers/losers (Bank Nifty, IT, Auto, Metals), volume spikes, and unusual options open interest buildups. |
+| **01:30 PM IST (13:30)** | Mon – Fri | **Short** | 9:16 (1080×1920) | 45 – 60s | **Mid-Day Session & European Impact**: FTSE / DAX opening impact, mid-session trend reversals, and breakout stock scans. |
+| **04:00 PM IST (16:00)** | Mon – Fri | **Short** | 9:16 (1080×1920) | 45 – 60s | **Closing Bell Wrap & Day's Movers**: Market settlement summary, top 5 Nifty gainers & losers, intraday volatility extremes, and advance-decline ratio. |
+| **07:30 PM IST (19:30)** | Mon – Fri | **Long Format** | 16:9 (1920×1080) | 8 – 15 mins | **Evening Institutional Deep-Dive & FII/DII Net Flows**: Detailed institutional footprint, derivative OI heatmaps, macroeconomic telemetry, corporate earnings breakdown, and strategic outlook for the next session. |
+| **11:00 AM IST (Saturday)** | Saturday | **Long Format** | 16:9 (1920×1080) | 12 – 25 mins | **Weekend Wealth Masterclass & Sector Dossier**: 10-year holding thesis, 8-point institutional quality checklist, balance sheet forensic autopsies, and corporate governance reviews. |
+
+### 🔄 Multi-Modal Closed Flywheel Loop
+For every scheduled slot, the system executes an autonomous 6-step cycle:
+1. **Live Quantitative Ingestion**: Extracts live NSE/BSE quotes, orderbook depth, and macro indicators via `MarketDataFetcher`.
+2. **Video Scripting & Voice Synthesis**: Generates SEBI/ASCI-compliant studio narration with Kokoro TTS / Azure Neural Voice (`en-IN-ArjunNeural`).
+3. **High-Definition Video Rendering**: Synthesizes mplfinance dynamic candlestick charts and 4K footage.
+4. **Autonomous YouTube Publishing**: Uploads directly to YouTube channel via OAuth API and appends to the designated playlist.
+5. **Institutional Web Article Generation**: Generates a 1,500+ word deep-dive article featuring the 8-Point Institutional Quality Checklist, Bull/Bear thesis, and corporate events calendar.
+6. **Instant Vercel Deployment & Backlink Injection**: Commits the article to GitHub triggering live Vercel production deployment, then automatically updates the YouTube video description and pinned comment with the exact website dossier URL.
+
 ## Feedback & Suggestions 📢
 
 - You can submit an [issue](https://github.com/harry0703/MoneyPrinterTurbo/issues) or

@@ -77,19 +77,25 @@ export default async function handler(req, res) {
       }
     }
 
-    // 4. Pros & Cons
+    // 4. Pros & Cons (support attributes like style="flex-basis: 50%;" and variations)
     const pros = [];
-    const prosBlock = rawHtml.match(/<div class="pros[^"]*">[\s\S]*?<ul>([\s\S]*?)<\/ul>/);
+    const prosBlock = rawHtml.match(/<div[^>]*class="[^"]*\bpros\b[^"]*"[^>]*>[\s\S]*?<ul>([\s\S]*?)<\/ul>/i);
     if (prosBlock) {
-      const lis = prosBlock[1].match(/<li[^>]*>([\s\S]*?)<\/li>/g) || [];
-      for (const li of lis) pros.push(li.replace(/<[^>]+>/g, '').trim());
+      const lis = prosBlock[1].match(/<li[^>]*>([\s\S]*?)<\/li>/gi) || [];
+      for (const li of lis) {
+        const txt = li.replace(/<[^>]+>/g, '').trim();
+        if (txt) pros.push(txt);
+      }
     }
 
     const cons = [];
-    const consBlock = rawHtml.match(/<div class="cons[^"]*">[\s\S]*?<ul>([\s\S]*?)<\/ul>/);
+    const consBlock = rawHtml.match(/<div[^>]*class="[^"]*\bcons\b[^"]*"[^>]*>[\s\S]*?<ul>([\s\S]*?)<\/ul>/i);
     if (consBlock) {
-      const lis = consBlock[1].match(/<li[^>]*>([\s\S]*?)<\/li>/g) || [];
-      for (const li of lis) cons.push(li.replace(/<[^>]+>/g, '').trim());
+      const lis = consBlock[1].match(/<li[^>]*>([\s\S]*?)<\/li>/gi) || [];
+      for (const li of lis) {
+        const txt = li.replace(/<[^>]+>/g, '').trim();
+        if (txt) cons.push(txt);
+      }
     }
 
     // 5. Compounding Growth Cards

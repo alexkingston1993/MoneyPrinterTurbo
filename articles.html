@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Institutional Equity Research Dossiers & Market Intelligence | The Bull Print</title>
+    <meta name="description" content="In-depth fundamental research, 8-point institutional quality checklists, bull vs bear theses, and corporate event catalysts for Indian equities.">
+    <link rel="canonical" href="https://the-bull-print.vercel.app/articles.html">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="Institutional Equity Research Dossiers | The Bull Print">
+    <meta property="og:description" content="Comprehensive fundamental breakdown, 8-point checklists, and actionable video analyses for Indian equities.">
+    <meta property="og:image" content="brand_assets/opengraph_social_card_1200x630.png">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="brand_assets/website_favicon_32x32.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="brand_assets/website_favicon_192x192.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Global Theme CSS & Auth System -->
+    <link rel="stylesheet" href="brand_assets/global-theme.css">
+    <script src="brand_assets/theme-auth.js"></script>
+
+    <style>
+        :root {
+            --font-display: 'Outfit', sans-serif;
+            --font-body: 'Inter', -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+        }
+
+        body {
+            background-color: var(--bg-canvas);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Top Navbar */
+        .site-navbar {
+            background: var(--navbar-bg);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-subtle);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .navbar-inner {
+            max-width: 1340px;
+            margin: 0 auto;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .brand-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .brand-logo-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+        }
+        .brand-name {
+            font-family: var(--font-display);
+            font-weight: 800;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+            color: var(--text-primary);
+        }
+        .brand-name span { color: var(--groww-mint); }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            overflow-x: auto;
+        }
+        .nav-link {
+            padding: 7px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: var(--groww-mint);
+            background: var(--groww-mint-soft);
+        }
+
+        /* Container */
+        .articles-page-container {
+            max-width: 1340px;
+            margin: 32px auto 80px;
+            padding: 0 24px;
+        }
+
+        /* Hero Banner */
+        .articles-hero {
+            background: linear-gradient(135deg, rgba(0, 208, 156, 0.08) 0%, rgba(2, 132, 199, 0.06) 100%);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 36px;
+            margin-bottom: 32px;
+            position: relative;
+            overflow: hidden;
+        }
+        .articles-hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            color: var(--groww-mint);
+            background: rgba(0, 208, 156, 0.12);
+            padding: 4px 10px;
+            border-radius: 9999px;
+            margin-bottom: 12px;
+        }
+        .articles-hero-title {
+            font-family: var(--font-display);
+            font-size: clamp(26px, 3.8vw, 38px);
+            font-weight: 900;
+            margin: 0 0 10px 0;
+            letter-spacing: -0.5px;
+        }
+        .articles-hero-subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+            max-width: 780px;
+            line-height: 1.6;
+            margin: 0 0 24px 0;
+        }
+
+        /* Filter & Search Bar */
+        .filter-search-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+        }
+        .category-pills-wrap {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+        .category-pill {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            padding: 7px 14px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .category-pill:hover {
+            color: var(--text-primary);
+            border-color: var(--border-focus);
+        }
+        .category-pill.active {
+            background: var(--groww-mint);
+            color: #0b0e14;
+            border-color: var(--groww-mint);
+            box-shadow: 0 2px 10px rgba(0, 208, 156, 0.3);
+        }
+
+        .search-box {
+            position: relative;
+            min-width: 280px;
+            flex-grow: 1;
+            max-width: 420px;
+        }
+        .search-input {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-primary);
+            padding: 9px 14px 9px 36px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-family: inherit;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+        .search-input:focus {
+            border-color: var(--groww-mint);
+            box-shadow: 0 0 0 3px rgba(0, 208, 156, 0.15);
+        }
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        /* 8-Point Institutional Quality Banner */
+        .checklist-framework-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 20px 24px;
+            margin-bottom: 32px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .checklist-points-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            width: 100%;
+            margin-top: 14px;
+        }
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12.5px;
+            color: var(--text-secondary);
+        }
+        .checklist-item strong { color: var(--text-primary); }
+        .checklist-check {
+            color: var(--groww-mint);
+            font-weight: 900;
+        }
+
+        /* Articles Grid */
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            gap: 24px;
+        }
+
+        .article-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+            text-decoration: none;
+            color: inherit;
+        }
+        .article-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--groww-mint);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+        }
+        [data-theme="dark"] .article-card:hover {
+            box-shadow: 0 12px 30px rgba(0, 208, 156, 0.1);
+        }
+
+        .article-card-header {
+            padding: 18px 22px 12px;
+            border-bottom: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .article-category-badge {
+            font-size: 11px;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            color: var(--accent-blue);
+            background: rgba(2, 132, 199, 0.1);
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+        .article-video-badge {
+            font-size: 11px;
+            font-weight: 700;
+            color: #ef4444;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .article-card-body {
+            padding: 20px 22px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .article-card-title {
+            font-family: var(--font-display);
+            font-size: 17px;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.4;
+            margin: 0 0 10px;
+        }
+        .article-card-excerpt {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0 0 16px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* Thesis Badges */
+        .article-thesis-row {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: auto;
+            padding-top: 14px;
+            border-top: 1px dashed var(--border-subtle);
+            font-size: 12px;
+        }
+        .thesis-bull {
+            color: var(--groww-mint);
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+        }
+        .thesis-bear {
+            color: var(--market-red);
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+        }
+
+        .article-card-footer {
+            padding: 12px 22px;
+            background: var(--bg-card-subtle);
+            border-top: 1px solid var(--border-subtle);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11.5px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+        .read-btn {
+            color: var(--groww-mint);
+            font-weight: 700;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. Top Navbar -->
+    <header class="site-navbar">
+        <div class="navbar-inner">
+            <a href="/" class="brand-group">
+                <img src="brand_assets/website_favicon_192x192.png" alt="The Bull Print Logo" class="brand-logo-img">
+                <span class="brand-name">THE BULL <span>PRINT</span></span>
+            </a>
+
+            <nav class="nav-links">
+                <a href="/" class="nav-link">Dashboard</a>
+                <a href="/screener.html" class="nav-link">Screener</a>
+                <a href="/articles.html" class="nav-link active">Articles</a>
+                <a href="/fno.html" class="nav-link">F&O Radar</a>
+                <a href="/events.html" class="nav-link">Stock Events</a>
+                <a href="/schemes.html" class="nav-link">Govt Schemes</a>
+                <a href="/unlisted.html" class="nav-link">Unlisted</a>
+                <a href="/portfolio.html" class="nav-link">Portfolio</a>
+                <a href="/insurance.html" class="nav-link">Insurance</a>
+                <a href="/crypto.html" class="nav-link">Crypto</a>
+                <a href="/calculators.html" class="nav-link">Calculators</a>
+            </nav>
+
+            <div style="display:flex; align-items:center; gap:10px;">
+                <button class="theme-toggle-btn" onclick="toggleDSATheme()">
+                    🌙 <span class="theme-text">Dark</span>
+                </button>
+                <div class="nav-auth-wrapper"></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="articles-page-container">
+        <!-- Hero Banner -->
+        <div class="articles-hero">
+            <div class="articles-hero-badge">⚡ INSTITUTIONAL RESEARCH DESK</div>
+            <h1 class="articles-hero-title">Quantitative Research & Article Dossiers</h1>
+            <p class="articles-hero-subtitle">
+                Beyond superficial news headlines. Every research dossier features an 8-point institutional quality checklist, transparent Bull vs Bear theses, full-scope capital efficiency metrics, and verified corporate action timelines.
+            </p>
+        </div>
+
+        <!-- 8-Point Institutional Quality Checklist Framework -->
+        <div class="checklist-framework-card">
+            <div>
+                <h3 style="margin:0 0 4px 0; font-family:var(--font-display); font-size:16px;">The 8-Point Institutional Screener Quality Filter</h3>
+                <span style="font-size:13px; color:var(--text-secondary);">Why consider any stock? Every counter must rigorously tick these institutional criteria before research publication:</span>
+            </div>
+            <div class="checklist-points-grid">
+                <div class="checklist-item"><span class="checklist-check">✓</span> <span><strong>1. Economic Moat:</strong> Pricing power & high switching cost</span></div>
+                <div class="checklist-item"><span class="checklist-check">✓</span> <span><strong>2. Capital Efficiency:</strong> ROCE > 20% & ROE > 15%</span></div>
+                <div class="checklist-item"><span class="checklist-check">✓</span> <span><strong>3. Fortress Balance Sheet:</strong> Zero debt or D/E < 0.3x</span></div>
+                <div class="checklist-item"><span class="checklist-check">✓</span> <span><strong>4. Forensic Cleanliness:</strong> Beneish M-Score & OCF > PAT</span></div>
+                <div class="checklist-item"><span class="checklist-check">✓</span> <span><strong>5. Free Cash Flow:</strong> FCF / EBITDA conversion > 65%</span></div>
+                <div class="checklist-item"><span class="checklist-check">✓</span> <span><strong>6. Margin of Safety:</strong> Fair P/E vs 10-Yr Historical Median</span></div>
+                <div class="checklist-item"><span class="checklist-check">✓</span> <span><strong>7. Insider Alignment:</strong> Clean promoter pledge & FII/DII backing</span></div>
+                <div class="checklist-item"><span class="checklist-check">✓</span> <span><strong>8. Actionable Catalysts:</strong> Near-term corporate & earnings events</span></div>
+            </div>
+        </div>
+
+        <!-- Filter & Search Bar -->
+        <div class="filter-search-row">
+            <div class="category-pills-wrap">
+                <button class="category-pill active" onclick="filterArticles('all', this)">All Research</button>
+                <button class="category-pill" onclick="filterArticles('Nifty 50', this)">Nifty 50 Bluechips</button>
+                <button class="category-pill" onclick="filterArticles('FMCG', this)">FMCG & Consumer</button>
+                <button class="category-pill" onclick="filterArticles('Banking', this)">Banking & NBFCs</button>
+                <button class="category-pill" onclick="filterArticles('IT', this)">IT & Tech Titans</button>
+                <button class="category-pill" onclick="filterArticles('Market Wrap', this)">Market Wraps & F&O</button>
+            </div>
+
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="article-search" class="search-input" placeholder="Search by stock name, ticker, or sector..." oninput="handleArticleSearch()">
+            </div>
+        </div>
+
+        <!-- Articles Grid -->
+        <div class="articles-grid" id="articles-grid">
+            <!-- Populated via JavaScript from content/posts.json -->
+        </div>
+    </main>
+
+    <footer style="padding:32px 24px; text-align:center; border-top:1px solid var(--border-subtle); color:var(--text-muted); font-size:12px;">
+        THE BULL PRINT • INSTITUTIONAL RESEARCH & ARTICLE DESK • STRICTLY EDUCATIONAL & NON-COMMERCIAL
+    </footer>
+
+    <script>
+        let allArticles = [];
+
+        async function loadArticles() {
+            try {
+                const res = await fetch('/content/posts.json');
+                if (res.ok) {
+                    allArticles = await res.json();
+                    renderArticles(allArticles);
+                } else {
+                    document.getElementById('articles-grid').innerHTML = '<div style="padding:40px; text-align:center; color:var(--text-muted);">Failed to load articles repository.</div>';
+                }
+            } catch (e) {
+                console.error("Error loading articles:", e);
+            }
+        }
+
+        function renderArticles(posts) {
+            const grid = document.getElementById('articles-grid');
+            if (!posts || posts.length === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1; padding:60px 20px; text-align:center; color:var(--text-muted);">No research dossiers found matching your criteria.</div>';
+                return;
+            }
+
+            grid.innerHTML = posts.map(p => {
+                const category = (p.categories && p.categories[0]) || 'Equities Research';
+                const hasVideo = !!p.youtubeUrl;
+                const dateStr = p.date ? new Date(p.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Recent';
+
+                return `
+                    <a href="/article.html?slug=${p.slug}" class="article-card">
+                        <div class="article-card-header">
+                            <span class="article-category-badge">${category}</span>
+                            ${hasVideo ? '<span class="article-video-badge">▶ Video Dossier</span>' : '<span style="font-size:11px; color:var(--text-muted);">📄 Deep Dive</span>'}
+                        </div>
+                        <div class="article-card-body">
+                            <h2 class="article-card-title">${p.title}</h2>
+                            <p class="article-card-excerpt">${p.excerpt || 'Comprehensive quantitative breakdown, financial tables, 8-point institutional checklist, and forward catalysts.'}</p>
+                            
+                            <div class="article-thesis-row">
+                                <div class="thesis-bull">
+                                    <span>🟢</span>
+                                    <span><strong>Why Consider:</strong> High free cash flow conversion & capital efficiency</span>
+                                </div>
+                                <div class="thesis-bear">
+                                    <span>🔴</span>
+                                    <span><strong>Key Watch:</strong> Input cost cyclicality & sector valuation re-rating</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="article-card-footer">
+                            <span>📅 ${dateStr}</span>
+                            <span class="read-btn">Read Full Dossier ↗</span>
+                        </div>
+                    </a>
+                `;
+            }).join('');
+        }
+
+        function filterArticles(cat, btn) {
+            document.querySelectorAll('.category-pill').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+
+            if (cat === 'all') {
+                renderArticles(allArticles);
+                return;
+            }
+
+            const filtered = allArticles.filter(p => {
+                const cats = (p.categories || []).join(' ').toLowerCase();
+                const tags = (p.tags || []).join(' ').toLowerCase();
+                const title = (p.title || '').toLowerCase();
+                const target = cat.toLowerCase();
+                return cats.includes(target) || tags.includes(target) || title.includes(target);
+            });
+            renderArticles(filtered);
+        }
+
+        function handleArticleSearch() {
+            const q = document.getElementById('article-search').value.toLowerCase().trim();
+            if (!q) {
+                renderArticles(allArticles);
+                return;
+            }
+            const filtered = allArticles.filter(p => {
+                const title = (p.title || '').toLowerCase();
+                const excerpt = (p.excerpt || '').toLowerCase();
+                const tags = (p.tags || []).join(' ').toLowerCase();
+                return title.includes(q) || excerpt.includes(q) || tags.includes(q);
+            });
+            renderArticles(filtered);
+        }
+
+        window.addEventListener('DOMContentLoaded', loadArticles);
+    </script>
+</body>
+</html>
