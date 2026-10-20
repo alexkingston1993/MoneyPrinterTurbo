@@ -184,7 +184,7 @@ export default async function handler(req, res) {
       }
     }
 
-    // 8. Peers
+    // 8. Peers with Dynamic Header Detection
     const peers = [];
     const whM = rawHtml.match(/data-warehouse-id="(\d+)"/);
     if (whM) {
@@ -194,17 +194,38 @@ export default async function handler(req, res) {
         });
         if (pResp.ok) {
           const pHtml = await pResp.text();
+          let roceIdx = 10;
+          let divIdx = 5;
+          let mcapIdx = 4;
+          let peIdx = 3;
+          let cmpIdx = 2;
+
+          const thsMatch = pHtml.match(/<th[^>]*>([\s\S]*?)<\/th>/g);
+          if (thsMatch) {
+            const cleanThs = thsMatch.map(t => t.replace(/<[^>]+>/g, '').toLowerCase().trim());
+            const rI = cleanThs.findIndex(t => t.includes('roce'));
+            if (rI !== -1) roceIdx = rI;
+            const dI = cleanThs.findIndex(t => t.includes('div'));
+            if (dI !== -1) divIdx = dI;
+            const mI = cleanThs.findIndex(t => t.includes('mar cap') || t.includes('mcap'));
+            if (mI !== -1) mcapIdx = mI;
+            const pI = cleanThs.findIndex(t => t.includes('p/e') || t.includes('pe'));
+            if (pI !== -1) peIdx = pI;
+            const cI = cleanThs.findIndex(t => t.includes('cmp'));
+            if (cI !== -1) cmpIdx = cI;
+          }
+
           const trs = pHtml.match(/<tr[^>]*>([\s\S]*?)<\/tr>/g) || [];
           for (const tr of trs) {
             const tds = (tr.match(/<td[^>]*>([\s\S]*?)<\/td>/g) || []).map(td => td.replace(/<[^>]+>/g, '').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim());
             if (tds.length >= 5 && tds[1] && !tds[1].includes('Median')) {
               peers.push({
                 name: tds[1],
-                cmp: tds[2],
-                pe: tds[3],
-                mcap: tds[4],
-                divYield: tds[5] || '0.0',
-                roce: tds[7] || '0.0'
+                cmp: tds[cmpIdx] || tds[2],
+                pe: tds[peIdx] || tds[3],
+                mcap: tds[mcapIdx] || tds[4],
+                divYield: tds[divIdx] || '0.0',
+                roce: tds[roceIdx] || '0.0'
               });
             }
           }

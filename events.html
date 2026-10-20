@@ -213,8 +213,9 @@
         /* Calendar Grid */
         .cal-grid {
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
+            grid-template-columns: repeat(7, minmax(0, 1fr));
             gap: 6px;
+            width: 100%;
         }
         .cal-weekday {
             text-align: center;
@@ -515,6 +516,162 @@
             color: var(--text-primary);
             margin-top: 2px;
         }
+
+        /* Mobile Responsiveness for all screen sizes */
+        @media (max-width: 992px) {
+            .site-navbar {
+                padding: 10px 14px;
+            }
+            .navbar-inner {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .brand-group {
+                flex: 1;
+            }
+            .nav-links {
+                width: 100%;
+                order: 3;
+                overflow-x: auto;
+                white-space: nowrap;
+                padding: 4px 2px 6px;
+                gap: 8px;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .nav-links::-webkit-scrollbar {
+                display: none;
+            }
+            .nav-link {
+                flex-shrink: 0;
+                padding: 5px 12px;
+                border-radius: 9999px;
+                background: var(--bg-card);
+                border: 1px solid var(--border-subtle);
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-bottom: 72px;
+            }
+            .events-viewport {
+                padding: 0 12px 60px;
+            }
+            .cal-header-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+            .cal-legend-bar {
+                overflow-x: auto;
+                white-space: nowrap;
+                width: 100%;
+                padding-bottom: 4px;
+                gap: 8px;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .cal-legend-bar::-webkit-scrollbar {
+                display: none;
+            }
+            .cal-grid {
+                grid-template-columns: repeat(7, minmax(0, 1fr)) !important;
+                gap: 3px !important;
+                width: 100% !important;
+            }
+            .cal-weekday {
+                font-size: 9px !important;
+                padding: 4px 1px !important;
+                min-width: 0 !important;
+            }
+            .cal-day-cell {
+                min-height: 48px !important;
+                padding: 2px 3px !important;
+                border-radius: 4px !important;
+                min-width: 0 !important;
+                overflow: hidden !important;
+            }
+            .cal-day-num {
+                font-size: 10px;
+                margin-bottom: 2px;
+            }
+            .cal-badge-pill {
+                font-size: 8px !important;
+                padding: 1px 3px !important;
+                max-width: 100%;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .filter-pill-row {
+                overflow-x: auto;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                padding-bottom: 4px;
+                width: 100%;
+            }
+            .filter-pill-row::-webkit-scrollbar {
+                display: none;
+            }
+            .events-feed-grid {
+                grid-template-columns: 1fr;
+            }
+            .event-modal-content {
+                width: 95%;
+                margin: 20px auto;
+                padding: 18px;
+            }
+            .modal-meta-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+        }
+
+        /* Mobile Bottom App Navigation Dock */
+        .mobile-bottom-dock {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            background: var(--navbar-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-subtle);
+            padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 4px));
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+        }
+        @media (max-width: 768px) {
+            .mobile-bottom-dock {
+                display: flex;
+            }
+        }
+        .dock-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 600;
+            transition: color 0.15s ease;
+            flex: 1;
+            text-align: center;
+        }
+        .dock-item:hover, .dock-item.active {
+            color: var(--groww-mint);
+        }
+        .dock-icon {
+            font-size: 18px;
+            line-height: 1;
+        }
     </style>
 </head>
 <body>
@@ -530,10 +687,12 @@
             <nav class="nav-links">
                 <a href="/" class="nav-link">Dashboard</a>
                 <a href="/screener.html" class="nav-link">Stock Screener</a>
+                <a href="/fno.html" class="nav-link">F&O Radar</a>
                 <a href="/events.html" class="nav-link active">Stock Events</a>
-                <a href="/ipo.html" class="nav-link">IPOs</a>
                 <a href="/unlisted.html" class="nav-link">Unlisted Shares</a>
                 <a href="/portfolio.html" class="nav-link">Portfolio</a>
+                <a href="/insurance.html" class="nav-link">Insurance</a>
+                <a href="/crypto.html" class="nav-link">Crypto & Tax</a>
                 <a href="/calculators.html" class="nav-link">Calculators</a>
             </nav>
 
@@ -726,7 +885,7 @@
                 dateLabel: "26 OCT 2026",
                 recordDate: "N/A (Board Meet)",
                 actionVal: "Quarterly Results",
-                cmpMcap: "₹4,120.00 · ₹14,90,375 Cr",
+                cmpMcap: "₹2,461.00 · ₹8,90,375 Cr",
                 avatar: "TC",
                 avatarBg: "#6366f1",
                 pillClass: "pill-earnings",
@@ -744,12 +903,12 @@
                 dateLabel: "29 OCT 2026",
                 recordDate: "30 OCT 2026",
                 actionVal: "Split 1:10 (FV ₹10 to ₹1)",
-                cmpMcap: "₹7,450.00 · ₹2,64,189 Cr",
+                cmpMcap: "₹2,892.00 · ₹1,54,189 Cr",
                 avatar: "TR",
                 avatarBg: "#10b981",
                 pillClass: "pill-split",
                 desc: "Sub-division of 1 equity share of face value ₹10/- each into 10 equity shares of face value ₹1/- each to increase liquidity and retail participation.",
-                takeaway: "Post-split adjusted price around ₹745 expands liquidity for institutional indexing and retail option writing."
+                takeaway: "Post-split adjusted price around ₹289 expands liquidity for institutional indexing and retail option writing."
             },
             {
                 id: "ev-4",
@@ -762,7 +921,7 @@
                 dateLabel: "31 OCT 2026",
                 recordDate: "N/A",
                 actionVal: "Capex & Demerger Review",
-                cmpMcap: "₹2,688.00 · ₹19,84,200 Cr",
+                cmpMcap: "₹1,202.00 · ₹16,26,611 Cr",
                 avatar: "RE",
                 avatarBg: "#2563eb",
                 pillClass: "pill-meeting",
@@ -780,7 +939,7 @@
                 dateLabel: "18 OCT 2026",
                 recordDate: "N/A",
                 actionVal: "Quarterly Results",
-                cmpMcap: "₹1,885.00 · ₹7,58,869 Cr",
+                cmpMcap: "₹1,131.00 · ₹4,58,869 Cr",
                 avatar: "IN",
                 avatarBg: "#0284c7",
                 pillClass: "pill-earnings",
@@ -834,7 +993,7 @@
                 dateLabel: "06 NOV 2026",
                 recordDate: "N/A",
                 actionVal: "Quarterly Results",
-                cmpMcap: "₹968.20 · ₹3,56,800 Cr",
+                cmpMcap: "₹895.00 · ₹3,28,400 Cr",
                 avatar: "TM",
                 avatarBg: "#6366f1",
                 pillClass: "pill-earnings",
@@ -852,7 +1011,7 @@
                 dateLabel: "12 NOV 2026",
                 recordDate: "13 NOV 2026",
                 actionVal: "Bonus 1:1 Issue",
-                cmpMcap: "₹174.60 · ₹8,120 Cr",
+                cmpMcap: "₹18.10 · ₹17,781 Cr",
                 avatar: "PC",
                 avatarBg: "#f59e0b",
                 pillClass: "pill-split",
@@ -870,7 +1029,7 @@
                 dateLabel: "19 OCT 2026",
                 recordDate: "N/A",
                 actionVal: "Quarterly Financials",
-                cmpMcap: "₹1,642.50 · ₹12,48,500 Cr",
+                cmpMcap: "₹712.00 · ₹10,97,804 Cr",
                 avatar: "HD",
                 avatarBg: "#0d9488",
                 pillClass: "pill-earnings",
@@ -906,7 +1065,7 @@
                 dateLabel: "02 NOV 2026",
                 recordDate: "N/A",
                 actionVal: "Quarterly Financials",
-                cmpMcap: "₹1,685.00 · ₹9,85,600 Cr",
+                cmpMcap: "₹1,875.00 · ₹11,70,428 Cr",
                 avatar: "BA",
                 avatarBg: "#dc2626",
                 pillClass: "pill-earnings",
@@ -1121,5 +1280,28 @@
             renderEventsFeed();
         });
     </script>
+    <!-- Mobile Bottom App Navigation Dock -->
+    <nav class="mobile-bottom-dock">
+        <a href="/" class="dock-item">
+            <span class="dock-icon">🏠</span>
+            <span>Dashboard</span>
+        </a>
+        <a href="/screener.html" class="dock-item">
+            <span class="dock-icon">⚡</span>
+            <span>Screener</span>
+        </a>
+        <a href="/fno.html" class="dock-item">
+            <span class="dock-icon">📊</span>
+            <span>F&O Radar</span>
+        </a>
+        <a href="/events.html" class="dock-item active">
+            <span class="dock-icon">📅</span>
+            <span>Events</span>
+        </a>
+        <a href="/portfolio.html" class="dock-item">
+            <span class="dock-icon">💼</span>
+            <span>Portfolio</span>
+        </a>
+    </nav>
 </body>
 </html>

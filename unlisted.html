@@ -417,6 +417,104 @@
             color: var(--text-muted);
             cursor: pointer;
         }
+
+        /* Complete Mobile Responsiveness */
+        @media (max-width: 992px) {
+            .site-navbar {
+                padding: 10px 14px;
+            }
+            .navbar-inner {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .brand-group {
+                flex: 1;
+            }
+            .nav-links {
+                width: 100%;
+                order: 3;
+                overflow-x: auto;
+                white-space: nowrap;
+                padding: 4px 2px 6px;
+                gap: 8px;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .nav-links::-webkit-scrollbar {
+                display: none;
+            }
+            .nav-link {
+                flex-shrink: 0;
+                padding: 5px 12px;
+                border-radius: 9999px;
+                background: var(--bg-card);
+                border: 1px solid var(--border-subtle);
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-bottom: 72px;
+            }
+            .unlisted-viewport {
+                padding: 16px 12px 60px;
+            }
+            .unlisted-hero {
+                padding: 24px 14px 16px;
+            }
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                width: 100%;
+            }
+            .unlisted-table {
+                min-width: 600px;
+            }
+        }
+
+        /* Mobile Bottom App Navigation Dock */
+        .mobile-bottom-dock {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            background: var(--navbar-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-subtle);
+            padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 4px));
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+        }
+        @media (max-width: 768px) {
+            .mobile-bottom-dock {
+                display: flex;
+            }
+        }
+        .dock-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 600;
+            transition: color 0.15s ease;
+            flex: 1;
+            text-align: center;
+        }
+        .dock-item:hover, .dock-item.active {
+            color: var(--groww-mint);
+        }
+        .dock-icon {
+            font-size: 18px;
+            line-height: 1;
+        }
     </style>
 </head>
 <body>
@@ -432,10 +530,12 @@
             <div class="nav-links">
                 <a href="/" class="nav-link">Dashboard</a>
                 <a href="/screener.html" class="nav-link">Stock Screener</a>
+                <a href="/fno.html" class="nav-link">F&O Radar</a>
                 <a href="/events.html" class="nav-link">Stock Events</a>
-                <a href="/ipo.html" class="nav-link">IPOs</a>
                 <a href="/unlisted.html" class="nav-link active">Unlisted Shares</a>
                 <a href="/portfolio.html" class="nav-link">Portfolio</a>
+                <a href="/insurance.html" class="nav-link">Insurance</a>
+                <a href="/crypto.html" class="nav-link">Crypto & Tax</a>
                 <a href="/calculators.html" class="nav-link">Calculators</a>
             </div>
 
@@ -827,14 +927,181 @@
                     </div>
                 </div>
                 <div style="border-top:1px solid var(--border-subtle); padding-top:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-                    <span style="font-size:11.5px; color:var(--text-muted);">Transferred to Demat via CDSL/NSDL e-DIS</span>
-                    <button class="btn-primary" style="background:var(--groww-mint); color:#ffffff; padding:8px 16px; border:none; border-radius:8px; font-size:12.5px; font-weight:700; cursor:pointer;" onclick="showToast('Inquiry request logged for ${stock.name}. Pre-IPO desk will connect with accredited investor credentials.')">
-                        📩 Request Share Availability
+                    <span style="font-size:11.5px; color:var(--text-muted);">Transferred to Demat via CDSL/NSDL e-DIS • Off-market Settlement</span>
+                    <button class="btn-primary" style="background:var(--groww-mint); color:#ffffff; padding:10px 20px; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; box-shadow:0 4px 12px rgba(16,185,129,0.25);" onclick="openOrderBookingFlow('${stock.id}')">
+                        ⚡ Book Shares / Request Allocation →
                     </button>
                 </div>
             `;
 
             document.getElementById('unlisted-modal').classList.add('active');
+        }
+
+        /* ── Pre-IPO Order Booking & Allocation Flow ── */
+        function openOrderBookingFlow(id) {
+            const stock = UNLISTED_STOCKS.find(x => x.id === id);
+            if (!stock) return;
+
+            const priceNum = parseFloat(stock.price.replace(/[^0-9.]/g, '')) || 500;
+            const minQty = parseInt(stock.lotSize.replace(/[^0-9]/g, '')) || 50;
+
+            const body = document.getElementById('modal-unlisted-body');
+            body.innerHTML = `
+                <div style="margin-bottom:14px; display:flex; justify-content:space-between; align-items:center; background:var(--bg-card-subtle); border:1px solid var(--border-subtle); border-radius:10px; padding:12px 16px;">
+                    <div>
+                        <div style="font-size:12px; color:var(--text-muted); font-weight:700;">INDICATIVE UNLISTED PRICE</div>
+                        <div style="font-size:20px; font-weight:800; color:var(--groww-mint); font-family:'JetBrains Mono';">${stock.price} / Share</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-size:12px; color:var(--text-muted); font-weight:700;">MINIMUM LOT</div>
+                        <div style="font-size:14px; font-weight:700; color:var(--text-primary);">${stock.lotSize}</div>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:700; color:var(--text-primary); margin-bottom:4px;">Quantity (Shares)</label>
+                        <input type="number" id="book-qty-input" value="${minQty}" min="${minQty}" step="10" oninput="calculateBookingTotal(${priceNum})" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid var(--border-subtle); background:var(--bg-card); color:var(--text-primary); font-size:13px; font-family:'JetBrains Mono';">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:700; color:var(--text-primary); margin-bottom:4px;">Depository (Demat)</label>
+                        <select id="book-depository-select" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid var(--border-subtle); background:var(--bg-card); color:var(--text-primary); font-size:13px;">
+                            <option value="CDSL">CDSL (16-Digit BO ID)</option>
+                            <option value="NSDL">NSDL (IN + 14-Digit DP ID)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px;">
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:700; color:var(--text-primary); margin-bottom:4px;">Investor Name (as per PAN)</label>
+                        <input type="text" id="book-name-input" placeholder="e.g. Rahul Sharma" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid var(--border-subtle); background:var(--bg-card); color:var(--text-primary); font-size:13px;">
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:12px; font-weight:700; color:var(--text-primary); margin-bottom:4px;">WhatsApp Number</label>
+                        <input type="tel" id="book-phone-input" placeholder="+91 98765 43210" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid var(--border-subtle); background:var(--bg-card); color:var(--text-primary); font-size:13px;">
+                    </div>
+                </div>
+
+                <div style="margin-bottom:14px;">
+                    <label style="display:block; font-size:12px; font-weight:700; color:var(--text-primary); margin-bottom:4px;">Demat Account Number (BO ID / DP ID)</label>
+                    <input type="text" id="book-demat-input" placeholder="1208160012345678 (16 digits for CDSL / NSDL)" style="width:100%; padding:9px 12px; border-radius:8px; border:1px solid var(--border-subtle); background:var(--bg-card); color:var(--text-primary); font-size:13px; font-family:'JetBrains Mono';">
+                </div>
+
+                <!-- Price Breakdown Table -->
+                <div style="background:var(--bg-card-subtle); border:1px solid var(--border-subtle); border-radius:10px; padding:12px 16px; margin-bottom:14px;">
+                    <div style="display:flex; justify-content:space-between; font-size:12.5px; color:var(--text-secondary); margin-bottom:6px;">
+                        <span>Share Purchase Amount (<span id="calc-qty-label">${minQty}</span> shares @ ₹${priceNum}):</span>
+                        <strong style="color:var(--text-primary); font-family:'JetBrains Mono';" id="calc-base-val">₹${(minQty * priceNum).toLocaleString('en-IN')}</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-muted); margin-bottom:6px;">
+                        <span>Govt Stamp Duty (0.015%):</span>
+                        <span style="font-family:'JetBrains Mono';" id="calc-stamp-val">₹${((minQty * priceNum) * 0.00015).toFixed(2)}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--text-muted); margin-bottom:8px;">
+                        <span>Depository e-DIS Transfer Fee:</span>
+                        <span style="font-family:'JetBrains Mono';">₹15.00</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; font-size:14px; font-weight:800; color:var(--text-primary); border-top:1px dashed var(--border-subtle); padding-top:8px;">
+                        <span>Net Order Value (Escrow Deposit):</span>
+                        <span style="color:var(--groww-mint); font-family:'JetBrains Mono';" id="calc-net-val">₹${Math.round((minQty * priceNum) + 15 + ((minQty * priceNum) * 0.00015)).toLocaleString('en-IN')}</span>
+                    </div>
+                </div>
+
+                <label style="display:flex; align-items:flex-start; gap:8px; font-size:11.5px; color:var(--text-secondary); margin-bottom:16px; cursor:pointer;">
+                    <input type="checkbox" id="book-sebi-consent" checked style="accent-color:var(--groww-mint); margin-top:2px;">
+                    <span>I understand that pre-IPO equities are subject to SEBI's statutory <strong>6-month post-listing lock-in period</strong> under ICDR Regulations and verify that off-market e-DIS transfer is permitted.</span>
+                </label>
+
+                <div style="display:flex; justify-content:space-between; gap:10px;">
+                    <button class="btn-secondary" onclick="openUnlistedModal('${stock.id}')" style="padding:9px 16px; font-size:13px;">← Back to Analysis</button>
+                    <button class="btn-primary" onclick="submitOrderBooking('${stock.id}', ${priceNum})" style="background:var(--groww-mint); color:#fff; border:none; padding:10px 22px; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; box-shadow:0 4px 14px rgba(16,185,129,0.3);">
+                        🚀 Confirm &amp; Generate Allocation Docket
+                    </button>
+                </div>
+            `;
+        }
+
+        function calculateBookingTotal(pricePerShare) {
+            const qty = parseInt(document.getElementById('book-qty-input').value) || 0;
+            const base = qty * pricePerShare;
+            const stamp = base * 0.00015;
+            const net = base + stamp + (qty > 0 ? 15 : 0);
+
+            document.getElementById('calc-qty-label').textContent = qty;
+            document.getElementById('calc-base-val').textContent = '₹' + Math.round(base).toLocaleString('en-IN');
+            document.getElementById('calc-stamp-val').textContent = '₹' + stamp.toFixed(2);
+            document.getElementById('calc-net-val').textContent = '₹' + Math.round(net).toLocaleString('en-IN');
+        }
+
+        function submitOrderBooking(id, pricePerShare) {
+            const stock = UNLISTED_STOCKS.find(x => x.id === id);
+            if (!stock) return;
+
+            const name = document.getElementById('book-name-input').value.trim();
+            const phone = document.getElementById('book-phone-input').value.trim();
+            const demat = document.getElementById('book-demat-input').value.trim();
+            const qty = parseInt(document.getElementById('book-qty-input').value) || 0;
+            const consent = document.getElementById('book-sebi-consent').checked;
+
+            if (!name || !phone || !demat) {
+                showToast("Please enter your Name, WhatsApp Number, and 16-Digit Demat ID.");
+                return;
+            }
+
+            if (!consent) {
+                showToast("Please acknowledge SEBI's 6-month post-listing lock-in clause.");
+                return;
+            }
+
+            const refId = `DSA-UNL-${new Date().getFullYear()}-${stock.id.toUpperCase().slice(0, 6)}-${Math.floor(1000 + Math.random() * 9000)}`;
+            const totalVal = Math.round((qty * pricePerShare) + 15 + ((qty * pricePerShare) * 0.00015));
+
+            const body = document.getElementById('modal-unlisted-body');
+            body.innerHTML = `
+                <div style="text-align:center; padding:16px 0 20px;">
+                    <div style="width:56px; height:56px; border-radius:50%; background:rgba(16,185,129,0.12); color:var(--groww-mint); font-size:28px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px;">✓</div>
+                    <h3 style="font-family:'Outfit'; font-size:20px; font-weight:800; color:var(--text-primary); margin-bottom:4px;">Allocation Reserved in Escrow!</h3>
+                    <p style="font-size:12.5px; color:var(--text-secondary); max-width:440px; margin:0 auto 16px;">
+                        Pre-IPO allocation docket generated for <strong>${name}</strong>. Held in priority settlement escrow for 24 hours.
+                    </p>
+                </div>
+
+                <div style="background:var(--bg-card-subtle); border:1px solid var(--border-subtle); border-radius:10px; padding:16px; margin-bottom:18px; font-family:'JetBrains Mono'; font-size:12px;">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:8px; border-bottom:1px solid var(--border-subtle); padding-bottom:6px;">
+                        <span style="color:var(--text-muted);">DOCKET REFERENCE ID:</span>
+                        <strong style="color:var(--accent-blue);">${refId}</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                        <span style="color:var(--text-muted);">EQUITY ASSET:</span>
+                        <strong style="color:var(--text-primary); font-family:'Outfit';">${stock.name}</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                        <span style="color:var(--text-muted);">RESERVED SHARES:</span>
+                        <strong style="color:var(--text-primary);">${qty} Shares @ ${stock.price}</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                        <span style="color:var(--text-muted);">ESCROW VALUE:</span>
+                        <strong style="color:var(--groww-mint);">₹${totalVal.toLocaleString('en-IN')}</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; margin-bottom:6px;">
+                        <span style="color:var(--text-muted);">TARGET DEMAT ID:</span>
+                        <strong style="color:var(--text-primary);">${demat}</strong>
+                    </div>
+                    <div style="display:flex; justify-content:space-between;">
+                        <span style="color:var(--text-muted);">DELIVERY WINDOW:</span>
+                        <strong style="color:#d97706;">T+1 Day via Depository e-DIS</strong>
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center;">
+                    <button class="btn-primary" onclick="showToast('Downloading verified Pre-IPO Allocation Term Sheet PDF...');" style="padding:9px 18px; font-size:12.5px;">📄 Download Term Sheet (PDF)</button>
+                    <button class="btn-secondary" onclick="showToast('Dispatched WhatsApp copy to ${phone}!');" style="padding:9px 18px; font-size:12.5px;">📱 Send to WhatsApp</button>
+                    <button class="btn-secondary" onclick="closeUnlistedModal()" style="padding:9px 18px; font-size:12.5px;">✕ Done</button>
+                </div>
+            `;
+
+            showToast(`✅ Pre-IPO Allocation Docket Generated: ${refId}`);
         }
 
         function closeUnlistedModal() {
@@ -845,5 +1112,28 @@
             renderUnlisted();
         });
     </script>
+    <!-- Mobile Bottom App Navigation Dock -->
+    <nav class="mobile-bottom-dock">
+        <a href="/" class="dock-item">
+            <span class="dock-icon">🏠</span>
+            <span>Dashboard</span>
+        </a>
+        <a href="/screener.html" class="dock-item">
+            <span class="dock-icon">⚡</span>
+            <span>Screener</span>
+        </a>
+        <a href="/fno.html" class="dock-item">
+            <span class="dock-icon">📊</span>
+            <span>F&O Radar</span>
+        </a>
+        <a href="/events.html" class="dock-item">
+            <span class="dock-icon">📅</span>
+            <span>Events</span>
+        </a>
+        <a href="/portfolio.html" class="dock-item">
+            <span class="dock-icon">💼</span>
+            <span>Portfolio</span>
+        </a>
+    </nav>
 </body>
 </html>

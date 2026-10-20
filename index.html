@@ -1157,8 +1157,164 @@
             font-size: 13px;
             transition: color 0.2s ease;
         }
-        .footer-nav a:hover {
+        /* Comprehensive Mobile Responsiveness for Dalal Street Alpha */
+        @media (max-width: 992px) {
+            .site-header {
+                padding: 10px 14px;
+            }
+            .header-inner {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .brand-group {
+                flex: 1;
+            }
+            .header-utility {
+                margin-left: auto;
+            }
+            .header-nav-links {
+                width: 100%;
+                order: 3;
+                overflow-x: auto;
+                white-space: nowrap;
+                padding: 4px 2px 6px;
+                gap: 8px;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .header-nav-links::-webkit-scrollbar {
+                display: none;
+            }
+            .nav-link-item {
+                flex-shrink: 0;
+                padding: 5px 12px;
+                border-radius: 9999px;
+                background: var(--bg-card);
+                border: 1px solid var(--border-subtle);
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-bottom: 72px; /* Space for mobile bottom bar */
+            }
+            .hero-section {
+                padding: 24px 14px 16px;
+            }
+            .hero-title {
+                font-size: 26px !important;
+                line-height: 1.25;
+            }
+            .hero-subtitle {
+                font-size: 13.5px;
+            }
+            .search-bar-wrap {
+                width: 100%;
+            }
+            .market-status-strip {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+                font-size: 11px;
+            }
+            .dashboard-tabs-bar {
+                overflow-x: auto;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                padding: 6px 12px;
+            }
+            .dashboard-tabs-bar::-webkit-scrollbar {
+                display: none;
+            }
+            .tab-btn {
+                flex-shrink: 0;
+            }
+            .trending-header-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .trending-filter-tabs {
+                width: 100%;
+                overflow-x: auto;
+                white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .trending-filter-tabs::-webkit-scrollbar {
+                display: none;
+            }
+            .movers-table-scroll {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                width: 100%;
+            }
+            .movers-table {
+                min-width: 580px;
+            }
+            .movers-filter-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title {
+                font-size: 22px !important;
+            }
+            .brand-name {
+                font-size: 16px;
+            }
+            .live-status-pill {
+                padding: 4px 8px;
+                font-size: 10.5px;
+            }
+        }
+
+        /* Mobile Bottom App Navigation Dock */
+        .mobile-bottom-dock {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            background: var(--navbar-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-subtle);
+            padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 4px));
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+        }
+        @media (max-width: 768px) {
+            .mobile-bottom-dock {
+                display: flex;
+            }
+        }
+        .dock-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 600;
+            transition: color 0.15s ease;
+            flex: 1;
+            text-align: center;
+        }
+        .dock-item:hover, .dock-item.active {
             color: var(--groww-mint);
+        }
+        .dock-icon {
+            font-size: 18px;
+            line-height: 1;
         }
     </style>
 </head>
@@ -1211,13 +1367,14 @@
 
             <nav class="header-nav-links">
                 <a href="#movers-section" class="nav-link-item" onclick="switchDashboardTab('movers')">Movers</a>
-                <a href="/screener.html" class="nav-link-item">Stock Screener</a>
+                <a href="/screener.html" class="nav-link-item">Screener</a>
+                <a href="/fno.html" class="nav-link-item">F&O Radar</a>
                 <a href="/events.html" class="nav-link-item">Stock Events</a>
-                <a href="/ipo.html" class="nav-link-item">IPOs</a>
-                <a href="/unlisted.html" class="nav-link-item">Unlisted Shares</a>
+                <a href="/unlisted.html" class="nav-link-item">Unlisted</a>
                 <a href="/portfolio.html" class="nav-link-item">Portfolio</a>
+                <a href="/insurance.html" class="nav-link-item">Insurance</a>
+                <a href="/crypto.html" class="nav-link-item">Crypto & Tax</a>
                 <a href="/calculators.html" class="nav-link-item">Calculators</a>
-                <a href="#research-section" class="nav-link-item" onclick="switchDashboardTab('research')">Research</a>
             </nav>
 
             <div class="header-utility" style="display:flex; align-items:center; gap:10px;">
@@ -1817,14 +1974,14 @@
         // Top Movers Mock Data & Filtering
         const MOVERS_DATA = {
             gainers: [
-                { name: "Trent Ltd", symbol: "TRENT", price: "₹7,450.00", change: "+3.20%" },
-                { name: "Mahindra & Mahindra", symbol: "M&M", price: "₹2,950.00", change: "+2.40%" },
-                { name: "Bharti Airtel", symbol: "BHARTIARTL", price: "₹1,675.20", change: "+1.90%" },
-                { name: "Bajaj Finance", symbol: "BAJFINANCE", price: "₹6,845.00", change: "+1.75%" },
-                { name: "Larsen & Toubro", symbol: "LT", price: "₹3,540.00", change: "+1.40%" },
-                { name: "ICICI Bank", symbol: "ICICIBANK", price: "₹1,268.40", change: "+1.15%" },
-                { name: "Sun Pharma", symbol: "SUNPHARMA", price: "₹1,840.00", change: "+0.90%" },
-                { name: "HDFC Bank", symbol: "HDFCBANK", price: "₹1,642.50", change: "+0.85%" }
+                { name: "Trent Ltd", symbol: "TRENT", price: "₹2,892.00", change: "+3.20%" },
+                { name: "Larsen & Toubro", symbol: "LT", price: "₹3,662.00", change: "+1.95%" },
+                { name: "Bharti Airtel", symbol: "BHARTIARTL", price: "₹1,875.00", change: "+1.80%" },
+                { name: "ICICI Bank", symbol: "ICICIBANK", price: "₹1,381.00", change: "+1.45%" },
+                { name: "State Bank of India", symbol: "SBIN", price: "₹974.00", change: "+1.20%" },
+                { name: "Hindustan Unilever", symbol: "HINDUNILVR", price: "₹1,853.00", change: "+0.95%" },
+                { name: "Bajaj Finance", symbol: "BAJFINANCE", price: "₹957.00", change: "+0.85%" },
+                { name: "HDFC Bank", symbol: "HDFCBANK", price: "₹712.00", change: "+0.75%" }
             ],
             losers: [
                 { name: "Bandhan Bank", symbol: "BANDHANBNK", price: "₹172.50", change: "-1.80%" },
@@ -1832,19 +1989,19 @@
                 { name: "Tata Motors", symbol: "TATAMOTORS", price: "₹895.00", change: "-1.10%" },
                 { name: "Adani Enterprises", symbol: "ADANIENT", price: "₹2,840.00", change: "-0.70%" },
                 { name: "Maruti Suzuki", symbol: "MARUTI", price: "₹11,850.00", change: "-0.50%" },
-                { name: "TCS Ltd", symbol: "TCS", price: "₹4,120.00", change: "-0.45%" },
+                { name: "TCS Ltd", symbol: "TCS", price: "₹2,461.00", change: "-0.45%" },
                 { name: "ONGC", symbol: "ONGC", price: "₹268.00", change: "-0.40%" },
-                { name: "Infosys Ltd", symbol: "INFY", price: "₹1,885.00", change: "-0.32%" }
+                { name: "Infosys Ltd", symbol: "INFY", price: "₹1,131.00", change: "-0.32%" }
             ],
             volume: [
-                { name: "State Bank of India", symbol: "SBIN", price: "₹795.30", change: "-0.20%" },
-                { name: "HDFC Bank", symbol: "HDFCBANK", price: "₹1,642.50", change: "+0.85%" },
-                { name: "ITC Ltd", symbol: "ITC", price: "₹492.15", change: "+0.65%" },
-                { name: "ICICI Bank", symbol: "ICICIBANK", price: "₹1,268.40", change: "+1.15%" },
+                { name: "State Bank of India", symbol: "SBIN", price: "₹974.00", change: "+1.20%" },
+                { name: "HDFC Bank", symbol: "HDFCBANK", price: "₹712.00", change: "+0.75%" },
+                { name: "ITC Ltd", symbol: "ITC", price: "₹260.80", change: "+0.65%" },
+                { name: "ICICI Bank", symbol: "ICICIBANK", price: "₹1,381.00", change: "+1.45%" },
                 { name: "Tata Motors", symbol: "TATAMOTORS", price: "₹895.00", change: "-1.10%" },
-                { name: "Reliance Industries", symbol: "RELIANCE", price: "₹2,688.00", change: "+0.42%" },
-                { name: "Bharti Airtel", symbol: "BHARTIARTL", price: "₹1,675.20", change: "+1.90%" },
-                { name: "NTPC Ltd", symbol: "NTPC", price: "₹415.00", change: "+1.20%" }
+                { name: "Reliance Industries", symbol: "RELIANCE", price: "₹1,202.00", change: "+0.42%" },
+                { name: "Bharti Airtel", symbol: "BHARTIARTL", price: "₹1,875.00", change: "+1.80%" },
+                { name: "PC Jeweller Ltd", symbol: "PCJEWELLER", price: "₹18.10", change: "+4.95%" }
             ]
         };
 
@@ -1925,22 +2082,22 @@
         // 1. Dynamic Top Trending Equities Pools (No Favorites - Real Momentum)
         const TRENDING_POOLS = {
             gainers: [
-                { symbol: "TRENT", name: "Trent Ltd", ltp: "₹7,450.00", chg: "+3.26%", up: true, tag: "Retail Titan", avatar: "TR", bg: "#10b981", points: "0,22 20,18 45,20 70,12 95,14 120,4" },
-                { symbol: "M&M", name: "Mahindra & Mahindra", ltp: "₹2,950.00", chg: "+2.46%", up: true, tag: "SUV & Farm Tech", avatar: "MM", bg: "#3b82f6", points: "0,24 25,20 50,16 75,18 95,10 120,4" },
-                { symbol: "BEL", name: "Bharat Electronics", ltp: "₹308.40", chg: "+2.15%", up: true, tag: "Defence Radars", avatar: "BE", bg: "#8b5cf6", points: "0,22 25,18 50,16 75,14 100,10 120,4" },
-                { symbol: "PCJEWELLER", name: "PC Jeweller Ltd", ltp: "₹174.60", chg: "+1.85%", up: true, tag: "Debt Turnaround", avatar: "PC", bg: "#f59e0b", points: "0,25 25,22 50,18 75,14 100,8 120,4" }
+                { symbol: "TRENT", name: "Trent Ltd", ltp: "₹2,892.00", chg: "+3.26%", up: true, tag: "Retail Titan", avatar: "TR", bg: "#10b981", points: "0,22 20,18 45,20 70,12 95,14 120,4" },
+                { symbol: "BHARTIARTL", name: "Bharti Airtel", ltp: "₹1,875.00", chg: "+2.46%", up: true, tag: "ARPU Expansion", avatar: "BA", bg: "#ef4444", points: "0,24 25,20 50,16 75,18 95,10 120,4" },
+                { symbol: "ICICIBANK", name: "ICICI Bank", ltp: "₹1,381.00", chg: "+2.15%", up: true, tag: "Banking RoA", avatar: "IC", bg: "#8b5cf6", points: "0,22 25,18 50,16 75,14 100,10 120,4" },
+                { symbol: "PCJEWELLER", name: "PC Jeweller Ltd", ltp: "₹18.10", chg: "+4.95%", up: true, tag: "Debt Turnaround", avatar: "PC", bg: "#f59e0b", points: "0,25 25,22 50,18 75,14 100,8 120,4" }
             ],
             active: [
-                { symbol: "RELIANCE", name: "Reliance Industries", ltp: "₹2,688.00", chg: "+0.42%", up: true, tag: "₹1,420 Cr Turnover", avatar: "RE", bg: "#2563eb", points: "0,22 20,18 45,20 70,10 95,14 120,4" },
-                { symbol: "HDFCBANK", name: "HDFC Bank", ltp: "₹1,642.50", chg: "+0.85%", up: true, tag: "Banking Anchor", avatar: "HD", bg: "#0d9488", points: "0,24 25,20 50,16 75,18 95,10 120,4" },
-                { symbol: "TATAMOTORS", name: "Tata Motors Ltd", ltp: "₹968.20", chg: "+1.45%", up: true, tag: "JLR Commercials", avatar: "TM", bg: "#6366f1", points: "0,20 25,22 50,15 75,12 100,10 120,4" },
+                { symbol: "RELIANCE", name: "Reliance Industries", ltp: "₹1,202.00", chg: "+0.42%", up: true, tag: "₹1,420 Cr Turnover", avatar: "RE", bg: "#2563eb", points: "0,22 20,18 45,20 70,10 95,14 120,4" },
+                { symbol: "HDFCBANK", name: "HDFC Bank", ltp: "₹712.00", chg: "+0.85%", up: true, tag: "Banking Anchor", avatar: "HD", bg: "#0d9488", points: "0,24 25,20 50,16 75,18 95,10 120,4" },
+                { symbol: "TCS", name: "TCS Ltd", ltp: "₹2,461.00", chg: "+0.95%", up: true, tag: "AI Transformation", avatar: "TC", bg: "#6366f1", points: "0,20 25,22 50,15 75,12 100,10 120,4" },
                 { symbol: "ITC", name: "ITC Ltd", ltp: "₹260.80", chg: "+0.75%", up: true, tag: "Cash Compounder", avatar: "IT", bg: "#059669", points: "0,24 25,20 50,18 75,14 100,12 120,6" }
             ],
             breakout: [
-                { symbol: "TRENT", name: "Trent Ltd", ltp: "₹7,450.00", chg: "+3.26%", up: true, tag: "All-Time High", avatar: "TR", bg: "#10b981", points: "0,22 20,18 45,20 70,12 95,14 120,4" },
-                { symbol: "TITAN", name: "Titan Company", ltp: "₹3,410.00", chg: "+1.60%", up: true, tag: "Jewellery Surge", avatar: "TI", bg: "#ec4899", points: "0,22 25,18 50,14 75,16 100,8 120,4" },
-                { symbol: "BHARTIARTL", name: "Bharti Airtel", ltp: "₹1,685.00", chg: "+1.25%", up: true, tag: "ARPU Expansion", avatar: "BA", bg: "#ef4444", points: "0,24 25,20 50,16 75,12 100,10 120,5" },
-                { symbol: "INFY", name: "Infosys Ltd", ltp: "₹1,885.00", chg: "+1.20%", up: true, tag: "BFSI Multi-Month", avatar: "IN", bg: "#0284c7", points: "0,24 30,18 55,20 80,12 100,14 120,4" }
+                { symbol: "TRENT", name: "Trent Ltd", ltp: "₹2,892.00", chg: "+3.26%", up: true, tag: "All-Time High", avatar: "TR", bg: "#10b981", points: "0,22 20,18 45,20 70,12 95,14 120,4" },
+                { symbol: "LT", name: "Larsen & Toubro", ltp: "₹3,662.00", chg: "+1.95%", up: true, tag: "Infra Capex", avatar: "LT", bg: "#ec4899", points: "0,22 25,18 50,14 75,16 100,8 120,4" },
+                { symbol: "BHARTIARTL", name: "Bharti Airtel", ltp: "₹1,875.00", chg: "+1.80%", up: true, tag: "ARPU Expansion", avatar: "BA", bg: "#ef4444", points: "0,24 25,20 50,16 75,12 100,10 120,5" },
+                { symbol: "INFY", name: "Infosys Ltd", ltp: "₹1,131.00", chg: "+1.20%", up: true, tag: "BFSI Multi-Month", avatar: "IN", bg: "#0284c7", points: "0,24 30,18 55,20 80,12 100,14 120,4" }
             ]
         };
 
@@ -2226,5 +2383,28 @@
             loadResearchReports();
         });
     </script>
+    <!-- Mobile Bottom App Navigation Dock -->
+    <nav class="mobile-bottom-dock">
+        <a href="/" class="dock-item active">
+            <span class="dock-icon">🏠</span>
+            <span>Dashboard</span>
+        </a>
+        <a href="/screener.html" class="dock-item">
+            <span class="dock-icon">⚡</span>
+            <span>Screener</span>
+        </a>
+        <a href="/fno.html" class="dock-item">
+            <span class="dock-icon">📊</span>
+            <span>F&O Radar</span>
+        </a>
+        <a href="/events.html" class="dock-item">
+            <span class="dock-icon">📅</span>
+            <span>Events</span>
+        </a>
+        <a href="/portfolio.html" class="dock-item">
+            <span class="dock-icon">💼</span>
+            <span>Portfolio</span>
+        </a>
+    </nav>
 </body>
 </html>

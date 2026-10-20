@@ -180,17 +180,25 @@ def fetch_screener_stock(symbol):
             p_url = f"https://www.screener.in/api/company/{warehouse_id}/peers/"
             p_req = urllib.request.Request(p_url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)'})
             p_html = urllib.request.urlopen(p_req, timeout=6).read().decode('utf-8')
+            ths_match = re.findall(r'<th[^>]*>(.*?)</th>', p_html, re.DOTALL)
+            clean_ths = [re.sub(r'<[^>]+>', '', t).lower().strip() for t in ths_match]
+            roce_idx = next((i for i, t in enumerate(clean_ths) if 'roce' in t), 10)
+            div_idx = next((i for i, t in enumerate(clean_ths) if 'div' in t), 5)
+            mcap_idx = next((i for i, t in enumerate(clean_ths) if 'mar cap' in t or 'mcap' in t), 4)
+            pe_idx = next((i for i, t in enumerate(clean_ths) if 'p/e' in t or 'pe' in t), 3)
+            cmp_idx = next((i for i, t in enumerate(clean_ths) if 'cmp' in t), 2)
+
             for tr in re.findall(r'<tr[^>]*>(.*?)</tr>', p_html, re.DOTALL):
                 tds = [re.sub(r'<[^>]+>', ' ', td).strip() for td in re.findall(r'<td[^>]*>(.*?)</td>', tr, re.DOTALL)]
                 tds = [re.sub(r'\s+', ' ', html.unescape(td)) for td in tds]
                 if len(tds) >= 5 and tds[1] and 'Median' not in tds[1]:
                     peer_list.append({
                         "name": tds[1],
-                        "cmp": tds[2],
-                        "pe": tds[3],
-                        "mcap": tds[4],
-                        "divYield": tds[5] if len(tds) > 5 else "0.0",
-                        "roce": tds[7] if len(tds) > 7 else "0.0"
+                        "cmp": tds[cmp_idx] if len(tds) > cmp_idx else tds[2],
+                        "pe": tds[pe_idx] if len(tds) > pe_idx else tds[3],
+                        "mcap": tds[mcap_idx] if len(tds) > mcap_idx else tds[4],
+                        "divYield": tds[div_idx] if len(tds) > div_idx else "0.0",
+                        "roce": tds[roce_idx] if len(tds) > roce_idx else "0.0"
                     })
         except Exception as e:
             print(f"    [-] Peers fetch error: {e}")

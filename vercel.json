@@ -64,6 +64,18 @@
     {
       "source": "/unlisted",
       "destination": "/unlisted.html"
+    },
+    {
+      "source": "/fno",
+      "destination": "/fno.html"
+    },
+    {
+      "source": "/insurance",
+      "destination": "/insurance.html"
+    },
+    {
+      "source": "/crypto",
+      "destination": "/crypto.html"
     }
   ],
   "headers": [

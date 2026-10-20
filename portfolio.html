@@ -558,6 +558,152 @@
             margin-top: 4px;
         }
 
+        /* Mobile Responsiveness for all screen sizes */
+        @media (max-width: 992px) {
+            .site-navbar {
+                padding: 10px 14px;
+            }
+            .navbar-inner {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .brand-group {
+                flex: 1;
+            }
+            .nav-links {
+                width: 100%;
+                order: 3;
+                overflow-x: auto;
+                white-space: nowrap;
+                padding: 4px 2px 6px;
+                gap: 8px;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .nav-links::-webkit-scrollbar {
+                display: none;
+            }
+            .nav-link {
+                flex-shrink: 0;
+                padding: 5px 12px;
+                border-radius: 9999px;
+                background: var(--bg-card);
+                border: 1px solid var(--border-subtle);
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-bottom: 72px;
+            }
+            .port-viewport {
+                padding: 0 12px 60px;
+            }
+            .port-hero {
+                padding: 16px 12px;
+            }
+            .port-hero-top {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+            }
+            .action-btns-group {
+                overflow-x: auto;
+                white-space: nowrap;
+                width: 100%;
+                padding-bottom: 6px;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .action-btns-group::-webkit-scrollbar {
+                display: none;
+            }
+            .broker-connect-bar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .broker-list {
+                overflow-x: auto;
+                white-space: nowrap;
+                width: 100%;
+                padding-bottom: 4px;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .broker-list::-webkit-scrollbar {
+                display: none;
+            }
+            .metric-cards-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px;
+            }
+            .holdings-table-wrap {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                width: 100%;
+            }
+            .holdings-table {
+                min-width: 650px;
+            }
+            .charts-row {
+                grid-template-columns: 1fr !important;
+            }
+            .ai-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .metric-cards-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+        /* Mobile Bottom App Navigation Dock */
+        .mobile-bottom-dock {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            background: var(--navbar-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-subtle);
+            padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 4px));
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+        }
+        @media (max-width: 768px) {
+            .mobile-bottom-dock {
+                display: flex;
+            }
+        }
+        .dock-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 600;
+            transition: color 0.15s ease;
+            flex: 1;
+            text-align: center;
+        }
+        .dock-item:hover, .dock-item.active {
+            color: var(--groww-mint);
+        }
+        .dock-icon {
+            font-size: 18px;
+            line-height: 1;
+        }
+
         @media print {
             .site-navbar, .action-btns-group, .broker-connect-bar, .modal-overlay, .theme-toggle-btn, .instructions-section {
                 display: none !important;
@@ -581,10 +727,12 @@
             <div class="nav-links">
                 <a href="/" class="nav-link">Dashboard</a>
                 <a href="/screener.html" class="nav-link">Stock Screener</a>
+                <a href="/fno.html" class="nav-link">F&O Radar</a>
                 <a href="/events.html" class="nav-link">Stock Events</a>
-                <a href="/ipo.html" class="nav-link">IPOs</a>
                 <a href="/unlisted.html" class="nav-link">Unlisted Shares</a>
                 <a href="/portfolio.html" class="nav-link active">Multi-Broker Portfolio</a>
+                <a href="/insurance.html" class="nav-link">Insurance</a>
+                <a href="/crypto.html" class="nav-link">Crypto & Tax</a>
                 <a href="/calculators.html" class="nav-link">Calculators</a>
             </div>
 
@@ -632,9 +780,10 @@
                 <button class="btn-secondary" onclick="scrollToExportGuide()">
                     📖 Guides
                 </button>
-                <button class="btn-secondary" onclick="loadDemoMultiBrokerPortfolio()" title="Reset to authentic multi-broker compounder sample">
-                    ⚡ Demo
-                </button>
+                <label class="demo-toggle-label" style="display:inline-flex; align-items:center; gap:8px; background:var(--bg-card-subtle); border:1px solid var(--border-subtle); border-radius:24px; padding:6px 14px; cursor:pointer; font-size:12px; font-weight:700; color:var(--text-primary); user-select:none; box-shadow:0 2px 6px rgba(0,0,0,0.05);" title="Switch ON to preview terminal with authentic sample holdings. Wiped on reload.">
+                    <input type="checkbox" id="demo-mode-toggle" onchange="toggleDemoMode(this.checked)" style="accent-color:var(--groww-mint); width:16px; height:16px; cursor:pointer;">
+                    <span>⚡ Demo Mode</span>
+                </label>
             </div>
         </div>
 
@@ -1216,32 +1365,48 @@
     <script>
         const DEFAULT_HOLDINGS = [
             { symbol: "ITC", name: "ITC Ltd", broker: "groww", qty: 1500, avgBuy: 210.00, cmp: 260.80, sector: "FMCG" },
-            { symbol: "PCJEWELLER", name: "PC Jeweller Ltd", broker: "zerodha", qty: 15000, avgBuy: 11.40, cmp: 18.13, sector: "Jewellery" },
-            { symbol: "TCS", name: "Tata Consultancy Services", broker: "zerodha", qty: 85, avgBuy: 3450.00, cmp: 4120.00, sector: "IT" },
-            { symbol: "HDFCBANK", name: "HDFC Bank Ltd", broker: "dhan", qty: 200, avgBuy: 1480.00, cmp: 1642.50, sector: "Banking" },
-            { symbol: "TRENT", name: "Trent Ltd", broker: "groww", qty: 60, avgBuy: 4200.00, cmp: 6850.00, sector: "Retail" },
-            { symbol: "RELIANCE", name: "Reliance Industries", broker: "dhan", qty: 50, avgBuy: 2450.00, cmp: 2688.00, sector: "Energy" }
+            { symbol: "PCJEWELLER", name: "PC Jeweller Ltd", broker: "zerodha", qty: 15000, avgBuy: 11.40, cmp: 18.10, sector: "Jewellery" },
+            { symbol: "TCS", name: "Tata Consultancy Services", broker: "zerodha", qty: 85, avgBuy: 2150.00, cmp: 2461.00, sector: "IT" },
+            { symbol: "HDFCBANK", name: "HDFC Bank Ltd", broker: "dhan", qty: 400, avgBuy: 640.00, cmp: 712.00, sector: "Banking" },
+            { symbol: "TRENT", name: "Trent Ltd", broker: "groww", qty: 60, avgBuy: 2200.00, cmp: 2892.00, sector: "Retail" },
+            { symbol: "RELIANCE", name: "Reliance Industries", broker: "dhan", qty: 100, avgBuy: 1050.00, cmp: 1202.00, sector: "Energy" }
         ];
 
+        let isDemoMode = false;
         let portfolioHoldings = [];
 
         function initPortfolio() {
             try {
-                const saved = localStorage.getItem('dsa_portfolio_holdings');
+                // Load real user portfolio if saved
+                const saved = localStorage.getItem('dsa_portfolio_real');
                 if (saved) {
                     portfolioHoldings = JSON.parse(saved);
                 } else {
-                    portfolioHoldings = [...DEFAULT_HOLDINGS];
-                    savePortfolio();
+                    portfolioHoldings = [];
                 }
             } catch (e) {
-                portfolioHoldings = [...DEFAULT_HOLDINGS];
+                portfolioHoldings = [];
+            }
+            renderPortfolio();
+        }
+
+        function toggleDemoMode(enable) {
+            isDemoMode = enable;
+            if (enable) {
+                portfolioHoldings = JSON.parse(JSON.stringify(DEFAULT_HOLDINGS));
+                showToast("⚡ Demo Mode ON: Sample multi-broker portfolio loaded. (Wiped on reload)");
+            } else {
+                const saved = localStorage.getItem('dsa_portfolio_real');
+                portfolioHoldings = saved ? JSON.parse(saved) : [];
+                showToast("Demo Mode OFF: Returned to your real portfolio.");
             }
             renderPortfolio();
         }
 
         function savePortfolio() {
-            localStorage.setItem('dsa_portfolio_holdings', JSON.stringify(portfolioHoldings));
+            if (!isDemoMode) {
+                localStorage.setItem('dsa_portfolio_real', JSON.stringify(portfolioHoldings));
+            }
         }
 
         function renderPortfolio() {
@@ -1256,11 +1421,29 @@
             let totalCurrent = 0;
 
             if (portfolioHoldings.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding:32px; color:var(--text-muted);">No holdings found. Import a broker statement or click "+ Add Stock".</td></tr>`;
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" style="text-align:center; padding:48px 20px;">
+                            <div style="font-size:38px; margin-bottom:12px;">📊</div>
+                            <h4 style="font-size:16px; font-weight:800; color:var(--text-primary); margin-bottom:6px;">No Broker Holdings Linked Yet</h4>
+                            <p style="font-size:13px; color:var(--text-secondary); max-width:500px; margin:0 auto 18px; line-height:1.5;">
+                                Seamlessly link your Zerodha, Groww, or Upstox holdings via CSV/Excel, sync via Demat ID, or toggle <strong>Demo Mode</strong> above to preview the terminal.
+                            </p>
+                            <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+                                <button class="btn-primary" onclick="openLinkBrokerModal('demat')" style="background:linear-gradient(135deg, #10b981, #059669); border:none; padding:8px 16px;">🏦 Demat ID / AA Sync</button>
+                                <button class="btn-primary" onclick="openLinkBrokerModal('file')" style="padding:8px 16px;">📁 Import Statement CSV</button>
+                                <button class="btn-secondary" onclick="openLinkBrokerModal('manual')" style="padding:8px 16px;">+ Add Manual Stock</button>
+                                <button class="btn-secondary" onclick="document.getElementById('demo-mode-toggle').checked = true; toggleDemoMode(true);" style="padding:8px 16px;">⚡ Switch ON Demo Mode</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
                 document.getElementById("port-total-val").textContent = "₹0";
                 document.getElementById("port-invested-val").textContent = "₹0";
                 document.getElementById("port-total-pl").textContent = "₹0";
                 document.getElementById("port-pl-pct").textContent = "0.00% Absolute Gain";
+                document.getElementById("port-pl-pct").className = "metric-card-sub";
+                document.getElementById("holdings-count-label").textContent = `Showing 0 Holdings • Link accounts to analyze`;
                 return;
             }
 
@@ -1575,6 +1758,11 @@
             }
 
             if (newHoldings.length > 0) {
+                if (isDemoMode) {
+                    isDemoMode = false;
+                    const toggle = document.getElementById("demo-mode-toggle");
+                    if (toggle) toggle.checked = false;
+                }
                 portfolioHoldings = newHoldings;
                 savePortfolio();
                 renderPortfolio();
@@ -1588,17 +1776,17 @@
         function loadSampleZerodhaCSV() {
             const sampleZerodha = `Instrument,Qty.,Avg. cost,LTP,Cur. val,P&L,Net chg.
 ITC,1500,210.00,260.80,391200,76200,+24.19%
-TCS,85,3450.00,4120.00,350200,56950,+19.42%
-PCJEWELLER,15000,11.40,18.13,271950,100950,+59.03%
-HDFCBANK,180,1480.00,1642.50,295650,29250,+10.98%`;
+TCS,85,2150.00,2461.00,209185,26435,+14.47%
+PCJEWELLER,15000,11.40,18.10,271500,100500,+58.77%
+HDFCBANK,400,640.00,712.00,284800,28800,+11.25%`;
             parseAndImportCSV(sampleZerodha, "Zerodha_Console_Holdings.csv");
         }
 
         function loadSampleGrowwCSV() {
             const sampleGroww = `Stock name,Symbol,Shares,Average price,LTP,Current value
-Reliance Industries,RELIANCE,100,2450.00,2688.00,268800
-Trent Ltd,TRENT,80,4200.00,6850.00,548000
-Infosys,INFY,250,1540.00,1885.00,471250`;
+Reliance Industries,RELIANCE,100,1050.00,1202.00,120200
+Trent Ltd,TRENT,80,2200.00,2892.00,231360
+Infosys,INFY,250,980.00,1131.00,282750`;
             parseAndImportCSV(sampleGroww, "Groww_Holdings_2026.csv");
         }
 
@@ -1641,6 +1829,13 @@ Infosys,INFY,250,1540.00,1885.00,471250`;
             if (!sym) {
                 showToast("Please enter stock symbol.");
                 return;
+            }
+
+            if (isDemoMode) {
+                isDemoMode = false;
+                const toggle = document.getElementById("demo-mode-toggle");
+                if (toggle) toggle.checked = false;
+                portfolioHoldings = [];
             }
 
             portfolioHoldings.push({
@@ -1750,5 +1945,28 @@ Infosys,INFY,250,1540.00,1885.00,471250`;
             initPortfolio();
         });
     </script>
+    <!-- Mobile Bottom App Navigation Dock -->
+    <nav class="mobile-bottom-dock">
+        <a href="/" class="dock-item">
+            <span class="dock-icon">🏠</span>
+            <span>Dashboard</span>
+        </a>
+        <a href="/screener.html" class="dock-item">
+            <span class="dock-icon">⚡</span>
+            <span>Screener</span>
+        </a>
+        <a href="/fno.html" class="dock-item">
+            <span class="dock-icon">📊</span>
+            <span>F&O Radar</span>
+        </a>
+        <a href="/events.html" class="dock-item">
+            <span class="dock-icon">📅</span>
+            <span>Events</span>
+        </a>
+        <a href="/portfolio.html" class="dock-item active">
+            <span class="dock-icon">💼</span>
+            <span>Portfolio</span>
+        </a>
+    </nav>
 </body>
 </html>

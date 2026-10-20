@@ -651,6 +651,102 @@
             border-color: var(--groww-mint);
             color: var(--groww-mint);
         }
+
+        /* Mobile Responsiveness for all screen sizes */
+        @media (max-width: 992px) {
+            .site-navbar {
+                padding: 10px 14px;
+            }
+            .navbar-inner {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .brand-group {
+                flex: 1;
+            }
+            .nav-links {
+                width: 100%;
+                order: 3;
+                overflow-x: auto;
+                white-space: nowrap;
+                padding: 4px 2px 6px;
+                gap: 8px;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .nav-links::-webkit-scrollbar {
+                display: none;
+            }
+            .nav-link {
+                flex-shrink: 0;
+                padding: 5px 12px;
+                border-radius: 9999px;
+                background: var(--bg-card);
+                border: 1px solid var(--border-subtle);
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-bottom: 72px;
+            }
+            .screens-viewport {
+                padding: 0 12px;
+                gap: 20px;
+            }
+            .table-responsive, .table-container {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                width: 100%;
+            }
+            .screener-table {
+                min-width: 600px;
+            }
+        }
+
+        /* Mobile Bottom App Navigation Dock */
+        .mobile-bottom-dock {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            background: var(--navbar-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-subtle);
+            padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 4px));
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+        }
+        @media (max-width: 768px) {
+            .mobile-bottom-dock {
+                display: flex;
+            }
+        }
+        .dock-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 600;
+            transition: color 0.15s ease;
+            flex: 1;
+            text-align: center;
+        }
+        .dock-item:hover, .dock-item.active {
+            color: var(--groww-mint);
+        }
+        .dock-icon {
+            font-size: 18px;
+            line-height: 1;
+        }
     </style>
 </head>
 <body>
@@ -666,10 +762,12 @@
             <nav class="nav-links">
                 <a href="/" class="nav-link">Dashboard</a>
                 <a href="/screener.html" class="nav-link active">Stock Screener</a>
+                <a href="/fno.html" class="nav-link">F&O Radar</a>
                 <a href="/events.html" class="nav-link">Stock Events</a>
-                <a href="/ipo.html" class="nav-link">IPOs</a>
                 <a href="/unlisted.html" class="nav-link">Unlisted Shares</a>
                 <a href="/portfolio.html" class="nav-link">Multi-Broker Portfolio</a>
+                <a href="/insurance.html" class="nav-link">Insurance</a>
+                <a href="/crypto.html" class="nav-link">Crypto & Tax</a>
                 <a href="/calculators.html" class="nav-link">Calculators</a>
             </nav>
 
@@ -1029,15 +1127,11 @@
                     const numRoe = parseFloat((s.roe || "0").replace(/[^0-9.]/g, '')) || 0;
                     const numDe = parseFloat(s.debtToEquity) || 0;
 
-                    // Approximate CMP if not explicit
-                    let cmp = numPe > 0 && numBv > 0 ? (numBv * 2.5) : 1000;
-                    if (sym === "ITC") cmp = 260.80;
-                    if (sym === "PCJEWELLER") cmp = 18.13;
-                    if (sym === "RELIANCE") cmp = 2688.00;
-                    if (sym === "TCS") cmp = 4120.00;
-                    if (sym === "HDFCBANK") cmp = 1642.50;
-                    if (sym === "INFY") cmp = 1885.00;
-                    if (sym === "TRENT") cmp = 6850.00;
+                    // 100% Authentic CMP from stocks_database.json
+                    let cmp = parseFloat((s.cmp || "0").replace(/[^0-9.]/g, '')) || 0;
+                    if (!cmp && numPe > 0 && numBv > 0) {
+                        cmp = numBv * 2.5;
+                    }
 
                     return {
                         symbol: sym,
@@ -1565,5 +1659,28 @@
             });
         });
     </script>
+    <!-- Mobile Bottom App Navigation Dock -->
+    <nav class="mobile-bottom-dock">
+        <a href="/" class="dock-item">
+            <span class="dock-icon">🏠</span>
+            <span>Dashboard</span>
+        </a>
+        <a href="/screener.html" class="dock-item active">
+            <span class="dock-icon">⚡</span>
+            <span>Screener</span>
+        </a>
+        <a href="/fno.html" class="dock-item">
+            <span class="dock-icon">📊</span>
+            <span>F&O Radar</span>
+        </a>
+        <a href="/events.html" class="dock-item">
+            <span class="dock-icon">📅</span>
+            <span>Events</span>
+        </a>
+        <a href="/portfolio.html" class="dock-item">
+            <span class="dock-icon">💼</span>
+            <span>Portfolio</span>
+        </a>
+    </nav>
 </body>
 </html>

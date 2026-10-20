@@ -277,6 +277,111 @@
         @media (max-width: 800px) {
             .calc-panel { grid-template-columns: 1fr; }
         }
+
+        /* Complete Mobile Responsiveness */
+        @media (max-width: 992px) {
+            .site-navbar {
+                padding: 10px 14px;
+            }
+            .navbar-inner {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            .brand-group {
+                flex: 1;
+            }
+            .nav-links {
+                width: 100%;
+                order: 3;
+                overflow-x: auto;
+                white-space: nowrap;
+                padding: 4px 2px 6px;
+                gap: 8px;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .nav-links::-webkit-scrollbar {
+                display: none;
+            }
+            .nav-link {
+                flex-shrink: 0;
+                padding: 5px 12px;
+                border-radius: 9999px;
+                background: var(--bg-card);
+                border: 1px solid var(--border-subtle);
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-bottom: 72px;
+            }
+            .calc-viewport {
+                padding: 16px 12px 60px;
+            }
+            .calc-tabs-bar {
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 4px;
+                gap: 8px;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                width: 100%;
+            }
+            .calc-tabs-bar::-webkit-scrollbar {
+                display: none;
+            }
+            .calc-tab-btn {
+                flex-shrink: 0;
+            }
+            .calc-panel {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Mobile Bottom App Navigation Dock */
+        .mobile-bottom-dock {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999;
+            background: var(--navbar-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-top: 1px solid var(--border-subtle);
+            padding: 8px 8px calc(8px + env(safe-area-inset-bottom, 4px));
+            justify-content: space-around;
+            align-items: center;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+        }
+        @media (max-width: 768px) {
+            .mobile-bottom-dock {
+                display: flex;
+            }
+        }
+        .dock-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            text-decoration: none;
+            color: var(--text-muted);
+            font-size: 10px;
+            font-weight: 600;
+            transition: color 0.15s ease;
+            flex: 1;
+            text-align: center;
+        }
+        .dock-item:hover, .dock-item.active {
+            color: var(--groww-mint);
+        }
+        .dock-icon {
+            font-size: 18px;
+            line-height: 1;
+        }
     </style>
 </head>
 <body>
@@ -292,10 +397,12 @@
             <div class="nav-links">
                 <a href="/" class="nav-link">Dashboard</a>
                 <a href="/screener.html" class="nav-link">Stock Screener</a>
+                <a href="/fno.html" class="nav-link">F&O Radar</a>
                 <a href="/events.html" class="nav-link">Stock Events</a>
-                <a href="/ipo.html" class="nav-link">IPOs</a>
                 <a href="/unlisted.html" class="nav-link">Unlisted Shares</a>
                 <a href="/portfolio.html" class="nav-link">Multi-Broker Portfolio</a>
+                <a href="/insurance.html" class="nav-link">Insurance</a>
+                <a href="/crypto.html" class="nav-link">Crypto & Tax</a>
                 <a href="/calculators.html" class="nav-link active">Calculators</a>
             </div>
 
@@ -788,5 +895,28 @@
             calculateLumpsum();
         });
     </script>
+    <!-- Mobile Bottom App Navigation Dock -->
+    <nav class="mobile-bottom-dock">
+        <a href="/" class="dock-item">
+            <span class="dock-icon">🏠</span>
+            <span>Dashboard</span>
+        </a>
+        <a href="/screener.html" class="dock-item">
+            <span class="dock-icon">⚡</span>
+            <span>Screener</span>
+        </a>
+        <a href="/fno.html" class="dock-item">
+            <span class="dock-icon">📊</span>
+            <span>F&O Radar</span>
+        </a>
+        <a href="/events.html" class="dock-item">
+            <span class="dock-icon">📅</span>
+            <span>Events</span>
+        </a>
+        <a href="/portfolio.html" class="dock-item">
+            <span class="dock-icon">💼</span>
+            <span>Portfolio</span>
+        </a>
+    </nav>
 </body>
 </html>
