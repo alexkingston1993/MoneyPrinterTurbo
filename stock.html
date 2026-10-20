@@ -1149,10 +1149,34 @@
                 bseBtn.style.display = "inline-flex";
             }
 
+            // Hero Price & 52W Range from stock data
+            if (stock.cmp) {
+                document.getElementById("hero-ltp").textContent = stock.cmp;
+                document.getElementById("scr-price").textContent = stock.cmp;
+            }
+            if (stock.highLow) {
+                document.getElementById("scr-high-low").textContent = stock.highLow;
+                const parts = stock.highLow.replace(/₹/g, '').split('/');
+                if (parts.length === 2) {
+                    const hi = parts[0].trim();
+                    const lo = parts[1].trim();
+                    document.getElementById("range-high").textContent = `₹${hi}`;
+                    document.getElementById("range-low").textContent = `₹${lo}`;
+                    
+                    // Approximate position in 52W range
+                    const cmpNum = parseFloat(String(stock.cmp).replace(/[^0-9.]/g, ''));
+                    const hiNum = parseFloat(hi);
+                    const loNum = parseFloat(lo);
+                    if (cmpNum && hiNum > loNum) {
+                        const pct = Math.max(0, Math.min(100, Math.round(((cmpNum - loNum) / (hiNum - loNum)) * 100)));
+                        document.getElementById("range-fill").style.width = `${pct}%`;
+                        document.getElementById("range-pin").style.left = `${pct}%`;
+                    }
+                }
+            }
+
             // Key Ratios
             if (stock.mcap) document.getElementById("scr-mcap").textContent = stock.mcap;
-            if (stock.cmp) document.getElementById("scr-price").textContent = stock.cmp;
-            if (stock.highLow) document.getElementById("scr-high-low").textContent = stock.highLow;
             if (stock.pe) document.getElementById("scr-pe").textContent = stock.pe;
             if (stock.bv) document.getElementById("scr-bv").textContent = stock.bv;
             if (stock.divYield) document.getElementById("scr-div").textContent = stock.divYield;
