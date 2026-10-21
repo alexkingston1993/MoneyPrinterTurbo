@@ -46,8 +46,19 @@ class PipelineOrchestrator:
             f"sentiment={ctx.market_sentiment}, Nifty={ctx.nifty.value if ctx.nifty else 'N/A'}"
         )
 
-        # 2. Determine YouTube Video URL (live or placeholder)
-        youtube_url = mock_video_url or "https://www.youtube.com/watch?v=dQw4w9WgXcQ"  # placeholder or real upload
+        # 2. Real Video Generation & Upload via Task Engine
+        youtube_url = mock_video_url
+        if not youtube_url:
+            try:
+                logger.info("[Orchestrator] Step 1.5: Triggering real autonomous video production in cloud...")
+                youtube_url = self._generate_and_upload_video(ctx, slot_name)
+            except Exception as e:
+                logger.error(f"[Orchestrator] Autonomous video generation error: {e}")
+
+        # Fallback to the latest real video on the channel if generation skipped
+        if not youtube_url:
+            youtube_url = "https://www.youtube.com/watch?v=FfxHCzx7QhM"
+
 
         # 3. Generate Humanized, GEO-Optimized Article
         logger.info("[Orchestrator] Step 2: Generating in-depth humanized market article...")
@@ -114,6 +125,117 @@ class PipelineOrchestrator:
             "published_status": publish_res.get("status"),
         }
 
+    def _generate_and_upload_video(self, ctx: MarketContext, slot_name: str) -> Optional[str]:
+        """Synthesizes a Short video for the market slot and uploads to YouTube autonomously in cloud."""
+        import uuid
+        from app.models.schema import VideoParams, VideoConcatMode
+        from app.services import task
+
+        task_id = str(uuid.uuid4())
+        nifty_str = f"{ctx.nifty.value:.1f}" if ctx.nifty else "24,500"
+        nifty_chg = f"{ctx.nifty.change_percent:+.2f}%" if ctx.nifty and ctx.nifty.change_percent is not None else "+0.00%"
+
+        if slot_name == "pre_market":
+            subject = "Nifty 50 Pre-Market Briefing | Gift Nifty Opening Setup"
+            script = (
+                f"Good morning Dalal Street. Here is your institutional opening setup. "
+                f"Benchmark Nifty 50 enters the session with Gift Nifty signaling early directional bias. "
+                f"Key pivot levels to watch on the hourly charts stand near {nifty_str}. "
+                f"Watch for open interest concentration around weekly ATM call and put strikes. "
+                f"Please conduct your own due diligence and market research as I am not a SEBI-registered advisor."
+            )
+            terms = ["stock market trading", "gift nifty futures", "indian economy finance", "stock chart analysis"]
+        elif slot_name == "morning_momentum":
+            subject = "Morning Momentum & Sector Rotation Radar"
+            script = (
+                f"Dalal Street morning momentum update. We are observing active sector rotation across banking, IT, and auto. "
+                f"Nifty 50 is trading near {nifty_str} ({nifty_chg}). "
+                f"Institutional order flow reflects selective accumulation in high cash-conversion equities. "
+                f"Manage risk proactively as intraday volatility peaks around European market opening. "
+                f"Strictly educational commentary, not investment advice."
+            )
+            terms = ["stock market chart", "banking sector money", "indian business", "trading desktop screen"]
+        elif slot_name == "market_close":
+            subject = "Dalal Street Closing Bell Wrap | Nifty Settlement Analysis"
+            script = (
+                f"Closing bell wrap on Dalal Street. Nifty 50 settled the trading session at {nifty_str} ({nifty_chg}). "
+                f"Market breadth reflected active participation with decisive trends across key large-cap leaders. "
+                f"Foreign institutional flows and domestic mutual fund support continue to anchor market structure. "
+                f"Review your positional risk carefully, and please consult an independent certified financial advisor."
+            )
+            terms = ["mumbai stock exchange", "closing bell trading", "stock market graph rising", "business handshake"]
+        else:
+            subject = "Nifty 50 Market Analysis & Quantitative Overview"
+            script = (
+                f"Welcome to The Bull Print. Here is the quantitative breakdown for Indian equity markets. "
+                f"Nifty 50 benchmark stands at {nifty_str} with market sentiment currently classified as {ctx.market_sentiment}. "
+                f"Institutional capital flows emphasize balance sheet resilience and disciplined cash compounding. "
+                f"Please do your own due diligence and market research before taking any financial decision."
+            )
+            terms = ["financial market data", "stock candlestick upward", "corporate boardroom", "investment growth"]
+
+        params = VideoParams(
+            video_subject=subject,
+            video_script=script,
+            video_terms=terms,
+            video_aspect="9:16",
+            video_concat_mode=VideoConcatMode.sequential,
+            video_clip_duration=5,
+            video_count=1,
+            video_source=config.app.get("video_source", "pexels"),
+            voice_name="kokoro:af_heart",
+            bgm_type="random",
+            subtitle_enabled=True,
+            subtitle_position="center",
+            font_size=75,
+            text_fore_color="#FFFFFF",
+            text_background_color=True,
+            stroke_color="#000000",
+            stroke_width=2.0,
+        )
+
+        logger.info(f"[Orchestrator] Launching video rendering task {task_id} for '{subject}'...")
+        res = task.start(task_id, params)
+        if res and "youtube_upload" in res:
+            yt_upload = res["youtube_upload"].get("en", {})
+            if yt_upload and yt_upload.get("success") and yt_upload.get("url"):
+                yt_url = yt_upload["url"]
+                logger.success(f"[Orchestrator] Autonomous video generated and published: {yt_url}")
+                vid_id = yt_upload.get("video_id")
+                if vid_id:
+                    self._add_to_playlist(vid_id)
+                return yt_url
+
+        return None
+
+    def _add_to_playlist(self, video_id: str):
+        """Add uploaded video to official public playlist."""
+        import os, pickle
+        from googleapiclient.discovery import build
+        token_path = "data/youtube_tokens/youtube_token_en.pickle"
+        if not os.path.exists(token_path) or not video_id:
+            return
+        try:
+            with open(token_path, "rb") as f:
+                creds = pickle.load(f)
+            youtube = build("youtube", "v3", credentials=creds)
+            youtube.playlistItems().insert(
+                part="snippet",
+                body={
+                    "snippet": {
+                        "playlistId": "PLO2FWTao-JNA",
+                        "resourceId": {
+                            "kind": "youtube#video",
+                            "videoId": video_id,
+                        },
+                    }
+                },
+            ).execute()
+            logger.success(f"[Orchestrator] Added video {video_id} to playlist PLO2FWTao-JNA")
+        except Exception as e:
+            logger.warning(f"[Orchestrator] Playlist insert warning: {e}")
+
 
 # Global instance
 pipeline_orchestrator = PipelineOrchestrator()
+
