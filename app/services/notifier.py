@@ -98,8 +98,8 @@ def send_telegram_alert(message: str) -> bool:
     Sends instant push alert via Telegram Bot.
     Takes 30 seconds to set up via @BotFather. 100% free forever with rich embeds.
     """
-    bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
-    chat_id = os.getenv("TELEGRAM_CHAT_ID")
+    bot_token = os.getenv("TELEGRAM_BOT_TOKEN") or config.app.get("telegram_bot_token")
+    chat_id = os.getenv("TELEGRAM_CHAT_ID") or config.app.get("telegram_chat_id")
 
     if not bot_token or not chat_id:
         return False
