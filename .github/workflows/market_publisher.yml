@@ -37,16 +37,23 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
+      - name: Cache Kokoro Neural Voice Weights
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/huggingface
+          key: ${{ runner.os }}-huggingface-kokoro-v1
+          restore-keys: |
+            ${{ runner.os }}-huggingface-kokoro-
+
       - name: Install FFmpeg
         run: |
-          sudo apt update
-          sudo apt install -y ffmpeg
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg
 
       - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytz yfinance requests loguru google-generativeai toml beautifulsoup4 google-api-python-client google-auth-oauthlib google-auth-httplib2 kokoro soundfile misaki mplfinance pandas
-          if [ -f requirements.txt ]; then pip install -r requirements.txt || true; fi
+          pip install -r requirements.txt
 
 
       - name: Restore YouTube Token

@@ -21,3 +21,12 @@ litellm==1.60.0
 kokoro>=0.9.4
 soundfile>=0.14.0
 misaki>=0.9.4
+pytz>=2024.1
+yfinance>=0.2.38
+mplfinance>=0.12.10b0
+pandas>=2.0.0
+toml>=0.10.2
+beautifulsoup4>=4.12.3
+google-api-python-client>=2.118.0
+google-auth-oauthlib>=1.2.0
+google-auth-httplib2>=0.2.0

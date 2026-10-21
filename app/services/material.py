@@ -288,6 +288,36 @@ def download_videos(
                     break
         except Exception as e:
             logger.error(f"failed to download video: {utils.to_json(item)} => {str(e)}")
+
+    if not video_paths:
+        logger.warning("[Material] No videos obtained from external provider (Pexels). Engaging resilient fallback...")
+        fallback_dir = os.path.join(utils.resource_dir(), "fallback_videos")
+        if os.path.isdir(fallback_dir):
+            local_clips = [
+                os.path.join(fallback_dir, f)
+                for f in os.listdir(fallback_dir)
+                if f.lower().endswith((".mp4", ".mov", ".mkv"))
+            ]
+            if local_clips:
+                logger.info(f"[Material] Using {len(local_clips)} pre-baked local B-roll clips.")
+                return local_clips
+
+        # Resilient procedural generator: generate a solid dark-navy financial background clip
+        try:
+            from moviepy import ColorClip
+            aspect = VideoAspect(video_aspect)
+            vw, vh = aspect.to_resolution()
+            target_dur = max(audio_duration, 15.0)
+            fallback_path = os.path.join(utils.task_dir(task_id), "resilient_fallback_bg.mp4")
+            clip = ColorClip(size=(vw, vh), color=(10, 15, 30)).with_duration(target_dur)
+            clip.write_videofile(fallback_path, fps=24, codec="libx264", logger=None)
+            clip.close()
+            if os.path.exists(fallback_path):
+                logger.success(f"[Material] Generated resilient procedural fallback video: {fallback_path}")
+                video_paths.append(fallback_path)
+        except Exception as fb_err:
+            logger.error(f"[Material] Procedural fallback clip failed: {fb_err}")
+
     logger.success(f"downloaded {len(video_paths)} videos")
     return video_paths
 

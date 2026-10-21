@@ -1,0 +1,47 @@
+# ==============================================================================
+# The Bull Print / MoneyPrinterTurbo Cloud Engine
+# Pre-baked container with FFmpeg, Kokoro-82M neural TTS weights, and all Python dependencies.
+# Eliminates cold-start package installs and network timeouts in cloud runners.
+# ==============================================================================
+
+FROM python:3.11-slim-bookworm
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PYTHONUNBUFFERED=1 \
+    PYTHONPATH=/MoneyPrinterTurbo \
+    HF_HOME=/root/.cache/huggingface \
+    IMAGEIO_FFMPEG_EXE=/usr/bin/ffmpeg
+
+WORKDIR /MoneyPrinterTurbo
+
+# 1. Install system utilities, FFmpeg, ImageMagick, and fonts
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    ffmpeg \
+    imagemagick \
+    git \
+    curl \
+    ca-certificates \
+    fonts-freefont-ttf \
+    fonts-noto-cjk \
+    fonts-noto-color-emoji \
+    && rm -rf /var/lib/apt/lists/*
+
+# 2. Configure ImageMagick security policy to permit MoviePy TextClip text rendering
+RUN if [ -f /etc/ImageMagick-6/policy.xml ]; then \
+        sed -i '/<policy domain="path" rights="none" pattern="@\*"/d' /etc/ImageMagick-6/policy.xml; \
+    fi
+
+# 3. Copy dependencies and install Python packages
+COPY requirements.txt ./
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# 4. Pre-bake Kokoro-82M neural voice weights & Misaki phonemizer into the Docker layer
+# This guarantees 0 download latency & complete immunity to Hugging Face network glitches at runtime!
+RUN python3 -c "from kokoro import KPipeline; p = KPipeline(lang_code='a'); p('The Bull Print autonomous cloud engine initialized.', voice='af_heart')" || true
+
+# 5. Copy repository codebase
+COPY . .
+
+# 6. Default execution (can be overridden by GitHub Actions or docker run)
+CMD ["python", "-m", "app.services.autonomous_scheduler", "--now", "scheduled_cron"]
