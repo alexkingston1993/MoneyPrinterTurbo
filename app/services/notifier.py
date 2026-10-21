@@ -1,8 +1,11 @@
 """
 The Bull Print - Autonomous Broadcast Notifier
 Sends real-time broadcast alerts (YouTube Short link + Published Website Article link)
-directly to your personal WhatsApp without needing a dedicated phone number or server.
-Uses CallMeBot Gateway API.
+directly to your personal phone without needing a dedicated server or phone number.
+Supports:
+1. Twilio WhatsApp Sandbox (Official, high-reliability WhatsApp)
+2. CallMeBot WhatsApp (Free community gateway)
+3. Telegram Bot (Instant, 100% free, zero limitations)
 """
 
 import os
@@ -10,27 +13,66 @@ import urllib.parse
 from typing import Optional
 from loguru import logger
 import requests
+from requests.auth import HTTPBasicAuth
 
 from app.config import config
 
 
-def send_whatsapp_alert(
+def send_twilio_whatsapp(message: str) -> bool:
+    """
+    Sends WhatsApp alert via Twilio WhatsApp Sandbox.
+    Uses Twilio's shared business number (+1 415 523 8886) - zero phone number needed from user.
+    """
+    account_sid = os.getenv("TWILIO_ACCOUNT_SID")
+    auth_token = os.getenv("TWILIO_AUTH_TOKEN")
+    to_phone = os.getenv("TWILIO_TO_PHONE") or os.getenv("WHATSAPP_PHONE")
+    from_phone = os.getenv("TWILIO_FROM_PHONE", "+14155238886")
+
+    if not account_sid or not auth_token or not to_phone:
+        return False
+
+    clean_to = str(to_phone).strip().replace(" ", "").replace("-", "")
+    if not clean_to.startswith("+"):
+        clean_to = f"+{clean_to}"
+    if not clean_to.startswith("whatsapp:"):
+        clean_to = f"whatsapp:{clean_to}"
+
+    clean_from = from_phone if from_phone.startswith("whatsapp:") else f"whatsapp:{from_phone}"
+
+    url = f"https://api.twilio.com/2010-04-01/Accounts/{account_sid}/Messages.json"
+    payload = {
+        "From": clean_from,
+        "To": clean_to,
+        "Body": message,
+    }
+
+    try:
+        resp = requests.post(url, data=payload, auth=HTTPBasicAuth(account_sid, auth_token), timeout=15)
+        if resp.status_code in (200, 201):
+            logger.success(f"[Notifier] Twilio WhatsApp notification delivered to {clean_to}!")
+            return True
+        else:
+            logger.warning(f"[Notifier] Twilio WhatsApp API returned {resp.status_code}: {resp.text}")
+            return False
+    except Exception as e:
+        logger.warning(f"[Notifier] Twilio WhatsApp error: {e}")
+        return False
+
+
+def send_callmebot_whatsapp(
     message: str,
     phone: Optional[str] = None,
     api_key: Optional[str] = None,
 ) -> bool:
     """
-    Sends an alert message to WhatsApp via CallMeBot.
-    No dedicated phone number or server required.
+    Sends WhatsApp alert via CallMeBot gateway.
     """
     target_phone = phone or os.getenv("WHATSAPP_PHONE") or config.app.get("whatsapp_phone")
     target_key = api_key or os.getenv("WHATSAPP_APIKEY") or config.app.get("whatsapp_apikey")
 
     if not target_phone or not target_key:
-        logger.info("[Notifier] WhatsApp notification skipped (WHATSAPP_PHONE or WHATSAPP_APIKEY not configured).")
         return False
 
-    # Clean phone number (ensure no spaces or hyphens)
     clean_phone = str(target_phone).strip().replace(" ", "").replace("-", "")
     if not clean_phone.startswith("+"):
         clean_phone = f"+{clean_phone}"
@@ -41,13 +83,45 @@ def send_whatsapp_alert(
     try:
         resp = requests.get(api_url, timeout=15)
         if resp.status_code == 200:
-            logger.success(f"[Notifier] WhatsApp notification dispatched successfully to {clean_phone}!")
+            logger.success(f"[Notifier] CallMeBot WhatsApp notification dispatched to {clean_phone}!")
             return True
         else:
-            logger.warning(f"[Notifier] CallMeBot API returned status {resp.status_code}: {resp.text}")
+            logger.warning(f"[Notifier] CallMeBot returned status {resp.status_code}: {resp.text}")
             return False
     except Exception as e:
-        logger.warning(f"[Notifier] Failed to send WhatsApp notification: {e}")
+        logger.warning(f"[Notifier] CallMeBot error: {e}")
+        return False
+
+
+def send_telegram_alert(message: str) -> bool:
+    """
+    Sends instant push alert via Telegram Bot.
+    Takes 30 seconds to set up via @BotFather. 100% free forever with rich embeds.
+    """
+    bot_token = os.getenv("TELEGRAM_BOT_TOKEN")
+    chat_id = os.getenv("TELEGRAM_CHAT_ID")
+
+    if not bot_token or not chat_id:
+        return False
+
+    url = f"https://api.telegram.org/bot{bot_token}/sendMessage"
+    payload = {
+        "chat_id": chat_id,
+        "text": message,
+        "parse_mode": "Markdown",
+        "disable_web_page_preview": False,
+    }
+
+    try:
+        resp = requests.post(url, json=payload, timeout=15)
+        if resp.status_code == 200:
+            logger.success("[Notifier] Telegram notification dispatched successfully!")
+            return True
+        else:
+            logger.warning(f"[Notifier] Telegram returned status {resp.status_code}: {resp.text}")
+            return False
+    except Exception as e:
+        logger.warning(f"[Notifier] Telegram error: {e}")
         return False
 
 
@@ -60,8 +134,8 @@ def send_market_release_alert(
     sentiment: Optional[str] = None,
 ) -> bool:
     """
-    Formats and delivers a high-impact release alert to your WhatsApp
-    immediately after a video & article go live.
+    Formats and delivers release alerts across all configured channels
+    (Twilio WhatsApp, CallMeBot, and/or Telegram).
     """
     slot_display = {
         "pre_market": "Opening Bell Setup (09:00 AM IST)",
@@ -96,4 +170,21 @@ def send_market_release_alert(
     ])
 
     formatted_message = "\n".join(lines)
-    return send_whatsapp_alert(formatted_message)
+
+    delivered = False
+    # 1. Try Twilio WhatsApp Sandbox
+    if send_twilio_whatsapp(formatted_message):
+        delivered = True
+
+    # 2. Try CallMeBot WhatsApp
+    if send_callmebot_whatsapp(formatted_message):
+        delivered = True
+
+    # 3. Try Telegram Bot
+    if send_telegram_alert(formatted_message):
+        delivered = True
+
+    if not delivered:
+        logger.info("[Notifier] No notification services configured (Twilio, CallMeBot, or Telegram).")
+
+    return delivered
