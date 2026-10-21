@@ -108,7 +108,6 @@ def send_telegram_alert(message: str) -> bool:
     payload = {
         "chat_id": chat_id,
         "text": message,
-        "parse_mode": "Markdown",
         "disable_web_page_preview": False,
     }
 
