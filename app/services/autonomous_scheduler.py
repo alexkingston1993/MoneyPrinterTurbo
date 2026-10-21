@@ -49,13 +49,38 @@ class AutonomousScheduler:
         utc_now = datetime.datetime.utcnow()
         return utc_now + datetime.timedelta(hours=5, minutes=30)
 
+    def resolve_slot(self, slot_name: str) -> str:
+        """Resolves generic trigger names (e.g. scheduled_cron) to the appropriate IST market slot."""
+        if slot_name and slot_name not in ["scheduled_cron", "manual_trigger", "live_update"]:
+            return slot_name
+        now = self.get_ist_now()
+        weekday = now.weekday()
+        if weekday == 5:  # Saturday
+            return "weekend_masterclass"
+        hour = now.hour
+        minute = now.minute
+        time_decimal = hour + minute / 60.0
+
+        if time_decimal < 10.0:
+            return "pre_market"
+        elif time_decimal < 12.5:
+            return "morning_momentum"
+        elif time_decimal < 15.0:
+            return "midday_update"
+        elif time_decimal < 18.0:
+            return "market_close"
+        else:
+            return "evening_wrap"
+
     def run_slot(self, slot_name: str) -> Dict:
         """Trigger an immediate market cycle for a specific slot."""
-        logger.info(f"[Scheduler] Triggering scheduled slot: '{slot_name}'")
-        res = pipeline_orchestrator.run_market_cycle(slot_name=slot_name)
-        self.last_run_slot = slot_name
+        resolved_slot = self.resolve_slot(slot_name)
+        logger.info(f"[Scheduler] Triggering scheduled slot: '{resolved_slot}' (raw input: '{slot_name}')")
+        res = pipeline_orchestrator.run_market_cycle(slot_name=resolved_slot)
+        self.last_run_slot = resolved_slot
         self.last_run_time = self.get_ist_now().strftime("%Y-%m-%d %H:%M:%S IST")
         return res
+
 
     def start_daemon(self, check_interval_sec: int = 45):
         """Continuous background daemon checking the clock against IST slots."""
