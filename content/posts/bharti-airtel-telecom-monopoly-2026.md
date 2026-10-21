@@ -6,7 +6,7 @@ excerpt: "Institutional thesis on Bharti Airtel (NSE: BHARTIARTL). Examining str
 focusKeyword: "Bharti Airtel stock analysis 2026"
 categories: ["Telecom", "Equities Research", "Nifty 50"]
 tags: ["BHARTIARTL", "Airtel", "TelecomIndia", "5GNetworks", "Nifty50"]
-youtubeUrl: ""
+youtubeUrl: "https://youtu.be/FfxHCzx7QhM"
 ---
 
 <div class="market-article">
