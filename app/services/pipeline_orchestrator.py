@@ -194,6 +194,11 @@ class PipelineOrchestrator:
             stroke_width=2.0,
         )
 
+        # Unconditionally enable YouTube auto-upload for autonomous cloud pipeline
+        config.ui["youtube_enabled"] = True
+        config.ui["youtube_auto_upload"] = True
+        config.ui["youtube_privacy"] = os.getenv("YOUTUBE_PRIVACY", "public")
+
         logger.info(f"[Orchestrator] Launching video rendering task {task_id} for '{subject}'...")
         res = task.start(task_id, params)
         if res and "youtube_upload" in res:

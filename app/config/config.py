@@ -101,6 +101,12 @@ if os.getenv("GITHUB_REPO"):
     _cfg["github"]["repo"] = os.getenv("GITHUB_REPO")
     app["github_repo"] = os.getenv("GITHUB_REPO")
 
+# YouTube cloud auto-upload overrides
+if os.getenv("YOUTUBE_TOKEN_EN") or os.path.exists(os.path.join(root_dir, "data", "youtube_tokens", "youtube_token_en.pickle")):
+    ui["youtube_enabled"] = True
+    ui["youtube_auto_upload"] = True
+    ui["youtube_privacy"] = os.getenv("YOUTUBE_PRIVACY", "public")
+
 imagemagick_path = app.get("imagemagick_path", "")
 if imagemagick_path and os.path.isfile(imagemagick_path):
     os.environ["IMAGEMAGICK_BINARY"] = imagemagick_path
