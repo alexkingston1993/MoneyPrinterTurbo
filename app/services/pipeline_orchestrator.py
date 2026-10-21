@@ -183,7 +183,7 @@ class PipelineOrchestrator:
             video_clip_duration=5,
             video_count=1,
             video_source=config.app.get("video_source", "pexels"),
-            voice_name="kokoro:af_heart",
+            voice_name=config.app.get("voice_name", "en-IN-ArjunNeural-Male"),
             bgm_type="random",
             subtitle_enabled=True,
             subtitle_position="center",
