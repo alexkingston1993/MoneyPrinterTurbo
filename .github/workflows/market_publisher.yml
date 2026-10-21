@@ -74,6 +74,8 @@ jobs:
           GEMINI_MODEL_NAME: "gemini-flash-latest"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPO: ${{ github.repository }}
+          WHATSAPP_PHONE: ${{ secrets.WHATSAPP_PHONE }}
+          WHATSAPP_APIKEY: ${{ secrets.WHATSAPP_APIKEY }}
         run: |
           SLOT="${{ github.event.inputs.slot || 'scheduled_cron' }}"
           echo "🚀 Running autonomous market cycle for slot: $SLOT"

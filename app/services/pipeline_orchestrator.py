@@ -111,6 +111,20 @@ class PipelineOrchestrator:
         duration = time.time() - start_time
         logger.info(f"[Orchestrator] Market cycle completed in {duration:.1f}s")
 
+        # 6. Real-time Dispatch Notification (WhatsApp via CallMeBot)
+        try:
+            from app.services.notifier import send_market_release_alert
+            send_market_release_alert(
+                slot_name=slot_name,
+                article_title=article.title,
+                youtube_url=youtube_url,
+                published_url=publish_res.get("url"),
+                nifty_level=ctx.nifty.value if ctx.nifty else None,
+                sentiment=ctx.market_sentiment,
+            )
+        except Exception as alert_err:
+            logger.warning(f"[Orchestrator] WhatsApp alert dispatch warning: {alert_err}")
+
         return {
             "success": True,
             "slot": slot_name,
