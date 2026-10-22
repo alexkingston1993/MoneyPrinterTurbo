@@ -1260,6 +1260,9 @@ def tts(
     if voice_name and voice_name.lower().startswith("kokoro:"):
         from app.services.kokoro_voice import kokoro_tts
         return kokoro_tts(text, voice_name, voice_rate, voice_file, voice_volume)
+    elif voice_name and voice_name.lower() in ["xtts:prabhat", "prabhat_local", "prabhat_offline"]:
+        from app.services.cloned_prabhat_tts import cloned_prabhat_tts
+        return cloned_prabhat_tts(text, voice_file, voice_rate, voice_volume)
     elif is_azure_v2_voice(voice_name):
         return azure_tts_v2(text, voice_name, voice_file)
     elif is_siliconflow_voice(voice_name):
@@ -1333,8 +1336,13 @@ def tts(
                     res = azure_tts_v1(text, alt_voice, voice_rate, voice_file)
                     if res:
                         return res
-            logger.error(f"[Voice] Azure Neural TTS failed for Indian voice '{voice_name}'.")
-            return None
+            logger.warning(f"[Voice] Azure Neural TTS blocked by cloud provider. Falling back to 100% local offline cloned Prabhat engine...")
+            try:
+                from app.services.cloned_prabhat_tts import cloned_prabhat_tts
+                return cloned_prabhat_tts(text, voice_file, voice_rate, voice_volume)
+            except Exception as clone_err:
+                logger.error(f"[Voice] Offline cloned Prabhat fallback failed: {clone_err}")
+                return None
         logger.warning(
             f"[Voice] Cloud TTS failed for '{voice_name}'."
         )
