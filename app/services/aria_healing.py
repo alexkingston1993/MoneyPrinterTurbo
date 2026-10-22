@@ -196,6 +196,29 @@ class AriaSelfHealingEngine:
                 backoff_seconds=backoff,
             )
 
+        # 3.5 Upstream Pipeline Premature Termination (res=None before YouTube)
+        if "without youtube_upload result" in err_str or "res=none" in err_str:
+            backoff = 6 * attempt
+            cls.purge_scratch_artifacts()
+            terms = cls.UNIVERSAL_INSTITUTIONAL_KEYWORDS
+            random.shuffle(terms)
+            return AriaRemedy(
+                domain=FailureDomain.RENDER_FFMPEG,
+                failed_component="Upstream Video Assembly & Rendering Pipeline",
+                root_cause="Pipeline stage terminated prematurely (task.start returned None). Typically caused by runner disk saturation, encoder timeout, or stock clip starvation.",
+                severity="HIGH",
+                action_plan="Purging runner scratch disk, falling back to high-liquidity financial B-roll keywords, and engaging ultrafast safe CPU render mode.",
+                short_desc="Upstream Pipeline Recovery (Scratch Scrub + Universal B-Roll + Ultrafast Render)",
+                params={
+                    "terms": terms[:5],
+                    "clip_duration": 6,
+                    "safe_mode_ffmpeg": True,
+                    "ffmpeg_threads": 2,
+                    "preset": "ultrafast",
+                },
+                backoff_seconds=backoff,
+            )
+
         # 4. YouTube API & Publishing Domain
         if any(k in err_str for k in [
             "youtube", "uploadlimitexceeded", "quotaexceeded", "403", "pickle",
