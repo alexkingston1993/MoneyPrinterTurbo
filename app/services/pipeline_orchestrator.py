@@ -12,7 +12,7 @@ Executes the unified loop:
 
 import os
 import time
-from typing import Dict, Optional
+from typing import Dict, Optional, Any
 from loguru import logger
 
 from app.services.market_data import get_fetcher, MarketContext
