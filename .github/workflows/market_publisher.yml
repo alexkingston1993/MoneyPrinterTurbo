@@ -3,12 +3,13 @@ name: Autonomous Live Market Media & News Engine
 on:
   schedule:
     # 5 Daily Slots aligned with Indian Standard Time (IST = UTC + 5:30)
-    - cron: '30 3 * * 1-5'   # 09:00 AM IST (Pre-Market / Open Brief)
-    - cron: '30 5 * * 1-5'   # 11:00 AM IST (Morning Momentum & Sector Rotation)
-    - cron: '00 8 * * 1-5'   # 13:30 PM IST (Mid-Day / European Cues)
-    - cron: '30 10 * * 1-5'  # 16:00 PM IST (Closing Bell Wrap & Top Movers)
-    - cron: '00 14 * * 1-5'  # 19:30 PM IST (Evening FII/DII Deep Dive)
-    - cron: '30 5 * * 6'     # 11:00 AM IST Saturday (Weekend Masterclass)
+    # Using :03 and :33 minute offsets to avoid high-load top-of-hour GitHub Actions queue stalls
+    - cron: '33 3 * * 1-5'   # 09:03 AM IST (Pre-Market / Open Brief)
+    - cron: '33 5 * * 1-5'   # 11:03 AM IST (Morning Momentum & Sector Rotation)
+    - cron: '03 8 * * 1-5'   # 13:33 PM IST (Mid-Day / European Cues)
+    - cron: '33 10 * * 1-5'  # 16:03 PM IST (Closing Bell Wrap & Top Movers)
+    - cron: '03 14 * * 1-5'  # 19:33 PM IST (Evening FII/DII Deep Dive)
+    - cron: '33 5 * * 6'     # 11:03 AM IST Saturday (Weekend Masterclass)
   workflow_dispatch:
     inputs:
       slot:
@@ -95,5 +96,7 @@ jobs:
             echo "No new changes to commit."
           else
             git commit -m "feat(market): autonomous market news release [skip ci]"
+            git pull --rebase origin main || true
             git push origin main
           fi
+
