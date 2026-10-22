@@ -180,9 +180,23 @@ def send_market_release_alert(
     if send_callmebot_whatsapp(formatted_message):
         delivered = True
 
-    # 3. Try Telegram Bot
-    if send_telegram_alert(formatted_message):
-        delivered = True
+    # 3. Try Telegram Bot (Personalized Aria Work-Wife Persona)
+    try:
+        from app.services.assistant_persona import aria
+        clean_pub = published_url if (published_url and "github.com" not in published_url) else "https://the-bull-print.vercel.app"
+        if aria.notify_success(
+            slot_name=slot_name,
+            article_title=article_title,
+            youtube_url=youtube_url or "https://the-bull-print.vercel.app",
+            published_url=clean_pub,
+            nifty_level=nifty_level,
+            sentiment=sentiment,
+        ):
+            delivered = True
+    except Exception as e:
+        logger.warning(f"[Notifier] Aria work-wife Telegram alert failed: {e}")
+        if send_telegram_alert(formatted_message):
+            delivered = True
 
     if not delivered:
         logger.info("[Notifier] No notification services configured (Twilio, CallMeBot, or Telegram).")
