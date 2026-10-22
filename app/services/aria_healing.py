@@ -319,7 +319,7 @@ class AriaCommandToolkit:
         # 2. Check latest GitHub Actions run
         latest_run_summary = "All cloud runners idle & ready."
         try:
-            gh_bin = shutil.which("gh") or "/usr/local/bin/gh"
+            gh_bin = "/usr/local/bin/gh" if os.path.exists("/usr/local/bin/gh") else (shutil.which("gh") or "gh")
             res = subprocess.run(
                 [gh_bin, "run", "list", "-R", "alexkingston1993/MoneyPrinterTurbo", "-L", "1", "--json", "status,conclusion,headSha,updatedAt,event"],
                 capture_output=True,
@@ -440,7 +440,7 @@ class AriaCommandToolkit:
             return f"❌ Invalid slot '{slot_name}'. Valid options: {', '.join(valid_slots)}"
 
         try:
-            gh_bin = shutil.which("gh") or "/usr/local/bin/gh"
+            gh_bin = "/usr/local/bin/gh" if os.path.exists("/usr/local/bin/gh") else (shutil.which("gh") or "gh")
             res = subprocess.run(
                 [gh_bin, "workflow", "run", "market_publisher.yml", "-R", "alexkingston1993/MoneyPrinterTurbo", "-f", f"slot={clean_slot}"],
                 capture_output=True,

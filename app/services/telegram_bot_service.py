@@ -50,7 +50,10 @@ class AriaEngineerTools:
 
     @staticmethod
     def get_gh_bin() -> str:
-        return shutil.which("gh") or "/usr/local/bin/gh"
+        for p in ["/usr/local/bin/gh", "/opt/homebrew/bin/gh"]:
+            if os.path.exists(p):
+                return p
+        return shutil.which("gh") or "gh"
 
     @classmethod
     def get_active_or_latest_run(cls) -> Dict[str, Any]:
