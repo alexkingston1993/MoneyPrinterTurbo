@@ -306,7 +306,7 @@ class PipelineOrchestrator:
             ]
             aspect = "16:9"
             font_size = 48
-            clip_duration = 8
+            clip_duration = 15
         else:
             subject = "Institutional Alpha Alert: Quantitative Nifty 50 Liquidity Breakdown"
             script = (

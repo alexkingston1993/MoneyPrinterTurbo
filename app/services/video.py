@@ -399,7 +399,7 @@ def combine_videos(
                 
             # wirte clip to temp file
             clip_file = f"{output_dir}/temp-clip-{i+1}.mp4"
-            clip.write_videofile(clip_file, logger=None, fps=fps, codec=video_codec)
+            clip.write_videofile(clip_file, logger=None, fps=fps, codec=video_codec, preset="veryfast", threads=4)
 
             # Store clip duration before closing
             clip_duration_saved = clip.duration
@@ -668,7 +668,8 @@ def generate_video(
         audio_fps=output_audio_fps,
         audio_bitrate=audio_bitrate,
         temp_audiofile_path=output_dir,
-        threads=params.n_threads or 2,
+        threads=params.n_threads or 4,
+        preset="veryfast",
         logger=None,
         fps=fps,
     )
