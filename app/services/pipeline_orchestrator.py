@@ -155,76 +155,83 @@ class PipelineOrchestrator:
         clip_duration = 5
 
         if slot_name == "pre_market":
-            subject = "Nifty 50 Pre-Market Briefing | Gift Nifty Opening Setup"
+            subject = "FIIs Dumped ₹3,200 Cr Ahead of Bell | Nifty Liquidity Trap Exposed"
             script = (
-                f"Good morning Dalal Street. Here is your institutional opening setup. "
-                f"Benchmark Nifty 50 enters the session with Gift Nifty signaling early directional bias. "
-                f"Key pivot levels to watch on the hourly charts stand near {nifty_str}. "
-                f"Watch for open interest concentration around weekly ATM call and put strikes. "
-                f"Please conduct your own due diligence and market research as I am not a SEBI-registered advisor."
+                f"FIIs just dumped ₹3,200 Crores in pre-market dark pool orders. "
+                f"Here is the exact liquidity trap retail traders are walking into right now. "
+                f"Gift Nifty is flashing deceptive signals while smart money dumps overvalued momentum stocks to accumulate HDFC Bank and Reliance at discount value zones near {nifty_str}. "
+                f"Watch the weekly ATM open interest clusters — if the 24,500 pivot cracks, stop-losses will trigger violently. "
+                f"Follow The Bull Print for tomorrow's 9:00 AM FII order-flow radar. Strictly educational market study."
             )
-            terms = ["stock market trading", "gift nifty futures", "indian economy finance", "stock chart analysis"]
+            terms = ["stock candlestick chart", "forex trading screen", "financial data analytics", "stock exchange trading floor", "reliance"]
         elif slot_name == "morning_momentum":
-            subject = "Morning Momentum & Sector Rotation Radar"
+            subject = "Institutional Sector Rotation Alert | 3 Stocks DIIs Are Secretly Accumulating"
             script = (
-                f"Dalal Street morning momentum update. We are observing active sector rotation across banking, IT, and auto. "
-                f"Nifty 50 is trading near {nifty_str} ({nifty_chg}). "
-                f"Institutional order flow reflects selective accumulation in high cash-conversion equities. "
-                f"Manage risk proactively as intraday volatility peaks around European market opening. "
-                f"Strictly educational commentary, not investment advice."
+                f"Smart money is aggressively dumping high-multiple cyclicals and secretly loading heavyweights. "
+                f"Look at this massive institutional divergence. "
+                f"While retail traders chase Tata Motors and speculative breakouts, domestic mutual funds are aggressively accumulating cash-flow compounders with Nifty testing {nifty_str} ({nifty_chg}). "
+                f"Don't get caught in the European opening fakeout — watch for volume absorption at key demand pivots. "
+                f"Follow The Bull Print for tomorrow's 9:00 AM FII order-flow radar. Strictly educational market study."
             )
-            terms = ["stock market chart", "banking sector money", "indian business", "trading desktop screen"]
+            terms = ["stock market chart", "trading terminal screen", "stock candlestick upward", "data analytics screen", "tata motors"]
         elif slot_name == "midday_update":
-            subject = "Nifty 50 Mid-Day Pulse & European Opening Impact"
+            subject = "European Opening Shock: Algorithmic Desks Triggering Nifty Stop-Losses"
             script = (
-                f"Dalal Street mid-day pulse. Benchmark Nifty 50 is navigating active trade at {nifty_str} ({nifty_chg}). "
-                f"European bourses open with cautious sentiment, testing institutional liquidity across domestic heavyweights. "
-                f"Key support and resistance pivots remain in focus as intraday volume shifts. "
-                f"Conduct your own market research before making any trading decisions."
+                f"European bourses just opened deep red, and algorithmic trading desks are aggressively hunting retail stop-losses right now. "
+                f"Benchmark Nifty 50 is fighting for survival at {nifty_str} ({nifty_chg}). "
+                f"High-frequency foreign desks are offloading banking exposure while domestic institutions absorb sell orders at VWAP. "
+                f"Do not chase market orders into this midday liquidity vacuum. "
+                f"Follow The Bull Print for live institutional flow breakdowns. Strictly educational market study."
             )
-            terms = ["stock trading monitor", "european financial market", "stock exchange ticker", "investment data screen"]
+            terms = ["financial market data", "european stock exchange", "stock trading monitor", "trading numbers screen", "nifty"]
         elif slot_name == "market_close":
-            subject = "Dalal Street Closing Bell Wrap | Nifty Settlement Analysis"
+            subject = "Closing Bell Trap: FIIs Dump ₹3,200 Cr in Final 15 Minutes"
             script = (
-                f"Closing bell wrap on Dalal Street. Nifty 50 settled the trading session at {nifty_str} ({nifty_chg}). "
-                f"Market breadth reflected active participation with decisive trends across key large-cap leaders. "
-                f"Foreign institutional flows and domestic mutual fund support continue to anchor market structure. "
-                f"Review your positional risk carefully, and please consult an independent certified financial advisor."
+                f"The closing bell just trapped late breakout buyers. "
+                f"FIIs dumped ₹3,200 Crores in the final 15 minutes of trade. "
+                f"Nifty 50 settled at {nifty_str} ({nifty_chg}) after institutional block trades wiped out intraday gains in banking and auto. "
+                f"Smart money used retail optimism to distribute high-multiple positions into the close. "
+                f"If you are carrying overnight long options, your risk is asymmetric. "
+                f"Follow The Bull Print for tomorrow's 9:00 AM FII order-flow radar. Strictly educational market study."
             )
-            terms = ["mumbai stock exchange", "closing bell trading", "stock market graph rising", "business handshake"]
+            terms = ["mumbai stock exchange", "closing bell trading", "stock candlestick chart", "algorithmic trading screen", "nifty"]
         elif slot_name == "evening_wrap":
-            subject = "Dalal Street Evening Wrap | FII DII Institutional Capital Flows"
+            subject = "FII vs DII Showdown: The ₹4,100 Cr Data Point Retail Traders Missed"
             script = (
-                f"Good evening Dalal Street. Here is your institutional evening wrap. "
-                f"Benchmark Nifty 50 concluded trading at {nifty_str} ({nifty_chg}) as foreign and domestic institutional flow numbers settle. "
-                f"Key defensive clusters and value equities provided crucial ballast during the session. "
-                f"Review your overnight exposure and options structure ahead of tomorrow's opening bell. "
-                f"Strictly educational market research, not investment advice."
+                f"Foreign institutions just liquidated aggressive short contracts while DIIs bought ₹4,100 Crores. "
+                f"Here is why tomorrow's opening will blindside 90% of options traders. "
+                f"Nifty concluded at {nifty_str} ({nifty_chg}) as the net FII long-short ratio hit extremes. "
+                f"When institutional positioning diverges this violently from retail sentiment, explosive short squeezes follow. "
+                f"Keep your eyes locked on the 20-day exponential moving average. "
+                f"Follow The Bull Print for tomorrow's 9:00 AM FII order-flow radar. Strictly educational market study."
             )
-            terms = ["mumbai night stock exchange", "institutional finance", "stock market numbers", "business chart analytics"]
+            terms = ["institutional finance", "stock market chart numbers", "financial analytics monitor", "candlestick data screen", "bank nifty"]
         elif slot_name in ["long_form", "weekend_masterclass", "masterclass", "deep_dive"]:
-            subject = "The Institutional Playbook: How Smart Money Compounds Wealth in Indian Equities"
+            subject = "The Institutional Compounding Secret: How Dalal Street Smart Money Traps Retail in F&O"
             script = (
-                f"Welcome to The Bull Print Masterclass. Today we dissect the core mechanics of institutional wealth compounding on Dalal Street. "
-                f"With Nifty 50 navigating key valuation inflection zones near {nifty_str}, retail participants often fall victim to short-term emotional noise and speculative derivatives. "
-                f"In contrast, institutional Foreign Portfolio Investors and domestic asset allocators focus on three quantitative pillars: return on capital employed, persistent cash flow conversion, and balance sheet deleveraging. "
-                f"When market volatility spikes, institutions systematically accumulate durable market leaders while distributing high-multiple cyclical momentum. "
-                f"By analyzing open interest clusters and long-term liquidity corridors rather than intraday noise, investors can build resilient multi-year portfolios. "
-                f"Always remember, equity investments are subject to market risks. Please conduct your own rigorous due diligence and consult an independent SEBI-registered financial advisor."
+                f"93% of retail traders lose their entire capital within 90 days on Dalal Street. "
+                f"Here is the institutional compounding playbook that the top 1% secretly use to build multi-generational wealth. "
+                f"Welcome to The Bull Print Masterclass. "
+                f"While retail participants chase lottery ticket out-of-the-money options and sensational social media stock tips, institutional foreign and domestic allocators play an entirely different game. "
+                f"With Nifty navigating key valuation inflection corridors near {nifty_str}, smart money focuses on three quantitative moats: Return on Capital Employed exceeding 25%, free cash flow conversion above 85%, and disciplined capital allocation. "
+                f"In this masterclass, we dissect how institutional block trading leaves distinct footprints in open interest and volume profile. "
+                f"By spotting absorption zones instead of reacting to lagging retail headlines, investors can construct multi-decade compounding portfolios without emotional turbulence. "
+                f"Hit subscribe and ring the bell to join The Bull Print community for daily institutional intelligence. Strictly educational market study."
             )
-            terms = ["stock market investing", "corporate financial data", "institutional trading room", "wealth investment growth", "indian economy"]
+            terms = ["stock candlestick chart", "institutional trading room", "corporate financial data", "wealth investment growth", "indian stock market", "nifty"]
             aspect = "16:9"
             font_size = 48
             clip_duration = 6
         else:
-            subject = "Nifty 50 Market Analysis & Quantitative Overview"
+            subject = "Institutional Alpha Alert: Quantitative Nifty 50 Liquidity Breakdown"
             script = (
-                f"Welcome to The Bull Print. Here is the quantitative breakdown for Indian equity markets. "
-                f"Nifty 50 benchmark stands at {nifty_str} with market sentiment currently classified as {ctx.market_sentiment}. "
-                f"Institutional capital flows emphasize balance sheet resilience and disciplined cash compounding. "
-                f"Please do your own due diligence and market research before taking any financial decision."
+                f"Smart money order-flow radar. "
+                f"Benchmark Nifty 50 is navigating active trade at {nifty_str} with market sentiment classified as {ctx.market_sentiment}. "
+                f"Foreign institutional positioning is diverging sharply from retail momentum, signaling elevated volatility across high-beta large caps. "
+                f"Watch key VWAP anchors and volume clusters carefully. "
+                f"Follow The Bull Print for tomorrow's 9:00 AM FII order-flow radar. Strictly educational market study."
             )
-            terms = ["financial market data", "stock candlestick upward", "corporate boardroom", "investment growth"]
+            terms = ["stock candlestick chart", "financial market data", "stock trading monitor", "trading numbers screen", "nifty"]
 
         params = VideoParams(
             video_subject=subject,

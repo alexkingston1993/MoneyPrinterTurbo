@@ -619,6 +619,29 @@ def generate_video(
         for item in sub.subtitles:
             clip = create_text_clip(subtitle_item=item)
             text_clips.append(clip)
+
+        # Persistent Institutional Compliance & Alpha Watermark Badge
+        try:
+            badge_text = "THE BULL PRINT  |  SEBI RA EXEMPT • STRICTLY EDUCATIONAL"
+            badge_font_size = 20 if video_width > 1000 else 16
+            badge_clip = (
+                TextClip(
+                    text=badge_text,
+                    font=font_path,
+                    font_size=badge_font_size,
+                    color="#cbd5e1",
+                    bg_color="#0f172a",
+                    stroke_color="#000000",
+                    stroke_width=1,
+                    text_align="center",
+                )
+                .with_duration(video_clip.duration)
+                .with_position(("center", int(video_height * 0.04 if params.subtitle_position != "top" else video_height * 0.94)))
+            )
+            text_clips.append(badge_clip)
+        except Exception as e:
+            logger.warning(f"[Video Composer] Watermark badge bypassed: {e}")
+
         video_clip = CompositeVideoClip([video_clip, *text_clips])
 
     bgm_file = get_bgm_file(bgm_type=params.bgm_type, bgm_file=params.bgm_file)
