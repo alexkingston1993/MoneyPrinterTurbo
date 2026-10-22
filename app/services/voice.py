@@ -21,7 +21,7 @@ from moviepy.audio.io.AudioFileClip import AudioFileClip
 from app.config import config
 from app.utils import utils
 
-_DEFAULT_EDGE_TTS_TIMEOUT_SECONDS = 30.0
+_DEFAULT_EDGE_TTS_TIMEOUT_SECONDS = 300.0
 
 
 def _configure_pydub_ffmpeg(audio_segment_cls):
@@ -1626,7 +1626,7 @@ def azure_tts_v1(
             ensure_file_path_exists(voice_file)
             communicate = create_edge_tts_communicate(text, voice_name, rate_str)
             sub_maker = edge_tts.SubMaker()
-            timeout_seconds = get_edge_tts_timeout_seconds()
+            timeout_seconds = max(300.0, get_edge_tts_timeout_seconds() or 300.0)
 
             with open(voice_file, "wb") as file:
                 def _handle_chunk(chunk):
