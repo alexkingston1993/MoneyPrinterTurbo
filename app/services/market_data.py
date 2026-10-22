@@ -40,6 +40,10 @@ class IndexData:
     prev_close: float = 0.0
     timestamp: str = ""
 
+    @property
+    def change_percent(self) -> float:
+        return self.change_pct
+
 
 @dataclass
 class StockData:
@@ -50,6 +54,10 @@ class StockData:
     change_pct: float = 0.0
     volume: int = 0
     market_cap: float = 0.0
+
+    @property
+    def change_percent(self) -> float:
+        return self.change_pct
 
 
 @dataclass

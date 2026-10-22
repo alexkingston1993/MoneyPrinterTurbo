@@ -147,7 +147,7 @@ class PipelineOrchestrator:
 
         task_id = str(uuid.uuid4())
         nifty_str = f"{ctx.nifty.value:.1f}" if ctx.nifty else "24,500"
-        nifty_chg = f"{ctx.nifty.change_percent:+.2f}%" if ctx.nifty and ctx.nifty.change_percent is not None else "+0.00%"
+        nifty_chg = f"{ctx.nifty.change_pct:+.2f}%" if ctx.nifty and getattr(ctx.nifty, "change_pct", None) is not None else "+0.00%"
 
         if slot_name == "pre_market":
             subject = "Nifty 50 Pre-Market Briefing | Gift Nifty Opening Setup"
