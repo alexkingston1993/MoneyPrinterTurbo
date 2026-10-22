@@ -1314,7 +1314,20 @@ def tts(
         else:
             logger.error(f"Invalid coqui voice name format: {voice_name}")
             return None
-    return azure_tts_v1(text, voice_name, voice_rate, voice_file)
+    res = azure_tts_v1(text, voice_name, voice_rate, voice_file)
+    if res is None:
+        logger.warning(
+            f"[Voice] Cloud TTS failed for '{voice_name}'. Activating offline Kokoro Neural Voice fallback..."
+        )
+        try:
+            from app.services.kokoro_voice import kokoro_tts
+            res = kokoro_tts(text, "kokoro:am_adam", voice_rate, voice_file, voice_volume)
+            if res:
+                logger.success("[Voice] Kokoro neural voiceover fallback successfully synthesized audio and subtitles!")
+                return res
+        except Exception as ke:
+            logger.error(f"[Voice] Kokoro neural fallback failed: {ke}")
+    return res
 
 
 def convert_rate_to_percent(rate: float) -> str:
@@ -1590,7 +1603,7 @@ def azure_tts_v1(
     voice_name = parse_voice_name(voice_name)
     text = text.strip()
     rate_str = convert_rate_to_percent(voice_rate)
-    for i in range(3):
+    for i in range(2):
         try:
             logger.info(f"start, voice name: {voice_name}, try: {i + 1}")
 
