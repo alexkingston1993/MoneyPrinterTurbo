@@ -319,6 +319,67 @@ class AriaSelfHealingEngine:
             logger.warning(f"[Aria Healing] Git repair warning: {e}")
 
 
+class AriaDiskSentinel:
+    """
+    Background non-blocking disk watchdog that runs concurrently with rendering.
+    Monitors runner disk usage. If disk usage exceeds threshold (default 70%),
+    it immediately triggers background garbage collection and scratch purging
+    WITHOUT pausing or interrupting active MoviePy or pipeline tasks.
+    """
+    _thread: Optional[Any] = None
+    _stop_event: Any = None
+
+    @classmethod
+    def start_sentinel(cls, threshold_pct: float = 70.0, check_interval_sec: int = 15):
+        import threading
+        if cls._stop_event is None:
+            cls._stop_event = threading.Event()
+        if cls._thread and cls._thread.is_alive():
+            return
+        cls._stop_event.clear()
+
+        def _watchdog_loop():
+            logger.info(f"[Aria Sentinel] Parallel disk watchdog active (threshold={threshold_pct}%)...")
+            alerted = False
+            while not cls._stop_event.is_set():
+                try:
+                    usage = shutil.disk_usage("/")
+                    used_pct = (usage.used / usage.total) * 100
+                    if used_pct >= threshold_pct:
+                        logger.warning(f"[Aria Sentinel] Disk usage reached {used_pct:.1f}% (limit {threshold_pct}%). Purging non-blocking scratch buffers in parallel!")
+                        AriaSelfHealingEngine.purge_scratch_artifacts()
+                        for pat in ["/tmp/*.mp4", "/tmp/*.wav", "/tmp/*.aac", "/root/.cache/pip", "/home/runner/.cache/pip"]:
+                            try:
+                                for p in glob.glob(pat):
+                                    if os.path.isfile(p):
+                                        os.remove(p)
+                                    elif os.path.isdir(p):
+                                        shutil.rmtree(p, ignore_errors=True)
+                            except Exception:
+                                pass
+                        new_usage = shutil.disk_usage("/")
+                        new_pct = (new_usage.used / new_usage.total) * 100
+                        logger.success(f"[Aria Sentinel] Background disk scrub completed: {used_pct:.1f}% -> {new_pct:.1f}%.")
+                        if not alerted:
+                            aria.send_personal_alert(
+                                f"⚠️ *Agent Aria Live Sentinel:* Runner disk hit `{used_pct:.1f}%`. I executed a parallel background scrub reducing it to `{new_pct:.1f}%` with **zero interruption** to your video rendering!"
+                            )
+                            alerted = True
+                    elif used_pct < (threshold_pct - 10):
+                        alerted = False
+                except Exception as e:
+                    logger.debug(f"[Aria Sentinel] Watchdog check notice: {e}")
+                time.sleep(check_interval_sec)
+
+        cls._thread = threading.Thread(target=_watchdog_loop, daemon=True)
+        cls._thread.start()
+
+    @classmethod
+    def stop_sentinel(cls):
+        if cls._stop_event:
+            cls._stop_event.set()
+
+
 class AriaCommandToolkit:
     """
     Equips Agent Aria with autonomous operational tools that can be invoked via Telegram

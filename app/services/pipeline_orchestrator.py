@@ -39,6 +39,13 @@ class PipelineOrchestrator:
         start_time = time.time()
         logger.info(f"[Orchestrator] Starting market cycle: slot='{slot_name}'")
 
+        # Engage parallel zero-downtime disk sentinel (auto-scrubs if runner disk > 70%)
+        try:
+            from app.services.aria_healing import AriaDiskSentinel
+            AriaDiskSentinel.start_sentinel(threshold_pct=70.0, check_interval_sec=15)
+        except Exception as e:
+            logger.warning(f"[Orchestrator] Disk sentinel startup notice: {e}")
+
         # 1. Fetch live market snapshot
         logger.info("[Orchestrator] Step 1: Fetching live NSE/BSE context...")
         ctx: MarketContext = self.market_fetcher.get_full_context(include_stocks=True, include_global=True)
@@ -133,6 +140,13 @@ class PipelineOrchestrator:
             )
         except Exception as alert_err:
             logger.warning(f"[Orchestrator] WhatsApp alert dispatch warning: {alert_err}")
+
+        # Stop parallel disk sentinel
+        try:
+            from app.services.aria_healing import AriaDiskSentinel
+            AriaDiskSentinel.stop_sentinel()
+        except Exception:
+            pass
 
         return {
             "success": True,

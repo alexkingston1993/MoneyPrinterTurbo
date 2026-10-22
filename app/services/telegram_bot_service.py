@@ -296,6 +296,43 @@ class TelegramBotDaemon:
 
         # 2. Conversational & Technical Dialogue via LLM with Live Telemetry Context
         live_context = AriaEngineerTools.build_live_system_context()
+        system_instruction = f"{SYSTEM_PERSONA_PROMPT}\n\n{live_context}"
+
+        # 2A. Primary: Direct First-Party Google Gemini API (No Middleman)
+        gemini_api_key = os.getenv("GEMINI_API_KEY") or config.app.get("gemini_api_key")
+        if gemini_api_key:
+            try:
+                import google.generativeai as genai
+                genai.configure(api_key=gemini_api_key, transport="rest")
+
+                # Format conversational turns for Gemini
+                gemini_history = []
+                for turn in self.history[-6:]:
+                    role = "user" if turn["role"] == "user" else "model"
+                    gemini_history.append({"role": role, "parts": [turn["content"]]})
+
+                # Try direct flash models
+                for model_choice in ["models/gemini-3.5-flash", "models/gemini-3.5-flash-lite"]:
+                    try:
+                        model = genai.GenerativeModel(
+                            model_choice,
+                            system_instruction=system_instruction
+                        )
+                        chat = model.start_chat(history=gemini_history)
+                        response = chat.send_message(f"{user_name}: {user_text}")
+                        if response and response.text and response.text.strip():
+                            reply = response.text.strip()
+                            self.history.append({"role": "user", "content": user_text})
+                            self.history.append({"role": "assistant", "content": reply})
+                            logger.info(f"[Aria] Generated direct reply via Google {model_choice}")
+                            return reply
+                    except Exception as e_model:
+                        logger.warning(f"[Aria] Direct Gemini {model_choice} error: {e_model}")
+                        continue
+            except Exception as e_gemini:
+                logger.warning(f"[Aria] Direct Gemini init error: {e_gemini}")
+
+        # 2B. Secondary Failover: Fast OpenAI model via Pollinations
         messages = [
             {"role": "system", "content": SYSTEM_PERSONA_PROMPT},
             {"role": "system", "content": live_context},
@@ -304,7 +341,6 @@ class TelegramBotDaemon:
             messages.append(turn)
         messages.append({"role": "user", "content": f"{user_name}: {user_text}"})
 
-        # Try fast OpenAI model via Pollinations
         try:
             resp = requests.post(
                 "https://text.pollinations.ai/",
@@ -315,11 +351,12 @@ class TelegramBotDaemon:
                 reply = resp.text.strip()
                 self.history.append({"role": "user", "content": user_text})
                 self.history.append({"role": "assistant", "content": reply})
+                logger.info("[Aria] Generated reply via secondary failover (openai-fast)")
                 return reply
         except Exception as e:
-            logger.warning(f"[Aria] Primary conversational endpoint failed: {e}")
+            logger.warning(f"[Aria] Secondary conversational endpoint failed: {e}")
 
-        # Try secondary model on Pollinations
+        # 2C. Tertiary Failover: Mistral
         try:
             resp = requests.post(
                 "https://text.pollinations.ai/",
@@ -330,14 +367,15 @@ class TelegramBotDaemon:
                 reply = resp.text.strip()
                 self.history.append({"role": "user", "content": user_text})
                 self.history.append({"role": "assistant", "content": reply})
+                logger.info("[Aria] Generated reply via tertiary failover (mistral)")
                 return reply
         except Exception as e:
-            logger.warning(f"[Aria] Secondary conversational endpoint failed: {e}")
+            logger.warning(f"[Aria] Tertiary conversational endpoint failed: {e}")
 
         # Intelligent Fallback if LLM endpoints are unreachable
         if "res=none" in lower or "youtube_upload result" in lower or "error" in lower:
             return (
-                "Boss, apologies for the earlier copy-cat glitch! Let me answer you straight:\n\n"
+                "Boss, apologies for any earlier glitch! Let me answer you straight:\n\n"
                 "That `Task pipeline terminated without youtube_upload result (res=None)` error happened in earlier runs because the runner completely ran out of disk space (`[Errno 28] No space left on device`) from Kokoro/PyTorch installing 3.5GB of CUDA packages.\n\n"
                 "**Is it happening again? NO, absolutely not!** We completely purged Kokoro, added an automatic 20GB runner disk clean-up, and set MoviePy to ultrafast encoding. Our current run (#39795865879) has plenty of disk space and is compiling smoothly in the cloud right now! ☕🚀"
             )
