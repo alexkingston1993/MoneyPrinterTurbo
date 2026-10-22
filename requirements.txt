@@ -18,9 +18,6 @@ requests==2.33.1
 socksio==1.0.0
 pydub==0.25.1
 litellm==1.60.0
-kokoro>=0.9.4
-soundfile>=0.14.0
-misaki>=0.9.4
 pytz>=2024.1
 yfinance>=0.2.38
 mplfinance>=0.12.10b0

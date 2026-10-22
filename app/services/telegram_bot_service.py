@@ -111,21 +111,25 @@ class AriaEngineerTools:
                     [gh_bin, "run", "view", str(run_id), "--log-failed", "-R", "alexkingston1993/MoneyPrinterTurbo"],
                     capture_output=True,
                     text=True,
-                    timeout=15,
+                    timeout=20,
                 )
-                fail_log = res.stdout[:1200]
+                full_log = res.stdout or ""
+                # Get the relevant failure block from the end of the log
+                fail_log = full_log[-2500:] if len(full_log) > 2500 else full_log
             except Exception:
                 pass
 
             # Detect root cause
             root_cause = "Transient step interruption"
-            if "remedy" in fail_log:
+            if "no space left on device" in full_log.lower() or "errno 28" in full_log.lower():
+                root_cause = "GitHub runner disk exhausted by heavy PyTorch/CUDA packages (Purged Kokoro/Torch from requirements.txt)."
+            elif "remedy" in full_log:
                 root_cause = "Function signature parameter mismatch in self-healing retry loop (Resolved in commit bebf266)."
-            elif "NoAudioReceived" in fail_log or "edge_tts" in fail_log:
+            elif "NoAudioReceived" in full_log or "edge_tts" in full_log:
                 root_cause = "Azure Neural TTS websocket timeout on free consumer endpoint."
-            elif "pexels" in fail_log or "materials" in fail_log:
+            elif "pexels" in full_log or "materials" in full_log:
                 root_cause = "Stock B-roll query yielded zero clips for narrow entity search."
-            elif "403" in fail_log and "upload" in fail_log:
+            elif "403" in full_log and "upload" in full_log:
                 root_cause = "YouTube Studio API upload quota or OAuth token scope restriction."
 
             return (

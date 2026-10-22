@@ -48,6 +48,11 @@ jobs:
             echo "✓ FFmpeg is pre-installed: $(ffmpeg -version | head -n 1)"
           fi
 
+      - name: Free Disk Space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/share/boost 2>/dev/null || true
+          df -h
+
       - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
