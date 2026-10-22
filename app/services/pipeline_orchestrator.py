@@ -365,6 +365,13 @@ class PipelineOrchestrator:
         config.ui["youtube_auto_upload"] = True
         config.ui["youtube_privacy"] = os.getenv("YOUTUBE_PRIVACY", "public")
 
+        # ── Offload Long-Form Masterclass to Modal GPU Container ──
+        if slot_name in ["long_form", "weekend_masterclass", "masterclass", "deep_dive"]:
+            modal_yt_url = self._try_modal_gpu_masterclass(subject, script)
+            if modal_yt_url:
+                return modal_yt_url
+            logger.info("[Orchestrator] Modal GPU offload bypassed or unavailable; proceeding with standard pipeline.")
+
         logger.info(f"[Orchestrator] Launching video rendering task {task_id} for '{subject}'...")
         res = task.start(task_id, params)
         if res and "youtube_upload" in res:
@@ -381,6 +388,37 @@ class PipelineOrchestrator:
                 raise RuntimeError(f"YouTube upload failed: {error_msg}")
         else:
             raise RuntimeError(f"Task pipeline terminated without youtube_upload result (res={res})")
+
+    def _try_modal_gpu_masterclass(self, subject: str, script: str) -> Optional[str]:
+        """Attempts to render and upload the 10-minute masterclass using Modal GPU in the cloud."""
+        has_modal = os.getenv("MODAL_TOKEN_ID") or os.path.exists(os.path.expanduser("~/.modal.toml"))
+        if not has_modal:
+            return None
+        try:
+            logger.info("[Orchestrator] 🚀 Delegating long-form masterclass to Modal GPU cloud container...")
+            import base64
+            from app.services.modal_pipeline import render_masterclass_gpu
+            token_b64 = os.getenv("YOUTUBE_TOKEN_EN")
+            if not token_b64:
+                token_file = os.path.join(DATA_DIR, "youtube_tokens", "youtube_token_en.pickle")
+                if os.path.exists(token_file):
+                    with open(token_file, "rb") as tf:
+                        token_b64 = base64.b64encode(tf.read()).decode()
+
+            result = render_masterclass_gpu.remote(
+                subject=subject,
+                script=script,
+                youtube_token_b64=token_b64,
+            )
+            if result and result.get("success") and result.get("youtube_url"):
+                yt_url = result["youtube_url"]
+                logger.success(f"[Orchestrator] Modal GPU Masterclass published to YouTube: {yt_url}")
+                return yt_url
+        except Exception as e:
+            logger.warning(f"[Orchestrator] Modal GPU masterclass attempt encountered: {e}")
+            if "ResourceExhausted" in str(e) or "spend limit" in str(e).lower():
+                logger.error("[Orchestrator] Modal spend limit reached on modal.com. Falling back to local pipeline.")
+        return None
 
     def _diagnose_and_prepare_remedy(self, exc: Exception, attempt: int, slot_name: str = "pre_market") -> Dict[str, Any]:
         """Diagnose root cause of pipeline error and construct targeted self-healing remedy via Aria."""

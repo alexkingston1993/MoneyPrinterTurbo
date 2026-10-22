@@ -84,6 +84,9 @@ jobs:
           TWILIO_TO_PHONE: ${{ secrets.TWILIO_TO_PHONE }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          MODAL_TOKEN_ID: ${{ secrets.MODAL_TOKEN_ID }}
+          MODAL_TOKEN_SECRET: ${{ secrets.MODAL_TOKEN_SECRET }}
+          YOUTUBE_TOKEN_EN: ${{ secrets.YOUTUBE_TOKEN_EN }}
         run: |
           SLOT="${{ github.event.inputs.slot || 'scheduled_cron' }}"
           echo "🚀 Running autonomous market cycle for slot: $SLOT"
