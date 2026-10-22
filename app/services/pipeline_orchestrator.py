@@ -150,6 +150,10 @@ class PipelineOrchestrator:
         nifty_str = f"{ctx.nifty.value:.1f}" if ctx.nifty else "24,500"
         nifty_chg = f"{ctx.nifty.change_pct:+.2f}%" if ctx.nifty and getattr(ctx.nifty, "change_pct", None) is not None else "+0.00%"
 
+        aspect = "9:16"
+        font_size = 75
+        clip_duration = 5
+
         if slot_name == "pre_market":
             subject = "Nifty 50 Pre-Market Briefing | Gift Nifty Opening Setup"
             script = (
@@ -170,6 +174,15 @@ class PipelineOrchestrator:
                 f"Strictly educational commentary, not investment advice."
             )
             terms = ["stock market chart", "banking sector money", "indian business", "trading desktop screen"]
+        elif slot_name == "midday_update":
+            subject = "Nifty 50 Mid-Day Pulse & European Opening Impact"
+            script = (
+                f"Dalal Street mid-day pulse. Benchmark Nifty 50 is navigating active trade at {nifty_str} ({nifty_chg}). "
+                f"European bourses open with cautious sentiment, testing institutional liquidity across domestic heavyweights. "
+                f"Key support and resistance pivots remain in focus as intraday volume shifts. "
+                f"Conduct your own market research before making any trading decisions."
+            )
+            terms = ["stock trading monitor", "european financial market", "stock exchange ticker", "investment data screen"]
         elif slot_name == "market_close":
             subject = "Dalal Street Closing Bell Wrap | Nifty Settlement Analysis"
             script = (
@@ -179,6 +192,30 @@ class PipelineOrchestrator:
                 f"Review your positional risk carefully, and please consult an independent certified financial advisor."
             )
             terms = ["mumbai stock exchange", "closing bell trading", "stock market graph rising", "business handshake"]
+        elif slot_name == "evening_wrap":
+            subject = "Dalal Street Evening Wrap | FII DII Institutional Capital Flows"
+            script = (
+                f"Good evening Dalal Street. Here is your institutional evening wrap. "
+                f"Benchmark Nifty 50 concluded trading at {nifty_str} ({nifty_chg}) as foreign and domestic institutional flow numbers settle. "
+                f"Key defensive clusters and value equities provided crucial ballast during the session. "
+                f"Review your overnight exposure and options structure ahead of tomorrow's opening bell. "
+                f"Strictly educational market research, not investment advice."
+            )
+            terms = ["mumbai night stock exchange", "institutional finance", "stock market numbers", "business chart analytics"]
+        elif slot_name in ["long_form", "weekend_masterclass", "masterclass", "deep_dive"]:
+            subject = "The Institutional Playbook: How Smart Money Compounds Wealth in Indian Equities"
+            script = (
+                f"Welcome to The Bull Print Masterclass. Today we dissect the core mechanics of institutional wealth compounding on Dalal Street. "
+                f"With Nifty 50 navigating key valuation inflection zones near {nifty_str}, retail participants often fall victim to short-term emotional noise and speculative derivatives. "
+                f"In contrast, institutional Foreign Portfolio Investors and domestic asset allocators focus on three quantitative pillars: return on capital employed, persistent cash flow conversion, and balance sheet deleveraging. "
+                f"When market volatility spikes, institutions systematically accumulate durable market leaders while distributing high-multiple cyclical momentum. "
+                f"By analyzing open interest clusters and long-term liquidity corridors rather than intraday noise, investors can build resilient multi-year portfolios. "
+                f"Always remember, equity investments are subject to market risks. Please conduct your own rigorous due diligence and consult an independent SEBI-registered financial advisor."
+            )
+            terms = ["stock market investing", "corporate financial data", "institutional trading room", "wealth investment growth", "indian economy"]
+            aspect = "16:9"
+            font_size = 48
+            clip_duration = 6
         else:
             subject = "Nifty 50 Market Analysis & Quantitative Overview"
             script = (
@@ -193,21 +230,22 @@ class PipelineOrchestrator:
             video_subject=subject,
             video_script=script,
             video_terms=terms,
-            video_aspect="9:16",
+            video_aspect=aspect,
             video_concat_mode=VideoConcatMode.sequential,
-            video_clip_duration=5,
+            video_clip_duration=clip_duration,
             video_count=1,
             video_source=config.app.get("video_source", "pexels"),
             voice_name=config.app.get("voice_name", "en-IN-ArjunNeural-Male"),
             bgm_type="random",
             subtitle_enabled=True,
-            subtitle_position="center",
-            font_size=75,
+            subtitle_position="bottom" if aspect == "16:9" else "center",
+            font_size=font_size,
             text_fore_color="#FFFFFF",
             text_background_color=True,
             stroke_color="#000000",
             stroke_width=2.0,
         )
+
 
         # Unconditionally enable YouTube auto-upload for autonomous cloud pipeline
         config.ui["youtube_enabled"] = True

@@ -74,6 +74,21 @@ class AutonomousScheduler:
 
     def run_slot(self, slot_name: str) -> Dict:
         """Trigger an immediate market cycle for a specific slot."""
+        if slot_name in ["batch_all", "run_all_remaining"]:
+            slots_to_run = ["market_close", "evening_wrap", "morning_momentum", "long_form"]
+            logger.info(f"[Scheduler] Executing complete batch of remaining cycles in cloud: {slots_to_run}")
+            batch_results = []
+            for s in slots_to_run:
+                logger.info(f"[Scheduler] >>> Starting batch video production for slot: '{s}'")
+                try:
+                    res = pipeline_orchestrator.run_market_cycle(slot_name=s)
+                    batch_results.append({"slot": s, "result": res})
+                except Exception as ex:
+                    logger.error(f"[Scheduler] Error executing batch slot '{s}': {ex}")
+            self.last_run_slot = "batch_all"
+            self.last_run_time = self.get_ist_now().strftime("%Y-%m-%d %H:%M:%S IST")
+            return {"batch_success": True, "count": len(batch_results), "executed": batch_results}
+
         resolved_slot = self.resolve_slot(slot_name)
         logger.info(f"[Scheduler] Triggering scheduled slot: '{resolved_slot}' (raw input: '{slot_name}')")
         res = pipeline_orchestrator.run_market_cycle(slot_name=resolved_slot)
