@@ -11,8 +11,30 @@ from openai.types.chat import ChatCompletion
 from app.config import config
 
 _max_retries = 5
-_DEFAULT_GEMINI_MODEL = "gemini-flash-latest"
+_DEFAULT_GEMINI_MODEL = "gemini-2.0-flash"
 _DEPRECATED_GEMINI_MODELS = {"gemini-pro", "gemini-1.0-pro", "gemini-2.5-flash"}
+
+
+def _generate_via_openai_fast(prompt: str) -> str:
+    """Seamless zero-config fallback to GPT-4o-mini tier via Pollinations AI if primary LLM hits rate limit."""
+    import urllib.parse
+    try:
+        url = f"https://text.pollinations.ai/{urllib.parse.quote(prompt)}?model=openai-fast"
+        resp = requests.get(url, timeout=30)
+        if resp.status_code == 200 and resp.text.strip():
+            return resp.text.strip()
+    except Exception as e:
+        logger.warning(f"[LLM] Primary openai-fast fallback error: {e}")
+
+    try:
+        url2 = f"https://text.pollinations.ai/{urllib.parse.quote(prompt)}?model=mistral"
+        resp2 = requests.get(url2, timeout=30)
+        if resp2.status_code == 200 and resp2.text.strip():
+            return resp2.text.strip()
+    except Exception as e2:
+        logger.warning(f"[LLM] Secondary mistral fallback error: {e2}")
+
+    raise RuntimeError("All LLM fallback routes exhausted")
 
 
 def _normalize_text_response(content, llm_provider: str) -> str:
@@ -305,6 +327,15 @@ def _generate_response(prompt: str) -> str:
                     raise ValueError(
                         f"[{llm_provider}] returned invalid response content"
                     )
+                except Exception as gen_err:
+                    err_str = str(gen_err)
+                    if "429" in err_str or "quota" in err_str.lower() or "resourceexhausted" in err_str.lower():
+                        logger.warning(
+                            f"[LLM] Gemini quota/rate limited ({err_str[:120]}...). Performing seamless failover to openai-fast (GPT-4o-mini)..."
+                        )
+                        fallback_text = _generate_via_openai_fast(prompt)
+                        return _normalize_text_response(fallback_text, "openai-fast")
+                    raise
 
                 return _normalize_text_response(generated_text, llm_provider)
 
