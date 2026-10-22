@@ -104,7 +104,12 @@ class PipelineOrchestrator:
                         uploader = get_uploader()
                         logger.info(f"[Orchestrator] Step 4: Closing flywheel — adding article link to YouTube video {video_id}...")
                         uploader.append_article_link_to_description("en", video_id, published_url, article.title)
-                        comment_msg = f"📊 Read the full in-depth financial breakdown & data tables here: {published_url}"
+                        comment_msg = (
+                            f"📊 Full In-Depth Institutional Breakdown & Order-Flow Heatmaps:\n"
+                            f"{published_url}\n\n"
+                            f"🔔 Subscribe to The Bull Print for tomorrow's 9:00 AM FII order-flow radar.\n"
+                            f"⚖️ Strictly educational market research. Not SEBI registered."
+                        )
                         uploader.post_pinned_comment("en", video_id, comment_msg)
                 except Exception as e:
                     logger.warning(f"[Orchestrator] YouTube backlink update skipped: {e}")
