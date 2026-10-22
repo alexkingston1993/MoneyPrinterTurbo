@@ -363,6 +363,10 @@ class YouTubeUploader:
 
     def append_article_link_to_description(self, language: str, video_id: str, article_url: str, article_title: str) -> bool:
         """Append the published website article link to the YouTube video description for backlinks."""
+        # Ironclad privacy failsafe: never expose GitHub repository or blob URLs to public viewers
+        if not article_url or "github.com" in article_url:
+            article_url = "https://the-bull-print.vercel.app"
+
         service = self._get_service(language)
         if not service:
             return False
@@ -376,6 +380,10 @@ class YouTubeUploader:
             snippet = items[0]["snippet"]
             current_desc = snippet.get("description", "")
             
+            # Clean any existing leaked github urls in description
+            if "github.com" in current_desc:
+                current_desc = re.sub(r"https?://github\.com/\S+", "https://the-bull-print.vercel.app", current_desc)
+
             # 2. Append link if not already present
             if article_url not in current_desc:
                 cta_block = (
@@ -399,6 +407,10 @@ class YouTubeUploader:
 
     def post_pinned_comment(self, language: str, video_id: str, comment_text: str) -> bool:
         """Post a top comment on the video with the article link."""
+        # Ironclad privacy failsafe: never expose GitHub URLs in public comments
+        if "github.com" in comment_text:
+            comment_text = re.sub(r"https?://github\.com/\S+", "https://the-bull-print.vercel.app", comment_text)
+
         service = self._get_service(language)
         if not service:
             return False

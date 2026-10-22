@@ -158,14 +158,15 @@ def send_market_release_alert(
     ]
 
     if youtube_url:
-        lines.append(f"🎥 *YouTube Short:* {youtube_url}")
+        lines.append(f"🎥 *YouTube Video:* {youtube_url}")
     if published_url:
-        lines.append(f"🌐 *Full Research Article:* {published_url}")
+        clean_pub_url = published_url if "github.com" not in published_url else "https://the-bull-print.vercel.app"
+        lines.append(f"🌐 *Full Research Article:* {clean_pub_url}")
 
     lines.extend([
         "",
         "✅ Generated & Published 100% autonomously in the cloud.",
-        "👉 https://dalal-street-alpha.vercel.app",
+        "👉 https://the-bull-print.vercel.app",
     ])
 
     formatted_message = "\n".join(lines)

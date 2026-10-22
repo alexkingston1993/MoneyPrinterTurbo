@@ -34,6 +34,7 @@ class GitHubVercelPublisher:
         self.branch = gh_cfg.get("branch", "main")
         self.token = os.getenv("GITHUB_TOKEN", gh_cfg.get("token", ""))
         self.posts_dir = gh_cfg.get("posts_dir", "content/posts").strip("/")
+        self.site_url = os.getenv("SITE_URL", gh_cfg.get("site_url", "https://the-bull-print.vercel.app")).rstrip("/")
         self.enabled = bool(self.repo and self.token)
 
     def _update_local_posts_index(self, article: GeneratedArticle, youtube_url: Optional[str] = None):
@@ -155,7 +156,7 @@ class GitHubVercelPublisher:
                 "success": True,
                 "status": "saved_locally_for_vercel",
                 "file_path": local_path,
-                "url": f"https://github.com/{self.repo}/blob/{self.branch}/{file_path}",
+                "url": f"{self.site_url}",
                 "title": article.title,
                 "slug": article.slug,
             }
@@ -196,7 +197,7 @@ class GitHubVercelPublisher:
                     "repo": self.repo,
                     "file_path": file_path,
                     "title": article.title,
-                    "url": f"https://github.com/{self.repo}/blob/{self.branch}/{file_path}",
+                    "url": f"{self.site_url}",
                 }
             else:
                 logger.error(f"[GitHubVercel] GitHub API error {resp.status_code}: {resp.text}")

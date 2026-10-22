@@ -96,7 +96,10 @@ class PipelineOrchestrator:
             
             # 5. Closed-Loop Backlink: Update YouTube video description and pinned comment
             published_url = publish_res.get("url")
-            if published_url and youtube_url:
+            if not published_url or "github.com" in published_url:
+                published_url = "https://the-bull-print.vercel.app"
+            
+            if youtube_url:
                 try:
                     video_id = wp_publisher._extract_youtube_id(youtube_url)
                     if video_id and video_id != "dQw4w9WgXcQ":
