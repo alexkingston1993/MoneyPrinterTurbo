@@ -185,7 +185,7 @@ class ArticleGenerator:
 <div class="market-article">
     <!-- Executive Summary / GEO Answer Box -->
     <div class="geo-answer-box" style="background:#f8fafc; border-left:4px solid #2563eb; padding:18px; margin-bottom:24px; border-radius:6px;">
-        <h3 style="margin-top:0; color:#1e293b;">⚡ Executive Summary: What Moved Dalal Street Today</h3>
+        <h3 style="margin-top:0; color:#1e293b;">⚡ Executive Summary: What Moved Indian Equities Today</h3>
         <p style="font-size:16px; line-height:1.6; color:#334155; margin-bottom:0;">
             The Indian market witnessed active trading as the benchmark <strong>Nifty 50 settled at {nifty_val} ({nifty_chg})</strong>, while <strong>Sensex concluded at {sensex_val} ({sensex_chg})</strong>. 
             Bank Nifty clocked <strong>{bank_val} ({bank_chg})</strong>. Institutional flows reflected a net FII posture of ₹{ctx.fii_net:,.1f} Cr, counterbalanced by domestic institutions at ₹{ctx.dii_net:,.1f} Cr. 
@@ -200,7 +200,7 @@ class ArticleGenerator:
 
     <h2>1. Benchmark Index Overview & Price Action</h2>
     <p>
-        Dalal Street opened with clear intent today as sector rotation dictated the pace. Rather than a broad-based surge, institutional liquidity concentrated within specific large-cap counters, leaving broader market breadth nuanced.
+        Indian equity markets opened with clear intent today as sector rotation dictated the pace. Rather than a broad-based surge, institutional liquidity concentrated within specific large-cap counters, leaving broader market breadth nuanced.
     </p>
     
     <div class="table-responsive" style="overflow-x:auto; margin:20px 0;">
@@ -259,7 +259,7 @@ class ArticleGenerator:
 
     <h2>3. Institutional Liquidity: FII & DII Cash Market Dynamics</h2>
     <p>
-        Institutional positioning remains the primary anchor of Dalal Street's macro momentum. Foreign Institutional Investors (FIIs) recorded a net flow of <strong>₹{ctx.fii_net:,.1f} Cr</strong>, while Domestic Institutional Investors (DIIs) deployed <strong>₹{ctx.dii_net:,.1f} Cr</strong>.
+        Institutional positioning remains the primary anchor of the broader market's macro momentum. Foreign Institutional Investors (FIIs) recorded a net flow of <strong>₹{ctx.fii_net:,.1f} Cr</strong>, while Domestic Institutional Investors (DIIs) deployed <strong>₹{ctx.dii_net:,.1f} Cr</strong>.
     </p>
     <p>
         The tug-of-war between overseas allocators and domestic mutual fund SIP inflows continues to establish a firm floor beneath heavy drawdowns, preventing abrupt systemic cascades.

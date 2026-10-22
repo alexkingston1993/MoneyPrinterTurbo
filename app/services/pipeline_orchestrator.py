@@ -212,21 +212,98 @@ class PipelineOrchestrator:
             )
             terms = ["institutional finance", "stock market chart numbers", "financial analytics monitor", "candlestick data screen", "bank nifty"]
         elif slot_name in ["long_form", "weekend_masterclass", "masterclass", "deep_dive"]:
-            subject = "The Institutional Compounding Secret: How Dalal Street Smart Money Traps Retail in F&O"
+            subject = "The Institutional Compounding Secret: How Smart Money Traps Retail in F&O"
             script = (
-                f"93% of retail traders lose their entire capital within 90 days on Dalal Street. "
-                f"Here is the institutional compounding playbook that the top 1% secretly use to build multi-generational wealth. "
-                f"Welcome to The Bull Print Masterclass. "
-                f"While retail participants chase lottery ticket out-of-the-money options and sensational social media stock tips, institutional foreign and domestic allocators play an entirely different game. "
-                f"With Nifty navigating key valuation inflection corridors near {nifty_str}, smart money focuses on three quantitative moats: Return on Capital Employed exceeding 25%, free cash flow conversion above 85%, and disciplined capital allocation. "
-                f"In this masterclass, we dissect how institutional block trading leaves distinct footprints in open interest and volume profile. "
-                f"By spotting absorption zones instead of reacting to lagging retail headlines, investors can construct multi-decade compounding portfolios without emotional turbulence. "
-                f"Hit subscribe and ring the bell to join The Bull Print community for daily institutional intelligence. Strictly educational market study."
+                f"93% of retail traders lose their entire capital within 90 days in Indian equity markets. "
+                f"This is not a matter of bad luck, poor indicators, or emotional discipline alone. "
+                f"It is the direct mathematical result of playing a game where the structural odds are engineered against you. "
+                f"Welcome to The Bull Print Masterclass: The Institutional Compounding Playbook. "
+                f"Every single trading day, billions of rupees change hands between two distinct groups. "
+                f"On one side are retail market participants, driven by sensational social media stock tips, out-of-the-money derivative lotteries, and lagging technical indicators. "
+                f"On the other side are institutional Foreign Portfolio Investors, domestic mutual funds, and algorithmic prop desks executing multi-million rupee block trades based on mathematical edge, order-book mechanics, and durable balance sheet moats. "
+                f"With the benchmark Nifty navigating key valuation inflection corridors near {nifty_str}, the divide between how retail trades and how smart money compounds wealth has never been wider. "
+                f"In this masterclass, we will pull back the curtain on the exact quantitative frameworks, order-flow footprint analysis, and asymmetric portfolio structures that institutional allocators use to systematically compound wealth across market cycles. "
+                f"Let us begin with the first fundamental principle of institutional wealth compounding: The Three Balance Sheet Moats. "
+                f"Retail investors often obsess over superficial metrics such as price-to-earnings ratios or trailing twelve-month price charts. "
+                f"Institutional allocators know that earnings can be easily manipulated through aggressive revenue recognition, deferred tax assets, and capitalization of operating expenses. "
+                f"To filter out the noise and identify generational compounders, institutional research desks analyze three non-negotiable quantitative moats. "
+                f"Moat Number One: Return on Capital Employed, or ROCE, persistently exceeding 22% over a five to ten year horizon. "
+                f"When a company generates twenty-two rupees of operating profit for every one hundred rupees of capital deployed, it generates surplus capital that can be reinvested at high rates without taking on burdensome debt. "
+                f"Moat Number Two: Free Cash Flow conversion exceeding 80% of Operating Cash Flow. "
+                f"Profit is merely an accounting opinion, but cash is an objective reality. "
+                f"If a company reports rising net profit while its operating cash flows stagnate due to surging trade receivables or uncollected inventory, it is a ticking financial time bomb. "
+                f"Smart money demands that reported operating profits convert reliably into hard cash in the bank. "
+                f"Moat Number Three: Negative or Ultra-Low Working Capital Cycles. "
+                f"The greatest businesses in Indian corporate history do not fund their day-to-day operations with expensive bank debt or equity dilution. "
+                f"They fund their operations using their suppliers' capital through dominant bargaining power. "
+                f"When you invest in companies that possess these three quantitative moats, market corrections become generational accumulation opportunities rather than panic-inducing crises. "
+                f"Now let us transition from corporate fundamentals to the mechanics of price delivery: Decoding Institutional Order-Flow. "
+                f"Retail traders look at standard Japanese candlestick charts and see patterns like head-and-shoulders, double bottoms, or moving average crossovers. "
+                f"Institutional algorithmic desks do not look at retail chart patterns. "
+                f"They look at liquidity, order-book depth, and Volume Profile. "
+                f"When a large foreign institution needs to purchase ten lakh shares of a heavyweight large-cap like Reliance or HDFC Bank, they cannot simply click a market buy order. "
+                f"Executing a massive order at market price would immediately cause catastrophic slippage, driving the price upward against their own position. "
+                f"Instead, institutional algorithms use iceberg orders, splitting massive orders into hundreds of smaller limit orders hidden behind the best bid. "
+                f"More importantly, smart money relies on liquidity sweeps to engineer the liquidity they require. "
+                f"Before initiating an aggressive upward rally, institutional algorithms will often intentionally push price below an obvious technical support level. "
+                f"Why do they do this? "
+                f"Because beneath every visible swing low rests a dense cluster of retail stop-loss orders. "
+                f"A stop-loss order on a long position is an automatic market sell order. "
+                f"When retail stop-losses trigger simultaneously, it creates a sudden vacuum of market sell orders. "
+                f"The institutional algorithm steps in precisely at that moment, absorbing those panic sell orders at wholesale discount prices without causing upward slippage. "
+                f"By studying Volume Profile, Point of Control clusters, and Value Area boundaries rather than chasing emotional breakout candles, you begin to trade in harmony with smart money rather than becoming their exit liquidity. "
+                f"Next, we must confront the elephant in the room: The Derivatives Meat-Grinder. "
+                f"A landmark empirical study published by SEBI revealed a devastating reality: nine out of ten individual traders in equity futures and options suffer net financial losses, with average losses exceeding one lakh rupees per trader. "
+                f"Why does this happen with such terrifying consistency? "
+                f"The answer lies in the mathematical asymmetry of options contracts. "
+                f"Retail traders predominantly buy out-of-the-money options because of their low absolute rupee price. "
+                f"A call option priced at twenty rupees feels like an accessible lottery ticket. "
+                f"However, an out-of-the-money option carries a delta of less than point two zero and a probability of expiring worthless that frequently exceeds 85%. "
+                f"Every single second that passes, theta decay relentlessly erodes the extrinsic value of that option contract. "
+                f"Even if the underlying index moves slightly in your anticipated direction, volatility crush and time decay will often wipe out your entire premium before the contract expires. "
+                f"Institutional trading desks, in contrast, rarely gamble on single-leg naked options. "
+                f"Institutions operate primarily as market makers and volatility arbitrageurs. "
+                f"They construct delta-neutral calendar spreads, defined-risk iron condors, and ratio hedges where time decay works in their favor every weekend and every overnight session. "
+                f"If you want to survive and compound capital long-term, you must stop treating equity derivatives like a casino and either eliminate naked speculative options entirely or utilize them strictly as portfolio insurance. "
+                f"Let us examine how smart money constructs a resilient, all-weather portfolio through Asymmetric Risk Allocation. "
+                f"The core objective of institutional portfolio management is not maximizing returns in a bull market. "
+                f"The primary objective is the permanent avoidance of capital ruin. "
+                f"Consider the brutal mathematics of financial drawdown: "
+                f"If your portfolio suffers a 20% drawdown, you require a 25% gain just to return to even. "
+                f"If your portfolio suffers a 50% drawdown, you require a 100% gain simply to recover your starting capital. "
+                f"And if you suffer an 80% loss chasing speculative micro-caps or leveraged derivatives, you require a 400% gain just to break even — a mathematical hurdle that less than one percent of investors ever overcome. "
+                f"To eliminate catastrophic drawdown risk, institutional allocators utilize a Core-and-Satellite framework. "
+                f"70% of the portfolio is deployed into the Core: high-ROCE, free-cash-flow generating market leaders with pricing power and robust competitive advantages. "
+                f"20% is allocated to Satellite compounders: high-growth mid-cap innovators benefiting from structural economic tailwinds and domestic capital expenditure. "
+                f"And 10% is preserved in liquid cash equivalents and sovereign debt as an opportunistic war chest. "
+                f"When macro panics, foreign capital outflows, or geopolitical escalations trigger sharp market declines, the war chest allows the institutional investor to accumulate world-class assets at distressed valuations while retail investors are paralyzed by fear. "
+                f"Finally, let us distill this institutional philosophy into an actionable daily execution protocol. "
+                f"First: Disconnect from intraday market noise and sensational financial television commentary. "
+                f"Second: Monitor institutional flow data objectively. Track cumulative FII and DII cash market delivery volumes, index futures positioning, and the long-short ratio rather than price ticks alone. "
+                f"Third: Never place market orders in the opening fifteen minutes of trade when algorithmic spreads are widest and retail FOMO is at its peak. "
+                f"Fourth: Keep a detailed trading journal documenting the quantitative thesis, position sizing, and predetermined invalidation level for every single position you initiate. "
+                f"True wealth in Indian equity markets is not created overnight through speculative lottery tickets. "
+                f"It is constructed systematically, brick by brick, through the discipline of high-return capital allocation, patience, and unwavering emotional control. "
+                f"If you found value in this masterclass, hit the subscribe button, ring the notification bell, and join The Bull Print community for daily institutional intelligence and order-flow breakdowns. "
+                f"Strictly educational market study. Not financial advice."
             )
-            terms = ["stock candlestick chart", "institutional trading room", "corporate financial data", "wealth investment growth", "indian stock market", "nifty"]
+            terms = [
+                "stock candlestick chart",
+                "forex trading screen",
+                "algorithmic trading terminal",
+                "financial data analytics",
+                "stock exchange trading floor",
+                "investment wealth growth",
+                "corporate balance sheet finance",
+                "macro economy charts",
+                "hedge fund trading room",
+                "candlestick data screen",
+                "nifty",
+                "reliance"
+            ]
             aspect = "16:9"
             font_size = 48
-            clip_duration = 6
+            clip_duration = 8
         else:
             subject = "Institutional Alpha Alert: Quantitative Nifty 50 Liquidity Breakdown"
             script = (

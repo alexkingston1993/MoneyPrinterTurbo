@@ -250,7 +250,7 @@ class YouTubeUploader:
             f"may be partner/affiliate links that provide commissions at zero extra cost to you. All referral bonuses, reward points, "
             f"and trading fee discounts are funded and credited directly by the respective platforms into your account. "
             f"These affiliations do not influence our independent educational analysis.\n\n"
-            f"#DalalStreetAlpha #Nifty50 #BankNifty #StockMarketIndia #OptionsTrading #FIIFlows #FinancialEducation"
+            f"#TheBullPrint #Nifty50 #BankNifty #StockMarketIndia #OptionsTrading #FIIFlows #InstitutionalTrading"
         )
 
         body = {

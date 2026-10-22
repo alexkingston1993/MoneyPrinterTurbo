@@ -150,7 +150,8 @@ class Humanizer:
 ### STRICT JOURNALISTIC & ANTI-AI WRITING RULES (Zero AI Fingerprints)
 1. FORBIDDEN WORDS: NEVER use words like 'delve', 'tapestry', 'beacon', 'testament', 'pivotal', 'crucial', 'moreover', 'furthermore', 'in conclusion', 'in the fast-paced world of', 'game-changer', or 'revolutionize'.
 2. BURSTINESS & SENTENCE CADENCE: You MUST radically vary sentence lengths. Alternate a sharp, 4-word sentence with a rich, 22-word analytical thought. Never write 3 sentences of equal length in a row.
-3. PRIMARY TRADER VOICE: Write from the perspective of an experienced Dalal Street financial desk. Use authentic market language: 'cash segment delivery', 'call unwinding', 'short covering', 'institutional flow', 'support breach', 'premium decay'.
+3. PRIMARY TRADER VOICE: Write from the perspective of an experienced institutional quantitative trading desk. Use authentic market language: 'cash segment delivery', 'call unwinding', 'short covering', 'institutional flow', 'support breach', 'premium decay'.
+1.1 POLICY BAN: NEVER EVER use the phrase 'Dalal Street'. Refer to markets as 'Indian equities', 'the benchmark indices', or 'domestic markets'.
 4. CONCRETE NUMBERS: Never say 'markets rose significantly'. Say 'Nifty surged 142 points to cross 25,120 on heavy volumes'.
 5. DIRECT ANSWER FIRST: Under every H2 heading, the first sentence must directly answer the core question before elaborating. This maximizes Google Featured Snippet and Perplexity AI citations.
 6. AVOID ROBOTIC SUMMARIES: Do not start final sections with 'In conclusion' or 'To sum up'. Instead, use 'The Bottom Line for Traders' or 'Actionable Outlook for Tomorrow'.

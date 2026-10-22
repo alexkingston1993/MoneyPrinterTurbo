@@ -39,6 +39,7 @@ BANNED_PHRASES = [
     r"\b(will|going to) (reach|hit|touch|cross) ₹?\d+\b",
     r"\bprice (target|prediction)\b",
     r"\bthis is not financial advice\b",  # negative framing implies advice is given
+    r"\bdalal\s*street\b",  # BANNED channel policy
 ]
 
 # High-retention compliance standards: spoken audio requires educational study qualification,
@@ -228,6 +229,12 @@ def auto_sanitize_script(script: str) -> str:
     clean = re.sub(
         r"\bbuy (this|the) stock\b",
         "consider studying this company",
+        clean,
+        flags=re.IGNORECASE,
+    )
+    clean = re.sub(
+        r"\bdalal\s*street\b",
+        "Indian equities",
         clean,
         flags=re.IGNORECASE,
     )

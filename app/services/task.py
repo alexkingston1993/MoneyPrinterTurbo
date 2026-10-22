@@ -486,7 +486,7 @@ def start(task_id, params: VideoParams, stop_at: str = "video"):
         
         optimized_tags = seo_result.get("tags", []) if seo_result else None
         if not optimized_tags or not isinstance(optimized_tags, list):
-            optimized_tags = ["#shorts", "#stockmarketindia", "#nifty", "#investing", "#dalalstreetalpha"]
+            optimized_tags = ["#shorts", "#stockmarketindia", "#nifty", "#investing", "#thebullprint"]
 
         # Upload primary video in the content language
         primary_lang = params.video_language or "en"
