@@ -1178,8 +1178,15 @@ def get_language_from_voice(voice_name: str) -> str:
     return "en"
 
 
+EDGE_VOICE_ALIASES = {
+    # Microsoft Edge TTS endpoint mirrors Azure Neural Prabhat for Indian English Male
+    "en-IN-ArjunNeural": "en-IN-PrabhatNeural",
+    "en-IN-ArjunNeural-Male": "en-IN-PrabhatNeural",
+}
+
+
 MULTILINGUAL_EDGE_VOICES = {
-    "en": {"voice": "en-IN-ArjunNeural", "locale": "en-IN"},
+    "en": {"voice": "en-IN-PrabhatNeural", "locale": "en-IN"},
     "ta": {"voice": "ta-IN-PallaviNeural", "locale": "ta-IN"},
     "hi": {"voice": "hi-IN-SwaraNeural", "locale": "hi-IN"},
     "te": {"voice": "te-IN-ShrutiNeural", "locale": "te-IN"},
@@ -1316,17 +1323,20 @@ def tts(
             return None
     res = azure_tts_v1(text, voice_name, voice_rate, voice_file)
     if res is None:
+        parsed_name = parse_voice_name(voice_name)
+        # Never fall back to American Kokoro voice when an Indian voice is requested
+        if "en-IN" in parsed_name or "IN" in parsed_name:
+            for alt_voice in ["en-IN-PrabhatNeural", "en-IN-NeerjaNeural"]:
+                if alt_voice != parsed_name:
+                    logger.warning(f"[Voice] Retrying with Azure Neural voice '{alt_voice}'...")
+                    res = azure_tts_v1(text, alt_voice, voice_rate, voice_file)
+                    if res:
+                        return res
+            logger.error(f"[Voice] Azure Neural TTS failed for Indian voice '{voice_name}'.")
+            return None
         logger.warning(
-            f"[Voice] Cloud TTS failed for '{voice_name}'. Activating offline Kokoro Neural Voice fallback..."
+            f"[Voice] Cloud TTS failed for '{voice_name}'."
         )
-        try:
-            from app.services.kokoro_voice import kokoro_tts
-            res = kokoro_tts(text, "kokoro:am_adam", voice_rate, voice_file, voice_volume)
-            if res:
-                logger.success("[Voice] Kokoro neural voiceover fallback successfully synthesized audio and subtitles!")
-                return res
-        except Exception as ke:
-            logger.error(f"[Voice] Kokoro neural fallback failed: {ke}")
     return res
 
 
@@ -1527,22 +1537,24 @@ def _stream_edge_tts_sync_with_timeout(
     thread = threading.Thread(target=_produce_chunks, daemon=True)
     thread.start()
 
-    deadline = time.monotonic() + timeout_seconds
+    idle_timeout = timeout_seconds or 60.0
+    deadline = time.monotonic() + idle_timeout
     while True:
         remaining_seconds = deadline - time.monotonic()
         if remaining_seconds <= 0:
             raise TimeoutError(
-                f"edge_tts stream timed out after {timeout_seconds:g}s"
+                f"edge_tts stream timed out after {idle_timeout:g}s of inactivity"
             )
 
         try:
             item_type, payload = stream_queue.get(
-                timeout=min(0.5, remaining_seconds)
+                timeout=min(0.5, max(0.1, remaining_seconds))
             )
         except queue.Empty:
             continue
 
         if item_type == "chunk":
+            deadline = time.monotonic() + idle_timeout  # Reset inactivity deadline on every received data chunk
             on_chunk(payload)
         elif item_type == "error":
             raise payload
@@ -1601,6 +1613,7 @@ def azure_tts_v1(
     text: str, voice_name: str, voice_rate: float, voice_file: str
 ) -> Union[SubMaker, None]:
     voice_name = parse_voice_name(voice_name)
+    voice_name = EDGE_VOICE_ALIASES.get(voice_name, voice_name)
     text = text.strip()
     rate_str = convert_rate_to_percent(voice_rate)
     for i in range(2):

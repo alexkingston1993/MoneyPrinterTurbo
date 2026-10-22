@@ -38,13 +38,6 @@ jobs:
           python-version: '3.11'
           cache: 'pip'
 
-      - name: Cache Kokoro Neural Voice Weights
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/huggingface
-          key: ${{ runner.os }}-huggingface-kokoro-v1
-          restore-keys: |
-            ${{ runner.os }}-huggingface-kokoro-
 
       - name: Install FFmpeg
         run: |
