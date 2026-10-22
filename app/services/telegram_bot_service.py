@@ -90,16 +90,17 @@ class AriaEngineerTools:
         conclusion = latest.get("conclusion")
         event = latest.get("event", "workflow_dispatch")
 
-        # 1. Check if run is currently active
-        if status == "in_progress":
+        # 1. Check if run is currently active or queued
+        if status in ["in_progress", "queued", "waiting", "requested"]:
+            status_desc = "IN PROGRESS (Executing autonomously in cloud)" if status == "in_progress" else "QUEUED (Assigning cloud runner node...)"
             return (
                 f"🛰️ *AGENT ARIA: LIVE MISSION REPORT* 🕶️☕\n"
                 f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
                 f"⚡ *Run ID:* `{run_id}` (`{event}`)\n"
-                f"🔄 *Status:* `IN PROGRESS (Executing autonomously in GitHub Cloud)`\n"
+                f"🔄 *Status:* `{status_desc}`\n"
                 f"🎬 *Operation:* Cloud video synthesis & research publishing.\n"
                 f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-                f"The cloud engines are purring right now, Captain! I'm monitoring every chunk. Sit tight with your coffee! ☕🚀"
+                f"The cloud engines are firing up right now, Captain! I'm monitoring every chunk. Sit tight with your coffee! ☕🚀"
             )
 
         # 2. Check if run failed
