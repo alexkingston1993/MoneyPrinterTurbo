@@ -148,7 +148,9 @@ class PipelineOrchestrator:
             "published_status": publish_res.get("status"),
         }
 
-    def _generate_and_upload_video(self, ctx: MarketContext, slot_name: str) -> Optional[str]:
+    def _generate_and_upload_video(
+        self, ctx: MarketContext, slot_name: str, remedy: Optional[Dict[str, Any]] = None
+    ) -> Optional[str]:
         """Synthesizes a Short video for the market slot and uploads to YouTube autonomously in cloud."""
         import uuid
         from app.models.schema import VideoParams, VideoConcatMode
