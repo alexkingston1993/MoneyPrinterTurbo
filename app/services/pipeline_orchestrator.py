@@ -10,6 +10,7 @@ Executes the unified loop:
 6. Closes the loop by updating YouTube description with the article link
 """
 
+import os
 import time
 from typing import Dict, Optional
 from loguru import logger
