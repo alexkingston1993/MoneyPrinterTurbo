@@ -368,37 +368,24 @@ class PipelineOrchestrator:
         else:
             raise RuntimeError(f"Task pipeline terminated without youtube_upload result (res={res})")
 
-    def _diagnose_and_prepare_remedy(self, exc: Exception, attempt: int) -> Dict[str, Any]:
-        """Diagnose root cause of pipeline error and construct targeted self-healing remedy."""
-        err_str = str(exc).lower()
-        remedy: Dict[str, Any] = {"attempt": attempt, "voice_name": None, "clip_duration": None, "terms": None}
-
-        if any(k in err_str for k in ["audio", "tts", "timed out", "inactivity", "edge_tts", "noaudioreceived", "boundary"]):
-            remedy["failed_component"] = "Azure Neural Speech Engine"
-            fallback_voice = "en-IN-NeerjaNeural" if attempt % 2 == 1 else "en-IN-PrabhatNeural"
-            remedy["voice_name"] = fallback_voice
-            remedy["action"] = f"Rotating voice to Azure Neural '{fallback_voice}', extending buffer to 300s, and restarting audio stream."
-            remedy["desc"] = f"Azure Voice Rotation ({fallback_voice}) + Buffer Reset"
-        elif any(k in err_str for k in ["pexels", "video_clip", "material", "terms", "download", "http"]):
-            remedy["failed_component"] = "Stock Video Retrieval"
-            remedy["terms"] = ["stock market chart", "candlestick screen", "financial trading desk", "trading analytics", "nifty"]
-            remedy["clip_duration"] = 10
-            remedy["action"] = "Broadening Pexels search query to institutional financial keywords and optimizing subclip duration."
-            remedy["desc"] = "Universal Institutional Keywords & Subclip Optimization"
-        elif any(k in err_str for k in ["moviepy", "ffmpeg", "encode", "memory", "thread", "write_videofile"]):
-            remedy["failed_component"] = "MoviePy & FFmpeg Video Render Engine"
-            remedy["action"] = "Purging task scratch cache and switching MoviePy encode to safe CPU thread mode."
-            remedy["desc"] = "Scratch Cache Purge & Safe CPU Thread Mode"
-        elif any(k in err_str for k in ["youtube", "upload", "token", "403", "pickle", "permission"]):
-            remedy["failed_component"] = "YouTube Studio API Uploader"
-            remedy["action"] = "Refreshing YouTube OAuth token credentials from storage and executing backoff retry."
-            remedy["desc"] = "OAuth Token Refresh & Backoff Retry"
-        else:
-            remedy["failed_component"] = "Autonomous Pipeline Orchestrator"
-            remedy["action"] = f"Purging temporary workspace artifacts and performing intelligent retry pass {attempt + 1}."
-            remedy["desc"] = f"Workspace Artifact Purge & Adaptive Retry"
-
-        return remedy
+    def _diagnose_and_prepare_remedy(self, exc: Exception, attempt: int, slot_name: str = "pre_market") -> Dict[str, Any]:
+        """Diagnose root cause of pipeline error and construct targeted self-healing remedy via Aria."""
+        try:
+            from app.services.aria_healing import AriaSelfHealingEngine
+            remedy_obj = AriaSelfHealingEngine.diagnose(exc, attempt, slot_name)
+            return remedy_obj.to_dict()
+        except Exception as diag_err:
+            logger.warning(f"[Orchestrator] Fallback remedy due to diagnosis error: {diag_err}")
+            return {
+                "failed_component": "Autonomous Market Pipeline",
+                "action": f"Purging temporary workspace artifacts and performing adaptive retry {attempt + 1}.",
+                "desc": "Workspace Buffer Purge & Adaptive Retry",
+                "attempt": attempt,
+                "voice_name": None,
+                "clip_duration": None,
+                "terms": None,
+                "backoff_seconds": 5 * attempt,
+            }
 
     def _generate_and_upload_video_with_healing(
         self, ctx: MarketContext, slot_name: str, max_retries: int = 3
@@ -430,9 +417,9 @@ class PipelineOrchestrator:
                     raise RuntimeError("Task execution completed without returning a valid YouTube URL.")
             except Exception as exc:
                 logger.warning(f"[Orchestrator] Video production attempt {attempt}/{max_retries} failed: {exc}")
-                remedy = self._diagnose_and_prepare_remedy(exc, attempt)
+                remedy = self._diagnose_and_prepare_remedy(exc, attempt, slot_name=slot_name)
 
-                # Send flirty work-wife Telegram alert to Alex immediately!
+                # Send Telegram alert to Alex immediately!
                 try:
                     from app.services.assistant_persona import aria
                     aria.notify_issue(
@@ -447,7 +434,7 @@ class PipelineOrchestrator:
                     logger.warning(f"[Orchestrator] Aria issue notification error: {ne}")
 
                 if attempt < max_retries:
-                    backoff = 5 * attempt
+                    backoff = remedy.get("backoff_seconds", 5 * attempt)
                     logger.info(f"[Orchestrator] Applying remedy and waiting {backoff}s before retry {attempt + 1}...")
                     time.sleep(backoff)
                 else:
