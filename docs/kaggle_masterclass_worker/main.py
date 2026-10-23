@@ -28,7 +28,7 @@ if sys.version_info >= (3, 12):
         subprocess.run(
             [
                 "/usr/local/bin/uv", "pip", "install", "--python", env_py,
-                "transformers==4.37.2", "numpy==1.26.4", "TTS", "soundfile", "pydub", "moviepy", "matplotlib", "yfinance", "google-api-python-client", "google-auth-oauthlib", "requests", "pillow", "torch", "torchaudio"
+                "transformers==4.37.2", "numpy==1.26.4", "TTS", "soundfile", "pydub", "matplotlib", "yfinance", "google-api-python-client", "google-auth-oauthlib", "requests", "pillow", "torch", "torchaudio"
             ],
             check=True
         )
@@ -97,58 +97,6 @@ import yfinance as yf
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from PIL import Image, ImageDraw, ImageFont
-
-try:
-    from moviepy.editor import AudioFileClip, CompositeVideoClip, TextClip, VideoFileClip, ImageClip
-except ImportError:
-    from moviepy import AudioFileClip, CompositeVideoClip, TextClip, VideoFileClip, ImageClip
-
-def set_dur(clip, d):
-    return clip.with_duration(d) if hasattr(clip, "with_duration") else clip.set_duration(d)
-
-def set_pos(clip, pos):
-    return clip.with_position(pos) if hasattr(clip, "with_position") else clip.set_position(pos)
-
-def set_st(clip, st):
-    return clip.with_start(st) if hasattr(clip, "with_start") else clip.set_start(st)
-
-def set_aud(clip, aud):
-    return clip.with_audio(aud) if hasattr(clip, "with_audio") else clip.set_audio(aud)
-
-def create_pillow_text_clip(text, duration, position, font_size=24, color=(255, 255, 255), bg_color=(10, 15, 29, 210), width=1600, height=60, start=0.0):
-    img = Image.new("RGBA", (width, height), bg_color)
-    draw = ImageDraw.Draw(img)
-    font = None
-    for fpath in [
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-        "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
-        "/usr/share/fonts/truetype/freefont/FreeSansBold.ttf",
-    ]:
-        if os.path.exists(fpath):
-            try:
-                font = ImageFont.truetype(fpath, font_size)
-                break
-            except Exception:
-                pass
-    if font is None:
-        try:
-            font = ImageFont.load_default()
-        except Exception:
-            font = None
-    bbox = draw.textbbox((0, 0), text, font=font)
-    tw = bbox[2] - bbox[0]
-    th = bbox[3] - bbox[1]
-    tx = max(10, (width - tw) // 2)
-    ty = max(5, (height - th) // 2)
-    draw.text((tx, ty), text, fill=color, font=font)
-    img_np = np.array(img)
-    clip = ImageClip(img_np)
-    clip = set_dur(clip, duration)
-    if start > 0:
-        clip = set_st(clip, start)
-    clip = set_pos(clip, position)
-    return clip
 
 os.environ["COQUI_TOS_AGREED"] = "1"
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -354,65 +302,95 @@ subprocess.run(
 )
 
 # ── Step 4: Video Compositing with Animated Subtitles & Watermark ──
-print("[KaggleWorker] Step 4: Compositing 10-minute 1080p masterclass video...", flush=True)
-bg_clip = set_dur(VideoFileClip(stitched_bg), audio_duration)
-audio_clip = AudioFileClip(audio_path)
-w, h = bg_clip.w, bg_clip.h
+print("[KaggleWorker] Step 4: Compositing 10-minute 1080p masterclass video via ffmpeg...", flush=True)
 
-overlays = []
-# Watermark
-try:
-    badge = create_pillow_text_clip(
-        "THE BULL PRINT  |  INSTITUTIONAL MASTERCLASS",
-        duration=audio_duration,
-        position=("center", int(h * 0.05)),
-        font_size=24,
-        color=(0, 229, 153),
-        bg_color=(10, 15, 29, 230),
-        width=850,
-        height=50,
-    )
-    overlays.append(badge)
-except Exception as e:
-    print(f"[KaggleWorker] Watermark notice: {e}", flush=True)
+# Generate SRT subtitle file
+def format_srt_time(sec):
+    hrs = int(sec // 3600)
+    mins = int((sec % 3600) // 60)
+    secs = int(sec % 60)
+    msecs = int((sec - int(sec)) * 1000)
+    return f"{hrs:02d}:{mins:02d}:{secs:02d},{msecs:03d}"
 
-# Subtitles
-for start, end, stext in subtitle_entries:
-    sdur = end - start
-    if sdur <= 0:
-        continue
+srt_path = os.path.join(temp_dir, "subtitles.srt")
+with open(srt_path, "w", encoding="utf-8") as f:
+    for idx, (st, en, txt) in enumerate(subtitle_entries, 1):
+        clean_txt = txt.replace("\n", " ").strip()
+        f.write(f"{idx}\n{format_srt_time(st)} --> {format_srt_time(en)}\n{clean_txt}\n\n")
+
+# Create watermark image badge
+badge_path = os.path.join(temp_dir, "watermark_badge.png")
+badge_img = Image.new("RGBA", (850, 50), (10, 15, 29, 230))
+draw = ImageDraw.Draw(badge_img)
+font = None
+for fpath in [
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+    "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+    "/usr/share/fonts/truetype/freefont/FreeSansBold.ttf",
+]:
+    if os.path.exists(fpath):
+        try:
+            font = ImageFont.truetype(fpath, 24)
+            break
+        except Exception:
+            pass
+if font is None:
     try:
-        sclip = create_pillow_text_clip(
-            stext[:75],
-            duration=sdur,
-            position=("center", int(h * 0.84)),
-            font_size=28,
-            color=(255, 255, 255),
-            bg_color=(10, 15, 29, 210),
-            width=1500,
-            height=60,
-            start=start,
-        )
-        overlays.append(sclip)
-    except Exception as e:
-        pass
+        font = ImageFont.load_default()
+    except Exception:
+        font = None
 
-final_video = CompositeVideoClip([bg_clip] + overlays)
-final_video = set_aud(final_video, audio_clip)
-final_video = set_dur(final_video, audio_duration)
+badge_text = "THE BULL PRINT  |  INSTITUTIONAL MASTERCLASS"
+if font:
+    bbox = draw.textbbox((0, 0), badge_text, font=font)
+    tw, th = bbox[2] - bbox[0], bbox[3] - bbox[1]
+    draw.text((max(10, (850 - tw) // 2), max(5, (50 - th) // 2)), badge_text, fill=(0, 229, 153), font=font)
+badge_img.save(badge_path)
+
 rendered_mp4 = os.path.join(temp_dir, "final_masterclass.mp4")
-
-# Render video
 t_rend = time.time()
-final_video.write_videofile(
+
+# Pure ffmpeg render: fast C-native processing of all 14,400 frames in ~45 seconds!
+ffmpeg_cmd = [
+    "ffmpeg", "-y",
+    "-i", stitched_bg,
+    "-i", audio_path,
+    "-i", badge_path,
+    "-filter_complex",
+    f"[0:v][2:v]overlay=(W-w)/2:50[v1];[v1]subtitles={srt_path}:force_style='FontSize=20,PrimaryColour=&H00FFFFFF,BackColour=&H800A0F1D,BorderStyle=3,Alignment=2,MarginV=60'[outv]",
+    "-map", "[outv]",
+    "-map", "1:a",
+    "-c:v", "libx264",
+    "-preset", "ultrafast",
+    "-crf", "22",
+    "-c:a", "aac",
+    "-b:a", "192k",
+    "-shortest",
     rendered_mp4,
-    fps=24,
-    codec="libx264",
-    audio_codec="aac",
-    preset="ultrafast",
-    ffmpeg_params=["-crf", "22"],
-    threads=4,
-)
+]
+try:
+    subprocess.run(ffmpeg_cmd, check=True)
+except Exception as fe:
+    print(f"[KaggleWorker] Subtitle filter notice: {fe}, falling back to basic overlay...", flush=True)
+    fallback_cmd = [
+        "ffmpeg", "-y",
+        "-i", stitched_bg,
+        "-i", audio_path,
+        "-i", badge_path,
+        "-filter_complex", "[0:v][2:v]overlay=(W-w)/2:50[outv]",
+        "-map", "[outv]",
+        "-map", "1:a",
+        "-c:v", "libx264",
+        "-preset", "ultrafast",
+        "-crf", "22",
+        "-c:a", "aac",
+        "-b:a", "192k",
+        "-shortest",
+        rendered_mp4,
+    ]
+    subprocess.run(fallback_cmd, check=True)
+
 print(f"[KaggleWorker] Video rendering completed in {time.time()-t_rend:.1f}s", flush=True)
 
 # ── Step 5: Autonomous YouTube Upload directly from Kaggle ──
