@@ -21,7 +21,7 @@ litellm==1.60.0
 pytz>=2024.1
 yfinance>=0.2.38
 mplfinance>=0.12.10b0
-pandas>=2.0.0
+pandas>=1.4.0,<2.0.0
 toml>=0.10.2
 beautifulsoup4>=4.12.3
 google-api-python-client>=2.118.0
