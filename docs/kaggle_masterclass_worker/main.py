@@ -28,7 +28,7 @@ if sys.version_info >= (3, 12):
         subprocess.run(
             [
                 "/usr/local/bin/uv", "pip", "install", "--python", env_py,
-                "TTS", "soundfile", "pydub", "moviepy", "matplotlib", "yfinance", "google-api-python-client", "google-auth-oauthlib", "requests", "pillow", "torch", "torchaudio"
+                "transformers==4.37.2", "numpy==1.26.4", "TTS", "soundfile", "pydub", "moviepy", "matplotlib", "yfinance", "google-api-python-client", "google-auth-oauthlib", "requests", "pillow", "torch", "torchaudio"
             ],
             check=True
         )
