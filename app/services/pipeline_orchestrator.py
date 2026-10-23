@@ -402,7 +402,7 @@ class PipelineOrchestrator:
         try:
             logger.info("[Orchestrator] 🚀 Delegating 10-minute masterclass to Kaggle Nvidia T4 GPU (free tier)...")
             from app.services.kaggle_worker import KaggleWorker
-            worker = KaggleWorker()
+            worker = KaggleWorker(timeout=2400)
             token_b64 = os.getenv("YOUTUBE_TOKEN_EN")
             if not token_b64:
                 token_file = os.path.join(DATA_DIR, "youtube_tokens", "youtube_token_en.pickle")

@@ -111,7 +111,7 @@ class KaggleWorker:
         timeout: Max seconds to wait for a Kaggle kernel to complete.
     """
 
-    def __init__(self, timeout: int = 1200):
+    def __init__(self, timeout: int = 2400):
         self.api = _get_api()
         self.username = self.api.get_config_value("username")
         if not self.username:
