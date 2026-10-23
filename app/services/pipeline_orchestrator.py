@@ -374,7 +374,7 @@ class PipelineOrchestrator:
             modal_yt_url = self._try_modal_gpu_masterclass(subject, script)
             if modal_yt_url:
                 return modal_yt_url
-            logger.info("[Orchestrator] Cloud GPU offload bypassed or unavailable; proceeding with standard pipeline.")
+            raise RuntimeError("[Orchestrator] Cloud GPU offload (Kaggle T4 / Modal) required for 10-minute masterclass. Local compute strictly prohibited.")
 
         logger.info(f"[Orchestrator] Launching video rendering task {task_id} for '{subject}'...")
         res = task.start(task_id, params)
