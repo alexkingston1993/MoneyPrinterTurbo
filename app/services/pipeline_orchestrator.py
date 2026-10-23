@@ -365,12 +365,18 @@ class PipelineOrchestrator:
         config.ui["youtube_auto_upload"] = True
         config.ui["youtube_privacy"] = os.getenv("YOUTUBE_PRIVACY", "public")
 
-        # ── Offload Long-Form Masterclass to Modal GPU Container ──
+        # ── Offload Long-Form Masterclass to Cloud GPU (Kaggle T4 or Modal) ──
         if slot_name in ["long_form", "weekend_masterclass", "masterclass", "deep_dive"]:
+            # Priority 1: Kaggle Nvidia T4 GPU (100% Free, 30 hours/week, zero card)
+            kaggle_yt_url = self._try_kaggle_gpu_masterclass(subject, script)
+            if kaggle_yt_url:
+                return kaggle_yt_url
+
+            # Priority 2: Modal GPU Container
             modal_yt_url = self._try_modal_gpu_masterclass(subject, script)
             if modal_yt_url:
                 return modal_yt_url
-            logger.info("[Orchestrator] Modal GPU offload bypassed or unavailable; proceeding with standard pipeline.")
+            logger.info("[Orchestrator] Cloud GPU offload bypassed or unavailable; proceeding with standard pipeline.")
 
         logger.info(f"[Orchestrator] Launching video rendering task {task_id} for '{subject}'...")
         res = task.start(task_id, params)
@@ -388,6 +394,39 @@ class PipelineOrchestrator:
                 raise RuntimeError(f"YouTube upload failed: {error_msg}")
         else:
             raise RuntimeError(f"Task pipeline terminated without youtube_upload result (res={res})")
+
+    def _try_kaggle_gpu_masterclass(self, subject: str, script: str) -> Optional[str]:
+        """Attempts to render and upload the 10-minute masterclass using Kaggle Nvidia T4 GPU (100% Free)."""
+        has_kaggle = os.getenv("KAGGLE_USERNAME") or os.path.exists(os.path.expanduser("~/.kaggle/kaggle.json"))
+        if not has_kaggle:
+            return None
+        try:
+            logger.info("[Orchestrator] 🚀 Delegating 10-minute masterclass to Kaggle Nvidia T4 GPU (free tier)...")
+            from app.services.kaggle_worker import KaggleWorker
+            worker = KaggleWorker()
+            token_b64 = os.getenv("YOUTUBE_TOKEN_EN")
+            if not token_b64:
+                token_file = os.path.join(DATA_DIR, "youtube_tokens", "youtube_token_en.pickle")
+                if os.path.exists(token_file):
+                    with open(token_file, "rb") as tf:
+                        token_b64 = base64.b64encode(tf.read()).decode()
+
+            pexels_key = os.getenv("PEXELS_API_KEY", "")
+            if not pexels_key and config.app.get("pexels_api_keys"):
+                pexels_key = config.app["pexels_api_keys"][0]
+
+            yt_url = worker.run_masterclass_gpu(
+                subject=subject,
+                script=script,
+                pexels_api_key=pexels_key,
+                youtube_token_b64=token_b64,
+            )
+            if yt_url:
+                logger.success(f"[Orchestrator] Kaggle GPU Masterclass published to YouTube: {yt_url}")
+                return yt_url
+        except Exception as e:
+            logger.warning(f"[Orchestrator] Kaggle GPU masterclass attempt encountered: {e}")
+        return None
 
     def _try_modal_gpu_masterclass(self, subject: str, script: str) -> Optional[str]:
         """Attempts to render and upload the 10-minute masterclass using Modal GPU in the cloud."""

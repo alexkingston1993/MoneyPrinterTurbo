@@ -33,6 +33,17 @@ KAGGLE_NOTEBOOK_DIR = os.path.join(
 
 def _get_api():
     """Authenticate and return a KaggleApi instance."""
+    u = os.getenv("KAGGLE_USERNAME")
+    k = os.getenv("KAGGLE_KEY")
+    if u and k:
+        cfg_dir = os.path.expanduser("~/.kaggle")
+        os.makedirs(cfg_dir, exist_ok=True)
+        cfg_file = os.path.join(cfg_dir, "kaggle.json")
+        if not os.path.exists(cfg_file):
+            with open(cfg_file, "w") as f:
+                json.dump({"username": u, "key": k}, f)
+            os.chmod(cfg_file, 0o600)
+
     from kaggle.api.kaggle_api_extended import KaggleApi
     api = KaggleApi()
     api.authenticate()
@@ -245,3 +256,91 @@ class KaggleWorker:
         if self._last_run_output_dir and os.path.exists(self._last_run_output_dir):
             shutil.rmtree(self._last_run_output_dir, ignore_errors=True)
             self._last_run_output_dir = None
+
+    def run_masterclass_gpu(
+        self,
+        subject: str,
+        script: str,
+        pexels_api_key: str = "",
+        youtube_token_b64: str = "",
+        voice_ref_path: str = None,
+    ) -> str:
+        """
+        Executes the 10-minute masterclass generation and YouTube publication on Kaggle's free Nvidia T4 GPU.
+        Returns the published YouTube URL, or None if failed.
+        """
+        if not voice_ref_path or not os.path.exists(voice_ref_path):
+            voice_ref_path = os.path.join(
+                os.path.dirname(__file__), "voices", "prabhat_ref_master.wav"
+            )
+
+        voice_ref_b64 = ""
+        if os.path.exists(voice_ref_path):
+            with open(voice_ref_path, "rb") as f:
+                voice_ref_b64 = base64.b64encode(f.read()).decode()
+
+        payload = {
+            "subject": subject,
+            "script": script,
+            "pexels_api_key": pexels_api_key,
+            "youtube_token_b64": youtube_token_b64,
+            "voice_ref_b64": voice_ref_b64,
+        }
+
+        kernel_slug = f"mpt-masterclass-{uuid.uuid4().hex[:8]}"
+        tmp_dir = tempfile.mkdtemp(prefix="kaggle_mc_")
+        output_dir = tempfile.mkdtemp(prefix="kaggle_mc_out_")
+        self._last_run_output_dir = output_dir
+
+        full_id = f"{self.username}/{kernel_slug}"
+
+        try:
+            worker_src = os.path.join(
+                os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+                "docs", "kaggle_masterclass_worker", "main.py",
+            )
+            modified_script = _replace_payload(worker_src, payload)
+
+            kernel_main = os.path.join(tmp_dir, "main.py")
+            with open(kernel_main, "w") as f:
+                f.write(modified_script)
+
+            metadata = {
+                "id": full_id,
+                "title": kernel_slug,
+                "code_file": "main.py",
+                "language": "python",
+                "kernel_type": "script",
+                "is_private": True,
+                "enable_gpu": True,
+                "enable_internet": True,
+                "enable_tpu": False,
+            }
+            with open(os.path.join(tmp_dir, "kernel-metadata.json"), "w") as f:
+                json.dump(metadata, f, indent=2)
+
+            print(f"[kaggle] 🚀 Offloading 10-minute masterclass to Kaggle Nvidia T4 GPU: {full_id}...")
+            push_resp = self.api.kernels_push(tmp_dir)
+            kernel_url = getattr(push_resp, "url", f"https://www.kaggle.com/{full_id}")
+            print(f"[kaggle] Kernel dispatched: {kernel_url}")
+
+            status = self._wait_for_kernel(full_id)
+            if status != "complete":
+                err_msg = self._fetch_error(full_id, output_dir)
+                print(f"[kaggle] Kernel failed or timed out: {err_msg}")
+                return None
+
+            print("[kaggle] Downloading masterclass output result...")
+            self._download_output(full_id, output_dir)
+
+            result_json = os.path.join(output_dir, "result.json")
+            if os.path.exists(result_json):
+                with open(result_json) as f:
+                    data = json.load(f)
+                    yt_url = data.get("youtube_url")
+                    if yt_url:
+                        print(f"[kaggle] ✅ Autonomous Masterclass published via Kaggle GPU: {yt_url}")
+                        return yt_url
+            return None
+        finally:
+            shutil.rmtree(tmp_dir, ignore_errors=True)
