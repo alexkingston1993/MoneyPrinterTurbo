@@ -30,6 +30,26 @@ VOICES_DIR = os.path.join(os.path.dirname(__file__), "voices")
 LATENTS_PATH = os.path.join(VOICES_DIR, "prabhat_latents.pt")
 REF_WAV_PATH = os.path.join(VOICES_DIR, "prabhat_ref_master.wav")
 
+# Monkey-patch torch.load for PyTorch 2.6+ backward compatibility with legacy model checkpoints
+try:
+    _orig_torch_load = torch.load
+
+    def _safe_torch_load(*args, **kwargs):
+        if "weights_only" not in kwargs:
+            kwargs["weights_only"] = False
+        return _orig_torch_load(*args, **kwargs)
+
+    torch.load = _safe_torch_load
+except Exception as patch_err:
+    logger.debug(f"[XTTS-Prabhat] torch.load patch notice: {patch_err}")
+
+try:
+    import torch.serialization
+    from TTS.tts.configs.xtts_config import XttsConfig
+    torch.serialization.add_safe_globals([XttsConfig])
+except Exception:
+    pass
+
 _xtts_model = None
 _cached_latents = None
 
