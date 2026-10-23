@@ -18,20 +18,27 @@ import time
 import urllib.request
 from typing import Dict, List, Optional, Tuple
 
-# 1. Wait for Kaggle internet connection and install libraries
+# 1. Check network connection and attempt library installs
 print("[KaggleWorker] Initializing environment on GPU...", flush=True)
-for _ in range(6):
+has_internet = False
+for _ in range(3):
     try:
-        urllib.request.urlopen("https://pypi.org", timeout=5)
+        urllib.request.urlopen("https://pypi.org", timeout=4)
+        has_internet = True
         break
     except Exception:
-        time.sleep(5)
+        time.sleep(2)
 
-subprocess.run(
-    "pip install -q TTS soundfile moviepy yfinance mplfinance requests google-api-python-client google-auth-oauthlib google-auth-httplib2 pillow pydub 2>&1 | tail -5",
-    shell=True,
-    check=True,
-)
+if has_internet:
+    print("[KaggleWorker] Outbound internet active. Installing auxiliary packages...", flush=True)
+    subprocess.run(
+        "pip install -q TTS soundfile pydub 2>&1 | tail -3",
+        shell=True,
+        check=False,
+    )
+else:
+    print("[KaggleWorker] ⚠️ Internet access is disabled or not yet phone-verified on this Kaggle account.", flush=True)
+    print("[KaggleWorker] Complete one-time SMS verification at https://www.kaggle.com/settings to enable full GPU internet.", flush=True)
 
 # 2. Inject Payload Placeholder (re-written before kernel push)
 PAYLOAD_PLACEHOLDER
@@ -39,10 +46,25 @@ PAYLOAD_PLACEHOLDER
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import mplfinance as mpf
 import numpy as np
-import soundfile as sf
 import torch
+try:
+    import soundfile as sf
+except ImportError:
+    import scipy.io.wavfile as wavfile
+    class _SfCompat:
+        @staticmethod
+        def read(path):
+            sr, d = wavfile.read(path)
+            if d.dtype == np.int16:
+                d = d.astype(np.float32) / 32767.0
+            return d, sr
+        @staticmethod
+        def write(path, d, sr):
+            if d.dtype != np.int16:
+                d = (np.clip(d, -1.0, 1.0) * 32767.0).astype(np.int16)
+            wavfile.write(path, sr, d)
+    sf = _SfCompat()
 import yfinance as yf
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
@@ -80,8 +102,13 @@ if voice_ref_b64:
         f.write(ref_bytes)
 
 # ── Step 1: Voice Synthesis via Coqui XTTS on CUDA GPU ──
-print("[KaggleWorker] Step 1: Loading XTTS-v2 on CUDA GPU...", flush=True)
-from TTS.api import TTS
+try:
+    from TTS.api import TTS
+except ImportError:
+    raise RuntimeError(
+        "Coqui TTS is not installed because outbound internet is blocked on this Kaggle account. "
+        "Complete one-time SMS phone verification at https://www.kaggle.com/settings to enable GPU internet."
+    )
 
 t0 = time.time()
 tts_engine = TTS("tts_models/multilingual/multi-dataset/xtts_v2").to(device)
