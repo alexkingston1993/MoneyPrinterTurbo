@@ -29,8 +29,14 @@ if device == "cuda":
 
 # Decode voice reference
 voice_ref_path = "/tmp/ref.wav"
+ref_bytes = base64.b64decode(payload["voice_ref_b64"])
+try:
+    import gzip
+    ref_bytes = gzip.decompress(ref_bytes)
+except Exception:
+    pass
 with open(voice_ref_path, "wb") as f:
-    f.write(base64.b64decode(payload["voice_ref_b64"]))
+    f.write(ref_bytes)
 print(f"Voice ref: {os.path.getsize(voice_ref_path)} bytes")
 
 # Load TTS model

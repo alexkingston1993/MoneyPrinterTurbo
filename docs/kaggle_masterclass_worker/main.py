@@ -70,8 +70,14 @@ os.makedirs(output_dir, exist_ok=True)
 # Save reference voice
 voice_ref_path = os.path.join(temp_dir, "prabhat_ref.wav")
 if voice_ref_b64:
+    ref_bytes = base64.b64decode(voice_ref_b64)
+    try:
+        import gzip
+        ref_bytes = gzip.decompress(ref_bytes)
+    except Exception:
+        pass
     with open(voice_ref_path, "wb") as f:
-        f.write(base64.b64decode(voice_ref_b64))
+        f.write(ref_bytes)
 
 # ── Step 1: Voice Synthesis via Coqui XTTS on CUDA GPU ──
 print("[KaggleWorker] Step 1: Loading XTTS-v2 on CUDA GPU...", flush=True)

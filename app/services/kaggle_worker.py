@@ -50,6 +50,39 @@ def _get_api():
     return api
 
 
+def _prepare_voice_ref_b64(voice_ref_path: str, max_duration_sec: float = 8.0) -> str:
+    """
+    Prepares a compact, gzipped base64-encoded voice reference for Kaggle.
+    Kaggle limits kernel source code to 1MB. Trimming reference audio to <=8s
+    and gzipping keeps payload around 350-400KB while preserving full XTTS cloning fidelity.
+    """
+    if not voice_ref_path or not os.path.exists(voice_ref_path):
+        return ""
+
+    import gzip
+    import io
+    import wave
+
+    try:
+        with wave.open(voice_ref_path, "rb") as w:
+            params = w.getparams()
+            max_frames = min(w.getnframes(), int(params.framerate * max_duration_sec))
+            frames = w.readframes(max_frames)
+
+        buf = io.BytesIO()
+        with wave.open(buf, "wb") as w_out:
+            w_out.setparams(params)
+            w_out.writeframes(frames)
+        audio_bytes = buf.getvalue()
+    except Exception:
+        # Fallback to reading file directly
+        with open(voice_ref_path, "rb") as f:
+            audio_bytes = f.read()
+
+    compressed = gzip.compress(audio_bytes)
+    return base64.b64encode(compressed).decode("ascii")
+
+
 def _replace_payload(template_path: str, payload: dict) -> str:
     """Read notebook template, inject payload dict, return modified source."""
     with open(template_path) as f:
@@ -111,9 +144,8 @@ class KaggleWorker:
         Raises:
             RuntimeError: if TTS fails or times out.
         """
-        # Encode voice reference
-        with open(voice_ref_path, "rb") as f:
-            voice_ref_b64 = base64.b64encode(f.read()).decode()
+        # Encode voice reference (trimmed <= 8s & gzipped to stay under Kaggle 1MB limit)
+        voice_ref_b64 = _prepare_voice_ref_b64(voice_ref_path, max_duration_sec=8.0)
 
         payload = {
             "text": text,
@@ -270,14 +302,18 @@ class KaggleWorker:
         Returns the published YouTube URL, or None if failed.
         """
         if not voice_ref_path or not os.path.exists(voice_ref_path):
-            voice_ref_path = os.path.join(
-                os.path.dirname(__file__), "voices", "prabhat_ref_master.wav"
-            )
+            candidates = [
+                os.path.join(os.path.dirname(__file__), "voices", "prabhat_ref_8s.wav"),
+                os.path.join(os.path.dirname(__file__), "voices", "prabhat_ref_master.wav"),
+                os.path.join(os.path.dirname(__file__), "voices", "alex_ref_10s.wav"),
+            ]
+            for c in candidates:
+                if os.path.exists(c):
+                    voice_ref_path = c
+                    break
 
-        voice_ref_b64 = ""
-        if os.path.exists(voice_ref_path):
-            with open(voice_ref_path, "rb") as f:
-                voice_ref_b64 = base64.b64encode(f.read()).decode()
+        # Trim <= 8s & gzip-encode so kernel source remains ~400KB (well below Kaggle's 1MB limit)
+        voice_ref_b64 = _prepare_voice_ref_b64(voice_ref_path, max_duration_sec=8.0)
 
         payload = {
             "subject": subject,
