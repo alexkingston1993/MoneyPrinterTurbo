@@ -20,6 +20,8 @@ from app.services.article_generator import article_generator, GeneratedArticle
 from app.services.wp_publisher import wp_publisher
 from app.config import config
 
+DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data")
+
 
 class PipelineOrchestrator:
     """Coordinates autonomous live research, video production, and web publishing."""
