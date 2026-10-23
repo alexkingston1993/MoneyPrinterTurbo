@@ -44,6 +44,8 @@ def save_config():
 
 _cfg = load_config()
 app = _cfg.get("app", {})
+if os.getenv("VOICE_NAME"):
+    app["voice_name"] = os.getenv("VOICE_NAME")
 whisper = _cfg.get("whisper", {})
 proxy = _cfg.get("proxy", {})
 azure = _cfg.get("azure", {})

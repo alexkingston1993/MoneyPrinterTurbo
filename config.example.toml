@@ -1,6 +1,6 @@
 [app]
 video_source = "pexels" # "pexels" or "pixabay"
-voice_name = "en-IN-ArjunNeural-Male" # Studio-grade Indian English voice (Arjun Neural)
+voice_name = "xtts:prabhat" # 100% offline cloned Indian English voice (Prabhat/Arjun)
 telegram_bot_token = "8829963924:AAE7v_xEQXLmy3-YEx8kqMo2GRfnbnxf4GA"
 telegram_chat_id = "1126599043"
 

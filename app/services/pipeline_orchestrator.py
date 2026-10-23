@@ -343,7 +343,7 @@ class PipelineOrchestrator:
             video_clip_duration=clip_duration,
             video_count=1,
             video_source=config.app.get("video_source", "pexels"),
-            voice_name=remedy.get("voice_name") if (remedy and remedy.get("voice_name")) else config.app.get("voice_name", "en-IN-PrabhatNeural-Male"),
+            voice_name=remedy.get("voice_name") if (remedy and remedy.get("voice_name")) else config.app.get("voice_name", "xtts:prabhat"),
             bgm_type="random",
             subtitle_enabled=True,
             subtitle_position="bottom" if aspect == "16:9" else "center",

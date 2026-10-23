@@ -39,14 +39,10 @@ jobs:
           cache: 'pip'
 
 
-      - name: Verify FFmpeg
+      - name: Verify FFmpeg and Audio Libraries
         run: |
-          if ! command -v ffmpeg &> /dev/null; then
-            echo "FFmpeg missing, installing..."
-            sudo apt-get update -y && sudo apt-get install -y ffmpeg
-          else
-            echo "✓ FFmpeg is pre-installed: $(ffmpeg -version | head -n 1)"
-          fi
+          sudo apt-get update -y && sudo apt-get install -y ffmpeg libsndfile1 espeak-ng
+          echo "✓ FFmpeg & audio libs installed: $(ffmpeg -version | head -n 1)"
 
       - name: Free Disk Space
         run: |
@@ -75,6 +71,7 @@ jobs:
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           LLM_PROVIDER: "gemini"
           GEMINI_MODEL_NAME: "gemini-2.0-flash"
+          VOICE_NAME: "xtts:prabhat"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPO: ${{ github.repository }}
           WHATSAPP_PHONE: ${{ secrets.WHATSAPP_PHONE }}
@@ -100,8 +97,15 @@ jobs:
           if git diff --staged --quiet; then
             echo "No new changes to commit."
           else
-            git commit -m "feat(market): autonomous market news release [skip ci]"
-            git pull --rebase origin main || true
-            git push origin main
+            git commit -m "feat(market): autonomous market news release [skip ci]" || true
+            for retry in 1 2 3; do
+              git fetch origin main
+              git rebase -X ours origin/main || { git rebase --abort; git merge -X ours origin/main -m "merge: resolve content sync" || true; }
+              if git push origin main; then
+                echo "✓ Successfully pushed updated articles"
+                break
+              fi
+              sleep 5
+            done
           fi
 

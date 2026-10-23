@@ -86,9 +86,8 @@ class AriaSelfHealingEngine:
     """
 
     AZURE_VOICE_ROTATION_POOL = [
-        "en-IN-PrabhatNeural-Male",
-        "en-IN-NeerjaNeural-Female",
-        "en-IN-PrabhatNeural",
+        "xtts:prabhat",
+        "kokoro:am_adam",
     ]
 
     UNIVERSAL_INSTITUTIONAL_KEYWORDS = [
@@ -122,20 +121,19 @@ class AriaSelfHealingEngine:
         if any(k in err_str for k in [
             "noaudioreceived", "edge_tts", "edge-tts", "tts", "voice", "audio",
             "websocket", "brokenpipe", "streamtimeout", "timeout waiting for audio",
-            "connectionreseterror", "chunk", "am_adam", "kokoro"
+            "connectionreseterror", "chunk", "am_adam", "kokoro", "xtts"
         ]):
-            current_voice = context.get("current_voice", "en-IN-PrabhatNeural-Male")
-            # Rotate to secondary Indian voice
-            fallback_voice = "en-IN-NeerjaNeural-Female" if "prabhat" in current_voice.lower() else "en-IN-PrabhatNeural-Male"
+            current_voice = context.get("current_voice", "xtts:prabhat")
+            fallback_voice = "kokoro:am_adam" if "prabhat" in str(current_voice).lower() else "xtts:prabhat"
             backoff = 4 * attempt
 
             return AriaRemedy(
                 domain=FailureDomain.VOICE_TTS,
-                failed_component="Microsoft Azure Neural TTS Stream",
-                root_cause=f"Websocket or chunk timeout in Edge-TTS pipeline ({err_type}: {exc})",
+                failed_component="Offline Neural TTS Engine",
+                root_cause=f"TTS synthesis issue ({err_type}: {exc})",
                 severity="HIGH",
-                action_plan=f"Hot-swapping voice profile to '{fallback_voice}', extending buffer timeout to 400s, and re-initializing streaming chunks.",
-                short_desc=f"Azure Neural Voice Swap ({fallback_voice}) + Buffer Reset",
+                action_plan=f"Hot-swapping voice profile to offline model '{fallback_voice}' with reset buffers.",
+                short_desc=f"Offline Neural Voice Swap ({fallback_voice})",
                 params={
                     "voice_name": fallback_voice,
                     "extend_timeout": 400.0,

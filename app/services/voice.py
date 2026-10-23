@@ -1180,14 +1180,16 @@ def get_language_from_voice(voice_name: str) -> str:
 
 
 EDGE_VOICE_ALIASES = {
-    # Microsoft Edge TTS endpoint mirrors Azure Neural Prabhat for Indian English Male
-    "en-IN-ArjunNeural": "en-IN-PrabhatNeural",
-    "en-IN-ArjunNeural-Male": "en-IN-PrabhatNeural",
+    # Default Indian English Male directly to 100% offline cloned engine
+    "en-IN-ArjunNeural": "xtts:prabhat",
+    "en-IN-ArjunNeural-Male": "xtts:prabhat",
+    "en-IN-PrabhatNeural": "xtts:prabhat",
+    "en-IN-PrabhatNeural-Male": "xtts:prabhat",
 }
 
 
 MULTILINGUAL_EDGE_VOICES = {
-    "en": {"voice": "en-IN-PrabhatNeural", "locale": "en-IN"},
+    "en": {"voice": "xtts:prabhat", "locale": "en-IN"},
     "ta": {"voice": "ta-IN-PallaviNeural", "locale": "ta-IN"},
     "hi": {"voice": "hi-IN-SwaraNeural", "locale": "hi-IN"},
     "te": {"voice": "te-IN-ShrutiNeural", "locale": "te-IN"},
@@ -1260,7 +1262,11 @@ def tts(
     if voice_name and voice_name.lower().startswith("kokoro:"):
         from app.services.kokoro_voice import kokoro_tts
         return kokoro_tts(text, voice_name, voice_rate, voice_file, voice_volume)
-    elif voice_name and voice_name.lower() in ["xtts:prabhat", "prabhat_local", "prabhat_offline"]:
+    elif voice_name and (
+        voice_name.lower() in ["xtts:prabhat", "prabhat_local", "prabhat_offline"]
+        or "prabhat" in voice_name.lower()
+        or "arjun" in voice_name.lower()
+    ):
         from app.services.cloned_prabhat_tts import cloned_prabhat_tts
         return cloned_prabhat_tts(text, voice_file, voice_rate, voice_volume)
     elif is_azure_v2_voice(voice_name):
