@@ -321,6 +321,7 @@ class KaggleWorker:
             "pexels_api_key": pexels_api_key,
             "youtube_token_b64": youtube_token_b64,
             "voice_ref_b64": voice_ref_b64,
+            "playlist_id": "PLO2FWTao-JNA",
         }
 
         kernel_slug = f"mpt-masterclass-{uuid.uuid4().hex[:8]}"

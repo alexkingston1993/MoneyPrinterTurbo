@@ -18,27 +18,24 @@ import time
 import urllib.request
 from typing import Dict, List, Optional, Tuple
 
-# 1. Check network connection and attempt library installs
-print("[KaggleWorker] Initializing environment on GPU...", flush=True)
-has_internet = False
-for _ in range(3):
-    try:
-        urllib.request.urlopen("https://pypi.org", timeout=4)
-        has_internet = True
-        break
-    except Exception:
-        time.sleep(2)
+# 1. Environment bootstrap: ensure Python 3.11 with CUDA and TTS via uv
+if sys.version_info >= (3, 12):
+    env_dir = "/tmp/mpt_py11"
+    env_py = os.path.join(env_dir, "bin", "python")
+    if not os.path.exists(env_py):
+        print("[KaggleWorker] Setting up optimized Python 3.11 CUDA runtime via uv...", flush=True)
+        subprocess.run(["/usr/local/bin/uv", "venv", "--python", "3.11", env_dir], check=True)
+        subprocess.run(
+            [
+                "/usr/local/bin/uv", "pip", "install", "--python", env_py,
+                "TTS", "soundfile", "pydub", "moviepy", "matplotlib", "yfinance", "google-api-python-client", "google-auth-oauthlib", "requests", "pillow", "torch", "torchaudio"
+            ],
+            check=True
+        )
+    print("[KaggleWorker] Re-executing worker in Python 3.11 CUDA runtime...", flush=True)
+    os.execv(env_py, [env_py, __file__])
 
-if has_internet:
-    print("[KaggleWorker] Outbound internet active. Installing auxiliary packages...", flush=True)
-    subprocess.run(
-        "pip install -q TTS soundfile pydub 2>&1 | tail -3",
-        shell=True,
-        check=False,
-    )
-else:
-    print("[KaggleWorker] ⚠️ Internet access is disabled or not yet phone-verified on this Kaggle account.", flush=True)
-    print("[KaggleWorker] Complete one-time SMS verification at https://www.kaggle.com/settings to enable full GPU internet.", flush=True)
+print(f"[KaggleWorker] Running inside Python {sys.version.split()[0]} on GPU...", flush=True)
 
 # 2. Inject Payload Placeholder (re-written before kernel push)
 PAYLOAD_PLACEHOLDER
@@ -48,6 +45,15 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
+
+# Monkeypatch torch.load to prevent weights_only error with PyTorch 2.6+ in Coqui TTS
+_orig_torch_load = torch.load
+def _safe_torch_load(*args, **kwargs):
+    if "weights_only" not in kwargs:
+        kwargs["weights_only"] = False
+    return _orig_torch_load(*args, **kwargs)
+torch.load = _safe_torch_load
+
 try:
     import soundfile as sf
 except ImportError:
@@ -65,10 +71,49 @@ except ImportError:
                 d = (np.clip(d, -1.0, 1.0) * 32767.0).astype(np.int16)
             wavfile.write(path, sr, d)
     sf = _SfCompat()
+
 import yfinance as yf
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
-from moviepy import AudioFileClip, CompositeVideoClip, TextClip, VideoFileClip
+from PIL import Image, ImageDraw, ImageFont
+
+try:
+    from moviepy.editor import AudioFileClip, CompositeVideoClip, TextClip, VideoFileClip, ImageClip
+except ImportError:
+    from moviepy import AudioFileClip, CompositeVideoClip, TextClip, VideoFileClip, ImageClip
+
+def set_dur(clip, d):
+    return clip.with_duration(d) if hasattr(clip, "with_duration") else clip.set_duration(d)
+
+def set_pos(clip, pos):
+    return clip.with_position(pos) if hasattr(clip, "with_position") else clip.set_position(pos)
+
+def set_st(clip, st):
+    return clip.with_start(st) if hasattr(clip, "with_start") else clip.set_start(st)
+
+def set_aud(clip, aud):
+    return clip.with_audio(aud) if hasattr(clip, "with_audio") else clip.set_audio(aud)
+
+def create_pillow_text_clip(text, duration, position, font_size=24, color=(255, 255, 255), bg_color=(10, 15, 29, 210), width=1600, height=60, start=0.0):
+    img = Image.new("RGBA", (width, height), bg_color)
+    draw = ImageDraw.Draw(img)
+    try:
+        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", font_size)
+    except Exception:
+        font = ImageFont.load_default()
+    bbox = draw.textbbox((0, 0), text, font=font)
+    tw = bbox[2] - bbox[0]
+    th = bbox[3] - bbox[1]
+    tx = max(10, (width - tw) // 2)
+    ty = max(5, (height - th) // 2)
+    draw.text((tx, ty), text, fill=color, font=font)
+    img_np = np.array(img)
+    clip = ImageClip(img_np)
+    clip = set_dur(clip, duration)
+    if start > 0:
+        clip = set_st(clip, start)
+    clip = set_pos(clip, position)
+    return clip
 
 os.environ["COQUI_TOS_AGREED"] = "1"
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -275,23 +320,22 @@ subprocess.run(
 
 # ── Step 4: Video Compositing with Animated Subtitles & Watermark ──
 print("[KaggleWorker] Step 4: Compositing 10-minute 1080p masterclass video...", flush=True)
-bg_clip = VideoFileClip(stitched_bg).with_duration(audio_duration)
+bg_clip = set_dur(VideoFileClip(stitched_bg), audio_duration)
 audio_clip = AudioFileClip(audio_path)
 w, h = bg_clip.w, bg_clip.h
 
 overlays = []
 # Watermark
 try:
-    badge = (
-        TextClip(
-            text="  THE BULL PRINT  |  INSTITUTIONAL MASTERCLASS  ",
-            font_size=24,
-            color="#00e599",
-            bg_color="#0a0f1d",
-            method="label",
-        )
-        .with_duration(audio_duration)
-        .with_position(("center", int(h * 0.05)))
+    badge = create_pillow_text_clip(
+        "THE BULL PRINT  |  INSTITUTIONAL MASTERCLASS",
+        duration=audio_duration,
+        position=("center", int(h * 0.05)),
+        font_size=24,
+        color=(0, 229, 153),
+        bg_color=(10, 15, 29, 230),
+        width=850,
+        height=50,
     )
     overlays.append(badge)
 except Exception as e:
@@ -303,26 +347,27 @@ for start, end, stext in subtitle_entries:
     if sdur <= 0:
         continue
     try:
-        sclip = (
-            TextClip(
-                text=stext[:65],
-                font_size=28,
-                color="#ffffff",
-                bg_color="#0a0f1d",
-                method="label",
-            )
-            .with_start(start)
-            .with_duration(sdur)
-            .with_position(("center", int(h * 0.85)))
+        sclip = create_pillow_text_clip(
+            stext[:75],
+            duration=sdur,
+            position=("center", int(h * 0.84)),
+            font_size=28,
+            color=(255, 255, 255),
+            bg_color=(10, 15, 29, 210),
+            width=1500,
+            height=60,
+            start=start,
         )
         overlays.append(sclip)
-    except Exception:
+    except Exception as e:
         pass
 
-final_video = CompositeVideoClip([bg_clip] + overlays).with_audio(audio_clip).with_duration(audio_duration)
+final_video = CompositeVideoClip([bg_clip] + overlays)
+final_video = set_aud(final_video, audio_clip)
+final_video = set_dur(final_video, audio_duration)
 rendered_mp4 = os.path.join(temp_dir, "final_masterclass.mp4")
 
-# Render with NVENC hardware acceleration if available, otherwise fast libx264
+# Render video
 t_rend = time.time()
 final_video.write_videofile(
     rendered_mp4,
@@ -370,6 +415,25 @@ if youtube_token_b64:
         if vid_id:
             yt_url = f"https://youtu.be/{vid_id}"
             print(f"[KaggleWorker] ✅ Masterclass published successfully: {yt_url}", flush=True)
+            # Add to playlist
+            playlist_id = payload.get("playlist_id", "PLO2FWTao-JNA")
+            if playlist_id:
+                try:
+                    yt_service.playlistItems().insert(
+                        part="snippet",
+                        body={
+                            "snippet": {
+                                "playlistId": playlist_id,
+                                "resourceId": {
+                                    "kind": "youtube#video",
+                                    "videoId": vid_id,
+                                },
+                            }
+                        },
+                    ).execute()
+                    print(f"[KaggleWorker] Added video {vid_id} to playlist {playlist_id}", flush=True)
+                except Exception as pe:
+                    print(f"[KaggleWorker] Playlist insert notice: {pe}", flush=True)
     except Exception as e:
         print(f"[KaggleWorker] YouTube upload error: {e}", flush=True)
 
