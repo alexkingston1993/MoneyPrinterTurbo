@@ -72,6 +72,27 @@ except ImportError:
             wavfile.write(path, sr, d)
     sf = _SfCompat()
 
+import torchaudio
+
+# Monkeypatch torchaudio.load and torchaudio.save to bypass torchcodec requirement in torchaudio 2.6+
+def _safe_torchaudio_load(filepath, *args, **kwargs):
+    data, sr = sf.read(filepath)
+    tensor = torch.from_numpy(data).float()
+    if tensor.ndim == 1:
+        tensor = tensor.unsqueeze(0)
+    elif tensor.ndim == 2:
+        tensor = tensor.t()
+    return tensor, sr
+
+def _safe_torchaudio_save(filepath, tensor, sr, *args, **kwargs):
+    arr = tensor.detach().cpu().numpy()
+    if arr.ndim == 2:
+        arr = arr.t()
+    sf.write(filepath, arr, sr)
+
+torchaudio.load = _safe_torchaudio_load
+torchaudio.save = _safe_torchaudio_save
+
 import yfinance as yf
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
