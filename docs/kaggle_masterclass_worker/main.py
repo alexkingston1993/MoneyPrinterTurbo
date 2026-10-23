@@ -97,10 +97,24 @@ def set_aud(clip, aud):
 def create_pillow_text_clip(text, duration, position, font_size=24, color=(255, 255, 255), bg_color=(10, 15, 29, 210), width=1600, height=60, start=0.0):
     img = Image.new("RGBA", (width, height), bg_color)
     draw = ImageDraw.Draw(img)
-    try:
-        font = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", font_size)
-    except Exception:
-        font = ImageFont.load_default()
+    font = None
+    for fpath in [
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+        "/usr/share/fonts/truetype/freefont/FreeSansBold.ttf",
+    ]:
+        if os.path.exists(fpath):
+            try:
+                font = ImageFont.truetype(fpath, font_size)
+                break
+            except Exception:
+                pass
+    if font is None:
+        try:
+            font = ImageFont.load_default()
+        except Exception:
+            font = None
     bbox = draw.textbbox((0, 0), text, font=font)
     tw = bbox[2] - bbox[0]
     th = bbox[3] - bbox[1]
