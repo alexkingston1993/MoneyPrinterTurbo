@@ -62,6 +62,10 @@ class AriaQuirkyAssistant:
             logger.warning(f"[Aria] Error sending Telegram message: {e}")
             return False
 
+    def send_personal_alert(self, message: str) -> bool:
+        """Send a direct personal alert or notification to Alex via Telegram."""
+        return self._send(message)
+
     def notify_success(
         self,
         slot_name: str,
