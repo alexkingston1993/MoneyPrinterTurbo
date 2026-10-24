@@ -49,6 +49,91 @@ async function dispatchGitHubEvent(eventType: string, clientPayload: object = {}
   });
 }
 
+// =====================================================================
+// 💰 AFFILIATE & REVENUE LEDGER HELPERS (Zero-DB GitHub Repo Variables)
+// =====================================================================
+interface TelemetryShape {
+  total_clicks: number;
+  brokers: Record<string, number>;
+  campaigns: Record<string, number>;
+  updated_at: string;
+}
+
+function blankTelemetry(): TelemetryShape {
+  return { total_clicks: 0, brokers: {}, campaigns: {}, updated_at: '' };
+}
+
+async function fetchAffiliateTelemetry(): Promise<TelemetryShape> {
+  let data = blankTelemetry();
+  if (!GH_TOKEN) return data;
+  try {
+    const res = await fetch(`https://api.github.com/repos/${GH_REPO}/actions/variables/AFFILIATE_TELEMETRY_JSON`, {
+      headers: { Authorization: `Bearer ${GH_TOKEN}`, Accept: 'application/vnd.github+json', 'User-Agent': 'TheBullPrint-Telegram-Webhook' },
+    });
+    if (res.status === 404) return data; // Ledger not created yet
+    if (res.ok) {
+      const raw = (await res.json()).value;
+      data = { ...blankTelemetry(), ...JSON.parse(raw) };
+    }
+  } catch {
+    // Silent zero ledger on any network failure.
+  }
+  return data;
+}
+
+async function fetchPostStats(): Promise<{ total: number; last7: number }> {
+  const stats = { total: 0, last7: 0 };
+  try {
+    const res = await fetch('https://the-bull-print.vercel.app/content/posts.json', { cache: 'no-store' });
+    if (!res.ok) return stats;
+    let posts: any = await res.json();
+    if (!Array.isArray(posts)) posts = posts?.posts || [];
+    stats.total = posts.length;
+    const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    for (const p of posts) {
+      const date = Date.parse(p?.date || p?.published || p?.created_at || '');
+      if (!Number.isNaN(date) && date >= weekAgo) stats.last7 += 1;
+    }
+  } catch {
+    // Silent zero stats on any fetch failure.
+  }
+  return stats;
+}
+
+function buildRevenueLedgerCard(t: TelemetryShape, content: { total: number; last7: number }): string {
+  const brokerOrder: Array<[string, string]> = [
+    ['tradingview', 'TradingView'],
+    ['gocharting', 'GoCharting'],
+    ['zerodha', 'Zerodha'],
+    ['delta', 'Delta'],
+    ['bybit', 'Bybit'],
+  ];
+  const total = Number(t.total_clicks || 0);
+  const breakdown = brokerOrder.map(([key, label]) => `${label}: \`${t.brokers?.[key] || 0}\``).join(' | ');
+  const estReferrals = total * 0.04; // 4% conversion assumption
+  const projectedInr = estReferrals * 500; // blended INR kickback/month
+  const updatedAt = (t.updated_at || '—').replace('T', ' ').split('.')[0];
+
+  return (
+    `💰 *THE BULL PRINT — AFFILIATE & REVENUE LEDGER* 🐂\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `🖱️ *Total Affiliate Clicks:* \`${total}\`\n` +
+    `📊 *Breakdown by Broker:* ${breakdown}\n` +
+    `🎓 *Published Research Dossiers:* \`${content.total}\` (+${content.last7} this week)\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `📈 *Est. Active Referrals* (4% CVR): \`${estReferrals.toFixed(1)}\`\n` +
+    `₹ *Projected Monthly Recurring RevShare:* \`₹${projectedInr.toLocaleString('en-IN', { maximumFractionDigits: 0 })}\`\n` +
+    `🕒 *Ledger Updated:* \`${updatedAt}\`\n` +
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n` +
+    `💡 *Verdict:* Every YouTube description fires \`/go/{broker}\` — keep publishing dossiers and the flywheel compounds! ☕🚀`
+  );
+}
+
+async function handleRevenueCommand(chatId: number | string) {
+  const [t, content] = await Promise.all([fetchAffiliateTelemetry(), fetchPostStats()]);
+  await sendTelegram(chatId, buildRevenueLedgerCard(t, content));
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -62,6 +147,12 @@ export async function POST(req: NextRequest) {
       if (AUTH_CHAT_ID && String(chatId) !== String(AUTH_CHAT_ID)) {
         await answerCallbackQuery(cb.id, 'Unauthorized');
         return NextResponse.json({ ok: true, status: 'unauthorized_ignored' });
+      }
+
+      if (data === 'view_revenue') {
+        await answerCallbackQuery(cb.id, 'Pulling the Revenue Ledger... 💰');
+        await handleRevenueCommand(chatId);
+        return NextResponse.json({ ok: true, handler: 'view_revenue' });
       }
 
       await answerCallbackQuery(cb.id, 'Engaging Agent Aria...');
@@ -151,6 +242,7 @@ export async function POST(req: NextRequest) {
                   { text: '🔄 Re-Run Failed Jobs', callback_data: `rerun_failed:${latest.id}` },
                   { text: '🩹 Force Clean Rebuild', callback_data: 'run_slot:Institutional Order Flow & Macro Liquidity' },
                 ],
+                [{ text: '💰 Revenue & Clicks', callback_data: 'view_revenue' }],
               ],
             }
           : {
@@ -161,6 +253,7 @@ export async function POST(req: NextRequest) {
                 ],
                 [
                   { text: '🎓 Weekend Masterclass', callback_data: 'run_slot:Weekend Wealth & Market Structure Masterclass' },
+                  { text: '💰 Revenue & Clicks', callback_data: 'view_revenue' },
                 ],
               ],
             };
@@ -180,6 +273,12 @@ export async function POST(req: NextRequest) {
           : `⚠️ *Agent Aria:* Failed to dispatch GitHub Action (HTTP ${ghRes.status}). Verify \`GITHUB_PAT_TOKEN\`.`
       );
       return NextResponse.json({ ok: true, dispatched: ghRes.ok, topic });
+    }
+
+    // Command: /revenue, /clicks, or /analytics — the 💰 Affiliate & Revenue Ledger
+    if (['/revenue', '/clicks', '/analytics', 'revenue', 'clicks'].includes(lower)) {
+      await handleRevenueCommand(chatId);
+      return NextResponse.json({ ok: true, handler: 'revenue_ledger' });
     }
 
     return NextResponse.json({ ok: true });

@@ -57,6 +57,11 @@ class AriaEngineerTools:
         return shutil.which("gh") or "gh"
 
     @classmethod
+    def generate_revenue_report(cls) -> str:
+        """The /revenue, /clicks & /analytics command — 🐂 AFFILIATE & REVENUE LEDGER card."""
+        return aria_tools.generate_revenue_report()
+
+    @classmethod
     def get_active_or_latest_run(cls) -> Dict[str, Any]:
         """Fetches metadata of the latest GitHub Actions workflow run."""
         try:
@@ -316,6 +321,9 @@ class TelegramBotDaemon:
         if lower in ["/health", "/sweep", "health", "sweep", "diagnostic sweep"]:
             return aria_tools.run_diagnostic_sweep()
 
+        if lower in ["/revenue", "/clicks", "/analytics", "revenue", "clicks", "revenue and clicks", "affiliate clicks"]:
+            return AriaEngineerTools.generate_revenue_report()
+
         if lower.startswith("/run ") or lower.startswith("/trigger ") or (lower.startswith("trigger ") and len(lower.split()) == 2):
             words = lower.split()
             slot_arg = words[1].replace("/", "")
@@ -462,6 +470,8 @@ class TelegramBotDaemon:
                     elif data.startswith("run_slot:"):
                         slot = data.split(":")[1]
                         self.send_message(chat_id, aria_tools.trigger_market_slot(slot))
+                    elif data == "view_revenue":
+                        self.send_message(chat_id, AriaEngineerTools.generate_revenue_report())
                     continue
 
                 msg = u.get("message", {})

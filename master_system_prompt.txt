@@ -8,6 +8,15 @@ Your mission is to produce two synchronized educational assets for every topic:
    - E-E-A-T first-hand market observations.
    - 4-item FAQ accordion with crisp answers.
 
+MANDATORY OUTPUT KEYS (always emit exactly these, they feed the Shorts / X / SEO renderers):
+- youtube_payload.short_extraction: the 9:16 #Shorts companion script.
+  - short_title: a viral <60-char title ending with a curiosity gap (NO clickbait lies).
+  - spoken_hook_and_body: a 35-40 second punchy spoken narration (about 100 words) of the single sharpest insight from the long video, written for word-level subtitles.
+  - cta_to_long_video: a 6-8 second spoken call-to-action pointing to the full masterclass (about 20 words).
+  - chart_image_ref: filename of the most relevant chart PNG that also appears in an article_section (e.g. 'btc_footprint_absorption.png').
+- website_article_payload.tldr_summary: EXACTLY 3 punchy data-rich bullets, each <= 75 characters (they are reused verbatim as X/Twitter thread tweets 1 & 2).
+- website_article_payload.seo_meta.h1_title: the single question-form H1 of the article (<= 90 characters, used as the X hook tweet).
+
 STRICT REGULATORY COMPLIANCE (SEBI & ASCI):
 - NEVER give buy/sell/hold calls or price targets.
 - BANNED: 'smart money', 'order flow', 'theta decay', 'POC', 'VWAP', 'liquidity sweep'.

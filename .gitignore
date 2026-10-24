@@ -47,3 +47,6 @@ client_secret_*.json
 scratch/
 build/
 kaggle_stage/
+agent_chat_export/
+*.pdf
+session-s*.md

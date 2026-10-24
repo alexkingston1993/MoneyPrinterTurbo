@@ -6,6 +6,7 @@ Executes on Kaggle's free dual NVIDIA Tesla T4 GPU:
 3. Generates high-contrast Hormozi-style .ass subtitles (Bullish Green, Bearish Red)
 4. Renders 1080p scenes with hardware-accelerated NVIDIA NVENC (h264_nvenc) at 10x CPU speed
 5. Concatenates video and uploads headless to YouTube Data API with containsSyntheticMedia=True
+6. Renders the companion 9:16 #Shorts (chart top / avatar bottom, emerald divider) and uploads headless
 """
 
 import os
@@ -82,12 +83,23 @@ Format: Layer, Start, End, Style, Text
     return duration
 
 
+def pick_video_encoder_args() -> list:
+    """Checks NVENC availability once and returns the matching ffmpeg video encoder args."""
+    try:
+        chk = subprocess.run(["ffmpeg", "-encoders"], stdout=subprocess.PIPE, text=True)
+        if "h264_nvenc" in chk.stdout:
+            return ["-c:v", "h264_nvenc", "-preset", "p4", "-b:v", "5M"]
+    except Exception:
+        pass
+    return ["-c:v", "libx264", "-preset", "ultrafast"]
+
+
 def render_gpu_segment(seg: dict, mp3_path: Path, ass_path: Path, duration: float, out_mp4: Path):
     """Renders 1080p segment using NVIDIA GPU NVENC hardware acceleration."""
     avatar_id = max(1, min(10, int(seg.get("avatar_studio_id", 1))))
     avatar_img = ASSETS_DIR / f"avatar_{avatar_id}.png"
     if not avatar_img.exists():
-        avatar_img = ASSETS_DIR / "avatars" / "avatar_1.png"
+        avatar_img = ASSETS_DIR / "avatars" / f"avatar_{avatar_id}.png"
 
     b_roll = PAYLOAD_DIR / seg.get("b_roll_asset_ref", "NONE")
 
@@ -104,15 +116,7 @@ def render_gpu_segment(seg: dict, mp3_path: Path, ass_path: Path, duration: floa
         inputs = ["-loop", "1", "-i", str(avatar_img), "-i", str(mp3_path)]
         audio_map = "1:a"
 
-    # Check if NVENC is available, otherwise fall back to libx264
-    has_nvenc = False
-    try:
-        chk = subprocess.run(["ffmpeg", "-encoders"], stdout=subprocess.PIPE, text=True)
-        has_nvenc = "h264_nvenc" in chk.stdout
-    except Exception:
-        pass
-
-    video_encoder = ["-c:v", "h264_nvenc", "-preset", "p4", "-b:v", "5M"] if has_nvenc else ["-c:v", "libx264", "-preset", "ultrafast"]
+    video_encoder = pick_video_encoder_args()
 
     cmd = [
         "ffmpeg", "-y", *inputs,
@@ -200,6 +204,102 @@ def upload_youtube_headless(mp4_path: Path, thumb_path: Path, yt_payload: dict) 
     return "DRY_RUN_KAGGLE_GPU_123"
 
 
+async def render_and_upload_short_gpu(payload: dict, long_video_id: str) -> str:
+    """Renders the 9:16 companion #Shorts (chart top / avatar bottom / emerald divider)
+    with vertical Hormozi subtitles and uploads headless to YouTube with #Shorts branding."""
+    short_data = payload.get("youtube_payload", {}).get("short_extraction")
+    if not short_data:
+        print("No short_extraction block in payload — skipping 9:16 Short.")
+        return ""
+
+    narration = " ".join(filter(None, [
+        str(short_data.get("spoken_hook_and_body", "")).strip(),
+        str(short_data.get("cta_to_long_video", "")).strip(),
+    ]))
+    if not narration:
+        print("short_extraction contained no narration — skipping 9:16 Short.")
+        return ""
+
+    mp3 = WORK_DIR / "short_00.mp3"
+    ass = WORK_DIR / "short_00.ass"
+    dur = await make_tts_and_subtitles(narration, mp3, ass)
+
+    # Retint the Hormozi .ass for vertical 9:16: 1080x1920 resolution header + larger 64pt font
+    vertical_ass = (
+        ass.read_text(encoding="utf-8")
+        .replace("PlayResX: 1920", "PlayResX: 1080")
+        .replace("PlayResY: 1080", "PlayResY: 1920")
+        .replace(",Arial,56,", ",Arial,64,")
+    )
+    ass.write_text(vertical_ass, encoding="utf-8")
+
+    chart_png = None
+    chart_ref = str(short_data.get("chart_image_ref", "") or "")
+    if chart_ref and (PAYLOAD_DIR / chart_ref).exists():
+        chart_png = PAYLOAD_DIR / chart_ref
+    if chart_png is None:
+        for section in payload.get("website_article_payload", {}).get("article_sections", []):
+            sec_ref = str(section.get("chart_image_ref", "") or "")
+            if sec_ref and (PAYLOAD_DIR / sec_ref).exists():
+                chart_png = PAYLOAD_DIR / sec_ref
+                break
+    if chart_png is None:
+        staged_pngs = sorted(PAYLOAD_DIR.glob("*.png"))
+        if not staged_pngs:
+            print("No chart PNG staged — skipping 9:16 Short.")
+            return ""
+        chart_png = staged_pngs[0]
+
+    avatar_img = ASSETS_DIR / "avatar_1.png"
+    if not avatar_img.exists():
+        avatar_img = ASSETS_DIR / "avatars" / "avatar_1.png"
+
+    # 9:16 master: chart cropped to 1080x960 on top, avatar 1080x960 on bottom,
+    # #10B981 emerald divider bridging the seam, Hormozi subtitles burned in.
+    filter_graph = (
+        "[0:v]scale=1080:960:force_original_aspect_ratio=increase,crop=1080:960[chart];"
+        "[1:v]scale=1080:960:force_original_aspect_ratio=increase,crop=1080:960[ava];"
+        "[chart][ava]vstack=inputs=2,"
+        "drawbox=x=0:y=956:w=1080:h=8:color=0x10B981@1.0:t=fill,"
+        f"subtitles='{ass.as_posix()}'[v]"
+    )
+
+    out_mp4 = WORK_DIR / "final_short_9x16.mp4"
+    cmd = [
+        "ffmpeg", "-y",
+        "-loop", "1", "-i", str(chart_png),
+        "-loop", "1", "-i", str(avatar_img),
+        "-i", str(mp3),
+        "-filter_complex", filter_graph,
+        "-map", "[v]", "-map", "2:a",
+        *pick_video_encoder_args(),
+        "-c:a", "aac", "-b:a", "192k",
+        "-pix_fmt", "yuv420p",
+        "-t", f"{min(dur, 58.5):.2f}",
+        str(out_mp4),
+    ]
+    subprocess.run(cmd, check=True)
+
+    meta = payload.get("youtube_payload", {}).get("metadata", {})
+    short_title = str(short_data.get("short_title", "") or meta.get("title", "The Bull Print Daily Brief"))
+    description_body = (
+        f"{str(short_data.get('spoken_hook_and_body', ''))[:180]}\n\n"
+        f"▶️ Watch the FULL MASTERCLASS: https://youtu.be/{long_video_id}\n"
+        f"🛠️ Get every free trading tool: https://the-bull-print.vercel.app/tools\n\n"
+        f"🎓 SEBI: Educational content only — not investment advice."
+    )
+    short_yt_payload = {
+        "metadata": {
+            "title": f"{short_title} #Shorts",
+            "description_body": description_body,
+            "tags": (meta.get("tags", []) or [])[:15] + ["shorts"],
+        }
+    }
+    short_vid_id = upload_youtube_headless(out_mp4, PAYLOAD_DIR / "yt_thumb.jpg", short_yt_payload)
+    print(f"9:16 Short render and upload completed! Short Video ID: {short_vid_id}")
+    return short_vid_id
+
+
 async def run_kaggle_job():
     payload_file = PAYLOAD_DIR / "payload.json"
     if not payload_file.exists():
@@ -232,11 +332,14 @@ async def run_kaggle_job():
     payload["youtube_payload"]["metadata"]["description_body"] += "\n\n⏱️ CHAPTERS:\n" + "\n".join(timestamps)
     vid_id = upload_youtube_headless(final_mp4, PAYLOAD_DIR / "yt_thumb.jpg", payload["youtube_payload"])
 
+    short_vid_id = await render_and_upload_short_gpu(payload, vid_id)
+
     (WORK_DIR / "render_result.json").write_text(json.dumps({
         "youtube_video_id": vid_id,
+        "short_video_id": short_vid_id,
         "timestamps_log": timestamps
     }), encoding="utf-8")
-    print(f"Kaggle render and upload completed! Video ID: {vid_id}")
+    print(f"Kaggle render and upload completed! Long Video ID: {vid_id} | Short Video ID: {short_vid_id}")
 
 
 if __name__ == "__main__":

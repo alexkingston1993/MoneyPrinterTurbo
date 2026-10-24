@@ -10,6 +10,7 @@ Zero-cost cloud architecture tying together:
 """
 
 import os
+import re
 import json
 import time
 import asyncio
@@ -230,14 +231,157 @@ class AriaMissionControl:
                     logger.debug(f"Webhook restoration notice: {e}")
 
 
+def _enforce_master_keys(data: Dict) -> Dict:
+    """Guarantees the mandatory keys (short_extraction, tldr_summary, seo_meta.h1_title) exist,
+    deriving defensive fallbacks from the rest of the payload so the Shorts / X / SEO renderers
+    never hit a missing key even if a fallback LLM ignores the schema."""
+    yt = data.setdefault("youtube_payload", {})
+    web = data.setdefault("website_article_payload", {})
+    meta = yt.setdefault("metadata", {})
+    sections = web.get("article_sections") or []
+
+    short_data = yt.get("short_extraction")
+    if not isinstance(short_data, dict) or not short_data.get("spoken_hook_and_body"):
+        seg0 = (yt.get("segments") or [{}])[0]
+        first_chart = (sections[0].get("chart_image_ref") if sections else "") or ""
+        yt["short_extraction"] = {
+            "short_title": str(meta.get("title", data.get("topic", "")))[:60],
+            "spoken_hook_and_body": str(seg0.get("spoken_narration", ""))[:400],
+            "cta_to_long_video": "Watch the full masterclass on The Bull Print for every detail and chart.",
+            "chart_image_ref": first_chart,
+        }
+
+    tldr = web.get("tldr_summary")
+    if not isinstance(tldr, list) or len([t for t in tldr if str(t).strip()]) < 3:
+        derived = [str(s.get("direct_answer_passage", "")).strip()[:70] for s in sections[:3]]
+        meta_desc = str(web.get("meta_description", "")).replace(". ", ".|").split("|")
+        derived += [m.strip()[:70] for m in meta_desc]
+        derived = [d for d in derived if d][:3]
+        while len(derived) < 3:
+            derived.append(str(meta.get("title", data.get("topic", "The Bull Print daily insight")))[:70])
+        web["tldr_summary"] = derived
+
+    seo_meta = web.get("seo_meta")
+    if not isinstance(seo_meta, dict) or not str(seo_meta.get("h1_title", "")).strip():
+        web["seo_meta"] = {"h1_title": web.get("seo_title") or meta.get("title") or data.get("topic", "")}
+
+    return data
+
+
 # =====================================================================
 # STEP 1: GOOGLE AI STUDIO (FREE GEMINI API) MASTER JSON GENERATOR
 # =====================================================================
+def _parse_llm_json(text: str) -> Optional[Dict]:
+    """Strips markdown fences / AI chatter and parses a raw LLM response into a JSON dict."""
+    clean = (text or "").strip()
+    if "```" in clean:
+        clean = re.sub(r"^```(?:json)?\s*", "", clean, flags=re.MULTILINE)
+        clean = re.sub(r"```\s*$", "", clean).strip()
+    match = re.search(r"(\{.*\})", clean, re.DOTALL)
+    if match:
+        clean = match.group(1)
+    try:
+        data = json.loads(clean)
+        return data if isinstance(data, dict) else None
+    except Exception:
+        return None
+
+
+def _free_llm_json_fallback(system_prompt: str, user_input: str) -> Optional[Dict]:
+    """
+    Free LLM Quota Failover: fires when GEMINI_API_KEY is depleted (429 ResourceExhausted) or errors.
+    Routes (first success wins, a depleted Google token never halts the cloud pipeline):
+    1. OpenAI-compatible: OPENAI_API_KEY or OPENROUTER_API_KEY with JSON response_format
+    2. Repo's own multi-provider fallback engine in app/services/llm.py (Pollinations openai-fast)
+    3. Direct zero-dependency Pollinations POST (always free, no keys required)
+    """
+    messages = [
+        {"role": "system", "content": system_prompt or "You are an expert financial educator producing institutional-grade research."},
+        {"role": "user", "content": (
+            f"{user_input}\n\nIMPORTANT: Respond with ONLY one valid JSON object matching the required "
+            f"schema. No markdown fences and no commentary.\n"
+            f"MANDATORY KEYS (must be present): youtube_payload.short_extraction "
+            f"(short_title, spoken_hook_and_body, cta_to_long_video, chart_image_ref), "
+            f"website_article_payload.tldr_summary (exactly 3 bullets), "
+            f"website_article_payload.seo_meta.h1_title."
+        )},
+    ]
+
+    compat_routes = []
+    openai_key = os.getenv("OPENAI_API_KEY", "")
+    openrouter_key = os.getenv("OPENROUTER_API_KEY", "")
+    if openai_key:
+        compat_routes.append(("https://api.openai.com/v1/chat/completions", openai_key, os.getenv("OPENAI_MODEL", "gpt-4o-mini")))
+    if openrouter_key:
+        compat_routes.append(("https://openrouter.ai/api/v1/chat/completions", openrouter_key, os.getenv("OPENROUTER_MODEL", "openai/gpt-4o-mini")))
+
+    for url, key, model in compat_routes:
+        try:
+            resp = requests.post(
+                url,
+                timeout=90,
+                headers={"Authorization": f"Bearer {key}"},
+                json={
+                    "model": model,
+                    "messages": messages,
+                    "temperature": 0.4,
+                    "response_format": {"type": "json_object"},
+                },
+            )
+            if resp.status_code == 200:
+                txt = resp.json().get("choices", [{}])[0].get("message", {}).get("content", "")
+                data = _parse_llm_json(txt)
+                if data:
+                    logger.success(f"✓ Free LLM failover succeeded via {model}.")
+                    return data
+            else:
+                logger.warning(f"Free LLM route {model} returned HTTP {resp.status_code}.")
+        except Exception as e:
+            logger.warning(f"Free LLM route {model} failed: {e}")
+
+    try:
+        from app.services.llm import _generate_via_openai_fast
+
+        flat_prompt = f"{messages[0]['content']}\n\n---\n\n{messages[1]['content']}"
+        data = _parse_llm_json(_generate_via_openai_fast(flat_prompt))
+        if data:
+            logger.success("✓ Free LLM failover succeeded via app.services.llm (Pollinations openai-fast).")
+            return data
+    except Exception as e:
+        logger.warning(f"app.services.llm fallback unavailable: {e}")
+
+    try:
+        resp = requests.post(
+            "https://text.pollinations.ai/openai",
+            timeout=35,
+            json={"model": "openai-fast", "messages": messages, "temperature": 0.4},
+        )
+        if resp.status_code == 200:
+            txt = resp.json().get("choices", [{}])[0].get("message", {}).get("content", "")
+            data = _parse_llm_json(txt)
+            if data:
+                logger.success("✓ Free LLM failover succeeded via Pollinations direct endpoint.")
+                return data
+    except Exception as e:
+        logger.warning(f"Pollinations direct failover failed: {e}")
+
+    return None
+
+
 def generate_master_json_via_ai_studio(topic: str, market_notes: str, chart_files: List[str]) -> Dict:
-    """Calls Google AI Studio Free Tier with Structured Outputs to generate dual script + article."""
+    """Calls Google AI Studio Free Tier with Structured Outputs to generate dual script + article.
+    If GEMINI_API_KEY is depleted (429 ResourceExhausted) or the call errors, engages _free_llm_json_fallback."""
     api_key = os.getenv("GEMINI_API_KEY")
     prompt_file = BASE_DIR / "master_system_prompt.txt"
     schema_file = BASE_DIR / "master_schema.json"
+
+    system_prompt = prompt_file.read_text(encoding="utf-8") if prompt_file.exists() else "Financial Educator"
+    user_input = json.dumps({
+        "topic": topic,
+        "market_data_notes": market_notes,
+        "chart_screenshots": chart_files,
+        "website_domain": "flipzon.work.gd"
+    })
 
     if api_key:
         try:
@@ -245,15 +389,7 @@ def generate_master_json_via_ai_studio(topic: str, market_notes: str, chart_file
             from google.genai import types
 
             client = genai.Client(api_key=api_key)
-            system_prompt = prompt_file.read_text(encoding="utf-8") if prompt_file.exists() else "Financial Educator"
             schema_dict = json.loads(schema_file.read_text(encoding="utf-8")) if schema_file.exists() else {}
-
-            user_input = json.dumps({
-                "topic": topic,
-                "market_data_notes": market_notes,
-                "chart_screenshots": chart_files,
-                "website_domain": "flipzon.work.gd"
-            })
 
             logger.info("🧠 Calling Google AI Studio (Gemini 2.5 Flash / Pro)...")
             response = client.models.generate_content(
@@ -267,16 +403,21 @@ def generate_master_json_via_ai_studio(topic: str, market_notes: str, chart_file
                     max_output_tokens=8192,
                 ),
             )
-            return json.loads(response.text)
+            return _enforce_master_keys(json.loads(response.text))
         except Exception as e:
-            logger.warning(f"Google AI Studio direct API call failed or timed out: {e}")
+            logger.warning(f"GEMINI_API_KEY depleted or Google AI Studio call failed: {e}")
+            logger.info("🔁 Engaging free LLM quota failover (OpenRouter / OpenAI / Pollinations)...")
+            fallback_data = _free_llm_json_fallback(system_prompt, user_input)
+            if fallback_data:
+                return _enforce_master_keys(fallback_data)
+            logger.warning("All free LLM providers exhausted — using local payload benchmark.")
 
     # Fallback to local payload benchmark
     logger.info("ℹ️ Using local payload benchmark.")
     payload_file = BASE_DIR / "payload.json"
     data = json.loads(payload_file.read_text(encoding="utf-8"))
     data["topic"] = topic
-    return data
+    return _enforce_master_keys(data)
 
 
 # =====================================================================
@@ -287,10 +428,11 @@ def run_kaggle_gpu_renderer(
     chart_files: List[str],
     yt_thumb: Path,
     mission: AriaMissionControl
-) -> Tuple[str, List[str]]:
+) -> Tuple[str, List[str], str]:
     """
     Pushes payload + charts to private Kaggle dataset, triggers T4 GPU kernel,
-    and runs a 26-minute state-aware poller. Falls back to local engine if Kaggle is unconfigured.
+    and runs a 26-minute state-aware poller. Returns (long_video_id, timestamps, short_video_id).
+    Falls back to local engine if Kaggle is unconfigured.
     """
     import shutil
     kaggle_key = os.getenv("KAGGLE_KEY")
@@ -321,7 +463,8 @@ def run_kaggle_gpu_renderer(
         stitch_all_segments(rendered_files, final_mp4)
         vid_id = upload_to_youtube(final_mp4, payload["youtube_payload"])
         mission.update_stage("kaggle_gpu", f"✅ Rendered Locally (`{vid_id}`)")
-        return vid_id, timestamps
+        logger.info("ℹ️ No 9:16 Short generated in local fallback mode (Kaggle GPU required).")
+        return vid_id, timestamps, ""
 
     # 1. Stage Kaggle Dataset
     (KAGGLE_STAGE_DIR / "payload.json").write_text(json.dumps(payload, indent=2), encoding="utf-8")
@@ -386,7 +529,7 @@ def run_kaggle_gpu_renderer(
     subprocess.run(["kaggle", "kernels", "output", kernel_id, "-p", str(out_dir)], check=True)
 
     result_data = json.loads((out_dir / "render_result.json").read_text(encoding="utf-8"))
-    return result_data["youtube_video_id"], result_data["timestamps_log"]
+    return result_data["youtube_video_id"], result_data["timestamps_log"], result_data.get("short_video_id", "")
 
 
 # =====================================================================
@@ -435,15 +578,33 @@ async def main():
 
     # 5. Render Video via Kaggle GPU NVENC / Faster-Whisper
     mission.update_stage("kaggle_gpu", "🚀 Dispatching to Kaggle Dual-T4 GPU...")
-    yt_video_id, timestamps_log = run_kaggle_gpu_renderer(payload, chart_files, yt_thumb, mission)
+    yt_video_id, timestamps_log, short_video_id = run_kaggle_gpu_renderer(payload, chart_files, yt_thumb, mission)
+    if short_video_id:
+        logger.info(f"🎬 9:16 #Shorts published: https://youtube.com/shorts/{short_video_id}")
 
     # 6. Generate MDX Article + Deploy to Vercel + Ping Search Indexers
     mission.update_stage("vercel", "📝 Compiling MDX & IndexNow Ping...")
     mdx_path = generate_website_article_file(payload, yt_video_id, timestamps_log)
     live_url = publish_and_index_article(mdx_path, chart_files, slug)
-    mission.update_stage("vercel", f"✅ Live & Indexed (`{live_url}`)", "Run complete! All systems operational.")
+
+    # 7. Distribute the 3-tweet X/Twitter thread (graceful skip without X credentials)
+    try:
+        from app.services.x_thread_publisher import publish_x_thread
+
+        chart_paths = [str(BASE_DIR / "assets" / "charts" / cf) for cf in chart_files]
+        x_thread_status = publish_x_thread(payload, chart_paths, yt_video_id, short_video_id, live_url)
+    except Exception as x_err:
+        x_thread_status = f"Error ({x_err.__class__.__name__})"
+        logger.warning(f"X thread distribution failed: {x_err}")
+    logger.info(f"🐦 X Thread status: {x_thread_status}")
+
+    final_note = f"🐦 X Thread: {x_thread_status}"
+    if short_video_id:
+        final_note = f"🎬 Short: youtube.com/shorts/{short_video_id} · 🐦 X Thread: {x_thread_status}"
+    mission.update_stage("vercel", f"✅ Live & Indexed (`{live_url}`)", final_note)
 
     print(f"\n🎉 Cloud pipeline completed successfully! Live URL: {live_url}")
+    print(f"🎬 Short: {'youtube.com/shorts/' + short_video_id if short_video_id else 'skipped'} | 🐦 X Thread: {x_thread_status}")
 
 
 if __name__ == "__main__":

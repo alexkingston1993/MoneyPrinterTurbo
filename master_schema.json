@@ -31,15 +31,33 @@
             },
             "required": ["segment_index", "chapter_title", "visual_mode", "avatar_studio_id", "spoken_narration"]
           }
+        },
+        "short_extraction": {
+          "type": "object",
+          "properties": {
+            "short_title": { "type": "string" },
+            "spoken_hook_and_body": { "type": "string" },
+            "cta_to_long_video": { "type": "string" },
+            "chart_image_ref": { "type": "string" }
+          },
+          "required": ["short_title", "spoken_hook_and_body", "cta_to_long_video", "chart_image_ref"]
         }
       },
-      "required": ["metadata", "segments"]
+      "required": ["metadata", "segments", "short_extraction"]
     },
     "website_article_payload": {
       "type": "object",
       "properties": {
         "seo_title": { "type": "string" },
         "meta_description": { "type": "string" },
+        "tldr_summary": { "type": "array", "minItems": 3, "maxItems": 3, "items": { "type": "string" } },
+        "seo_meta": {
+          "type": "object",
+          "properties": {
+            "h1_title": { "type": "string" }
+          },
+          "required": ["h1_title"]
+        },
         "article_sections": {
           "type": "array",
           "items": {
@@ -54,7 +72,7 @@
           }
         }
       },
-      "required": ["seo_title", "meta_description", "article_sections"]
+      "required": ["seo_title", "meta_description", "seo_meta", "tldr_summary", "article_sections"]
     }
   },
   "required": ["campaign_id", "topic", "youtube_payload", "website_article_payload"]

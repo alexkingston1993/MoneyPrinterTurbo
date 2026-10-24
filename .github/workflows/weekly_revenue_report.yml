@@ -1,0 +1,42 @@
+name: Weekly Revenue Report (Sunday Executive Digest)
+
+on:
+  schedule:
+    # 03:30 UTC = 09:00 AM IST every Sunday
+    - cron: '30 3 * * 0'
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  sunday-revenue-report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+
+      - name: Install Runtime Dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt || pip install requests loguru pydantic pydantic-settings
+
+      - name: Send Sunday Revenue & Content Growth Digest
+        env:
+          GITHUB_REPO: ${{ github.repository }}
+          GITHUB_PAT_TOKEN: ${{ secrets.GITHUB_PAT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          SITE_BASE_URL: https://the-bull-print.vercel.app
+        run: |
+          python3 -c "from app.services.aria_healing import AriaCommandToolkit as AriaEngineerTools; AriaEngineerTools.send_weekly_revenue_report()"

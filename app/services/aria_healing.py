@@ -584,6 +584,159 @@ class AriaCommandToolkit:
         except Exception as e:
             return f"⚠️ Failed to launch workflow: `{e}`"
 
+    # -----------------------------------------------------------------
+    # 💰 AFFILIATE & REVENUE LEDGER (Zero-DB — GitHub Actions Repo Variable)
+    # -----------------------------------------------------------------
+    GH_REPO = os.getenv("GITHUB_REPO", "alexkingston1993/MoneyPrinterTurbo")
+    SITE_BASE = os.getenv("SITE_BASE_URL", "https://the-bull-print.vercel.app")
+    BROKER_LABELS = {"zerodha": "Zerodha", "tradingview": "TradingView", "gocharting": "GoCharting", "delta": "Delta", "bybit": "Bybit"}
+    EST_CVR = 0.04           # 4% refresh → funded-account conversion assumption
+    EST_KICKBACK_INR = 500   # Blended ₹ CPAP kickback across Broker RevShare + SaaS panels
+
+    @classmethod
+    def get_gh_headers(cls) -> Dict[str, str]:
+        token = os.getenv("GITHUB_PAT_TOKEN") or os.getenv("GITHUB_TOKEN") or ""
+        return {
+            "Authorization": f"token {token}",
+            "Accept": "application/vnd.github+json",
+            "User-Agent": "TheBullPrint-Aria-Revenue",
+        }
+
+    @classmethod
+    def fetch_affiliate_telemetry(cls) -> Dict[str, Any]:
+        """Reads the AFFILIATE_TELEMETRY_JSON GitHub Actions Repository Variable (zero-defaults if unset)."""
+        blank = {"total_clicks": 0, "brokers": {b: 0 for b in cls.BROKER_LABELS}, "campaigns": {}, "updated_at": ""}
+        try:
+            res = requests.get(
+                f"https://api.github.com/repos/{cls.GH_REPO}/actions/variables/AFFILIATE_TELEMETRY_JSON",
+                headers=cls.get_gh_headers(),
+                timeout=15,
+            )
+            if res.status_code == 200:
+                body = res.json()
+                data = json.loads(body.get("value", "{}"))
+                blank.update(data or {})
+            elif res.status_code == 404:
+                logger.info("[Aria Revenue] AFFILIATE_TELEMETRY_JSON not created yet — starting from zero ledger.")
+        except Exception as e:
+            logger.warning(f"[Aria Revenue] Telemetry fetch failed: {e}")
+        blank.setdefault("brokers", {})
+        blank.setdefault("campaigns", {})
+        return blank
+
+    @classmethod
+    def fetch_post_stats(cls) -> Dict[str, int]:
+        """Counts published research dossiers from the live posts.json manifest (+ last-7-day growth)."""
+        stats = {"total": 0, "last_7_days": 0}
+        try:
+            res = requests.get(f"{cls.SITE_BASE}/content/posts.json", timeout=15)
+            res.raise_for_status()
+            posts = res.json()
+            if isinstance(posts, dict):
+                posts = posts.get("posts", [])
+            stats["total"] = len(posts)
+            import datetime
+            week_ago = datetime.datetime.now() - datetime.timedelta(days=7)
+            for p in posts:
+                if not isinstance(p, dict):
+                    continue
+                date_raw = p.get("date") or p.get("published") or p.get("created_at") or ""
+                for fmt in ("%Y-%m-%d %H:%M:%S", "%Y-%m-%d", "%d %B %Y", "%B %d, %Y"):
+                    try:
+                        d = datetime.datetime.strptime(str(date_raw)[:15].strip(), fmt)
+                        if d >= week_ago:
+                            stats["last_7_days"] += 1
+                        break
+                    except Exception:
+                        continue
+        except Exception as e:
+            logger.warning(f"[Aria Revenue] posts.json fetch failed: {e}")
+        return stats
+
+    @classmethod
+    def format_revenue_card(cls, telemetry: Optional[Dict[str, Any]] = None) -> str:
+        """Builds the 🐂 THE BULL PRINT — AFFILIATE & REVENUE LEDGER Markdown card."""
+        data = telemetry if telemetry is not None else cls.fetch_affiliate_telemetry()
+        content = cls.fetch_post_stats()
+
+        total_clicks = int(data.get("total_clicks") or 0)
+        brokers = data.get("brokers") or {}
+        breakdown = " | ".join(
+            f"{label}: `{int(brokers.get(key) or 0)}`" for key, label in cls.BROKER_LABELS.items()
+        )
+        campaigns = data.get("campaigns") or {}
+        top_campaigns = sorted(campaigns.items(), key=lambda kv: kv[1], reverse=True)[:3]
+        top_campaigns_str = ", ".join(f"`{k}` ({v})" for k, v in top_campaigns) if top_campaigns else "`none yet`"
+
+        estimated_referrals = total_clicks * cls.EST_CVR
+        projected_monthly_inr = estimated_referrals * cls.EST_KICKBACK_INR
+        updated_at = str(data.get("updated_at") or "—").replace("T", " ").split(".")[0]
+
+        lines = [
+            "💰 *THE BULL PRINT — AFFILIATE & REVENUE LEDGER* 🐂",
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+            f"🖱️ *Total Affiliate Clicks:* `{total_clicks}`",
+            f"📊 *Breakdown by Broker:* {breakdown}",
+            f"📣 *Top Campaigns:* {top_campaigns_str}",
+            f"🎓 *Published Research Dossiers:* `{content['total']}` (+{content['last_7_days']} this week)",
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+            f"📈 *Est. Active Referrals* (4% CVR): `{estimated_referrals:.1f}`",
+            f"₹ *Projected Monthly Recurring RevShare:* `₹{projected_monthly_inr:,.0f}`",
+            f"🕒 *Ledger Updated:* `{updated_at}`",
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+        ]
+        return "\n".join(lines)
+
+    @classmethod
+    def generate_revenue_report(cls) -> str:
+        """The /revenue & /clicks command — full ledger card + Kickback KPI verdict."""
+        card = cls.format_revenue_card()
+        verdict = (
+            "💡 *Verdict:* Ledger is live and compounding! Publish fresh dossiers daily — "
+            "every YouTube description link fires the `/go/{broker}` tracker automatically. ☕🚀"
+        )
+        return f"{card}\n{verdict}"
+
+    @classmethod
+    def send_weekly_revenue_report(cls) -> bool:
+        """Sends the full weekly Affiliate Click + Content Growth digest to TELEGRAM_CHAT_ID."""
+        content = cls.fetch_post_stats()
+        telemetry = cls.fetch_affiliate_telemetry()
+        header = (
+            "🌅 *THE BULL PRINT — SUNDAY EXECUTIVE REPORT* ☕🕶️\n"
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            f"📚 *This Week's Publishing Cadence:* `{content['last_7_days']} new dossiers` "
+            f"(library total: `{content['total']}`)\n"
+        )
+        body = cls.format_revenue_card(telemetry)
+        closing = "🎯 *Sunday Directive:* keep the 5-slot weekday cadence, Akshev — the RevShare flywheel rewards volume. 🚀"
+        report = f"{header}{body}\n{closing}"
+
+        bot_token = os.getenv("TELEGRAM_BOT_TOKEN") or config.app.get("telegram_bot_token") or ""
+        chat_id = os.getenv("TELEGRAM_CHAT_ID") or config.app.get("telegram_chat_id") or ""
+        if not bot_token or not chat_id:
+            logger.warning("[Aria Revenue] TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID not set — weekly report skipped.")
+            logger.info(report)
+            return False
+        try:
+            res = requests.post(
+                f"https://api.telegram.org/bot{bot_token}/sendMessage",
+                json={"chat_id": chat_id, "text": report, "parse_mode": "Markdown", "disable_web_page_preview": True},
+                timeout=15,
+            )
+            if res.status_code != 200:
+                stripped = report.replace("*", "")
+                requests.post(
+                    f"https://api.telegram.org/bot{bot_token}/sendMessage",
+                    json={"chat_id": chat_id, "text": stripped, "disable_web_page_preview": True},
+                    timeout=15,
+                )
+            logger.success("[Aria Revenue] Weekly Sunday revenue report sent to Telegram.")
+            return True
+        except Exception as e:
+            logger.warning(f"[Aria Revenue] Failed to send weekly report: {e}")
+            return False
+
 
 # Singletons for effortless import
 aria_healing = AriaSelfHealingEngine()
