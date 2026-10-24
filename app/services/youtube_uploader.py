@@ -13,6 +13,7 @@ import os
 import pickle
 import re
 import time
+from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
 from google.auth.transport.requests import Request
@@ -223,6 +224,88 @@ class YouTubeUploader:
         """Case-insensitive, punctuation-insensitive title fingerprint."""
         return " ".join(re.sub(r"[^\w\s]+", " ", str(text or "").lower()).split())
 
+    def _load_credential_pool(self) -> List[Dict]:
+        """
+        Multi-Project Quota Rotator: every distinct OAuth slot the channel can use.
+        Sources (deduplicated case-insensitively by client_id):
+          1) YT_OAUTH_POOL_JSON     -> JSON list of {client_id, client_secret, refresh_token}
+          2) YT_CLIENT_ID[_N]/YT_CLIENT_SECRET[_N]/YT_REFRESH_TOKEN[_N] (1..6 + raw)
+          3) YOUTUBE_TOKEN_<LANG>[_N] base64 pickles
+          4) local data/youtube_tokens/youtube_token_*.pickle files
+        Slots matching the primary (cached-service) credential are dropped so the
+        rotation loop only spends time on genuinely different Google Cloud projects.
+        """
+        slots: List[Dict] = []
+
+        pool_json = os.getenv("YT_OAUTH_POOL_JSON")
+        if pool_json:
+            try:
+                parsed = json.loads(pool_json)
+                if isinstance(parsed, dict):
+                    parsed = [parsed]
+                for s in parsed:
+                    if s.get("client_id") and s.get("client_secret") and s.get("refresh_token"):
+                        slots.append({"client_id": s["client_id"], "client_secret": s["client_secret"],
+                                      "refresh_token": s["refresh_token"], "source": "YT_OAUTH_POOL_JSON"})
+            except Exception as e:
+                logger.warning(f"YT_OAUTH_POOL_JSON unparsable: {e}")
+
+        for suffix in ("", "1", "2", "3", "4", "5", "6"):
+            variants = ((f"YT_CLIENT_ID{suffix}", f"YT_CLIENT_SECRET{suffix}", f"YT_REFRESH_TOKEN{suffix}"),) if not suffix else (
+                (f"YT_CLIENT_ID{suffix}", f"YT_CLIENT_SECRET{suffix}", f"YT_REFRESH_TOKEN{suffix}"),
+                (f"YT_CLIENT_ID_{suffix}", f"YT_CLIENT_SECRET_{suffix}", f"YT_REFRESH_TOKEN_{suffix}"),
+            )
+            for cid_v, cse_v, rt_v in variants:
+                cid, cse, rt = os.getenv(cid_v), os.getenv(cse_v), os.getenv(rt_v)
+                if cid and cse and rt:
+                    slots.append({"client_id": cid, "client_secret": cse, "refresh_token": rt, "source": cid_v})
+                    break
+
+        for i in range(1, 6):
+            lang_key = (os.getenv("PIPELINE_LANGUAGE", "en") or "en").upper()
+            env_name = f"YOUTUBE_TOKEN_{lang_key}" if i == 1 else f"YOUTUBE_TOKEN_{lang_key}_{i}"
+            b64_env = os.getenv(env_name)
+            if b64_env:
+                try:
+                    obj = pickle.loads(base64.b64decode(b64_env))
+                    if isinstance(obj, dict) and "credentials" in obj:
+                        obj = obj["credentials"]
+                    slot = {"client_id": obj.get("client_id"), "client_secret": obj.get("client_secret"),
+                            "refresh_token": obj.get("refresh_token"), "source": env_name}
+                    if all(slot.values()) and slot not in slots:
+                        slots.append(slot)
+                except Exception as e:
+                    logger.warning(f"{env_name} decode failed: {e}")
+
+        for p in sorted(Path(TOKEN_DIR).glob("youtube_token_*.pickle")):
+            try:
+                obj = pickle.loads(p.read_bytes())
+                if isinstance(obj, dict) and "credentials" in obj:
+                    obj = obj["credentials"]
+                slot = {"client_id": obj.get("client_id"), "client_secret": obj.get("client_secret"),
+                        "refresh_token": obj.get("refresh_token"), "source": f"pickle:{p.name}"}
+                if all(slot.values()) and slot not in slots:
+                    slots.append(slot)
+            except Exception:
+                continue
+
+        seen, unique = set(), []
+        for s in slots:
+            key = (s["client_id"] or "").lower()
+            if key and key not in seen:
+                seen.add(key)
+                unique.append(s)
+        return unique
+
+    @staticmethod
+    def _is_quota_error(exc: Exception) -> bool:
+        """True when the error is retryable-offline by rotating to another project slot."""
+        text = str(exc)
+        return any(
+            marker in text
+            for marker in ("quotaExceeded", "dailyLimitExceeded", "uploadLimitExceeded", "rateLimitExceeded", "invalid_grant", "invalidCredentials")
+        )
+
     def _find_recent_duplicate(self, language: str, title: str, window_hours: int = 24) -> Optional[str]:
         """
         Idempotency guard against overlapping schedulers / workflow retries.
@@ -322,7 +405,7 @@ class YouTubeUploader:
             dict: Upload result with video_id, status, url
         """
         service = self._get_service(language)
-        if not service:
+        if not service and not self._load_credential_pool():
             return {"success": False, "error": f"Not authenticated for {language}"}
 
         if not os.path.exists(video_path):
@@ -407,61 +490,98 @@ class YouTubeUploader:
                 "already_existed": True,
             }
 
-        try:
-            logger.info(f"[{language}] Uploading: {title[:60]}... ({os.path.getsize(video_path)/1024/1024:.1f}MB)")
+        # Multi-Project Quota Rotator: attempt the upload on each OAuth slot in turn.
+        # Slot 1 re-uses the already-authenticated primary service; every further slot is a
+        # distinct Google Cloud project rounded-robin on quotaExceeded/invalid_grant.
+        pool = self._load_credential_pool()
+        logger.info(f"[{language}] Credential pool: {len(pool)} alternate OAuth slot(s) loaded")
 
-            media = MediaFileUpload(video_path, chunksize=1024 * 1024, resumable=True)
-            request = service.videos().insert(
-                part="snippet,status",
-                body=body,
-                media_body=media,
-            )
+        attempts: List[Tuple[int, Optional[Dict]]] = [(1, None)]
+        attempts.extend((i + 2, slot) for i, slot in enumerate(pool))
 
-            response = None
-            last_progress = 0
-            while response is None:
-                status, response = request.next_chunk()
-                if status:
-                    progress = int(status.progress() * 100)
-                    if progress - last_progress >= 10:
-                        logger.info(f"[{language}] Upload progress: {progress}%")
-                        last_progress = progress
+        last_error = "unknown"
+        for slot_index, slot in attempts:
+            try:
+                if slot is None:
+                    service = self._get_service(language)
+                    if not service:
+                        if attempts[1:] and slot_index == 1:
+                            last_error = f"No primary credentials for {language} — skipping to pool slots"
+                            logger.warning(f"[{language}] no primary credentials — attempting {len(pool)} pool slot(s)")
+                            continue
+                        raise RuntimeError(last_error)
+                else:
+                    logger.info(f"🔑 [Slot #{slot_index}] rotating upload to fresh Google Cloud project ({slot['source']})")
+                    creds = Credentials(
+                        token=None,
+                        refresh_token=slot["refresh_token"],
+                        token_uri="https://oauth2.googleapis.com/token",
+                        client_id=slot["client_id"],
+                        client_secret=slot["client_secret"],
+                        scopes=SCOPES,
+                    )
+                    creds.refresh(Request())
+                    service = build("youtube", "v3", credentials=creds)
 
-            video_id = response.get("id")
-            video_url = f"https://youtu.be/{video_id}"
+                logger.info(f"[{language}] Uploading: {title[:60]}... ({os.path.getsize(video_path)/1024/1024:.1f}MB)")
 
-            logger.success(f"[{language}] Uploaded: {video_url}")
+                media = MediaFileUpload(video_path, chunksize=1024 * 1024, resumable=True)
+                request = service.videos().insert(
+                    part="snippet,status",
+                    body=body,
+                    media_body=media,
+                )
 
-            # Upload thumbnail if provided
-            if thumbnail_path and os.path.exists(thumbnail_path):
-                try:
-                    service.thumbnails().set(
-                        videoId=video_id,
-                        media_body=MediaFileUpload(thumbnail_path),
-                    ).execute()
-                    logger.info(f"[{language}] Thumbnail set for {video_id}")
-                except HttpError as e:
-                    logger.warning(f"[{language}] Thumbnail upload failed: {e}")
+                response = None
+                last_progress = 0
+                while response is None:
+                    status, response = request.next_chunk()
+                    if status:
+                        progress = int(status.progress() * 100)
+                        if progress - last_progress >= 10:
+                            logger.info(f"[{language}] Upload progress: {progress}%")
+                            last_progress = progress
 
-            return {
-                "success": True,
-                "video_id": video_id,
-                "url": video_url,
-                "title": title[:100],
-                "language": language,
-                "publish_at": publish_at,
-                "scheduled": bool(publish_at),
-            }
+                video_id = response.get("id")
+                video_url = f"https://youtu.be/{video_id}"
 
-        except HttpError as e:
-            error_reason = str(e)
-            if "quotaExceeded" in error_reason:
-                error_reason = "YouTube API quota exceeded. Try again tomorrow."
-            logger.error(f"[{language}] Upload failed: {error_reason}")
-            return {"success": False, "error": error_reason}
-        except Exception as e:
-            logger.error(f"[{language}] Upload failed: {e}")
-            return {"success": False, "error": str(e)}
+                logger.success(f"[{language}] Uploaded (Slot #{slot_index}): {video_url}")
+
+                # Upload thumbnail if provided
+                if thumbnail_path and os.path.exists(thumbnail_path):
+                    try:
+                        service.thumbnails().set(
+                            videoId=video_id,
+                            media_body=MediaFileUpload(thumbnail_path),
+                        ).execute()
+                        logger.info(f"[{language}] Thumbnail set for {video_id}")
+                    except HttpError as e:
+                        logger.warning(f"[{language}] Thumbnail upload failed: {e}")
+
+                return {
+                    "success": True,
+                    "video_id": video_id,
+                    "url": video_url,
+                    "title": title[:100],
+                    "language": language,
+                    "publish_at": publish_at,
+                    "scheduled": bool(publish_at),
+                    "oauth_slot_used": slot_index,
+                }
+
+            except Exception as e:
+                last_error = str(e)
+                if self._is_quota_error(e) and slot_index < attempts[-1][0]:
+                    logger.warning(
+                        f"⚠️ YouTube API Slot #{slot_index} exhausted — rotating to Slot #{slot_index + 1} ({type(e).__name__})"
+                    )
+                    continue
+                logger.error(f"[{language}] Upload failed: {last_error}")
+                return {"success": False, "error": last_error}
+
+        logger.error(f"[{language}] All {len(attempts)} OAuth slot(s) exhausted: {last_error}")
+        quota_note = "YouTube API quota exceeded on every available slot. Try again tomorrow (or add more pool slots)."
+        return {"success": False, "error": quota_note, "detail": last_error}
 
     def upload_multilanguage(
         self,

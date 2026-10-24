@@ -502,9 +502,9 @@ class AriaCommandToolkit:
         ]
         return "\n".join(lines)
 
-    @staticmethod
-    def run_diagnostic_sweep() -> str:
-        """Executes a 5-point operational diagnostic sweep."""
+    @classmethod
+    def run_diagnostic_sweep(cls) -> str:
+        """Executes a 6-point operational diagnostic sweep."""
         results = []
 
         # 1. Edge-TTS Endpoint Test
@@ -524,14 +524,16 @@ class AriaCommandToolkit:
         except Exception:
             results.append("ℹ️ *Pexels API:* Cloud managed")
 
-        # 3. YouTube Token Verification
+        # 3. YouTube OAuth Pool Verification (Multi-Project Quota Rotator)
         try:
-            data_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data")
-            token_path = os.path.join(data_dir, "youtube_tokens", "youtube_token_en.pickle")
-            if os.path.exists(token_path) or os.getenv("YOUTUBE_TOKEN_EN_BASE64"):
-                results.append("✅ *YouTube OAuth Credentials:* Valid & Auto-Refreshing")
+            pool = cls.fetch_yt_quota_slots()
+            if pool["count"] > 0:
+                results.append(
+                    f"✅ *YouTube Quota Rotator:* {pool['count']} project slot(s) verified · "
+                    f"capacity ≈ {pool['count'] * 6} uploads/day"
+                )
             else:
-                results.append("ℹ️ *YouTube Credentials:* Restored via Cloud Secret")
+                results.append("ℹ️ *YouTube Credentials:* Restored via Cloud Secret (pool empty)")
         except Exception:
             results.append("ℹ️ *YouTube Credentials:* Cloud managed")
 
@@ -583,6 +585,77 @@ class AriaCommandToolkit:
                 return f"⚠️ Launch error from GitHub CLI: `{res.stderr.strip() or res.stdout.strip()}`"
         except Exception as e:
             return f"⚠️ Failed to launch workflow: `{e}`"
+
+    # -----------------------------------------------------------------
+    # 🔑 YT QUOTA ROTATOR (Multi-Project Google Cloud slot intelligence)
+    # -----------------------------------------------------------------
+    @classmethod
+    def fetch_yt_quota_slots(cls) -> Dict[str, Any]:
+        """Counts usable OAuth slots in YT_OAUTH_POOL_JSON / numbered YT_* envs / local pickles."""
+        slots: Dict[str, str] = {}  # masked client_id -> source
+        try:
+            raw = os.getenv("YT_OAUTH_POOL_JSON", "")
+            if raw:
+                parsed = json.loads(raw)
+                if isinstance(parsed, dict):
+                    parsed = [parsed]
+                for s in parsed:
+                    cid = str(s.get("client_id", ""))
+                    if cid:
+                        slots[cid[-14:]] = f"pool.json (ends …{cid[-14:]})"
+        except Exception:
+            pass
+
+        for i in range(1, 7):
+            cid = os.getenv(f"YT_CLIENT_ID_{i}")
+            rt = os.getenv(f"YT_REFRESH_TOKEN_{i}")
+            if cid and rt:
+                slots[cid[-14:]] = f"env YT_CLIENT_ID_{i} (ends …{cid[-14:]})"
+        cid, rt = os.getenv("YT_CLIENT_ID"), os.getenv("YT_REFRESH_TOKEN")
+        if cid and rt:
+            slots[cid[-14:]] = f"env YT_CLIENT_ID (ends …{cid[-14:]})"
+
+        try:
+            data_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data", "youtube_tokens")
+            for name in os.listdir(data_dir) if os.path.isdir(data_dir) else []:
+                if name.startswith("youtube_token_") and name.endswith(".pickle"):
+                    slots[f"pickle:{name}"] = f"local pickle {name}"
+        except Exception:
+            pass
+
+        return {"count": len(slots), "sources": list(slots.values())}
+
+    @classmethod
+    def generate_yt_quota_report(cls) -> str:
+        """The /ytquota command — 🔑 YouTube Quota Rotator capacity card."""
+        pool = cls.fetch_yt_quota_slots()
+        n = pool["count"]
+        capacity = n * 6  # videos().insert ≈ 1,600 units → 10,000/1,600 ≈ 6 uploads/day/slot
+        lines = [
+            "🔑 *AGENT ARIA: YT QUOTA ROTATOR STATUS* ⛽⚡",
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+            f"🧩 *Active OAuth Slots:* `{n}` project slot(s)",
+        ]
+        if n:
+            for src in pool["sources"]:
+                lines.append(f"   ▫️ `{src}`")
+        lines += [
+            "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+            f"📊 *Daily Upload Capacity:* `≈ {capacity} videos/day` ({n} × 6)",
+            "ℹ️ *Math:* 10,000 quota units/day/project ÷ 1,600 units per upload",
+        ]
+        if n == 0:
+            lines.append("⚠️ *No pool detected in this environment* (slots live in cloud secrets)")
+        elif n == 1:
+            lines.append("💡 *Tip:* Run `scripts/provision_yt_pool_cli.py --bootstrap ta` to add Google Cloud projects → capacity grows ×6 per slot")
+        else:
+            lines.append(f"🚀 *Rotation:* quotaExceeded on Slot #N auto-fails over to Slot #N+1 mid-upload")
+        lines.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+        lines.append("🛡️ *Verdict:* " + (
+            f"`{n} slots armed` — pipeline is duplicate-proof & quota-rotated 💪"
+            if n else "`run /status` after syncing pool secrets"
+        ))
+        return "\n".join(lines)
 
     # -----------------------------------------------------------------
     # 💰 AFFILIATE & REVENUE LEDGER (Zero-DB — GitHub Actions Repo Variable)

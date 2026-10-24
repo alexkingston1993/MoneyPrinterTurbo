@@ -197,84 +197,141 @@ def find_recent_duplicate(youtube_service, title: str, window_hours: int = 24) -
     return ""
 
 
+def _is_quota_error(exc: Exception) -> bool:
+    """True when we should rotate to the next Google Cloud project slot."""
+    text = str(exc)
+    return any(
+        m in text
+        for m in ("quotaExceeded", "dailyLimitExceeded", "uploadLimitExceeded", "rateLimitExceeded", "invalid_grant", "invalidCredentials")
+    )
+
+
+def load_oauth_pool() -> list:
+    """Every OAuth slot: yt_oauth_pool.json > yt_oauth.json > numbered/raw env vars."""
+    slots = []
+    for bases in ((ASSETS_DIR, PAYLOAD_DIR),):
+        for name in ("yt_oauth_pool.json", "yt_oauth.json"):
+            for base in bases:
+                p = base / name
+                if p.exists():
+                    try:
+                        data = json.loads(p.read_text(encoding="utf-8"))
+                        if isinstance(data, dict):
+                            data = [data]
+                        for s in data:
+                            if s.get("client_id") and s.get("client_secret") and s.get("refresh_token"):
+                                slots.append(s)
+                    except Exception as e:
+                        print(f"{name} unparsable: {e}")
+                    if slots:
+                        break
+            if slots:
+                break
+        if slots:
+            break
+    if not slots:
+        for suffix in ("", "1", "2", "3", "4", "5", "6"):
+            cid = os.getenv(f"YT_CLIENT_ID{suffix}")
+            cse = os.getenv(f"YT_CLIENT_SECRET{suffix}")
+            rt = os.getenv(f"YT_REFRESH_TOKEN{suffix}")
+            if suffix:
+                cid = cid or os.getenv(f"YT_CLIENT_ID_{suffix}")
+                cse = cse or os.getenv(f"YT_CLIENT_SECRET_{suffix}")
+                rt = rt or os.getenv(f"YT_REFRESH_TOKEN_{suffix}")
+            if cid and cse and rt:
+                slots.append({"client_id": cid, "client_secret": cse, "refresh_token": rt})
+                break
+
+    seen, unique = set(), []
+    for s in slots:
+        key = (s.get("client_id") or "").strip().lower()
+        if key and key not in seen:
+            seen.add(key)
+            unique.append(s)
+    return unique
+
+
+LAST_OAUTH_SLOT = {"value": 0}
+
+
+def _upload_with_slot(slot: dict, mp4_path: Path, thumb_path: Path, yt_payload: dict):
+    """One full upload attempt on a single OAuth slot. Raises on quota so the caller rotates."""
+    creds = Credentials(
+        None,
+        refresh_token=slot["refresh_token"],
+        token_uri="https://oauth2.googleapis.com/token",
+        client_id=slot["client_id"],
+        client_secret=slot["client_secret"],
+    )
+    creds.refresh(Request())
+    youtube = build("youtube", "v3", credentials=creds)
+
+    # Idempotency guard: skip if same normalized title was uploaded within 24h
+    meta = yt_payload["metadata"]
+    dup_id = find_recent_duplicate(youtube, meta["title"])
+    if dup_id:
+        print(f"Duplicate guard: '{meta['title'][:60]}' uploaded within 24h — skipping, existing video {dup_id}")
+        return dup_id
+
+    body = {
+        "snippet": {
+            "title": meta["title"][:100],
+            "description": meta["description_body"],
+            "tags": meta["tags"][:15],
+            "categoryId": "27"
+        },
+        "status": {
+            "privacyStatus": "public",
+            "selfDeclaredMadeForKids": False,
+            "containsSyntheticMedia": True
+        }
+    }
+
+    req = youtube.videos().insert(
+        part="snippet,status",
+        body=body,
+        media_body=MediaFileUpload(str(mp4_path), mimetype="video/mp4", resumable=True)
+    )
+    resp = None
+    while resp is None:
+        _, resp = req.next_chunk()
+    video_id = resp["id"]
+
+    if thumb_path.exists():
+        youtube.thumbnails().set(videoId=video_id, media_body=MediaFileUpload(str(thumb_path))).execute()
+
+    return video_id
+
+
 def upload_youtube_headless(mp4_path: Path, thumb_path: Path, yt_payload: dict) -> str:
-    """Headless YouTube upload with containsSyntheticMedia=True using OAuth refresh token."""
-    creds_file = ASSETS_DIR / "yt_oauth.json"
-    client_id = os.getenv("YT_CLIENT_ID")
-    client_secret = os.getenv("YT_CLIENT_SECRET")
-    refresh_token = os.getenv("YT_REFRESH_TOKEN")
-    
-    creds = None
-    if client_id and client_secret and refresh_token:
+    """Headless YouTube upload with containsSyntheticMedia=True, rotating through
+    every Google Cloud project slot on quotaExceeded/invalid_grant."""
+    pool = load_oauth_pool()
+    if not pool:
+        print("⚠️ No OAuth pool (yt_oauth_pool.json / yt_oauth.json / YT_* env vars) — DRY RUN upload.")
+        return "DRY_RUN_KAGGLE_GPU_123"
+
+    last_error = ""
+    for idx, slot in enumerate(pool, 1):
         try:
-            creds = Credentials(
-                None,
-                refresh_token=refresh_token,
-                token_uri="https://oauth2.googleapis.com/token",
-                client_id=client_id,
-                client_secret=client_secret
-            )
-            creds.refresh(Request())
+            vid = _upload_with_slot(slot, mp4_path, thumb_path, yt_payload)
+            LAST_OAUTH_SLOT["value"] = idx
+            print(f"🔑 YouTube upload OK via Quota Slot #{idx} → {vid}")
+            return vid
         except Exception as e:
-            print(f"Direct refresh token error: {e}")
+            if _is_quota_error(e) and idx < len(pool):
+                print(f"⚠️ YouTube API Slot #{idx} exhausted — rotating to Slot #{idx + 1} ({type(e).__name__})")
+                last_error = str(e)
+            else:
+                if _is_quota_error(e):
+                    last_error = str(e)
+                    break
+                print(f"Direct YouTube API upload bypassed (non-quota error on Slot #{idx}): {e}")
+                raise
 
-    if not creds and creds_file.exists():
-        try:
-            creds_data = json.loads(creds_file.read_text(encoding="utf-8"))
-            creds = Credentials(
-                None,
-                refresh_token=creds_data["refresh_token"],
-                token_uri="https://oauth2.googleapis.com/token",
-                client_id=creds_data["client_id"],
-                client_secret=creds_data["client_secret"]
-            )
-            creds.refresh(Request())
-        except Exception as e:
-            print(f"OAuth file error: {e}")
-
-    if creds:
-        try:
-            youtube = build("youtube", "v3", credentials=creds)
-
-            # Idempotency guard: skip if same normalized title was uploaded within 24h
-            meta = yt_payload["metadata"]
-            dup_id = find_recent_duplicate(youtube, meta["title"])
-            if dup_id:
-                print(f"Duplicate guard: '{meta['title'][:60]}' uploaded within 24h — skipping, existing video {dup_id}")
-                return dup_id
-
-            body = {
-                "snippet": {
-                    "title": meta["title"][:100],
-                    "description": meta["description_body"],
-                    "tags": meta["tags"][:15],
-                    "categoryId": "27"
-                },
-                "status": {
-                    "privacyStatus": "public",
-                    "selfDeclaredMadeForKids": False,
-                    "containsSyntheticMedia": True
-                }
-            }
-
-            req = youtube.videos().insert(
-                part="snippet,status",
-                body=body,
-                media_body=MediaFileUpload(str(mp4_path), mimetype="video/mp4", resumable=True)
-            )
-            resp = None
-            while resp is None:
-                _, resp = req.next_chunk()
-            video_id = resp["id"]
-
-            if thumb_path.exists():
-                youtube.thumbnails().set(videoId=video_id, media_body=MediaFileUpload(str(thumb_path))).execute()
-
-            return video_id
-        except Exception as e:
-            print(f"Direct YouTube API upload bypassed: {e}")
-
-    return "DRY_RUN_KAGGLE_GPU_123"
+    LAST_OAUTH_SLOT["value"] = len(pool)
+    print(f"❌ All {len(pool)} YouTube Quota Slots exhausted: {last_error}")
+    return "QUOTA_EXHAUSTED_ALL_SLOTS"
 
 
 async def render_and_upload_short_gpu(payload: dict, long_video_id: str) -> str:
@@ -368,7 +425,11 @@ async def render_and_upload_short_gpu(payload: dict, long_video_id: str) -> str:
             "tags": (meta.get("tags", []) or [])[:15] + ["shorts"],
         }
     }
-    short_vid_id = upload_youtube_headless(out_mp4, PAYLOAD_DIR / "yt_thumb.jpg", short_yt_payload)
+    # Dedicated 9:16 shelf thumbnail (top-chart / bottom-avatar banner) staged by the orchestrator
+    short_thumb = PAYLOAD_DIR / "yt_short_thumb.jpg"
+    if not short_thumb.exists():
+        short_thumb = PAYLOAD_DIR / "yt_thumb.jpg"
+    short_vid_id = upload_youtube_headless(out_mp4, short_thumb, short_yt_payload)
     print(f"9:16 Short render and upload completed! Short Video ID: {short_vid_id}")
     return short_vid_id
 
@@ -410,6 +471,7 @@ async def run_kaggle_job():
     (WORK_DIR / "render_result.json").write_text(json.dumps({
         "youtube_video_id": vid_id,
         "short_video_id": short_vid_id,
+        "oauth_slot_used": LAST_OAUTH_SLOT["value"],
         "timestamps_log": timestamps
     }), encoding="utf-8")
     print(f"Kaggle render and upload completed! Long Video ID: {vid_id} | Short Video ID: {short_vid_id}")

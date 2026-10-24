@@ -134,6 +134,51 @@ async function handleRevenueCommand(chatId: number | string) {
   await sendTelegram(chatId, buildRevenueLedgerCard(t, content));
 }
 
+function buildYtQuotaCard(): string {
+  // The only slot Vercel reliably holds is YT_OAUTH_POOL_JSON (provisioned via
+  // scripts/provision_yt_pool_cli.py). Everything else is cloud-managed.
+  let slots: any[] = [];
+  let poolSources: string[] = [];
+  try {
+    const raw = process.env.YT_OAUTH_POOL_JSON || '';
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      slots = Array.isArray(parsed) ? parsed : [parsed];
+      poolSources = slots.map(
+        (s: any) => `▫️ \`pool.json (ends …${String(s.client_id || '').slice(-14)})\``
+      );
+    }
+  } catch {
+    /* malformed pool json — report empty */
+  }
+  for (let i = 1; i <= 6; i++) {
+    if (process.env[`YT_CLIENT_ID_${i}`] && process.env[`YT_REFRESH_TOKEN_${i}`]) {
+      const cid = process.env[`YT_CLIENT_ID_${i}`]!;
+      poolSources.push(`▫️ \`env YT_CLIENT_ID_${i} (ends …${cid.slice(-14)})\``);
+    }
+  }
+
+  const n = poolSources.length;
+  const capacity = n * 6; // 10,000 units/day ÷ 1,600 units per upload ≈ 6 videos/day/slot
+  const lines = [
+    '🔑 *AGENT ARIA: YT QUOTA ROTATOR STATUS* ⛽⚡',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    `🧩 *Active OAuth Slots:* \`${n}\` project slot(s)`,
+    ...poolSources,
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    `📊 *Daily Upload Capacity:* \`≈ ${capacity} videos/day\` (${n} × 6)`,
+    'ℹ️ *Math:* 10,000 quota units/day/project ÷ 1,600 units per upload',
+  ];
+  if (n === 0) {
+    lines.push('⚠️ *No pool detected on Vercel* (run scripts/provision_yt_pool_cli.py --sync)');
+  } else {
+    lines.push('🚀 *Rotation:* quotaExceeded on Slot #N auto-fails over to Slot #N+1 mid-upload');
+  }
+  lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  lines.push('🛡️ *Verdict:* the pipeline is duplicate-proof & quota-rotated 🐂');
+  return lines.join('\n');
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
@@ -153,6 +198,12 @@ export async function POST(req: NextRequest) {
         await answerCallbackQuery(cb.id, 'Pulling the Revenue Ledger... 💰');
         await handleRevenueCommand(chatId);
         return NextResponse.json({ ok: true, handler: 'view_revenue' });
+      }
+
+      if (data === 'view_yt_quota') {
+        await answerCallbackQuery(cb.id, 'Auditing YouTube Quota Slots... 🔑');
+        await sendTelegram(chatId, buildYtQuotaCard());
+        return NextResponse.json({ ok: true, handler: 'view_yt_quota' });
       }
 
       await answerCallbackQuery(cb.id, 'Engaging Agent Aria...');
@@ -238,11 +289,11 @@ export async function POST(req: NextRequest) {
         latest.conclusion === 'failure'
           ? {
               inline_keyboard: [
-                [
-                  { text: '🔄 Re-Run Failed Jobs', callback_data: `rerun_failed:${latest.id}` },
+                [{ text: '🔄 Re-Run Failed Jobs', callback_data: `rerun_failed:${latest.id}` },
                   { text: '🩹 Force Clean Rebuild', callback_data: 'run_slot:Institutional Order Flow & Macro Liquidity' },
                 ],
-                [{ text: '💰 Revenue & Clicks', callback_data: 'view_revenue' }],
+                [{ text: '💰 Revenue & Clicks', callback_data: 'view_revenue' },
+                  { text: '🔑 YT Quota', callback_data: 'view_yt_quota' }],
               ],
             }
           : {
@@ -255,6 +306,7 @@ export async function POST(req: NextRequest) {
                   { text: '🎓 Weekend Masterclass', callback_data: 'run_slot:Weekend Wealth & Market Structure Masterclass' },
                   { text: '💰 Revenue & Clicks', callback_data: 'view_revenue' },
                 ],
+                [{ text: '🔑 YT Quota Slot Capacity', callback_data: 'view_yt_quota' }],
               ],
             };
 
@@ -279,6 +331,12 @@ export async function POST(req: NextRequest) {
     if (['/revenue', '/clicks', '/analytics', 'revenue', 'clicks'].includes(lower)) {
       await handleRevenueCommand(chatId);
       return NextResponse.json({ ok: true, handler: 'revenue_ledger' });
+    }
+
+    // Command: /ytquota or /quota — the 🔑 YouTube Quota Rotator capacity card
+    if (['/ytquota', '/quota', 'yt quota', 'quota slots'].includes(lower)) {
+      await sendTelegram(chatId, buildYtQuotaCard());
+      return NextResponse.json({ ok: true, handler: 'yt_quota' });
     }
 
     return NextResponse.json({ ok: true });

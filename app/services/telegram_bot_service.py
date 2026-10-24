@@ -62,6 +62,11 @@ class AriaEngineerTools:
         return aria_tools.generate_revenue_report()
 
     @classmethod
+    def generate_yt_quota_report(cls) -> str:
+        """The /ytquota command — 🔑 YouTube Quota Rotator capacity card."""
+        return aria_tools.generate_yt_quota_report()
+
+    @classmethod
     def get_active_or_latest_run(cls) -> Dict[str, Any]:
         """Fetches metadata of the latest GitHub Actions workflow run."""
         try:
@@ -324,6 +329,9 @@ class TelegramBotDaemon:
         if lower in ["/revenue", "/clicks", "/analytics", "revenue", "clicks", "revenue and clicks", "affiliate clicks"]:
             return AriaEngineerTools.generate_revenue_report()
 
+        if lower in ["/ytquota", "yt quota", "youtube quota", "quota slots", "yt slots"]:
+            return AriaEngineerTools.generate_yt_quota_report()
+
         if lower.startswith("/run ") or lower.startswith("/trigger ") or (lower.startswith("trigger ") and len(lower.split()) == 2):
             words = lower.split()
             slot_arg = words[1].replace("/", "")
@@ -472,6 +480,8 @@ class TelegramBotDaemon:
                         self.send_message(chat_id, aria_tools.trigger_market_slot(slot))
                     elif data == "view_revenue":
                         self.send_message(chat_id, AriaEngineerTools.generate_revenue_report())
+                    elif data == "view_yt_quota":
+                        self.send_message(chat_id, AriaEngineerTools.generate_yt_quota_report())
                     continue
 
                 msg = u.get("message", {})

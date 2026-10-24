@@ -13,6 +13,7 @@ import os
 import re
 import json
 import time
+import shutil
 import asyncio
 import subprocess
 from pathlib import Path
@@ -21,7 +22,7 @@ import requests
 from loguru import logger
 
 from chart_fetcher import capture_batch_charts
-from thumbnail_generator import create_marketing_images
+from thumbnail_generator import create_marketing_images, create_short_thumbnail
 from engine import generate_website_article_file
 from publisher import publish_and_index_article
 
@@ -427,12 +428,14 @@ def run_kaggle_gpu_renderer(
     payload: Dict,
     chart_files: List[str],
     yt_thumb: Path,
-    mission: AriaMissionControl
-) -> Tuple[str, List[str], str]:
+    mission: AriaMissionControl,
+    short_thumb_path: Optional[Path] = None,
+) -> Tuple[str, List[str], str, int]:
     """
     Pushes payload + charts to private Kaggle dataset, triggers T4 GPU kernel,
-    and runs a 26-minute state-aware poller. Returns (long_video_id, timestamps, short_video_id).
-    Falls back to local engine if Kaggle is unconfigured.
+    and runs a 26-minute state-aware poller. Returns (long_video_id, timestamps,
+    short_video_id, oauth_slot_used). Falls back to local engine if Kaggle is
+    unconfigured.
     """
     import shutil
     kaggle_key = os.getenv("KAGGLE_KEY")
@@ -464,9 +467,24 @@ def run_kaggle_gpu_renderer(
         vid_id = upload_to_youtube(final_mp4, payload["youtube_payload"])
         mission.update_stage("kaggle_gpu", f"✅ Rendered Locally (`{vid_id}`)")
         logger.info("ℹ️ No 9:16 Short generated in local fallback mode (Kaggle GPU required).")
-        return vid_id, timestamps, ""
+        return vid_id, timestamps, "", 0
 
-    # 1. Stage Kaggle Dataset
+    # 1. Stage Kaggle Dataset — include the YT OAuth quota pool so the GPU kernel rotates slots
+    if short_thumb_path and Path(short_thumb_path).exists():
+        shutil.copy2(short_thumb_path, KAGGLE_STAGE_DIR / "yt_short_thumb.jpg")
+        logger.info(f"🎬 Staged 9:16 Shorts shelf thumbnail into Kaggle dataset")
+    pool_json = os.getenv("YT_OAUTH_POOL_JSON", "")
+    if not pool_json:
+        local_pool = BASE_DIR / "data" / "youtube_tokens" / "oauth_pool.json"
+        if local_pool.exists():
+            pool_json = local_pool.read_text(encoding="utf-8")
+    if pool_json:
+        try:
+            (KAGGLE_STAGE_DIR / "yt_oauth_pool.json").write_text(pool_json, encoding="utf-8")
+            logger.info(f"🔐 Staged YT OAuth quota pool ({len(json.loads(pool_json))} slot(s)) into Kaggle dataset")
+        except Exception as e:
+            logger.warning(f"Could not stage YT OAuth pool: {e}")
+
     (KAGGLE_STAGE_DIR / "payload.json").write_text(json.dumps(payload, indent=2), encoding="utf-8")
     if yt_thumb.exists():
         shutil.copy2(yt_thumb, KAGGLE_STAGE_DIR / "yt_thumb.jpg")
@@ -529,7 +547,12 @@ def run_kaggle_gpu_renderer(
     subprocess.run(["kaggle", "kernels", "output", kernel_id, "-p", str(out_dir)], check=True)
 
     result_data = json.loads((out_dir / "render_result.json").read_text(encoding="utf-8"))
-    return result_data["youtube_video_id"], result_data["timestamps_log"], result_data.get("short_video_id", "")
+
+    # Surface which Google Cloud OAuth slot served the upload → Mission Control 🔑 line
+    oauth_slot_used = int(result_data.get("oauth_slot_used") or 0)
+    if oauth_slot_used > 0:
+        mission.update_stage("kaggle_gpu", f"🔥 Encoding NVENC + Whisper (done)", f"🔑 YT Quota Slot #{oauth_slot_used}")
+    return result_data["youtube_video_id"], result_data["timestamps_log"], result_data.get("short_video_id", ""), oauth_slot_used
 
 
 # =====================================================================
@@ -556,12 +579,39 @@ async def main():
     # 3. Call Google AI Studio / Gemini
     mission.update_stage("gemini", "🧠 Synthesizing Dual Script + Article...")
     payload = generate_master_json_via_ai_studio(topic, notes, chart_files)
+
+    # 🛡️ THE COMPLIANCE GATE (zero-tolerance SEBI + YouTube audit & 30-day freshness)
+    mission.update_stage("gemini", "🛡️ Auditing Compliance Gate...", "SEBI regex + freshness + LLM auditor")
+    try:
+        from app.services.compliance_gate import ComplianceGate, ComplianceGateError
+
+        payload = ComplianceGate.audit_and_enforce(payload)
+        mission.update_stage("gemini", f"✅ Generated + Compliance-Approved (`{payload['campaign_id']}`)")
+    except ComplianceGateError as e:
+        logger.error(str(e))
+        mission.update_stage("gemini", "🚨 COMPLIANCE HALT", str(e)[:120])
+        _alert = os.getenv("TELEGRAM_BOT_TOKEN") and os.getenv("TELEGRAM_CHAT_ID")
+        if _alert:
+            try:
+                import urllib.request
+
+                _body = urllib.parse.urlencode({
+                    "chat_id": os.getenv("TELEGRAM_CHAT_ID"),
+                    "text": "🚨 *CRITICAL COMPLIANCE HALT*\n" + str(e)[:400],
+                    "parse_mode": "Markdown",
+                }).encode()
+                urllib.request.urlopen(urllib.request.Request(
+                    f"https://api.telegram.org/bot{os.getenv('TELEGRAM_BOT_TOKEN')}/sendMessage", _body
+                ))
+            except Exception:
+                pass
+        raise SystemExit(1)
     slug = payload["campaign_id"]
     mission.update_stage("gemini", f"✅ Generated (`{slug}`)")
 
     # 4. Generate Thumbnail & Enter 5-Min Human-in-the-Loop Approval Gate
     mission.update_stage("thumbnail", "🎨 Rendering Pillow Graphics...")
-    headline_words = payload["youtube_payload"]["metadata"]["thumbnail_top_text"].split()[:3]
+    headline_words = payload["youtube_payload"]["metadata"]["thumbnail_top_text"].split()[:4]
     primary_chart = BASE_DIR / "assets" / "charts" / chart_files[0]
     avatar_1 = BASE_DIR / "assets" / "avatars" / "avatar_1.png"
     yt_thumb, discover_img = create_marketing_images(primary_chart, avatar_1, headline_words, slug)
@@ -576,9 +626,20 @@ async def main():
         timeout_sec=300
     )
 
+    # High-CTR vertical shelf thumb for the 9:16 Short (Khaby-style top-chart/bottom-avatar)
+    try:
+        mission.update_stage("thumbnail", "🎨 Rendering 9:16 Shorts Shelf Thumbnail...")
+        short_thumb_path = create_short_thumbnail(primary_chart, avatar_1, headline_words, slug)
+        logger.info(f"🎬 Shorts shelf thumbnail staged: {short_thumb_path.name}")
+    except Exception as s_err:
+        short_thumb_path = None
+        logger.warning(f"Shorts thumbnail generation failed (Short falls back to long thumb): {s_err}")
+
     # 5. Render Video via Kaggle GPU NVENC / Faster-Whisper
     mission.update_stage("kaggle_gpu", "🚀 Dispatching to Kaggle Dual-T4 GPU...")
-    yt_video_id, timestamps_log, short_video_id = run_kaggle_gpu_renderer(payload, chart_files, yt_thumb, mission)
+    yt_video_id, timestamps_log, short_video_id, oauth_slot_used = run_kaggle_gpu_renderer(
+        payload, chart_files, yt_thumb, mission, short_thumb_path=short_thumb_path
+    )
     if short_video_id:
         logger.info(f"🎬 9:16 #Shorts published: https://youtube.com/shorts/{short_video_id}")
 
@@ -601,6 +662,8 @@ async def main():
     final_note = f"🐦 X Thread: {x_thread_status}"
     if short_video_id:
         final_note = f"🎬 Short: youtube.com/shorts/{short_video_id} · 🐦 X Thread: {x_thread_status}"
+    if oauth_slot_used > 0:
+        final_note = f"🔑 YT Quota Slot #{oauth_slot_used} · " + final_note
     mission.update_stage("vercel", f"✅ Live & Indexed (`{live_url}`)", final_note)
 
     print(f"\n🎉 Cloud pipeline completed successfully! Live URL: {live_url}")
