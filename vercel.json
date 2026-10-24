@@ -6,6 +6,18 @@
   "trailingSlash": false,
   "rewrites": [
     {
+      "source": "/go/:broker",
+      "destination": "/api/go?broker=:broker"
+    },
+    {
+      "source": "/api/go/:broker",
+      "destination": "/api/go?broker=:broker"
+    },
+    {
+      "source": "/go",
+      "destination": "/tools.html"
+    },
+    {
       "source": "/stocks/:symbol",
       "destination": "/stock.html"
     },
