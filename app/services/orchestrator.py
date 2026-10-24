@@ -126,19 +126,11 @@ class StepResult:
 
 def sanitize_script(text: str) -> str:
     """Make script sound natural for TTS — remove special chars, format dates."""
-    text = text.replace("\u2011", "-").replace("\u2012", "-").replace("\u2013", "-")
-    text = text.replace("\u2014", " - ").replace("\u2015", " - ")
-    text = text.replace("\u2212", "-")
-    text = text.replace("\u00a0", " ").replace("\u2009", " ").replace("\u202f", " ")
-    text = text.replace("\u2018", "'").replace("\u2019", "'")
-    text = text.replace("\u201c", '"').replace("\u201d", '"')
-    text = re.sub(r'\*\*', '', text)
-    text = re.sub(r'---', '', text)
-    text = re.sub(r'###\s*', '', text)
-    text = text.replace("\u2013", "-").replace("\u2014", " - ")
-    text = re.sub(r' +', ' ', text)
-    text = re.sub(r'<[^>]+>', '', text)
-    text = re.sub(r'(\d+)\s*%', r'\1 percent', text)
+    try:
+        from app.services.tts_normalizer import normalize_script_for_tts
+        text = normalize_script_for_tts(text)
+    except Exception:
+        pass
 
     # Format dates naturally
     def _fmt_date(m):

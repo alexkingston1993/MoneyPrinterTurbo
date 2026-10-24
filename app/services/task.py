@@ -26,6 +26,13 @@ def generate_script(task_id, params):
     else:
         logger.debug(f"video script: \n{video_script}")
 
+    # Regulate script for TTS: no raw symbols, currencies expanded to words, punctuation converted to natural pauses
+    try:
+        from app.services.tts_normalizer import normalize_script_for_tts
+        video_script = normalize_script_for_tts(video_script, language=params.video_language or "en")
+    except Exception as norm_err:
+        logger.warning(f"TTS normalizer notice: {norm_err}")
+
     if not video_script:
         sm.state.update_task(task_id, state=const.TASK_STATE_FAILED)
         logger.error("failed to generate video script.")
@@ -492,6 +499,7 @@ def start(task_id, params: VideoParams, stop_at: str = "video"):
         primary_lang = params.video_language or "en"
         if final_video_paths and yt.is_authenticated(primary_lang):
             privacy = config.ui.get("youtube_privacy", "public")
+            thumbnail_path = getattr(params, "thumbnail_path", None)
             result = yt.upload_video(
                 language=primary_lang,
                 video_path=final_video_paths[0],
@@ -500,6 +508,8 @@ def start(task_id, params: VideoParams, stop_at: str = "video"):
                 tags=optimized_tags,
                 is_short=(params.video_aspect == "9:16"),
                 privacy_status=privacy,
+                thumbnail_path=thumbnail_path,
+                publish_at=publish_at,
             )
             youtube_results[primary_lang] = result
             if result.get("success"):

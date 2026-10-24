@@ -1232,6 +1232,67 @@
             font-weight: 600;
         }
 
+        /* Distinct Articles Nav Icon Button */
+        .nav-articles-pill {
+            display: inline-flex !important;
+            align-items: center;
+            gap: 7px;
+            background: linear-gradient(135deg, rgba(0, 208, 156, 0.12), rgba(37, 99, 235, 0.14)) !important;
+            border: 1px solid rgba(0, 208, 156, 0.45) !important;
+            color: var(--text-primary) !important;
+            font-weight: 700 !important;
+            padding: 6px 14px !important;
+            border-radius: 20px !important;
+            box-shadow: 0 0 14px rgba(0, 208, 156, 0.22);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            text-decoration: none;
+        }
+        .nav-articles-pill:hover {
+            background: linear-gradient(135deg, rgba(0, 208, 156, 0.22), rgba(37, 99, 235, 0.25)) !important;
+            border-color: var(--groww-mint) !important;
+            transform: translateY(-1.5px);
+            box-shadow: 0 4px 18px rgba(0, 208, 156, 0.38);
+        }
+        .nav-articles-icon {
+            font-size: 15px;
+            line-height: 1;
+        }
+        .nav-articles-text {
+            font-size: 13.5px;
+            letter-spacing: -0.2px;
+        }
+        .nav-articles-badge {
+            background: var(--groww-mint);
+            color: #0b0f17;
+            font-size: 9.5px;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 10px;
+            letter-spacing: 0.5px;
+            font-family: var(--font-mono);
+            line-height: 1.2;
+        }
+
+        .explore-all-articles-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, rgba(0, 208, 156, 0.12), rgba(37, 99, 235, 0.12));
+            border: 1px solid rgba(0, 208, 156, 0.4);
+            color: var(--text-primary);
+            font-size: 13px;
+            font-weight: 700;
+            padding: 9px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .explore-all-articles-btn:hover {
+            background: linear-gradient(135deg, rgba(0, 208, 156, 0.22), rgba(37, 99, 235, 0.22));
+            border-color: var(--groww-mint);
+            transform: translateY(-1px);
+        }
+
         /* TradingView Studio Container */
         .chart-studio-box {
             background: var(--bg-surface);
@@ -1794,11 +1855,16 @@
             <nav class="header-nav-links">
                 <a href="#movers-section" class="nav-link-item" onclick="switchDashboardTab('movers')">Movers</a>
                 <a href="/screener.html" class="nav-link-item">Screener</a>
-                <a href="/articles.html" class="nav-link-item">Articles</a>
+                <a href="/articles.html" class="nav-link-item nav-articles-pill" id="nav-articles-btn" title="Institutional Equity Research Dossiers & Market Intelligence">
+                    <span class="nav-articles-icon">📰</span>
+                    <span class="nav-articles-text">Articles</span>
+                    <span class="nav-articles-badge">GEO</span>
+                </a>
                 <a href="/fno.html" class="nav-link-item">F&O Radar</a>
                 <a href="/events.html" class="nav-link-item">Stock Events</a>
                 <a href="/schemes.html" class="nav-link-item">Govt Schemes</a>
                 <a href="/unlisted.html" class="nav-link-item">Unlisted</a>
+                <a href="/tools.html" class="nav-link-item">🛠️ Tools</a>
                 <a href="/portfolio.html" class="nav-link-item">Portfolio</a>
                 <a href="/insurance.html" class="nav-link-item">Insurance</a>
                 <a href="/crypto.html" class="nav-link-item">Crypto</a>
@@ -2163,6 +2229,80 @@
                     <div style="display:flex; justify-content:space-between; align-items:center; padding-top:8px; border-top:1px solid var(--border-subtle);">
                         <span style="font-size:11.5px; color:var(--text-muted);">Unlisted CMP</span>
                         <strong style="font-family:var(--font-mono); font-size:15px; color:var(--groww-mint);">₹1,340 / share</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Latest Market Research & Educational Dossiers (GEO + SEO Engine) -->
+        <section class="home-market-section" id="recent-articles-section" style="margin-top: 28px; background: var(--bg-card); border: 1px solid var(--border-subtle); border-radius: 14px; padding: 28px; box-shadow: var(--card-shadow);">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:24px; border-bottom:1px solid var(--border-subtle); padding-bottom:16px;">
+                <div>
+                    <div style="display:inline-flex; align-items:center; gap:8px; background:var(--groww-mint-soft); color:var(--groww-mint); padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:700; font-family:var(--font-mono); margin-bottom:8px;">
+                        <span>📰 ZERO-JARGON RESEARCH DESK</span>
+                        <span>·</span>
+                        <span>GEO & AI CITED</span>
+                        <span>·</span>
+                        <span>1,200–1,800 WORDS</span>
+                    </div>
+                    <h3 style="font-family:var(--font-display); font-size:22px; font-weight:800; color:var(--text-primary); margin:0;">
+                        Latest Research Dossiers & Educational Articles
+                    </h3>
+                    <p style="font-size:13.5px; color:var(--text-secondary); margin:6px 0 0 0;">
+                        In-depth equity breakdowns, synchronized 1080p video explainers, and everyday investor guides written by Alex from Chennai.
+                    </p>
+                </div>
+                <a href="/articles.html" class="explore-all-articles-btn">
+                    <span>Explore All Articles (40+)</span>
+                    <span style="font-size:16px;">→</span>
+                </a>
+            </div>
+
+            <div class="reports-grid" id="reports-grid">
+                <!-- Dynamically loaded from /content/posts.json via loadResearchReports() -->
+                <div class="report-card" style="opacity:0.9;">
+                    <div>
+                        <div class="report-badge">
+                            <span>📖 GOLD & MACRO</span>
+                            <span style="color:var(--text-muted);">·</span>
+                            <span>📹 1080P VIDEO</span>
+                        </div>
+                        <h4 class="report-title">Silver Crashes ₹56,000 & Gold Drops: Why Big Banks Are Shaking Out Everyday Investors</h4>
+                        <p class="report-excerpt">Precious metals experience steep liquidation. Why sovereign margin calls, bond yield surges, and institutional profit-taking create generational accumulation zones.</p>
+                    </div>
+                    <div class="report-footer">
+                        <span>📅 By Alex · 9 min read (1,942 words)</span>
+                        <span class="report-link-btn">Read Dossier →</span>
+                    </div>
+                </div>
+                <div class="report-card" style="opacity:0.9;">
+                    <div>
+                        <div class="report-badge">
+                            <span>📖 DERIVATIVES EDUCATION</span>
+                            <span style="color:var(--text-muted);">·</span>
+                            <span>📹 1080P VIDEO</span>
+                        </div>
+                        <h4 class="report-title">The Option Buyers Trap: Why 90% of Retail Traders Lose Money and How to Build Wealth Like Landlords</h4>
+                        <p class="report-excerpt">Understanding time decay through the melting ice cream analogy. How everyday retail investors can escape speculative traps and adopt institutional risk frameworks.</p>
+                    </div>
+                    <div class="report-footer">
+                        <span>📅 By Alex · 8 min read (1,750 words)</span>
+                        <span class="report-link-btn">Read Dossier →</span>
+                    </div>
+                </div>
+                <div class="report-card" style="opacity:0.9;">
+                    <div>
+                        <div class="report-badge">
+                            <span>📖 MARKET CLOSE RADAR</span>
+                            <span style="color:var(--text-muted);">·</span>
+                            <span>📹 1080P VIDEO</span>
+                        </div>
+                        <h4 class="report-title">Nifty & Sensex Today: Why Indian Markets Moved, What Institutions Are Buying, and 3 Wealth Rules</h4>
+                        <p class="report-excerpt">Benchmark index analysis, institutional cash flow dynamics between FIIs and domestic funds, and three fundamental wealth rules for retail investors.</p>
+                    </div>
+                    <div class="report-footer">
+                        <span>📅 By Alex · 7 min read (1,620 words)</span>
+                        <span class="report-link-btn">Read Dossier →</span>
                     </div>
                 </div>
             </div>
@@ -3235,25 +3375,36 @@
                 const res = await fetch('/content/posts.json');
                 const posts = await res.json();
                 const grid = document.getElementById('reports-grid');
-                if (!posts || posts.length === 0) return;
+                if (!grid || !posts || posts.length === 0) return;
 
-                grid.innerHTML = posts.map(p => `
-                    <a href="/article?slug=${p.slug}" class="report-card">
-                        <div>
-                            <div class="report-badge">
-                                <span>📖 ${p.categories ? p.categories[0] : 'EQUITY RESEARCH'}</span>
-                                <span style="color:var(--text-muted);">·</span>
-                                <span>📹 1080P VIDEO</span>
+                // Take top 6 most recent posts
+                const recentPosts = posts.slice(0, 6);
+
+                grid.innerHTML = recentPosts.map(p => {
+                    const category = (p.categories && p.categories.length > 0) ? p.categories[0].toUpperCase() : 'EQUITY RESEARCH';
+                    const dateStr = p.date ? p.date.split(' ')[0] : '2026-10-24';
+                    const readingTime = p.readingTimeMin ? `${p.readingTimeMin} min read` : '8 min read';
+                    const wordsBadge = p.wordCount ? `(${p.wordCount.toLocaleString()} words)` : '';
+                    const authorName = p.author ? p.author.replace(' from Chennai', '') : 'Alex';
+
+                    return `
+                        <a href="/article?slug=${p.slug}" class="report-card">
+                            <div>
+                                <div class="report-badge">
+                                    <span>📖 ${category}</span>
+                                    <span style="color:var(--text-muted);">·</span>
+                                    <span>📹 1080P VIDEO</span>
+                                </div>
+                                <h4 class="report-title">${p.title}</h4>
+                                <p class="report-excerpt">${p.excerpt || ''}</p>
                             </div>
-                            <h4 class="report-title">${p.title}</h4>
-                            <p class="report-excerpt">${p.excerpt || ''}</p>
-                        </div>
-                        <div class="report-footer">
-                            <span>📅 ${p.date ? p.date.split(' ')[0] : '2026-10-20'}</span>
-                            <span class="report-link-btn">Read Dossier →</span>
-                        </div>
-                    </a>
-                `).join('');
+                            <div class="report-footer">
+                                <span>📅 By ${authorName} · ${readingTime} ${wordsBadge}</span>
+                                <span class="report-link-btn">Read Dossier →</span>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
             } catch (err) {
                 console.error("Error loading research dossiers:", err);
             }

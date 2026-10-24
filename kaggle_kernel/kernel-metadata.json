@@ -1,0 +1,14 @@
+{
+  "id": "alexkingston1993/flipzon-gpu-video-renderer",
+  "title": "Flipzon GPU Video Renderer",
+  "code_file": "kaggle_worker.py",
+  "language": "python",
+  "kernel_type": "script",
+  "is_private": "true",
+  "enable_gpu": "true",
+  "enable_internet": "true",
+  "dataset_sources": [
+    "alexkingston1993/flipzon-studio-assets",
+    "alexkingston1993/flipzon-daily-payload"
+  ]
+}

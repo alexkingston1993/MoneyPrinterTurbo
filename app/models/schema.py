@@ -123,6 +123,8 @@ class VideoParams(BaseModel):
     stroke_width: float = 1.5
     n_threads: Optional[int] = 2
     paragraph_number: Optional[int] = 1
+    publish_at: Optional[str] = None  # RFC 3339 formatted future timestamp for scheduled YouTube publication
+    thumbnail_path: Optional[str] = None  # Custom high-CTR generated thumbnail image path
 
 
 class SubtitleRequest(BaseModel):

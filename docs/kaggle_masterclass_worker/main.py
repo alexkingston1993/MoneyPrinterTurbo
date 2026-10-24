@@ -142,6 +142,67 @@ t0 = time.time()
 tts_engine = TTS("tts_models/multilingual/multi-dataset/xtts_v2").to(device)
 print(f"[KaggleWorker] XTTS model ready in {time.time()-t0:.1f}s", flush=True)
 
+def normalize_script_for_tts(text: str) -> str:
+    s = text
+    s = re.sub(r"https?://\S+|www\.\S+", "", s)
+    s = re.sub(r"<[^>]+>", "", s)
+    s = re.sub(r"[*_#`~^]", "", s)
+    s = s.replace("\u2011", "-").replace("\u2012", "-").replace("\u2013", ", ")
+    s = s.replace("\u2014", ", ").replace("\u2015", ", ")
+    s = s.replace("…", ", ").replace("...", ", ")
+    acronyms = {
+        r"\bF&O\b": "Futures and Options",
+        r"\bP&L\b": "Profit and Loss",
+        r"\bFII/DII\b": "FII and DII",
+        r"\bATM\b": "at the money",
+        r"\bOTM\b": "out of the money",
+        r"\bITM\b": "in the money",
+        r"\bVWAP\b": "V-WAP",
+        r"\bPOC\b": "Point of Control",
+        r"\bNifty 50\b": "Nifty Fifty",
+        r"\bNIFTY 50\b": "Nifty Fifty",
+    }
+    for pat, rep in acronyms.items():
+        s = re.sub(pat, rep, s, flags=re.IGNORECASE)
+    while re.search(r"(?<=\d),(?=\d)", s):
+        s = re.sub(r"(?<=\d),(?=\d)", "", s)
+    s = re.sub(r"[₹\u20B9]\s*(\d+(?:\.\d+)?)\s*(?:Cr|Crores?|cr|crores?)\b", r"\1 crore rupees", s)
+    s = re.sub(r"[₹\u20B9]\s*(\d+(?:\.\d+)?)\s*(?:L|Lakhs?|l|lakhs?)\b", r"\1 lakh rupees", s)
+    s = re.sub(r"[₹\u20B9]\s*1(?!\d)", "1 rupee", s)
+    s = re.sub(r"[₹\u20B9]\s*(\d+(?:\.\d+)?)", r"\1 rupees", s)
+    s = re.sub(r"[₹\u20B9]", " rupees ", s)
+    s = re.sub(r"\$\s*(\d+(?:\.\d+)?)\s*[Bb](?:illion)?\b", r"\1 billion dollars", s)
+    s = re.sub(r"\$\s*(\d+(?:\.\d+)?)\s*[Mm](?:illion)?\b", r"\1 million dollars", s)
+    s = re.sub(r"\$\s*1(?!\d)", "1 dollar", s)
+    s = re.sub(r"\$\s*(\d+(?:\.\d+)?)", r"\1 dollars", s)
+    s = re.sub(r"\$", " dollars ", s)
+    s = re.sub(r"€\s*(\d+(?:\.\d+)?)", r"\1 euros", s)
+    s = re.sub(r"£\s*(\d+(?:\.\d+)?)", r"\1 pounds", s)
+    s = re.sub(r"(\d+(?:\.\d+)?)\s*%", r"\1 percent", s)
+    s = s.replace("%", " percent")
+    s = re.sub(r"\+([0-9]+(?:\.[0-9]+)?)", r"plus \1", s)
+    s = re.sub(r"(?<=\s)-([0-9]+(?:\.[0-9]+)?)", r"minus \1", s)
+    s = s.replace("&", " and ").replace("@", " at ").replace("/", " or ")
+    s = re.sub(r":", ", ", s)
+    s = s.replace(";", ", ")
+    s = re.sub(r"\s*\(([^)]+)\)\s*", r", \1, ", s)
+    s = re.sub(r"[()[\]{}]", " ", s)
+    s = re.sub(r'["\']', "", s)
+    s = re.sub(r"\s*\|\s*", ". ", s)
+    s = re.sub(r"\s+-\s+", ", ", s)
+    s = re.sub(r"(\w+)-(\w+)", r"\1 \2", s)
+    s = s.replace("-", " ")
+    s = re.sub(r"[^\w\s.,?!]", " ", s)
+    s = re.sub(r",\s*,+", ", ", s)
+    s = re.sub(r"\.\s*\.+", ". ", s)
+    s = re.sub(r",\s*\.", ". ", s)
+    s = re.sub(r",\s*$", ".", s)
+    s = re.sub(r",\s*\n", ".\n", s)
+    s = re.sub(r"[ \t]+", " ", s)
+    return s.strip()
+
+script = normalize_script_for_tts(script)
+
 # Split script into natural sentence units for synchronized cues
 lines = [l.strip() for l in script.splitlines() if l.strip()]
 sentences = []

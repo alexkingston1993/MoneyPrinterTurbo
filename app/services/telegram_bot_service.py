@@ -21,7 +21,7 @@ import shutil
 import random
 import requests
 import subprocess
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Tuple, Union
 from loguru import logger
 
 from app.config import config
@@ -130,11 +130,12 @@ class AriaEngineerTools:
         return context
 
     @classmethod
-    def diagnose_latest_issues(cls) -> str:
+    def diagnose_latest_issues(cls, with_markup: bool = False):
         """Inspects latest cloud run, extracts failure logs, and formulates technical diagnosis."""
         latest = cls.get_active_or_latest_run()
         if not latest:
-            return "🔍 *Agent Aria Diagnostic:* All cloud telemetry channels are quiet. No recent runs found to analyze, Captain!"
+            msg = "🔍 *Agent Aria Diagnostic:* All cloud telemetry channels are quiet. No recent runs found to analyze, Captain!"
+            return (msg, None) if with_markup else msg
 
         run_id = latest.get("databaseId")
         status = latest.get("status")
@@ -171,10 +172,18 @@ class AriaEngineerTools:
             except Exception:
                 pass
 
-            # Detect root cause
+            # Detect root cause across 7 operational domains
             root_cause = "Transient step interruption"
             if "no space left on device" in full_log.lower() or "errno 28" in full_log.lower():
-                root_cause = "GitHub runner disk exhausted by heavy PyTorch/CUDA packages (Purged Kokoro/Torch from requirements.txt)."
+                root_cause = "GitHub runner disk exhausted by heavy packages (Purged Kokoro/Torch from requirements.txt)."
+            elif "cuda out of memory" in full_log.lower() or "oom" in full_log.lower():
+                root_cause = "Kaggle GPU CUDA out-of-memory error during video encoding or model loading."
+            elif "kaggle" in full_log.lower() and ("queue" in full_log.lower() or "timeout" in full_log.lower()):
+                root_cause = "Kaggle GPU runner queue delay during peak US hours (exceeded wait budget)."
+            elif any(k in full_log.lower() for k in ["cloudflare", "screenshot too small", "playwright", "networkidle"]):
+                root_cause = "TradingView/GoCharting canvas blocked by Cloudflare challenge or network stall (Triggered mplfinance institutional fallback)."
+            elif "invalid_grant" in full_log.lower() or "token_expired" in full_log.lower():
+                root_cause = "YouTube OAuth refresh token expired or revoked (invalid_grant). Needs one-click re-authorization."
             elif "remedy" in full_log:
                 root_cause = "Function signature parameter mismatch in self-healing retry loop (Resolved in commit bebf266)."
             elif "NoAudioReceived" in full_log or "edge_tts" in full_log:
@@ -184,18 +193,27 @@ class AriaEngineerTools:
             elif "403" in full_log and "upload" in full_log:
                 root_cause = "YouTube Studio API upload quota or OAuth token scope restriction."
 
-            return (
+            fail_report = (
                 f"⚠️ *AGENT ARIA: ROOT CAUSE INVESTIGATION* 🔍🛠️\n"
                 f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
                 f"💥 *Failed Run:* `#{run_id}` (`{event}`)\n"
                 f"🔍 *Root Cause Identified:* {root_cause}\n"
                 f"📋 *Log Excerpt:* \n```\n{fail_log[-450:] if fail_log else 'Step failed during execution'}\n```\n"
                 f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-                f"💡 *My Remediation Plan:* I have targeted remedies ready. Just say *'Fix it, Aria'* and I will execute the repair and relaunch the cloud run immediately! ☕⚡"
+                f"💡 *My Remediation Plan:* Targeted remedies formulated. Tap an action button below or say *'Fix it, Aria'*! ☕⚡"
             )
+            markup = {
+                "inline_keyboard": [
+                    [
+                        {"text": "🔄 Re-Run Failed Jobs", "callback_data": f"rerun_failed:{run_id}"},
+                        {"text": "🩹 Heal & Relaunch", "callback_data": "run_slot:pre_market"}
+                    ]
+                ]
+            }
+            return (fail_report, markup) if with_markup else fail_report
 
         # 3. If run succeeded
-        return (
+        success_report = (
             f"🎉 *AGENT ARIA: ALL SYSTEMS OPERATIONAL* ✨😎\n"
             f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
             f"✅ *Latest Run:* `#{run_id}` finished with `SUCCESS`!\n"
@@ -206,6 +224,15 @@ class AriaEngineerTools:
             f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
             f"Everything is purring like a well-oiled supersonic jet, Boss! What's our next target? 🎯☕"
         )
+        markup = {
+            "inline_keyboard": [
+                [
+                    {"text": "🌅 Pre-Market Brief", "callback_data": "run_slot:pre_market"},
+                    {"text": "🔔 Closing Bell", "callback_data": "run_slot:market_close"}
+                ]
+            ]
+        }
+        return (success_report, markup) if with_markup else success_report
 
     @classmethod
     def execute_self_healing_and_relaunch(cls, slot_name: str = "pre_market") -> str:
@@ -264,21 +291,21 @@ class TelegramBotDaemon:
     def __init__(self):
         self.bot_token = (
             os.getenv("TELEGRAM_BOT_TOKEN")
-            or config.app.get("telegram_bot_token", "8829963924:AAE7v_xEQXLmy3-YEx8kqMo2GRfnbnxf4GA")
+            or config.app.get("telegram_bot_token")
+            or ""
         )
-        self.chat_id = int(os.getenv("TELEGRAM_CHAT_ID") or config.app.get("telegram_chat_id", "1126599043"))
-        self.history: List[Dict[str, str]] = []
+        self.chat_id = os.getenv("TELEGRAM_CHAT_ID") or config.app.get("telegram_chat_id")
+        self.history = []
         self.running = False
         self.last_update_id = 0
 
-    def generate_reply(self, user_text: str, user_name: str = "Alex") -> str:
-        """Route user text through Aria's cognitive tools or conversational LLM."""
-        clean_text = user_text.strip()
-        lower = clean_text.lower()
+    def generate_reply(self, user_text: str, user_name: str = "Alex") -> Union[str, Tuple[str, Optional[Dict]]]:
+        """Generate response based on technical triage tools or conversational intelligence."""
+        lower = user_text.lower().strip()
 
-        # 1. Exact / Slash Commands only (Never hijack full questions or conversational messages)
+        # 1. Direct Technical Commands & Engineering Automation
         if lower in ["/status", "/diagnose", "/report", "status", "status?", "/state"]:
-            return AriaEngineerTools.diagnose_latest_issues()
+            return AriaEngineerTools.diagnose_latest_issues(with_markup=True)
 
         if lower in ["/quota", "quota", "/minutes", "runner minutes", "minutes left", "check quota"]:
             return aria_tools.calculate_runner_quota()
@@ -312,7 +339,7 @@ class TelegramBotDaemon:
                     gemini_history.append({"role": role, "parts": [turn["content"]]})
 
                 # Try direct flash models
-                for model_choice in ["models/gemini-3.5-flash", "models/gemini-3.5-flash-lite"]:
+                for model_choice in ["models/gemini-2.5-flash", "models/gemini-2.5-flash-lite"]:
                     try:
                         model = genai.GenerativeModel(
                             model_choice,
@@ -384,7 +411,7 @@ class TelegramBotDaemon:
             "Agent Aria on station, Captain! 🕶️☕ Digital wrench is polished and ready. All systems on the bridge are running smoothly. What's our next objective, Boss? 🎯"
         )
 
-    def send_message(self, chat_id: int, text: str) -> bool:
+    def send_message(self, chat_id: int, text: str, reply_markup: Optional[Dict] = None) -> bool:
         """Send message back to Telegram."""
         url = f"https://api.telegram.org/bot{self.bot_token}/sendMessage"
         payload = {
@@ -393,6 +420,8 @@ class TelegramBotDaemon:
             "parse_mode": "Markdown",
             "disable_web_page_preview": False,
         }
+        if reply_markup:
+            payload["reply_markup"] = reply_markup
         try:
             r = requests.post(url, json=payload, timeout=12)
             if r.status_code != 200:
@@ -417,6 +446,24 @@ class TelegramBotDaemon:
             updates = data.get("result", [])
             for u in updates:
                 self.last_update_id = max(self.last_update_id, u["update_id"])
+
+                # Handle Inline Button Callback Queries
+                cb = u.get("callback_query")
+                if cb:
+                    cb_id = cb.get("id")
+                    chat_id = cb.get("message", {}).get("chat", {}).get("id")
+                    data = cb.get("data", "")
+                    requests.post(f"https://api.telegram.org/bot{self.bot_token}/answerCallbackQuery", json={"callback_query_id": cb_id})
+                    if data.startswith("rerun_failed:"):
+                        run_id = data.split(":")[1]
+                        gh_bin = AriaEngineerTools.get_gh_bin()
+                        subprocess.run([gh_bin, "run", "rerun", run_id, "--failed", "-R", "alexkingston1993/MoneyPrinterTurbo"], capture_output=True)
+                        self.send_message(chat_id, f"🔄 *Agent Aria:* Dispatched re-run for failed jobs in Run `#{run_id}`! ☕🚀")
+                    elif data.startswith("run_slot:"):
+                        slot = data.split(":")[1]
+                        self.send_message(chat_id, aria_tools.trigger_market_slot(slot))
+                    continue
+
                 msg = u.get("message", {})
                 chat = msg.get("chat", {})
                 chat_id = chat.get("id")
@@ -429,10 +476,15 @@ class TelegramBotDaemon:
 
                 logger.info(f"[Aria] Received message from {user_name} ({chat_id}): '{text}'")
                 reply = self.generate_reply(text, user_name)
-                self.send_message(chat_id, reply)
-                logger.success(f"[Aria] Replied to {user_name}: '{reply[:80]}...'")
+                if isinstance(reply, tuple):
+                    reply_text, markup = reply
+                    self.send_message(chat_id, reply_text, reply_markup=markup)
+                else:
+                    self.send_message(chat_id, reply)
+                logger.success(f"[Aria] Replied to {user_name}: '{str(reply)[:80]}...'")
 
         except Exception as e:
+            logger.warning(f"[Aria] Polling loop error: {e}")
             time.sleep(2)
 
     def start_polling(self):

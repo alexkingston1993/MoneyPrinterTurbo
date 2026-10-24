@@ -12,8 +12,9 @@ Executes the unified loop:
 
 import base64
 import os
+import re
 import time
-from typing import Dict, Optional, Any
+from typing import Dict, List, Optional, Any
 from loguru import logger
 
 from app.services.market_data import get_fetcher, MarketContext
@@ -35,6 +36,7 @@ class PipelineOrchestrator:
         slot_name: str = "live_update",
         mock_video_url: Optional[str] = None,
         publish_article: bool = True,
+        publish_at: Optional[str] = None,
     ) -> Dict:
         """
         Executes a complete market publishing cycle.
@@ -62,7 +64,7 @@ class PipelineOrchestrator:
         if not youtube_url:
             try:
                 logger.info("[Orchestrator] Step 1.5: Triggering real autonomous video production with Self-Healing Loop...")
-                youtube_url = self._generate_and_upload_video_with_healing(ctx, slot_name, max_retries=3)
+                youtube_url = self._generate_and_upload_video_with_healing(ctx, slot_name, max_retries=3, publish_at=publish_at)
             except Exception as e:
                 logger.error(f"[Orchestrator] Autonomous video generation exhausted retries: {e}")
 
@@ -71,10 +73,10 @@ class PipelineOrchestrator:
             youtube_url = "https://www.youtube.com/watch?v=FfxHCzx7QhM"
 
 
-        # 3. Generate Humanized, GEO-Optimized Article
+        # 3. Generate Humanized, GEO-Optimized Article (1,200 - 1,800 words modular GEO structure)
         logger.info("[Orchestrator] Step 2: Generating in-depth humanized market article...")
-        article: GeneratedArticle = article_generator.generate_article_from_context(ctx, youtube_url=youtube_url)
-        logger.info(f"[Orchestrator] Article generated: '{article.title}' ({len(article.html_content.split())} words)")
+        article: GeneratedArticle = article_generator.generate_article_from_context(ctx, youtube_url=youtube_url, slot_name=slot_name)
+        logger.info(f"[Orchestrator] Article generated: '{article.title}' ({article.word_count} words)")
 
         # 3.5 QA Critic Agent Gate: Comprehensive evaluation before publishing
         logger.info("[Orchestrator] Step 2.5: Running Autonomous QA Critic on article before web publishing...")
@@ -118,9 +120,9 @@ class PipelineOrchestrator:
                         logger.info(f"[Orchestrator] Step 4: Closing flywheel — adding article link to YouTube video {video_id}...")
                         uploader.append_article_link_to_description("en", video_id, published_url, article.title)
                         comment_msg = (
-                            f"📊 Full In-Depth Institutional Breakdown & Order-Flow Heatmaps:\n"
+                            f"📊 Full Beginner Market Guide & Big Banks Breakdown:\n"
                             f"{published_url}\n\n"
-                            f"🔔 Subscribe to The Bull Print for tomorrow's 9:00 AM FII order-flow radar.\n"
+                            f"🔔 Subscribe to The Bull Print for tomorrow's 8:30 AM simple morning brief.\n"
                             f"⚖️ Strictly educational market research. Not SEBI registered."
                         )
                         uploader.post_pinned_comment("en", video_id, comment_msg)
@@ -166,7 +168,8 @@ class PipelineOrchestrator:
         }
 
     def _generate_and_upload_video(
-        self, ctx: MarketContext, slot_name: str, remedy: Optional[Dict[str, Any]] = None
+        self, ctx: MarketContext, slot_name: str, remedy: Optional[Dict[str, Any]] = None,
+        publish_at: Optional[str] = None
     ) -> Optional[str]:
         """Synthesizes a Short video for the market slot and uploads to YouTube autonomously in cloud."""
         import uuid
@@ -181,128 +184,178 @@ class PipelineOrchestrator:
         font_size = 75
         clip_duration = 5
 
-        if slot_name == "pre_market":
-            subject = "FIIs Dumped ₹3,200 Cr Ahead of Bell | Nifty Liquidity Trap Exposed"
+        if slot_name in ["viral_trend", "breaking_news", "google_trend"]:
+            try:
+                from app.services.trend_detector import viral_trend_detector
+                v_topic = viral_trend_detector.get_hottest_viral_topic(slot_name, nifty_str, nifty_chg)
+                subject = v_topic["subject"]
+                script = v_topic["script"]
+                terms = v_topic["terms"]
+                logger.info(f"[Orchestrator] 🔥 Live Viral Trend Hook applied: '{subject}'")
+            except Exception as v_err:
+                logger.warning(f"[Orchestrator] Viral Trend Detector fallback: {v_err}")
+                subject = "Daily Market Update: What Happened Today and What Beginners Must Know"
+                script = f"Here is your calm, honest daily market check. Nifty is near {nifty_str}. Follow The Bull Print for daily updates. Strictly educational market study."
+                terms = ["stock market chart", "gold bullion bars", "financial analytics", "nifty"]
+        elif slot_name == "pre_market":
+            subject = "Big Banks Sold ₹3,200 Cr Before the Bell | What Beginners Must Know"
             script = (
-                f"FIIs just dumped ₹3,200 Crores in pre-market dark pool orders. "
-                f"Here is the exact liquidity trap retail traders are walking into right now. "
-                f"Gift Nifty is flashing deceptive signals while smart money dumps overvalued momentum stocks to accumulate HDFC Bank and Reliance at discount value zones near {nifty_str}. "
-                f"Watch the weekly ATM open interest clusters — if the 24,500 pivot cracks, stop-losses will trigger violently. "
-                f"Follow The Bull Print for tomorrow's 9:00 AM FII order-flow radar. Strictly educational market study."
+                f"Big foreign investment banks just sold 3,200 Crore rupees worth of shares before the market even opened. "
+                f"Here is the exact trap everyday investors need to watch out for today. "
+                f"Early morning indicators might look green, but behind the scenes, large institutions are quietly exiting expensive hype stocks and shifting their money into steady giants like HDFC Bank and Reliance near {nifty_str}. "
+                f"When big banks sell, everyday people often rush in thinking it is a quick bargain, only to see prices drop further. "
+                f"Protect your hard-earned money and do not rush into impulsive morning buys. "
+                f"Follow The Bull Print for daily honest market updates. Strictly educational market study."
             )
             terms = ["stock candlestick chart", "forex trading screen", "financial data analytics", "stock exchange trading floor", "reliance"]
         elif slot_name == "morning_momentum":
-            subject = "Institutional Sector Rotation Alert | 3 Stocks DIIs Are Secretly Accumulating"
+            subject = "Big Institutions Are Shifting Money | What Everyday Investors Should Do"
             script = (
-                f"Smart money is aggressively dumping high-multiple cyclicals and secretly loading heavyweights. "
-                f"Look at this massive institutional divergence. "
-                f"While retail traders chase Tata Motors and speculative breakouts, domestic mutual funds are aggressively accumulating cash-flow compounders with Nifty testing {nifty_str} ({nifty_chg}). "
-                f"Don't get caught in the European opening fakeout — watch for volume absorption at key demand pivots. "
-                f"Follow The Bull Print for tomorrow's 9:00 AM FII order-flow radar. Strictly educational market study."
+                f"Big financial institutions are quietly moving their money today. "
+                f"While everyday investors are getting excited and chasing fast-moving stocks on social media, our Indian mutual funds are doing the exact opposite. "
+                f"They are calmly buying solid, profitable household companies with Nifty testing {nifty_str} ({nifty_chg}). "
+                f"In the stock market, chasing stocks after they have already jumped 10 percent is like buying an airline ticket at the boarding gate at double the price. "
+                f"Be patient, invest for the long term, and don't let market excitement fool you. "
+                f"Follow The Bull Print for daily honest market updates. Strictly educational market study."
             )
             terms = ["stock market chart", "trading terminal screen", "stock candlestick upward", "data analytics screen", "tata motors"]
         elif slot_name == "midday_update":
-            subject = "European Opening Shock: Algorithmic Desks Triggering Nifty Stop-Losses"
+            subject = "European Markets Open Red: Why Beginners Must Avoid Panic Selling"
             script = (
-                f"European bourses just opened deep red, and algorithmic trading desks are aggressively hunting retail stop-losses right now. "
-                f"Benchmark Nifty 50 is fighting for survival at {nifty_str} ({nifty_chg}). "
-                f"High-frequency foreign desks are offloading banking exposure while domestic institutions absorb sell orders at VWAP. "
-                f"Do not chase market orders into this midday liquidity vacuum. "
-                f"Follow The Bull Print for live institutional flow breakdowns. Strictly educational market study."
+                f"European stock markets just opened with sharp declines, and that is sending shockwaves straight into our Indian market. "
+                f"The benchmark Nifty index is facing strong selling pressure around {nifty_str} ({nifty_chg}). "
+                f"Big foreign investment firms are selling off banking shares, while Indian mutual funds are quietly stepping in to buy at lower prices. "
+                f"If you are checking your trading app during your lunch break and feeling the urge to sell out of panic, pause. "
+                f"Sudden midday drops are usually temporary emotional reactions. Never gamble your family savings on midday price swings. "
+                f"Follow The Bull Print for calm and honest market updates. Strictly educational market study."
             )
             terms = ["financial market data", "european stock exchange", "stock trading monitor", "trading numbers screen", "nifty"]
         elif slot_name == "market_close":
-            subject = "Closing Bell Trap: FIIs Dump ₹3,200 Cr in Final 15 Minutes"
+            subject = "Closing Bell Trap: Big Funds Dump ₹3,200 Cr in Final 15 Minutes"
             script = (
-                f"The closing bell just trapped late breakout buyers. "
-                f"FIIs dumped ₹3,200 Crores in the final 15 minutes of trade. "
-                f"Nifty 50 settled at {nifty_str} ({nifty_chg}) after institutional block trades wiped out intraday gains in banking and auto. "
-                f"Smart money used retail optimism to distribute high-multiple positions into the close. "
-                f"If you are carrying overnight long options, your risk is asymmetric. "
-                f"Follow The Bull Print for tomorrow's 9:00 AM FII order-flow radar. Strictly educational market study."
+                f"The trading day just ended with a big surprise for everyday investors. "
+                f"In the final 15 minutes of trade, big foreign investment funds dumped over 3,200 Crore rupees of shares, erasing morning gains in banking and auto stocks. "
+                f"Nifty 50 settled at {nifty_str} ({nifty_chg}). "
+                f"Everyday investors who bought late in the day expecting prices to shoot higher are now stuck. "
+                f"In the stock market, big institutions use late afternoon excitement to sell their shares to everyday people at peak prices. "
+                f"Protect your capital and invest only in what you understand. "
+                f"Follow The Bull Print for daily honest market updates. Strictly educational market study."
             )
             terms = ["mumbai stock exchange", "closing bell trading", "stock candlestick chart", "algorithmic trading screen", "nifty"]
         elif slot_name == "evening_wrap":
-            subject = "FII vs DII Showdown: The ₹4,100 Cr Data Point Retail Traders Missed"
+            subject = "Big Foreign Funds vs Indian Mutual Funds: The ₹4,100 Cr Truth"
             script = (
-                f"Foreign institutions just liquidated aggressive short contracts while DIIs bought ₹4,100 Crores. "
-                f"Here is why tomorrow's opening will blindside 90% of options traders. "
-                f"Nifty concluded at {nifty_str} ({nifty_chg}) as the net FII long-short ratio hit extremes. "
-                f"When institutional positioning diverges this violently from retail sentiment, explosive short squeezes follow. "
-                f"Keep your eyes locked on the 20-day exponential moving average. "
-                f"Follow The Bull Print for tomorrow's 9:00 AM FII order-flow radar. Strictly educational market study."
+                f"The official numbers for today's market are in, and here is what happened behind the scenes. "
+                f"Big foreign funds sold heavily, but our Indian mutual funds stepped in and bought over 4,100 Crore rupees of quality shares. "
+                f"Nifty concluded at {nifty_str} ({nifty_chg}). "
+                f"When everyday people panic and sell, long-term Indian mutual funds take that opportunity to buy solid businesses at a discount. "
+                f"If you are an everyday investor investing through a monthly SIP, days like today actually work in your favor because you are buying shares on sale. "
+                f"Turn off the panic news, stay disciplined, and let compounding do the heavy lifting. "
+                f"Follow The Bull Print for daily honest market updates. Strictly educational market study."
             )
             terms = ["institutional finance", "stock market chart numbers", "financial analytics monitor", "candlestick data screen", "bank nifty"]
-        elif slot_name in ["long_form", "weekend_masterclass", "masterclass", "deep_dive"]:
-            subject = "The 22,400 Liquidity Trap: How Smart Money Traps Retail & The Institutional Reversal Code"
+        elif slot_name == "breakout_radar":
+            subject = "Morning Market Radar: Why You Should Never Chase Rising Stocks"
             script = (
-                f"The benchmark Nifty cracked below 22,450 today, triggering an avalanche of retail panic selling and stop-loss liquidations across Indian financial markets. "
-                f"Every business news channel is flashing red warning banners, calling for an imminent crash, and urging retail traders to buy cheap out-of-the-money put options to protect their portfolios. "
-                f"Yet, behind the wall of flashing red candles, Foreign Institutional Investors and proprietary algorithmic desks were executing massive dark-pool iceberg orders at wholesale discount prices near {nifty_str}. "
-                f"Welcome to The Bull Print Masterclass: The 22,400 Liquidity Trap and the Institutional Reversal Playbook. "
-                f"In this masterclass, we will pull back the curtain on how institutional order-flow really operates during sharp intraday selloffs, why 91% of retail options traders become liquidity for institutional market makers, and how to position your capital alongside smart money rather than becoming their exit liquidity. "
-                f"Let us begin with Part One: Deconstructing the Anatomy of a Liquidity Sweep. "
-                f"Retail technical analysis books teach traders that support levels are solid brick walls where prices bounce. "
-                f"Institutional algorithmic desks view support levels in the exact opposite light. "
-                f"To an institution managing a twenty-thousand crore fund, a visible technical support level like 22,400 is not a buying wall. "
-                f"It is a massive concentration of resting liquidity. "
-                f"When retail traders buy Nifty futures or calls at 22,480, they place their protective stop-loss orders just below the visible swing low, precisely around 22,400. "
-                f"A stop-loss on a long position is an automated, non-negotiable market sell order. "
-                f"When an institutional desk needs to accumulate twenty lakh shares without driving the market price higher against their own position, they cannot buy at the ask. "
-                f"Instead, institutional algorithms intentionally push the price just below 22,400. "
-                f"The moment price penetrates that level, thousands of retail stop-loss orders trigger simultaneously in milliseconds. "
-                f"A sudden cascade of panic sell orders floods the central order book. "
-                f"The institutional algorithm steps in at that exact second, absorbing every single sell order at wholesale discount prices with zero upward slippage. "
-                f"Once the retail stop-losses are fully absorbed, the market immediately reverses upward, leaving breakout put buyers trapped at the exact bottom of the day. "
-                f"This brings us to Part Two: The Mathematical Asymmetry of the SEBI Derivatives Report. "
-                f"In late 2024, the Securities and Exchange Board of India published an exhaustive empirical analysis that sent shockwaves across the financial ecosystem: "
-                f"Nine out of ten individual traders in equity futures and options lose money, with collective annual net losses exceeding fifty thousand crore rupees. "
-                f"Why is retail options trading such a statistical meat-grinder? "
-                f"It is not merely a lack of discipline. It is the inescapable mathematics of negative expectancy. "
-                f"Retail traders disproportionately buy out-of-the-money options because of their low rupee cost. "
-                f"However, an out-of-the-money option carries a delta of less than point two zero and a probability of expiring worthless that frequently exceeds 85%. "
-                f"Every passing hour, theta decay relentlessly evaporates the extrinsic premium of that option. "
-                f"Even when the underlying index moves in the trader's favor, volatility crush after high-impact market events collapses option prices before the contract expires. "
-                f"Smart money desks rarely gamble on single-leg naked option buys. "
-                f"Institutional desks act as net options sellers and volatility arbitrageurs. "
-                f"They build delta-neutral calendar spreads, defined-risk iron condors, and ratio hedges where time decay works in their favor every single weekend and every single overnight session. "
-                f"If your goal is generational wealth compounding, you must stop treating equity derivatives like lottery tickets and begin managing risk like an institutional market maker. "
-                f"Now let us examine Part Three: Tracking Institutional Footprints with Volume Profile and Point of Control. "
-                f"Standard retail charts plot volume along the bottom horizontal axis as total shares traded per minute. "
-                f"This tells you when volume occurred, but it completely obscures the critical question: at what specific price did smart money commit capital? "
-                f"Institutional research desks utilize Volume Profile, which maps traded volume horizontally across price levels. "
-                f"Within this framework, two critical markers reveal institutional intent: "
-                f"The Point of Control, or POC, is the exact price level that saw the absolute highest volume traded during the session. "
-                f"And the Value Area encompasses the seventy percent range where institutional market makers deemed price to be fair. "
-                f"When price trades below the Value Area Low on declining volume, and then aggressively rejects that level with high volume delta, smart money has completed its absorption phase. "
-                f"By identifying institutional Point of Control clusters and order-flow imbalances rather than relying on lagging indicators like RSI or MACD, you eliminate guesswork and trade in structural alignment with market makers. "
-                f"This leads us to Part Four: Decoding Today's FII/DII Net Positioning Divergence. "
-                f"Today's price action revealed a massive structural divergence between foreign institutional short positioning and domestic institutional cash accumulation. "
-                f"When foreign portfolio investors aggressively short index futures while domestic mutual funds deploy three thousand crore rupees into high-quality cash delivery, an explosive mathematical asymmetry is established. "
-                f"Foreign desks use index shorts primarily as portfolio hedges against global currency fluctuation and geopolitical risk. "
-                f"They are not necessarily bearish on Indian corporate earnings. "
-                f"When the net FII long-to-short ratio reaches historic oversold percentiles below fifteen percent, the fuel for a violent short squeeze is fully loaded. "
-                f"At that point, even a minor positive macro headline forces foreign algorithms to cover short positions simultaneously, triggering vertical short-covering rallies of four to five hundred points in Nifty. "
-                f"Let us synthesize these principles into Part Five: The 70-20-10 Asymmetric Portfolio Architecture. "
-                f"The first law of institutional capital management is not maximizing annual return. "
-                f"It is the permanent avoidance of capital ruin. "
-                f"Consider the brutal arithmetic of financial drawdown: "
-                f"A 20% portfolio loss requires a 25% gain to recover. "
-                f"A 50% loss requires a 100% gain simply to get back to even. "
-                f"And an 80% loss requires a 400% gain — a statistical hurdle that less than one in one thousand investors ever achieves. "
-                f"To insulate your net worth against severe corrections, institutional allocators implement a three-tier Core-and-Satellite structure: "
-                f"Tier One: 70% of capital is deployed into Core Compounders. These are monopolistic or oligopolistic businesses with Return on Capital Employed exceeding 22%, zero debt, and dominant pricing power. "
-                f"Tier Two: 20% is allocated to Satellite Growth. These are high-momentum mid-cap innovators benefiting from structural domestic capex, defence indigenization, and digital infrastructure. "
-                f"Tier Three: 10% is preserved in liquid cash equivalents and sovereign debt as an opportunistic war chest. "
-                f"When market corrections occur and retail investors panic-sell their assets, your war chest enables you to accumulate world-class compounders at generational discount valuations. "
-                f"Finally, here is your Actionable Execution Protocol for Tomorrow's Trading Session. "
-                f"Rule Number One: Completely eliminate market orders during the opening fifteen minutes of trade. This is when algorithmic spreads are widest and retail emotional chasing is at its absolute peak. "
-                f"Rule Number Two: Always wait for the 30-minute opening range to establish clear boundaries before committing capital to intraday directional trades. "
-                f"Rule Number Three: Track the FII and DII cash delivery numbers and open interest shifts rather than sensational financial news commentary. "
-                f"Rule Number Four: Pre-calculate your maximum dollar risk per position before entering any trade. If your potential loss exceeds one percent of your total account equity, reduce your position size immediately. "
-                f"True financial independence in Indian stock markets is not won through overnight speculative gambles. "
-                f"It is forged through the discipline of high-return capital allocation, patience, and absolute emotional mastery. "
-                f"If this institutional masterclass brought clarity to your market analysis, click the subscribe button, turn on notifications, and join The Bull Print community for daily institutional intelligence and market breakdowns. "
+                f"Mid-morning trading shows heavy buying activity across India's biggest companies. "
+                f"While the benchmark Nifty index navigates {nifty_str} ({nifty_chg}), large professional funds are steadily buying shares in top industry leaders. "
+                f"Here is the golden rule for beginners: when you see a stock shooting up on your phone screen, do not rush to buy it out of fear of missing out. "
+                f"The safest way to build wealth in the stock market is to buy great companies when nobody wants them, not when they are trending on social media. "
+                f"Follow The Bull Print for calm and honest market updates. Strictly educational market study."
+            )
+            terms = ["stock market chart", "candlestick breakout", "trading monitor", "financial data analytics", "nifty"]
+        elif slot_name == "block_deals":
+            subject = "Big Money Alert: Massive ₹2,000 Cr Private Deals in Banking Giants"
+            script = (
+                f"Behind the scenes today, big financial institutions traded over two thousand crore rupees in large private bundles of shares. "
+                f"These massive transactions show that major banks and mutual funds are quietly accumulating shares in India's top private banks and infrastructure companies. "
+                f"When giant funds invest thousands of crores without making the stock price jump, they are planning 5 to 10 years ahead. "
+                f"As an everyday investor, you don't need complicated trading systems. You just need the patience to own India's best companies alongside the big funds. "
+                f"Follow The Bull Print for daily honest market updates. Strictly educational market study."
+            )
+            terms = ["financial market data", "stock trading monitor", "trading numbers screen", "stock candlestick chart", "bank nifty"]
+        elif slot_name == "options_trap":
+            subject = "Warning for Beginners: Why 90% of Everyday People Lose in Options"
+            script = (
+                f"Did you know that according to official SEBI government data, over 90 percent of everyday people who trade in options lose their hard-earned money? "
+                f"Here is the simple truth financial influencers never tell you. "
+                f"Trading short-term options is not investing. It is buying an expiring lottery ticket. "
+                f"Every single hour that passes, the value of that contract melts away like an ice cube left out in the sun. "
+                f"Big financial institutions are the ones selling these tickets, collecting your money while everyday people hope for a miracle. "
+                f"If you want real wealth, stop gambling on options and start investing in real businesses and gold. "
+                f"Follow The Bull Print for daily honest market updates. Strictly educational market study."
+            )
+            terms = ["options trading screen", "stock market numbers", "financial analytics terminal", "candlestick chart", "nifty"]
+        elif slot_name == "us_market_open":
+            subject = "US Markets Open: How Wall Street Affects Your Indian Investments"
+            script = (
+                f"The US stock market in New York just opened for trading, and whatever happens on Wall Street tonight will directly impact our Indian market tomorrow morning. "
+                f"When interest rates in America rise, foreign investors often pull their money out of emerging markets like India and take it back home to US government bonds. "
+                f"This is why our Indian stock market sometimes drops even when Indian companies are reporting record profits. "
+                f"Global money moves like water finding the path of least resistance. Watch tomorrow's opening with a calm mind. "
+                f"Follow The Bull Print for daily honest market updates. Strictly educational market study."
+            )
+            terms = ["new york stock exchange", "wall street trading", "financial screen data", "forex charts", "gift nifty"]
+        elif slot_name == "night_compounder":
+            subject = "The Simple Secret to Wealth: How Regular People Become Rich in Stocks"
+            script = (
+                f"The real secret to building life-changing wealth in the Indian stock market is surprisingly simple. "
+                f"It is not staring at price charts all day or trading every morning. "
+                f"It is owning pieces of exceptional businesses that dominate their industries, have zero debt, and make solid profits year after year. "
+                f"Think about the companies whose products you and your family buy every single week, whether the market is up or down. "
+                f"When you buy shares in companies like that and hold them for a decade, compounding multiplies your wealth quietly while you sleep. "
+                f"Wealth is built through patience, not trading. "
+                f"Follow The Bull Print for daily honest market updates. Strictly educational market study."
+            )
+            terms = ["investment wealth growth", "corporate finance", "stock market chart", "financial analytics", "reliance"]
+        elif slot_name in ["gold_macro_radar", "money_pechu_macro", "gold_update"]:
+            try:
+                from app.services.trend_detector import viral_trend_detector
+                v_topic = viral_trend_detector.get_hottest_viral_topic("gold_macro_radar", nifty_str, nifty_chg)
+                subject = v_topic["subject"]
+                script = v_topic["script"]
+                terms = v_topic["terms"]
+                logger.info(f"[Orchestrator] Gold & Macro live viral pulse engaged: '{subject}'")
+            except Exception:
+                subject = "Why Big Wealthy Families Hoard Gold While Beginners Gamble in Stocks"
+                script = (
+                    f"Have you noticed how gold prices keep hitting new record highs in India? "
+                    f"While many everyday people get distracted trying to make quick money trading stocks, the world's biggest central banks and wealthiest families have been quietly buying physical gold in massive quantities. "
+                    f"Why? Because when prices of groceries rise and paper currency loses its buying power, gold has protected families for over five thousand years. "
+                    f"Real financial security comes from balance: keeping real gold, investing steadily in simple Nifty index funds, and having emergency cash in the bank. "
+                    f"Follow The Bull Print for daily honest market updates. Strictly educational market study."
+                )
+                terms = ["gold bullion bars", "stock market chart", "currency exchange trading", "financial analytics monitor", "nifty"]
+        elif slot_name in ["long_form", "weekend_masterclass", "masterclass", "deep_dive", "sunday_study"]:
+            subject = "How Big Institutions Trick Beginners Into Selling Cheap: The Truth Exposed"
+            script = (
+                f"The benchmark Nifty index dropped today, and every news channel started flashing red warning banners, urging everyday investors to panic and sell their shares. "
+                f"Yet behind the scenes, large global funds and investment banks were quietly buying shares at wholesale discount prices near {nifty_str}. "
+                f"Welcome to The Bull Print Beginner Masterclass: How Big Institutions Operate, and the Three Simple Rules of Real Wealth Creation. "
+                f"If you have practically zero knowledge of the stock market, this masterclass is made specifically for you. "
+                f"We are going to explain everything in plain, simple words so you never get tricked by market panics again. "
+                f"Let us begin with Rule Number One: The Wholesale vs Retail Trap. "
+                f"Imagine a crowded vegetable market. When a sudden rainstorm hits, anxious small sellers panic and want to get rid of their tomatoes for five rupees a kilo before they spoil. "
+                f"A wealthy wholesale merchant steps in, buys all the tomatoes at five rupees, and when the rain stops two hours later, sells them back to the crowd for twenty rupees. "
+                f"This is exactly what happens in the Indian stock market. "
+                f"When stock prices drop, big institutional funds intentionally push prices slightly lower to trigger fear. "
+                f"Everyday people panic, see red on their mobile screens, and sell their shares at rock-bottom prices. "
+                f"The big institutions absorb every single share at a bargain discount, and as soon as everyday investors have sold out, prices immediately bounce back. "
+                f"Now let us examine Rule Number Two: The Brutal Truth About Quick-Money Trading. "
+                f"In late 2024, the Indian government market regulator, SEBI, published a landmark report: "
+                f"Nine out of ten everyday people who trade short-term stock options lose money, with collective losses exceeding fifty thousand crore rupees. "
+                f"Why? Because trading options is like buying an ice cream cone on a blazing hot day. "
+                f"Every minute you hold it, it melts. If the market doesn't move immediately in your direction, your money completely evaporates to zero. "
+                f"The big banks are the ones selling you the ice cream, pocketing your cash, and watching time melt your investment away. "
+                f"Stop treating the stock market like a casino or a lottery ticket. "
+                f"This brings us to Rule Number Three: The Fortress Portfolio for Everyday Families. "
+                f"How do regular people actually build real wealth in India without taking foolish risks? "
+                f"Follow the simple three-pillar fortress strategy: "
+                f"Pillar One: Put 70 percent of your long-term savings into simple, low-cost Indian index funds or rock-solid companies with zero debt whose products you use every day. "
+                f"Pillar Two: Keep 20 percent in physical gold or sovereign gold bonds. Gold is the ancient shield that protects your family whenever paper money loses value or inflation rises. "
+                f"Pillar Three: Keep 10 percent in safe bank fixed deposits and emergency cash. When the market has a bad month and everyone is panicking, your cash allows you to buy great assets at a discount. "
+                f"Building wealth is not about being clever every morning. It is about being patient, avoiding foolish traps, and letting India's economic growth work for your family over the next ten years. "
+                f"If this simple guide helped you understand the stock market, subscribe to The Bull Print and join us for honest daily updates. "
                 f"Strictly educational market study. Not financial advice."
             )
             terms = [
@@ -323,15 +376,69 @@ class PipelineOrchestrator:
             font_size = 48
             clip_duration = 15
         else:
-            subject = "Institutional Alpha Alert: Quantitative Nifty 50 Liquidity Breakdown"
+            subject = "Daily Market Update: What Happened Today and What Beginners Must Know"
             script = (
-                f"Smart money order-flow radar. "
-                f"Benchmark Nifty 50 is navigating active trade at {nifty_str} with market sentiment classified as {ctx.market_sentiment}. "
-                f"Foreign institutional positioning is diverging sharply from retail momentum, signaling elevated volatility across high-beta large caps. "
-                f"Watch key VWAP anchors and volume clusters carefully. "
-                f"Follow The Bull Print for tomorrow's 9:00 AM FII order-flow radar. Strictly educational market study."
+                f"Here is your calm, honest daily market check. "
+                f"The benchmark Nifty 50 index is trading near {nifty_str} with market sentiment classified as {ctx.market_sentiment}. "
+                f"Big institutional funds are quietly moving their capital while everyday investors react to daily headlines. "
+                f"Remember: the daily noise of the stock market does not determine your long-term wealth. "
+                f"Stay disciplined, protect your savings, and focus on solid businesses. "
+                f"Follow The Bull Print for daily honest market updates. Strictly educational market study."
             )
             terms = ["stock candlestick chart", "financial market data", "stock trading monitor", "trading numbers screen", "nifty"]
+
+
+        # ── Duplicate Guard: Check if video already exists on the channel ──
+        existing_yt_url = self._check_video_already_published(subject)
+        if existing_yt_url:
+            logger.info(f"[Orchestrator] Video for slot '{slot_name}' already live on YouTube ({existing_yt_url}). Skipping duplicate upload.")
+            return existing_yt_url
+
+        # ── Psychological Title Lab: Select highest CTR framing ──
+        try:
+            from app.services.title_lab import title_lab
+            optimized_subject = title_lab.get_best_title(subject, slot_name=slot_name)
+            if optimized_subject and len(optimized_subject) > 10:
+                logger.info(f"[Orchestrator] Title Lab upgraded subject: '{subject}' -> '{optimized_subject}'")
+                subject = optimized_subject
+        except Exception as title_err:
+            logger.warning(f"[Orchestrator] Title Lab optimization notice: {title_err}")
+
+        # ── High-CTR Thumbnail Generation ──
+        custom_thumbnail_path = None
+        try:
+            s_low = subject.lower()
+            if "gold" in s_low or "silver" in s_low:
+                badge = "GOLD ALERT"
+            elif any(k in s_low for k in ["trap", "loss", "danger", "option", "lose"]):
+                badge = "AVOID THIS TRAP"
+            elif any(k in s_low for k in ["bank", "dump", "fii", "sell"]):
+                badge = "BIG BANKS DUMP"
+            else:
+                badge = "BEGINNER GUIDE"
+            custom_thumbnail_path = thumbnail_designer.generate_thumbnail(
+                title=subject,
+                aspect=aspect,
+                badge_text=badge,
+            )
+            logger.info(f"[Orchestrator] Custom high-CTR thumbnail generated: {custom_thumbnail_path}")
+        except Exception as thumb_err:
+            logger.warning(f"[Orchestrator] Thumbnail generation notice: {thumb_err}")
+
+        # ── Humanizer Engine: Enforce conversational human touch & burstiness ──
+        try:
+            from app.services.humanizer import humanizer
+            script = humanizer.humanize_script(script)
+            logger.info("[Orchestrator] Applied Humanizer to video script for natural human cadence")
+        except Exception as hum_err:
+            logger.warning(f"[Orchestrator] Humanizer notice: {hum_err}")
+
+        # ── TTS Normalization: Strip raw symbols, convert currencies to words, prevent spoken punctuation ──
+        try:
+            from app.services.tts_normalizer import normalize_script_for_tts
+            script = normalize_script_for_tts(script)
+        except Exception as norm_err:
+            logger.warning(f"[Orchestrator] TTS script normalization notice: {norm_err}")
 
         params = VideoParams(
             video_subject=subject,
@@ -351,6 +458,8 @@ class PipelineOrchestrator:
             text_background_color=True,
             stroke_color="#000000",
             stroke_width=2.0,
+            publish_at=publish_at,
+            thumbnail_path=custom_thumbnail_path,
         )
 
         # Apply remedy terms or clip duration if self-healing active
@@ -477,8 +586,43 @@ class PipelineOrchestrator:
                 "backoff_seconds": 5 * attempt,
             }
 
+    def _check_video_already_published(self, subject: str) -> Optional[str]:
+        """Queries recent uploads on YouTube to check if a public video with this title is already live."""
+        try:
+            from app.services.youtube_uploader import get_uploader
+            uploader = get_uploader()
+            service = uploader._get_service("en")
+            if not service:
+                return None
+
+            channel_res = service.channels().list(mine=True, part="contentDetails").execute()
+            if not channel_res or not channel_res.get("items"):
+                return None
+            uploads_pl = channel_res["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
+            recent_items = service.playlistItems().list(
+                playlistId=uploads_pl,
+                part="snippet",
+                maxResults=20,
+            ).execute().get("items", [])
+
+            clean_target = re.sub(r"[^\w\s]", "", subject.lower()).strip()
+            for itm in recent_items:
+                snip = itm.get("snippet", {})
+                v_title = snip.get("title", "")
+                clean_v = re.sub(r"[^\w\s]", "", v_title.lower()).strip()
+                v_id = snip.get("resourceId", {}).get("videoId")
+                if clean_target and clean_target == clean_v and v_id:
+                    v_chk = service.videos().list(id=v_id, part="status").execute()
+                    v_status = v_chk.get("items", [{}])[0].get("status", {}).get("privacyStatus", "")
+                    if v_status == "public":
+                        return f"https://youtu.be/{v_id}"
+        except Exception as e:
+            logger.debug(f"[Orchestrator] Check already published notice: {e}")
+        return None
+
     def _generate_and_upload_video_with_healing(
-        self, ctx: MarketContext, slot_name: str, max_retries: int = 3
+        self, ctx: MarketContext, slot_name: str, max_retries: int = 3,
+        publish_at: Optional[str] = None
     ) -> Optional[str]:
         """
         Intelligent self-healing loop for autonomous video production.
@@ -490,7 +634,7 @@ class PipelineOrchestrator:
         for attempt in range(1, max_retries + 1):
             try:
                 logger.info(f"[Orchestrator] Self-healing video generation pass {attempt}/{max_retries} for slot='{slot_name}'...")
-                yt_url = self._generate_and_upload_video(ctx, slot_name, remedy=remedy)
+                yt_url = self._generate_and_upload_video(ctx, slot_name, remedy=remedy, publish_at=publish_at)
                 if yt_url:
                     if attempt > 1:
                         try:
@@ -567,6 +711,58 @@ class PipelineOrchestrator:
             logger.success(f"[Orchestrator] Added video {video_id} to playlist PLO2FWTao-JNA")
         except Exception as e:
             logger.warning(f"[Orchestrator] Playlist insert warning: {e}")
+
+    def repurpose_and_schedule_masterclass_shorts(
+        self,
+        masterclass_video_path: str,
+        base_subject: str = "The Bull Print Masterclass",
+    ) -> List[Dict]:
+        """
+        Slices an approved 10-minute masterclass into 3 vertical 9:16 Shorts
+        and uploads/schedules them to YouTube with custom thumbnails and TitleLab hooks.
+        Multiplies channel reach by 3x at $0 extra compute.
+        """
+        from app.services.shorts_repurposer import ShortsRepurposer
+        from app.services.youtube_uploader import YouTubeUploader
+        import datetime
+
+        shorts = ShortsRepurposer.repurpose_masterclass_to_shorts(masterclass_video_path, base_subject=base_subject)
+        yt = YouTubeUploader()
+        results = []
+
+        now_utc = datetime.datetime.now(datetime.timezone.utc)
+        for i, s_info in enumerate(shorts):
+            p_path = s_info["path"]
+            p_title = s_info["title"]
+            scheduled_publish = (now_utc + datetime.timedelta(hours=2.0 * (i + 1))).strftime("%Y-%m-%dT%H:%M:%SZ")
+            logger.info(f"[Orchestrator] Uploading repurposed Short {i+1}/3: '{p_title}'...")
+
+            # Generate high-CTR 9:16 thumbnail
+            s_thumb = None
+            try:
+                from app.services.thumbnail_generator import thumbnail_designer
+                s_thumb = thumbnail_designer.generate_thumbnail(
+                    title=p_title,
+                    aspect="9:16",
+                    badge_text=s_info.get("tag", "BEGINNER GUIDE"),
+                )
+            except Exception as te:
+                logger.warning(f"[Orchestrator] Short thumbnail notice: {te}")
+
+            res = yt.upload_video(
+                language="en",
+                video_path=p_path,
+                title=p_title,
+                description=f"{p_title}\n\nSourced from The Bull Print Masterclass: {base_subject}.\nFull breakdown on the channel.\n\nStrictly educational financial market analysis.",
+                tags=["#shorts", "#stockmarketindia", "#thebullprint", "#investing", "#nifty"],
+                is_short=True,
+                privacy_status="public",
+                thumbnail_path=s_thumb,
+                publish_at=scheduled_publish,
+            )
+            results.append({"part": s_info["part"], "title": p_title, "url": res.get("url"), "scheduled": scheduled_publish})
+
+        return results
 
 
 # Global instance

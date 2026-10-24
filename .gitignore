@@ -45,3 +45,5 @@ my audio/
 client_secret_*.json
 *.log
 scratch/
+build/
+kaggle_stage/

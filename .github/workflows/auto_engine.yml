@@ -1,0 +1,83 @@
+name: Flipzon & The Bull Print 100% Cloud Media Engine
+
+on:
+  # 1. Automatic Schedule (Every day at 8:30 AM IST / 03:00 UTC)
+  schedule:
+    - cron: '0 3 * * *'
+  
+  # 2. Manual Trigger via GitHub Mobile App / Browser UI
+  workflow_dispatch:
+    inputs:
+      topic:
+        description: 'Market Topic to Analyze'
+        required: true
+        default: 'Bitcoin Order Flow Absorption & Global Macro Liquidity'
+      notes:
+        description: 'Research Notes / Context'
+        required: false
+        default: 'Analyze BTC footprint delta traps alongside DXY liquidity shifts and historical Nifty macro structure.'
+
+  # 3. External Webhook Trigger (From Telegram / Vercel / n8n / RSS)
+  repository_dispatch:
+    types: [trigger_media_engine]
+
+permissions:
+  contents: write
+
+jobs:
+  build_and_publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: 📥 Checkout Website & Engine Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🐍 Setup Python 3.11 & FFmpeg
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Install Cloud Dependencies & Headless Chromium
+        run: |
+          sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core
+          pip install google-genai playwright Pillow kaggle requests google-api-python-client google-auth edge-tts loguru
+          playwright install chromium
+
+      - name: 🔑 Materialize Cloud Credentials from GitHub Secrets
+        run: |
+          mkdir -p credentials ~/.kaggle
+          if [ -n "${{ secrets.GCP_SA_JSON }}" ]; then
+            echo '${{ secrets.GCP_SA_JSON }}' > credentials/service_account.json
+          fi
+          if [ -n "${{ secrets.KAGGLE_USERNAME }}" ] && [ -n "${{ secrets.KAGGLE_KEY }}" ]; then
+            echo '{"username":"${{ secrets.KAGGLE_USERNAME }}","key":"${{ secrets.KAGGLE_KEY }}"}' > ~/.kaggle/kaggle.json
+            chmod 600 ~/.kaggle/kaggle.json
+          fi
+
+      - name: 🚀 Run Cloud Orchestrator (Playwright -> AI Studio -> Kaggle GPU -> Vercel)
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          INPUT_TOPIC: ${{ github.event.inputs.topic || github.event.client_payload.topic || 'Institutional Order Flow Absorption & Macro Liquidity Shift' }}
+          INPUT_NOTES: ${{ github.event.inputs.notes || github.event.client_payload.notes || 'Break down BTC footprint delta absorption and 30-day+ historical Nifty macro structure.' }}
+        run: |
+          python cloud_orchestrator.py
+
+      - name: 💾 Commit & Push Generated Articles, Thumbnails and Posts Manifest
+        run: |
+          git config --global user.name "The Bull Print Autonomous Bot"
+          git config --global user.email "bot@thebullprint.media"
+          git add content/ assets/ output/thumbnails/
+          if git diff --staged --quiet; then
+            echo "No new assets to commit."
+          else
+            git commit -m "Auto-publish new educational dossier & marketing assets [skip ci]"
+            git push origin HEAD:${{ github.ref }}
+            echo "✓ Changes committed and pushed to GitHub. Vercel deployment triggered automatically."
+          fi

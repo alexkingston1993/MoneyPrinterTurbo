@@ -84,6 +84,9 @@ class GitHubVercelPublisher:
             "youtubeUrl": youtube_url or "",
             "html": html_content,
             "schema": article.schema_jsonld,
+            "wordCount": getattr(article, "word_count", len(html_content.split())),
+            "readingTime": getattr(article, "reading_time_min", max(4, int(len(html_content.split()) / 200))),
+            "author": "Alex from Chennai",
         }
         # Prepend latest
         posts.insert(0, new_entry)

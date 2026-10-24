@@ -100,6 +100,12 @@ def synthesize_audio_prabhat(text: str, output_path: str) -> Tuple[float, List[T
     import edge_tts
     import soundfile as sf
 
+    try:
+        from app.services.tts_normalizer import normalize_script_for_tts
+        text = normalize_script_for_tts(text)
+    except Exception:
+        pass
+
     chunks = _split_into_sentence_chunks(text, max_chars=320)
     _log(f"[TTS] Synthesizing {len(text)} chars across {len(chunks)} chunks with en-IN-PrabhatNeural...")
 
@@ -503,13 +509,13 @@ def render_masterclass_gpu(
 
 
 @app.local_entrypoint()
-def main(subject: str = "The Institutional Compounding Secret: How Smart Money Traps Retail in F&O"):
+def main(subject: str = "Why 93 Percent of Everyday People Lose Money in Quick Market Bets"):
     script = (
-        "Welcome to The Bull Print Masterclass: The Institutional Compounding Playbook. "
-        "93 percent of retail traders lose their entire capital within 90 days in Indian equity markets. "
-        "This is not bad luck; it is structural mathematics. "
-        "Smart money relies on order-flow liquidity sweeps and durable balance sheet moats. "
-        "Strictly educational market study. Follow The Bull Print for daily institutional intelligence."
+        "Hey, I am Alex from Chennai. Before we begin, this is strictly for educational purposes only. I am not a SEBI registered advisor. "
+        "93 percent of everyday people lose money in short term trading within 90 days. "
+        "This is not bad luck; it is because big foreign investment banks buy wholesale when beginners panic during temporary price dips. "
+        "Real wealth is created by holding essential everyday businesses and protecting family savings with physical gold. "
+        "Strictly educational market study. This is Alex from Chennai, signing off."
     )
     res = render_masterclass_gpu.remote(subject=subject, script=script)
     print(json.dumps(res, indent=2))

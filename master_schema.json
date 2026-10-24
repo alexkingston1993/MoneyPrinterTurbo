@@ -1,0 +1,61 @@
+{
+  "type": "object",
+  "properties": {
+    "campaign_id": { "type": "string" },
+    "topic": { "type": "string" },
+    "generated_at": { "type": "string" },
+    "youtube_payload": {
+      "type": "object",
+      "properties": {
+        "metadata": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "description_body": { "type": "string" },
+            "tags": { "type": "array", "items": { "type": "string" } },
+            "thumbnail_top_text": { "type": "string" }
+          },
+          "required": ["title", "description_body", "tags", "thumbnail_top_text"]
+        },
+        "segments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "segment_index": { "type": "integer" },
+              "chapter_title": { "type": "string" },
+              "visual_mode": { "type": "string", "enum": ["STUDIO_AVATAR_DIRECT", "CHART_B_ROLL_WITH_PIP"] },
+              "avatar_studio_id": { "type": "integer" },
+              "b_roll_asset_ref": { "type": "string" },
+              "spoken_narration": { "type": "string" }
+            },
+            "required": ["segment_index", "chapter_title", "visual_mode", "avatar_studio_id", "spoken_narration"]
+          }
+        }
+      },
+      "required": ["metadata", "segments"]
+    },
+    "website_article_payload": {
+      "type": "object",
+      "properties": {
+        "seo_title": { "type": "string" },
+        "meta_description": { "type": "string" },
+        "article_sections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "h2_title": { "type": "string" },
+              "direct_answer_passage": { "type": "string" },
+              "chart_image_ref": { "type": "string" },
+              "body_paragraphs": { "type": "string" }
+            },
+            "required": ["h2_title", "direct_answer_passage", "chart_image_ref", "body_paragraphs"]
+          }
+        }
+      },
+      "required": ["seo_title", "meta_description", "article_sections"]
+    }
+  },
+  "required": ["campaign_id", "topic", "youtube_payload", "website_article_payload"]
+}

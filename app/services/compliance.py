@@ -59,7 +59,7 @@ FOLLOW_UP_DISCLAIMERS = re.compile(
 )
 
 MANDATORY_CLOSING_DISCLAIMER = (
-    "Strictly educational market study. Follow The Bull Print for daily institutional order-flow radar."
+    "Strictly educational market study. Follow The Bull Print for daily market updates made simple."
 )
 
 
@@ -238,6 +238,20 @@ def auto_sanitize_script(script: str) -> str:
         clean,
         flags=re.IGNORECASE,
     )
+
+    # 3. Translate elitist financial jargon for zero-knowledge beginners
+    clean = re.sub(r"\bsmart money\b", "big foreign investment banks and mutual funds", clean, flags=re.IGNORECASE)
+    clean = re.sub(r"\bretail (investors|traders|crowd|buyers|players)\b", "everyday investors", clean, flags=re.IGNORECASE)
+    clean = re.sub(r"\bretail\b", "everyday people", clean, flags=re.IGNORECASE)
+    clean = re.sub(r"\btheta decay\b", "melting contract value", clean, flags=re.IGNORECASE)
+    clean = re.sub(r"\bliquidity (sweep|sweeps|grab|grabs)\b", "trap by big banks", clean, flags=re.IGNORECASE)
+    clean = re.sub(r"\bliquidity trap\b", "price trap by giant institutions", clean, flags=re.IGNORECASE)
+    clean = re.sub(r"\bdark pools?\b", "private institutional transactions", clean, flags=re.IGNORECASE)
+    clean = re.sub(r"\border.?flows?\b", "large institutional buying", clean, flags=re.IGNORECASE)
+    clean = re.sub(r"\bpoint of control\b", "heavy buying zone", clean, flags=re.IGNORECASE)
+    clean = re.sub(r"\bPOC\b", "heavy buying zone", clean)
+    clean = re.sub(r"\bVWAP\b", "average buying price", clean)
+    clean = re.sub(r"\bcyclicals?\b", "manufacturing companies", clean, flags=re.IGNORECASE)
 
     # 3. Ensure educational study qualification exists
     has_edu = re.search(r"(educational|study|research|due diligence|own research|SEBI)", clean, re.IGNORECASE)

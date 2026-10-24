@@ -38,6 +38,8 @@ class FailureDomain(str, Enum):
     LLM_RESEARCH = "llm_research"
     NETWORK_TRANSIENT = "network_transient"
     SYSTEM_RESOURCE = "system_resource"
+    KAGGLE_GPU = "kaggle_gpu"
+    PLAYWRIGHT_SCRAPER = "playwright_scraper"
     UNKNOWN = "unknown"
 
 
@@ -217,15 +219,57 @@ class AriaSelfHealingEngine:
                 backoff_seconds=backoff,
             )
 
+        # 3.8 Kaggle Remote GPU Domain
+        if any(k in err_str for k in ["kaggle", "cuda out of memory", "nvenc", "kernel failed"]):
+            backoff = 10 * attempt
+            is_oom = "cuda out of memory" in err_str or "oom" in err_str
+            root = "CUDA GPU memory exhaustion during video rendering." if is_oom else "Kaggle remote GPU kernel timeout or queue stall."
+            return AriaRemedy(
+                domain=FailureDomain.KAGGLE_GPU,
+                failed_component="Kaggle Dual-T4 Remote GPU Engine",
+                root_cause=root,
+                severity="HIGH",
+                action_plan="Switching to local safe CPU render mode or Colab/Modal GPU fallback with downscaled 720p safe mode.",
+                short_desc="Kaggle GPU Failover & Local/Modal Safe Mode",
+                params={"fallback_local": True, "downscale_safe": True},
+                backoff_seconds=backoff,
+            )
+
+        # 3.9 Playwright Visual Scraper Domain
+        if any(k in err_str for k in ["playwright", "cloudflare", "screenshot too small", "networkidle"]):
+            backoff = 4 * attempt
+            return AriaRemedy(
+                domain=FailureDomain.PLAYWRIGHT_SCRAPER,
+                failed_component="Playwright Headless Chart Scraper",
+                root_cause="Chart page stalled on third-party telemetry scripts or Cloudflare canvas verification.",
+                severity="MEDIUM",
+                action_plan="Bypassing browser scraper and deploying mplfinance institutional dark-mode chart generator with 100% reliability.",
+                short_desc="Institutional mplfinance Dark Chart Generator Fallback",
+                params={"chart_fallback": True},
+                backoff_seconds=backoff,
+            )
+
         # 4. YouTube API & Publishing Domain
         if any(k in err_str for k in [
             "youtube", "uploadlimitexceeded", "quotaexceeded", "403", "pickle",
-            "token", "credentials", "refreshed token", "authentication", "upload"
+            "token", "credentials", "refreshed token", "authentication", "upload", "invalid_grant"
         ]):
             backoff = 8 * attempt
             is_quota_ceiling = "uploadlimitexceeded" in err_str or "quota" in err_str
+            is_invalid_grant = "invalid_grant" in err_str or "token_expired" in err_str
 
-            if is_quota_ceiling:
+            if is_invalid_grant:
+                return AriaRemedy(
+                    domain=FailureDomain.YOUTUBE_API,
+                    failed_component="YouTube OAuth Refresh Token Gate",
+                    root_cause="YouTube OAuth refresh token expired or was revoked by Google Cloud (invalid_grant).",
+                    severity="CRITICAL",
+                    action_plan="Bypassing direct upload, safe-vaulting generated MP4 to output/, and dispatching 1-click re-auth instructions to Telegram.",
+                    short_desc="OAuth Token Revocation Notice & Video Safe-Vault",
+                    params={"vault_artifact": True, "reauth_required": True},
+                    backoff_seconds=backoff,
+                )
+            elif is_quota_ceiling:
                 return AriaRemedy(
                     domain=FailureDomain.YOUTUBE_API,
                     failed_component="YouTube Studio API Quota Gate",

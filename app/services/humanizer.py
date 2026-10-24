@@ -158,10 +158,77 @@ class Humanizer:
 """
 
     @classmethod
+    def apply_human_touch(cls, text: str, context_type: str = "article") -> str:
+        """
+        Injects a genuine human educator voice (Alex from Chennai persona):
+        - Strips AI robotic markers
+        - Enforces warm conversational tone & relatable real-world framing
+        - Adds sentence burstiness and authentic human rhythm
+        """
+        cleaned = cls.clean_ai_fingerprints(text)
+
+        # Conversational warmth replacements for robotic phrases
+        conversational_replacements = [
+            (r"\butilize\b", "use"),
+            (r"\butilizing\b", "using"),
+            (r"\bcommence\b", "start"),
+            (r"\bterminate\b", "stop"),
+            (r"\bdemonstrates\b", "shows"),
+            (r"\bindicates\b", "points to"),
+            (r"\bsubsequently\b", "then"),
+            (r"\bconsequently\b", "as a result"),
+            (r"\bin order to\b", "to"),
+            (r"\bdue to the fact that\b", "because"),
+            (r"\bat this point in time\b", "right now"),
+            (r"\bwith respect to\b", "about"),
+            (r"\bin regards to\b", "about"),
+            (r"\bpertaining to\b", "about"),
+            (r"\boptimal\b", "best"),
+            (r"\bmitigate\b", "reduce"),
+            (r"\bmitigating\b", "reducing"),
+            (r"\bprecipitous\b", "sharp"),
+            (r"\bamplified\b", "increased"),
+            (r"\bexponentially\b", "rapidly"),
+            (r"\baforementioned\b", "earlier mentioned"),
+            (r"\bnotwithstanding\b", "despite"),
+            (r"\bplethora of\b", "dozens of"),
+        ]
+
+        for pat, repl in conversational_replacements:
+            cleaned = re.sub(pat, repl, cleaned, flags=re.IGNORECASE)
+
+        # Ensure sentence burstiness: break up unnaturally long run-on sentences (> 40 words)
+        def break_run_on_sentence(match):
+            sentence = match.group(0)
+            words = sentence.split()
+            if len(words) > 35 and " and " in sentence:
+                # Split at middle ' and '
+                mid = len(sentence) // 2
+                split_pos = sentence.find(" and ", mid - 20)
+                if split_pos != -1:
+                    return sentence[:split_pos] + ". In addition, " + sentence[split_pos + 5:]
+            return sentence
+
+        cleaned = re.sub(r"[A-Z][^.!?]+[.!?]", break_run_on_sentence, cleaned)
+        return cleaned.strip()
+
+    @classmethod
+    def humanize_article(cls, article_html: str) -> str:
+        """Run comprehensive human touch optimization on HTML articles."""
+        return cls.apply_human_touch(article_html, context_type="article")
+
+    @classmethod
+    def humanize_script(cls, script_text: str) -> str:
+        """Run speech-focused human touch optimization on video narration scripts."""
+        cleaned = cls.apply_human_touch(script_text, context_type="script")
+        # Add natural speech pause cues for TTS where appropriate
+        cleaned = re.sub(r"\b(Look|Here is the truth|Think about it|Remember):\b", r"\1...", cleaned)
+        return cleaned
+
+    @classmethod
     def humanize(cls, raw_article: str) -> str:
         """Run full humanization pipeline on text."""
-        cleaned = cls.clean_ai_fingerprints(raw_article)
-        return cleaned
+        return cls.apply_human_touch(raw_article)
 
 
 # Global instance

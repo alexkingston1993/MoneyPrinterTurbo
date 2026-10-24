@@ -6,6 +6,7 @@ OAuth 2.0 authentication with token persistence and auto-refresh.
 Also supports service account authentication for server-side uploads.
 """
 
+import base64
 import datetime
 import json
 import os
@@ -81,37 +82,78 @@ class YouTubeUploader:
 
     def _get_service(self, language: str):
         """Get or create an authenticated YouTube API service for a channel.
-        Tries OAuth pickle first, then service account key."""
+        Tries raw env credentials (YT_CLIENT_ID/SECRET/REFRESH_TOKEN) first,
+        then base64 pickle env, then local pickle file, then service account key."""
         if language in self.services:
             return self.services[language]
 
-        token_file = _token_path(language)
         creds = None
 
-        if os.path.exists(token_file):
+        # 1. Direct Cloud Secrets: YT_CLIENT_ID, YT_CLIENT_SECRET, YT_REFRESH_TOKEN
+        client_id = os.getenv(f"YT_CLIENT_ID_{language.upper()}") or os.getenv("YT_CLIENT_ID")
+        client_secret = os.getenv(f"YT_CLIENT_SECRET_{language.upper()}") or os.getenv("YT_CLIENT_SECRET")
+        refresh_token = os.getenv(f"YT_REFRESH_TOKEN_{language.upper()}") or os.getenv("YT_REFRESH_TOKEN")
+
+        if client_id and client_secret and refresh_token:
+            try:
+                creds = Credentials(
+                    token=None,
+                    refresh_token=refresh_token,
+                    token_uri="https://oauth2.googleapis.com/token",
+                    client_id=client_id,
+                    client_secret=client_secret,
+                    scopes=SCOPES
+                )
+                creds.refresh(Request())
+                logger.info(f"✓ Authenticated YouTube API via direct OAuth refresh token for {language}")
+            except Exception as e:
+                logger.warning(f"Failed to refresh YouTube direct OAuth credentials for {language}: {e}")
+                creds = None
+
+        # 2. Base64 Cloud Secret: YOUTUBE_TOKEN_<LANG> (e.g. YOUTUBE_TOKEN_EN)
+        if not creds:
+            b64_env = os.getenv(f"YOUTUBE_TOKEN_{language.upper()}")
+            if b64_env:
+                try:
+                    raw_bytes = base64.b64decode(b64_env)
+                    creds = pickle.loads(raw_bytes)
+                    logger.info(f"Loaded YouTube credentials from base64 env for {language}")
+                except Exception as e:
+                    logger.warning(f"Failed to parse base64 YOUTUBE_TOKEN_{language.upper()}: {e}")
+
+        # 3. Local token pickle file
+        token_file = _token_path(language)
+        if not creds and os.path.exists(token_file):
             try:
                 with open(token_file, "rb") as f:
                     creds = pickle.load(f)
             except Exception as e:
                 logger.warning(f"failed to load token for {language}: {e}")
 
-        if creds and creds.expired and creds.refresh_token:
+        # 4. Auto-refresh if token is expired
+        if creds and (creds.expired or not creds.valid or not creds.token) and creds.refresh_token:
             try:
                 creds.refresh(Request())
-                with open(token_file, "wb") as f:
-                    pickle.dump(creds, f)
+                if os.path.exists(token_file):
+                    try:
+                        with open(token_file, "wb") as f:
+                            pickle.dump(creds, f)
+                    except Exception:
+                        pass
                 logger.info(f"refreshed token for {language}")
             except Exception as e:
-                logger.warning(f"failed to refresh token for {language}: {e}")
-                return None
+                logger.warning(f"failed to refresh token for {language} (invalid_grant or network): {e}")
+                creds = None
 
+        # 5. Fallback to service account
         if not creds or not creds.valid:
             creds = self._get_service_account_credentials(language)
 
         if not creds or not creds.valid:
             logger.warning(
                 f"no valid token for {language}. "
-                f"Run auth_setup('{language}') first, or place token at {token_file}"
+                f"Set YT_REFRESH_TOKEN / YOUTUBE_TOKEN_{language.upper()} in env, "
+                f"or place token at {token_file}"
             )
             return None
 
@@ -187,6 +229,7 @@ class YouTubeUploader:
         privacy_status: str = DEFAULT_PRIVACY,
         is_short: bool = False,
         thumbnail_path: Optional[str] = None,
+        publish_at: Optional[str] = None,
     ) -> Dict:
         """Upload a video to YouTube.
 
@@ -200,6 +243,7 @@ class YouTubeUploader:
             privacy_status: public, unlisted, or private
             is_short: If True, adds #shorts tag
             thumbnail_path: Optional path to custom thumbnail image
+            publish_at: Optional RFC 3339 datetime string (e.g. 2026-10-24T14:00:00Z) to schedule publishing
 
         Returns:
             dict: Upload result with video_id, status, url
@@ -253,6 +297,7 @@ class YouTubeUploader:
             f"#TheBullPrint #Nifty50 #BankNifty #StockMarketIndia #OptionsTrading #FIIFlows #InstitutionalTrading"
         )
 
+        effective_privacy = "private" if publish_at else privacy_status
         body = {
             "snippet": {
                 "title": title[:100],
@@ -261,10 +306,46 @@ class YouTubeUploader:
                 "categoryId": category_id,
             },
             "status": {
-                "privacyStatus": privacy_status,
+                "privacyStatus": effective_privacy,
                 "selfDeclaredMadeForKids": False,
             },
         }
+        if publish_at:
+            body["status"]["publishAt"] = publish_at
+
+        # Prevent duplicate uploads: Check if a public video with identical title already exists
+        try:
+            channel_res = service.channels().list(mine=True, part="contentDetails").execute()
+            if channel_res and channel_res.get("items"):
+                uploads_pl = channel_res["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
+                recent_items = service.playlistItems().list(
+                    playlistId=uploads_pl,
+                    part="snippet",
+                    maxResults=20,
+                ).execute().get("items", [])
+
+                clean_target = re.sub(r"[^\w\s]", "", title.lower()).strip()
+                for itm in recent_items:
+                    snip = itm.get("snippet", {})
+                    v_title = snip.get("title", "")
+                    clean_v = re.sub(r"[^\w\s]", "", v_title.lower()).strip()
+                    v_id = snip.get("resourceId", {}).get("videoId")
+                    if clean_target and clean_target == clean_v and v_id:
+                        v_chk = service.videos().list(id=v_id, part="status").execute()
+                        v_status = v_chk.get("items", [{}])[0].get("status", {}).get("privacyStatus", "")
+                        if v_status == "public":
+                            existing_url = f"https://youtu.be/{v_id}"
+                            logger.warning(f"[{language}] Video '{v_title}' already exists on channel ({existing_url}). Preventing duplicate upload.")
+                            return {
+                                "success": True,
+                                "video_id": v_id,
+                                "url": existing_url,
+                                "title": v_title,
+                                "language": language,
+                                "already_existed": True,
+                            }
+        except Exception as dup_err:
+            logger.debug(f"[{language}] Duplicate upload check notice: {dup_err}")
 
         try:
             logger.info(f"[{language}] Uploading: {title[:60]}... ({os.path.getsize(video_path)/1024/1024:.1f}MB)")
@@ -308,6 +389,8 @@ class YouTubeUploader:
                 "url": video_url,
                 "title": title[:100],
                 "language": language,
+                "publish_at": publish_at,
+                "scheduled": bool(publish_at),
             }
 
         except HttpError as e:

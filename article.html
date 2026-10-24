@@ -124,6 +124,47 @@
             color: var(--accent-mint);
             background: var(--bg-card-hover);
         }
+        /* Distinct Articles Nav Icon Button */
+        .nav-articles-pill {
+            display: inline-flex !important;
+            align-items: center;
+            gap: 7px;
+            background: linear-gradient(135deg, rgba(0, 208, 156, 0.12), rgba(37, 99, 235, 0.14)) !important;
+            border: 1px solid rgba(0, 208, 156, 0.45) !important;
+            color: var(--text-primary) !important;
+            font-weight: 700 !important;
+            padding: 6px 14px !important;
+            border-radius: 20px !important;
+            box-shadow: 0 0 14px rgba(0, 208, 156, 0.22);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            text-decoration: none;
+        }
+        .nav-articles-pill:hover, .nav-articles-pill.active {
+            background: linear-gradient(135deg, rgba(0, 208, 156, 0.22), rgba(37, 99, 235, 0.25)) !important;
+            border-color: var(--accent-mint) !important;
+            color: var(--text-primary) !important;
+            transform: translateY(-1.5px);
+            box-shadow: 0 4px 18px rgba(0, 208, 156, 0.38);
+        }
+        .nav-articles-icon {
+            font-size: 15px;
+            line-height: 1;
+        }
+        .nav-articles-text {
+            font-size: 13.5px;
+            letter-spacing: -0.2px;
+        }
+        .nav-articles-badge {
+            background: var(--accent-mint);
+            color: #0b0f17;
+            font-size: 9.5px;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 10px;
+            letter-spacing: 0.5px;
+            font-family: var(--font-mono);
+            line-height: 1.2;
+        }
         .nav-back-btn {
             display: inline-flex;
             align-items: center;
@@ -191,7 +232,7 @@
             font-size: clamp(28px, 4.5vw, 44px);
             font-weight: 800;
             line-height: 1.25;
-            color: #ffffff;
+            color: var(--text-primary);
             letter-spacing: -0.5px;
             margin: 0 0 20px 0;
         }
@@ -203,7 +244,7 @@
             font-size: 13.5px;
             color: var(--text-secondary);
             padding-bottom: 24px;
-            border-bottom: 1px solid var(--border-card);
+            border-bottom: 1px solid var(--border-subtle);
         }
         .meta-pill {
             display: inline-flex;
@@ -214,19 +255,19 @@
         /* Video Showcase Box */
         .video-showcase-box {
             background: var(--bg-card);
-            border: 1px solid var(--border-card);
+            border: 1px solid var(--border-subtle);
             border-radius: 12px;
             overflow: hidden;
             margin: 32px 0 40px 0;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            box-shadow: var(--card-shadow);
         }
         .video-showcase-bar {
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 12px 18px;
-            background: rgba(15, 23, 42, 0.6);
-            border-bottom: 1px solid var(--border-card);
+            background: var(--bg-card-hover);
+            border-bottom: 1px solid var(--border-subtle);
             font-family: var(--font-mono);
             font-size: 12px;
             color: var(--text-secondary);
@@ -246,42 +287,89 @@
             border: 0;
         }
 
-        /* Editorial Body */
+        /* Editorial Body & Typography */
         .article-content {
-            font-size: 16.5px;
+            font-size: 17px;
             line-height: 1.85;
-            color: #cbd5e1;
+            color: var(--text-primary);
         }
         .article-content h2 {
             font-family: var(--font-display);
-            font-size: clamp(22px, 3vw, 28px);
-            font-weight: 700;
-            color: #ffffff;
+            font-size: clamp(22px, 3vw, 30px);
+            font-weight: 800;
+            color: var(--text-primary);
             margin: 44px 0 18px 0;
-            padding-bottom: 8px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            letter-spacing: -0.3px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-subtle);
+            letter-spacing: -0.4px;
         }
         .article-content h3 {
             font-family: var(--font-display);
             font-size: 20px;
-            font-weight: 600;
-            color: #e2e8f0;
+            font-weight: 700;
+            color: var(--text-primary);
             margin: 32px 0 14px 0;
+        }
+        .article-content h4 {
+            font-family: var(--font-display);
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 24px 0 10px 0;
         }
         .article-content p {
             margin-bottom: 22px;
+            color: var(--text-primary);
+            line-height: 1.85;
         }
         .article-content strong {
-            color: #ffffff;
-            font-weight: 600;
+            color: var(--text-primary);
+            font-weight: 700;
         }
         .article-content ul, .article-content ol {
             padding-left: 24px;
             margin-bottom: 24px;
+            color: var(--text-primary);
         }
         .article-content li {
             margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        /* Direct Answer Chunk (AEO / GEO Semantic Passage) */
+        .article-content .direct-answer-chunk,
+        .direct-answer-chunk {
+            font-size: 16px !important;
+            line-height: 1.7 !important;
+            font-weight: 600 !important;
+            color: var(--text-primary) !important;
+            background: var(--bg-card-hover) !important;
+            border: 1px solid var(--border-subtle) !important;
+            border-left: 4px solid var(--accent-blue) !important;
+            padding: 14px 18px !important;
+            border-radius: 8px !important;
+            margin: 16px 0 24px 0 !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+        }
+
+        /* TL;DR / Executive Summary Box */
+        .geo-answer-box {
+            background: var(--bg-card) !important;
+            border: 1px solid var(--border-subtle) !important;
+            border-left: 4px solid var(--groww-mint) !important;
+            border-radius: 12px !important;
+            padding: 24px !important;
+            margin-bottom: 32px !important;
+            box-shadow: var(--card-shadow) !important;
+        }
+        .geo-answer-box h3 {
+            margin-top: 0 !important;
+            color: var(--groww-mint) !important;
+            font-size: 18px !important;
+            font-weight: 800 !important;
+        }
+        .geo-answer-box ul, .geo-answer-box p {
+            color: var(--text-secondary) !important;
         }
 
         /* Data Tables in Editorial */
@@ -289,47 +377,55 @@
             width: 100%;
             overflow-x: auto;
             margin: 28px 0;
-            border-radius: 8px;
-            border: 1px solid var(--border-card);
+            border-radius: 10px;
+            border: 1px solid var(--border-subtle);
             background: var(--bg-card);
+            box-shadow: var(--card-shadow);
         }
         .table-responsive table {
             width: 100%;
             border-collapse: collapse;
             text-align: left;
-            font-size: 14px;
+            font-size: 14.5px;
         }
         .table-responsive th {
-            background: rgba(15, 23, 42, 0.8);
-            padding: 12px 16px;
-            color: var(--accent-mint);
+            background: var(--table-header-bg, #f1f5f9);
+            padding: 14px 18px;
+            color: var(--text-primary);
             font-family: var(--font-mono);
-            font-weight: 600;
-            border-bottom: 1px solid var(--border-card);
+            font-weight: 700;
+            border-bottom: 2px solid var(--border-subtle);
         }
         .table-responsive td {
-            padding: 12px 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-            color: #cbd5e1;
+            padding: 13px 18px;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-primary);
         }
         .table-responsive tr:last-child td {
             border-bottom: none;
         }
+        .table-responsive tr:hover td {
+            background: var(--bg-card-hover);
+        }
 
         /* Regulatory Disclaimer Block */
         .disclaimer-box {
-            background: rgba(15, 23, 42, 0.7);
-            border: 1px solid rgba(244, 63, 94, 0.3);
-            border-left: 4px solid var(--accent-rose);
-            border-radius: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-left: 4px solid var(--market-red);
+            border-radius: 10px;
             padding: 24px;
             margin: 48px 0;
             font-size: 13px;
             line-height: 1.7;
             color: var(--text-secondary);
+            box-shadow: var(--card-shadow);
+        }
+        .disclaimer-box strong {
+            color: var(--text-primary);
         }
         .disclaimer-box a {
-            color: #60a5fa;
+            color: var(--accent-blue);
             text-decoration: underline;
         }
 
@@ -337,13 +433,13 @@
         .related-section {
             margin-top: 64px;
             padding-top: 40px;
-            border-top: 1px solid var(--border-card);
+            border-top: 1px solid var(--border-subtle);
         }
         .related-title {
             font-family: var(--font-display);
             font-size: 24px;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--text-primary);
             margin-bottom: 24px;
         }
         .related-grid {
@@ -353,7 +449,7 @@
         }
         .related-card {
             background: var(--bg-card);
-            border: 1px solid var(--border-card);
+            border: 1px solid var(--border-subtle);
             border-radius: 10px;
             padding: 20px;
             text-decoration: none;
@@ -361,17 +457,18 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            box-shadow: var(--card-shadow);
         }
         .related-card:hover {
             transform: translateY(-3px);
-            border-color: var(--accent-mint);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+            border-color: var(--groww-mint);
+            box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
         }
         .related-card-title {
             font-family: var(--font-display);
             font-size: 16px;
             font-weight: 700;
-            color: #ffffff;
+            color: var(--text-primary);
             margin: 0 0 10px 0;
             line-height: 1.4;
         }
@@ -387,10 +484,11 @@
             align-items: center;
             gap: 16px;
             padding: 20px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid var(--border-card);
-            border-radius: 8px;
+            background: var(--bg-card-hover) !important;
+            border: 1px solid var(--border-subtle) !important;
+            border-radius: 10px;
             margin: 40px 0;
+            color: var(--text-primary);
         }
         .author-avatar {
             width: 48px;
@@ -401,7 +499,7 @@
         .author-info h4 {
             margin: 0 0 4px 0;
             font-size: 15px;
-            color: #ffffff;
+            color: var(--text-primary);
         }
         .author-info p {
             margin: 0;
@@ -449,10 +547,15 @@
             <div style="display: flex; align-items: center; gap: 14px; flex-wrap: wrap;">
                 <a href="/" class="nav-link-item">Market Explorer</a>
                 <a href="/screener.html" class="nav-link-item">Screener</a>
-                <a href="/articles.html" class="nav-link-item active">Articles</a>
+                <a href="/articles.html" class="nav-link-item nav-articles-pill active" title="Institutional Equity Research Dossiers & Market Intelligence">
+                    <span class="nav-articles-icon">📰</span>
+                    <span class="nav-articles-text">Articles</span>
+                    <span class="nav-articles-badge">GEO</span>
+                </a>
                 <a href="/events.html" class="nav-link-item">Stock Events</a>
                 <a href="/schemes.html" class="nav-link-item">Govt Schemes</a>
                 <a href="/unlisted.html" class="nav-link-item">Unlisted</a>
+                <a href="/tools.html" class="nav-link-item">🛠️ Tools</a>
                 <a href="/portfolio.html" class="nav-link-item">Portfolio</a>
                 <a href="/insurance.html" class="nav-link-item">Insurance</a>
                 <a href="/crypto.html" class="nav-link-item">Crypto</a>
@@ -475,7 +578,7 @@
         <div class="article-breadcrumb">
             <a href="/">Home</a>
             <span>/</span>
-            <a href="/#research">Research Dossiers</a>
+            <a href="/articles.html">Research Dossiers</a>
             <span>/</span>
             <span id="breadcrumb-title" style="color: var(--text-secondary);">Loading Analysis...</span>
         </div>

@@ -102,6 +102,48 @@
             background: var(--groww-mint-soft);
         }
 
+        /* Distinct Articles Nav Icon Button */
+        .nav-articles-pill {
+            display: inline-flex !important;
+            align-items: center;
+            gap: 7px;
+            background: linear-gradient(135deg, rgba(0, 208, 156, 0.12), rgba(37, 99, 235, 0.14)) !important;
+            border: 1px solid rgba(0, 208, 156, 0.45) !important;
+            color: var(--text-primary) !important;
+            font-weight: 700 !important;
+            padding: 6px 14px !important;
+            border-radius: 20px !important;
+            box-shadow: 0 0 14px rgba(0, 208, 156, 0.22);
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+            text-decoration: none;
+        }
+        .nav-articles-pill:hover, .nav-articles-pill.active {
+            background: linear-gradient(135deg, rgba(0, 208, 156, 0.22), rgba(37, 99, 235, 0.25)) !important;
+            border-color: var(--groww-mint) !important;
+            color: var(--text-primary) !important;
+            transform: translateY(-1.5px);
+            box-shadow: 0 4px 18px rgba(0, 208, 156, 0.38);
+        }
+        .nav-articles-icon {
+            font-size: 15px;
+            line-height: 1;
+        }
+        .nav-articles-text {
+            font-size: 13.5px;
+            letter-spacing: -0.2px;
+        }
+        .nav-articles-badge {
+            background: var(--groww-mint);
+            color: #0b0f17;
+            font-size: 9.5px;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 10px;
+            letter-spacing: 0.5px;
+            font-family: var(--font-mono);
+            line-height: 1.2;
+        }
+
         /* Container */
         .articles-page-container {
             max-width: 1340px;
@@ -384,11 +426,16 @@
             <nav class="nav-links">
                 <a href="/" class="nav-link">Dashboard</a>
                 <a href="/screener.html" class="nav-link">Screener</a>
-                <a href="/articles.html" class="nav-link active">Articles</a>
+                <a href="/articles.html" class="nav-link nav-articles-pill active" title="Institutional Equity Research Dossiers & Market Intelligence">
+                    <span class="nav-articles-icon">📰</span>
+                    <span class="nav-articles-text">Articles</span>
+                    <span class="nav-articles-badge">GEO</span>
+                </a>
                 <a href="/fno.html" class="nav-link">F&O Radar</a>
                 <a href="/events.html" class="nav-link">Stock Events</a>
                 <a href="/schemes.html" class="nav-link">Govt Schemes</a>
                 <a href="/unlisted.html" class="nav-link">Unlisted</a>
+                <a href="/tools.html" class="nav-link">🛠️ Tools</a>
                 <a href="/portfolio.html" class="nav-link">Portfolio</a>
                 <a href="/insurance.html" class="nav-link">Insurance</a>
                 <a href="/crypto.html" class="nav-link">Crypto</a>
@@ -489,6 +536,10 @@
                 const hasVideo = !!p.youtubeUrl;
                 const dateStr = p.date ? new Date(p.date).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Recent';
 
+                const readingTime = p.readingTimeMin ? `${p.readingTimeMin} min read` : '8 min read';
+                const wordsBadge = p.wordCount ? `(${p.wordCount.toLocaleString()} words)` : '';
+                const authorName = p.author ? p.author.replace(' from Chennai', '') : 'Alex';
+
                 return `
                     <a href="/article.html?slug=${p.slug}" class="article-card">
                         <div class="article-card-header">
@@ -511,7 +562,7 @@
                             </div>
                         </div>
                         <div class="article-card-footer">
-                            <span>📅 ${dateStr}</span>
+                            <span>📅 By ${authorName} · ${readingTime} ${wordsBadge}</span>
                             <span class="read-btn">Read Full Dossier ↗</span>
                         </div>
                     </a>

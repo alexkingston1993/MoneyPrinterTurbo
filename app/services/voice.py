@@ -1259,6 +1259,12 @@ def tts(
     voice_file: str,
     voice_volume: float = 1.0,
 ) -> Union[SubMaker, None]:
+    try:
+        from app.services.tts_normalizer import normalize_script_for_tts
+        text = normalize_script_for_tts(text)
+    except Exception as norm_err:
+        logger.warning(f"[Voice] TTS normalization notice: {norm_err}")
+
     if voice_name and voice_name.lower().startswith("kokoro:"):
         from app.services.kokoro_voice import kokoro_tts
         return kokoro_tts(text, voice_name, voice_rate, voice_file, voice_volume)

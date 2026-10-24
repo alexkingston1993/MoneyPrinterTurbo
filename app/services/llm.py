@@ -2,7 +2,7 @@ import json
 import logging
 import re
 import requests
-from typing import List
+from typing import Any, Dict, List, Optional, Union
 
 from loguru import logger
 from openai import AzureOpenAI, OpenAI
@@ -16,25 +16,94 @@ _DEPRECATED_GEMINI_MODELS = {"gemini-pro", "gemini-1.0-pro", "gemini-2.5-flash"}
 
 
 def _generate_via_openai_fast(prompt: str) -> str:
-    """Seamless zero-config fallback to GPT-4o-mini tier via Pollinations AI if primary LLM hits rate limit."""
+    """Seamless zero-config fallback to GPT-4o-mini tier via Pollinations AI if primary LLM hits rate limit or error."""
+    # 1. High-capacity POST request (supports long scripts without URL length limits)
+    try:
+        url = "https://text.pollinations.ai/openai"
+        payload = {
+            "model": "openai-fast",
+            "messages": [{"role": "user", "content": prompt}],
+            "temperature": 0.5,
+        }
+        resp = requests.post(url, json=payload, timeout=35)
+        if resp.status_code == 200:
+            data = resp.json()
+            if "choices" in data and len(data["choices"]) > 0:
+                txt = data["choices"][0].get("message", {}).get("content", "").strip()
+                if txt:
+                    return txt
+    except Exception as e:
+        logger.warning(f"[LLM] Primary openai-fast POST fallback error: {e}")
+
+    # 2. Secondary GET fallback
     import urllib.parse
     try:
-        url = f"https://text.pollinations.ai/{urllib.parse.quote(prompt)}?model=openai-fast"
-        resp = requests.get(url, timeout=30)
-        if resp.status_code == 200 and resp.text.strip():
-            return resp.text.strip()
-    except Exception as e:
-        logger.warning(f"[LLM] Primary openai-fast fallback error: {e}")
-
-    try:
-        url2 = f"https://text.pollinations.ai/{urllib.parse.quote(prompt)}?model=mistral"
-        resp2 = requests.get(url2, timeout=30)
+        url2 = f"https://text.pollinations.ai/{urllib.parse.quote(prompt[:1200])}?model=openai-fast"
+        resp2 = requests.get(url2, timeout=25)
         if resp2.status_code == 200 and resp2.text.strip():
             return resp2.text.strip()
     except Exception as e2:
-        logger.warning(f"[LLM] Secondary mistral fallback error: {e2}")
+        logger.warning(f"[LLM] Secondary openai-fast GET fallback error: {e2}")
 
     raise RuntimeError("All LLM fallback routes exhausted")
+
+
+def repair_json(text: str) -> Any:
+    """
+    Robust JSON repair and parsing engine inspired by YAAS (YouTube Agentic AI Studio).
+    Handles markdown codeblocks, unclosed brackets, trailing commas, and escaped quotes.
+    """
+    if not text or not isinstance(text, str):
+        raise ValueError("Empty or non-string input to repair_json")
+
+    clean = text.strip()
+
+    # Strip markdown code fences: ```json ... ``` or ``` ... ```
+    if "```" in clean:
+        clean = re.sub(r"^```(?:json)?\s*", "", clean, flags=re.MULTILINE)
+        clean = re.sub(r"```\s*$", "", clean, flags=re.MULTILINE).strip()
+
+    # Direct standard parse
+    try:
+        return json.loads(clean)
+    except Exception:
+        pass
+
+    # Extract JSON list [ ... ]
+    match_list = re.search(r"(\[.*\])", clean, re.DOTALL)
+    if match_list:
+        candidate = match_list.group(1).strip()
+        candidate = re.sub(r",\s*([\]}])", r"\1", candidate)
+        try:
+            return json.loads(candidate)
+        except Exception:
+            pass
+
+    # Extract JSON dict { ... }
+    match_dict = re.search(r"(\{.*\})", clean, re.DOTALL)
+    if match_dict:
+        candidate = match_dict.group(1).strip()
+        candidate = re.sub(r",\s*([\]}])", r"\1", candidate)
+        try:
+            return json.loads(candidate)
+        except Exception:
+            pass
+
+    # Repair unclosed bracket list
+    if clean.startswith("[") and not clean.endswith("]"):
+        try:
+            return json.loads(clean + "]")
+        except Exception:
+            pass
+
+    # Repair unclosed brace dict
+    if clean.startswith("{") and not clean.endswith("}"):
+        try:
+            return json.loads(clean + "}")
+        except Exception:
+            pass
+
+    return json.loads(clean)
 
 
 def _normalize_text_response(content, llm_provider: str) -> str:
@@ -486,6 +555,17 @@ def _generate_response(prompt: str) -> str:
 
         return _normalize_text_response(content, llm_provider)
     except Exception as e:
+        logger.warning(
+            f"[LLM] Primary provider '{llm_provider}' failed ({str(e)[:120]}). "
+            f"Triggering resilient multi-model failover cascade..."
+        )
+        try:
+            fallback_text = _generate_via_openai_fast(prompt)
+            if fallback_text and not fallback_text.startswith("Error:"):
+                logger.info("[LLM] Fallback cascade succeeded via openai-fast")
+                return _normalize_text_response(fallback_text, "openai-fast")
+        except Exception as fb_err:
+            logger.error(f"[LLM] Fallback cascade also failed: {fb_err}")
         return f"Error: {str(e)}"
 
 
@@ -623,10 +703,25 @@ Use the "{hook_category}" hook style: {HOOK_CATEGORY_EXAMPLES[hook_category]}
 NEVER start with "Did you know" or "Do you know" — these are overused and boring."""
 
     prompt = f"""
-# Role: Script for Alex (Retail Investor from Chennai)
+# Role: Script for Alex (Everyday Investor from Chennai)
 
-You are writing a script for Alex, a retail investor from Chennai, Tamil Nadu.
+You are writing a script for Alex, an everyday investor from Chennai, Tamil Nadu.
 Alex shares his personal views on the Indian stock market for educational purposes.
+
+## Target Audience: People With Practically ZERO Knowledge of Stocks or Finance
+Your viewers are everyday people, college students, homemakers, and small shop owners who have never opened a finance textbook.
+Everything must be in simple, crystal-clear, everyday words.
+
+## Jargon Bans & Conversational Translations (CRITICAL)
+1. NEVER use the word "smart money". Instead say "big foreign investment banks and mutual fund giants" or "giant financial institutions".
+2. NEVER use "retail" or "retail investors". Instead say "everyday investors like you and me" or "everyday people".
+3. NEVER use "theta decay" or "derivative Greeks". Instead say "short-term bets where your money melts away like an ice cube left out in the hot sun".
+4. NEVER use "order flow", "dark pools", "POC", or "VWAP". Instead say "massive buying and selling moves by giant global banks".
+5. NEVER use "liquidity sweep" or "liquidity trap". Instead say "big banks pushing prices down temporarily so everyday beginners panic and sell their shares at a discount".
+6. NEVER mention "FII and DII" without immediately clarifying: "big foreign funds and our Indian mutual funds like LIC".
+7. NEVER use "F&O" without clarifying: "short-term gambling contracts where 93 percent of beginners lose their hard-earned money".
+8. Explain market events with everyday analogies: fruit markets, vegetable wholesale prices, household grocery bills, buying during rainstorms, and saving for family emergencies.
+9. Channel inspiration: Speak with the grounded, protective wisdom of Anand Srinivasan (Money Pechu) — always advocate for family safety, keeping cash buffers, holding physical gold, and avoiding quick-money gambling traps.
 
 ## Content Rules (HARD CONSTRAINTS - Never Violate)
 1. FRAME EVERYTHING as personal opinion: "I would...", "In my view...", "The data shows..."
@@ -635,18 +730,23 @@ Alex shares his personal views on the Indian stock market for educational purpos
 4. NEVER promise returns or use words like "guaranteed", "sure-shot", "double your money"
 5. Every "I would buy/sell/hold" MUST be followed by "But please do your own research before investing in this or any stock"
 6. Use only historical data (90+ days old). No live prices.
-7. Start the script with: "Hey, I'm Alex from Chennai. Before we dive in — this is for educational purposes only. I'm not a SEBI-registered advisor."
+7. Start the script with: "Hey, I'm Alex from Chennai. Before we dive in, this is for educational purposes only. I am not a SEBI registered advisor."
 8. End with: "This is Alex from Chennai, signing off."
-9. Keep language simple enough for a common person to understand
+9. Keep language simple enough for a middle-school student to understand
 10. Include BOTH positives and risks when discussing any stock
 11. NEVER mention future price movements or predictions
 12. NEVER use the phrase "this is not financial advice" — instead say "this is for educational purposes" (positive framing)
 
 ## Tone
-- Conversational, like one friend explaining to another
+- Conversational, warm, and protective, like an experienced elder brother or friend explaining over a cup of chai
 - Use "I", "my", "me" — Alex's personal perspective
-- Confident but humble — data speaks, not ego
-- Speak in short, punchy sentences (works better for shorts)
+- Confident but humble — simple facts, zero arrogance
+- Speak in short, punchy sentences (works best for shorts and reels)
+
+## Text-To-Speech Pronunciation Rules (MANDATORY)
+1. NEVER use symbols: write 'dollars' instead of '$', 'rupees' instead of '₹', 'percent' instead of '%', 'and' instead of '&'.
+2. NEVER use punctuation words: do NOT use colons (:), dashes or hyphens (—, -), slashes (/), or parentheses ( ). Use only commas (,) and periods (.) for natural breathing pauses so the voice engine never reads out words like 'colon', 'dash', or 'open parenthesis'.
+3. Write numbers without commas: write '24500' instead of '24,500' so the speech flows naturally without awkward pauses.
 
 ## Format
 Return ONLY the raw script text. No markdown, no formatting, no titles, no labels.
@@ -699,6 +799,12 @@ Return ONLY the raw script text. No markdown, no formatting, no titles, no label
     except Exception as e:
         logger.warning(f"QA Critic enforcement error: {e}")
 
+    try:
+        from app.services.tts_normalizer import normalize_script_for_tts
+        final_script = normalize_script_for_tts(final_script, language=language or "en")
+    except Exception as norm_err:
+        logger.warning(f"Script TTS normalizer warning: {norm_err}")
+
     return final_script.strip()
 
 
@@ -736,28 +842,27 @@ Please note that you must use English for generating video search terms; Chinese
     for i in range(_max_retries):
         try:
             response = _generate_response(prompt)
-            if "Error: " in response:
-                logger.error(f"failed to generate video script: {response}")
-                return response
-            search_terms = json.loads(response)
-            if not isinstance(search_terms, list) or not all(
-                isinstance(term, str) for term in search_terms
-            ):
-                logger.error("response is not a list of strings.")
+            if "Error: " in response and not ("[" in response and "]" in response):
+                logger.error(f"failed to generate video terms response: {response}")
                 continue
-
+            parsed = repair_json(response)
+            if isinstance(parsed, list) and all(isinstance(term, str) for term in parsed):
+                search_terms = parsed
+                break
+            else:
+                logger.warning(f"Parsed response is not a list of strings: {parsed}")
         except Exception as e:
-            logger.warning(f"failed to generate video terms: {str(e)}")
+            logger.warning(f"failed to parse video terms JSON ({e}), attempting regex recovery: {response[:100]}")
             if response:
-                match = re.search(r"\[.*]", response)
+                match = re.search(r"(\[.*\])", response, re.DOTALL)
                 if match:
                     try:
-                        search_terms = json.loads(match.group())
-                    except Exception as e:
-                        # 这里保留重试流程，但必须记录 LLM 返回的非标准 JSON，
-                        # 否则后续排查搜索词为空时无法定位
-                        # 是模型格式问题还是解析逻辑问题。
-                        logger.warning(f"failed to generate video terms: {str(e)}")
+                        parsed = repair_json(match.group(1))
+                        if isinstance(parsed, list):
+                            search_terms = [str(t) for t in parsed]
+                            break
+                    except Exception as rec_err:
+                        logger.warning(f"Regex recovery also failed: {rec_err}")
 
         if search_terms and len(search_terms) > 0:
             break

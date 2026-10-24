@@ -147,6 +147,12 @@ class KaggleWorker:
         # Encode voice reference (trimmed <= 8s & gzipped to stay under Kaggle 1MB limit)
         voice_ref_b64 = _prepare_voice_ref_b64(voice_ref_path, max_duration_sec=8.0)
 
+        try:
+            from app.services.tts_normalizer import normalize_script_for_tts
+            text = normalize_script_for_tts(text, language=language)
+        except Exception:
+            pass
+
         payload = {
             "text": text,
             "language": language,
@@ -314,6 +320,12 @@ class KaggleWorker:
 
         # Trim <= 8s & gzip-encode so kernel source remains ~400KB (well below Kaggle's 1MB limit)
         voice_ref_b64 = _prepare_voice_ref_b64(voice_ref_path, max_duration_sec=8.0)
+
+        try:
+            from app.services.tts_normalizer import normalize_script_for_tts
+            script = normalize_script_for_tts(script)
+        except Exception:
+            pass
 
         payload = {
             "subject": subject,
