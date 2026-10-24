@@ -6,7 +6,7 @@ excerpt: "Live market analysis: Nifty closes at 22,600.0 (-0.39%), Sensex at 73,
 focusKeyword: "Nifty 50 market analysis today"
 categories: ["Market Live", "Nifty 50", "Derivatives Analysis"]
 tags: ["Nifty50", "StockMarketToday", "BankNifty", "FIIFlows", "ShareMarketNews"]
-youtubeUrl: "https://youtu.be/KZ-r1WsKdLs"
+youtubeUrl: "https://youtu.be/6yicAVI_WqQ"
 ---
 <div class="market-article">
  <!-- Executive Summary / GEO Answer Box -->
@@ -21,7 +21,7 @@ youtubeUrl: "https://youtu.be/KZ-r1WsKdLs"
 
  <!-- YouTube Video Strategic Embed -->
  <div class="video-embed-container" style="margin:28px 0; text-align:center;">
- <div class="yt-embed-wrapper" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;margin:24px 0;"><iframe src="https://youtu.be/KZ-r1WsKdLs" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen></iframe></div>
+ <div class="yt-embed-wrapper" style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:8px;margin:24px 0;"><iframe src="https://youtu.be/6yicAVI_WqQ" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0;" allowfullscreen></iframe></div>
  </div>
 
  <h2>1. Benchmark Index Overview & Price Action</h2>
