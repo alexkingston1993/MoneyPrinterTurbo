@@ -68,7 +68,7 @@ async function trackAffiliateClick(repo, token, brokerKey, utmMedium, utmCampaig
   }
 }
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   const { broker, utm_source, utm_medium, utm_campaign } = req.query;
   const key = (broker || '').toLowerCase();
   const target = AFFILIATE_LINKS[key];
@@ -78,10 +78,17 @@ export default function handler(req, res) {
     return res.end();
   }
 
-  // Fire-and-forget click telemetry — never awaited, never throws.
   const repo = process.env.GITHUB_REPO || 'alexkingston1993/MoneyPrinterTurbo';
   const token = process.env.GITHUB_PAT_TOKEN || process.env.GITHUB_TOKEN || '';
-  trackAffiliateClick(repo, token, key, utm_medium, utm_campaign).catch(() => {});
+
+  // Bounded-wait telemetry: serverless freezes after res.end() and kills
+  // fire-and-forget promises, so we track FIRST but cap the wait at ~1.2s —
+  // the redirect ALWAYS fires (no lost clicks, no failed/slow redirects).
+  const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+  await Promise.race([
+    trackAffiliateClick(repo, token, key, utm_medium, utm_campaign).catch(() => {}),
+    sleep(1200),
+  ]);
 
   const url = new URL(target);
   url.searchParams.set('utm_source', utm_source || 'youtube');

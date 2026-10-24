@@ -94,17 +94,22 @@ export async function GET(
     return NextResponse.redirect(new URL('/tools', request.url));
   }
 
-  // Fire-and-forget click telemetry — never awaited, never throws.
+  // Bounded-wait telemetry: serverless freezes after the response is returned and
+  // kills fire-and-forget promises, so we track FIRST but cap the wait at ~1.2s —
+  // the redirect ALWAYS fires (no lost clicks, no failed/slow redirects).
   const repo = process.env.GITHUB_REPO || 'alexkingston1993/MoneyPrinterTurbo';
   const token = process.env.GITHUB_PAT_TOKEN || process.env.GITHUB_TOKEN || '';
-  trackAffiliateClick(
-    repo,
-    token,
-    brokerKey,
-    request.nextUrl.searchParams.get('utm_source') || '',
-    request.nextUrl.searchParams.get('utm_medium') || '',
-    request.nextUrl.searchParams.get('utm_campaign') || ''
-  ).catch(() => {});
+  await Promise.race([
+    trackAffiliateClick(
+      repo,
+      token,
+      brokerKey,
+      request.nextUrl.searchParams.get('utm_source') || '',
+      request.nextUrl.searchParams.get('utm_medium') || '',
+      request.nextUrl.searchParams.get('utm_campaign') || ''
+    ),
+    new Promise((resolve) => setTimeout(resolve, 1200)),
+  ]);
 
   // Parse incoming UTMs from YouTube descriptions, email newsletters, or social links
   const urlObj = new URL(targetUrl);
