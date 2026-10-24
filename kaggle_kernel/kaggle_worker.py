@@ -10,8 +10,10 @@ Executes on Kaggle's free dual NVIDIA Tesla T4 GPU:
 """
 
 import os
+import re
 import json
 import asyncio
+import datetime
 import subprocess
 from pathlib import Path
 
@@ -130,6 +132,71 @@ def render_gpu_segment(seg: dict, mp3_path: Path, ass_path: Path, duration: floa
     subprocess.run(cmd, check=True)
 
 
+def _normalize_title(text: str) -> str:
+    """Case-insensitive, punctuation-insensitive title fingerprint for the dup guard."""
+    return " ".join(re.sub(r"[^\w\s]+", " ", str(text or "").lower()).split())
+
+
+def find_recent_duplicate(youtube_service, title: str, window_hours: int = 24) -> str:
+    """
+    Idempotency guard against overlapping schedulers / workflow retries.
+    Pass A: channel uploads playlist scan (freshest & cheapest).
+    Pass B: search.list(forMine=True) fallback (covers delayed playlist indexing).
+    Returns the EXISTING video_id if the same normalized title was uploaded inside
+    the 24h window; otherwise '' so the caller uploads a NEW video.
+    """
+    now = datetime.datetime.now(datetime.timezone.utc)
+    cutoff = now - datetime.timedelta(hours=window_hours)
+
+    def _norm(s: str) -> str:
+        return _normalize_title(s)
+
+    target = _norm(title)
+    target_prefix = target[:60]
+    if not target:
+        return ""
+
+    candidates = []
+
+    # Pass A: uploads playlist (up to 25 most recent)
+    try:
+        chan = youtube_service.channels().list(part="contentDetails", mine=True).execute()
+        uploads_pl = chan["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
+        for it in youtube_service.playlistItems().list(
+            part="snippet", playlistId=uploads_pl, maxResults=25
+        ).execute().get("items", []):
+            sn = it.get("snippet", {})
+            candidates.append((sn.get("resourceId", {}).get("videoId", ""), sn.get("title", ""), sn.get("publishedAt", "")))
+    except Exception as e:
+        print(f"Duplicate playlist scan notice: {e}")
+
+    # Pass B: search.list forMine (up to 15 most recent by date)
+    try:
+        for it in youtube_service.search().list(
+            part="snippet", forMine=True, type="video", maxResults=15, order="date"
+        ).execute().get("items", []):
+            sn = it.get("snippet", {})
+            candidates.append((it.get("id", {}).get("videoId", ""), sn.get("title", ""), sn.get("publishTime", "")))
+    except Exception as e:
+        print(f"Duplicate search scan notice: {e}")
+
+    seen = set()
+    for vid, v_title, published_at in candidates:
+        if not vid or vid in seen:
+            continue
+        seen.add(vid)
+        norm = _norm(v_title)
+        if not published_at or not (norm == target or norm[:60] == target_prefix):
+            continue
+        try:
+            when = datetime.datetime.fromisoformat(str(published_at).replace("Z", "+00:00"))
+            if when >= cutoff:
+                return vid
+        except Exception:
+            continue
+    return ""
+
+
 def upload_youtube_headless(mp4_path: Path, thumb_path: Path, yt_payload: dict) -> str:
     """Headless YouTube upload with containsSyntheticMedia=True using OAuth refresh token."""
     creds_file = ASSETS_DIR / "yt_oauth.json"
@@ -169,7 +236,13 @@ def upload_youtube_headless(mp4_path: Path, thumb_path: Path, yt_payload: dict) 
         try:
             youtube = build("youtube", "v3", credentials=creds)
 
+            # Idempotency guard: skip if same normalized title was uploaded within 24h
             meta = yt_payload["metadata"]
+            dup_id = find_recent_duplicate(youtube, meta["title"])
+            if dup_id:
+                print(f"Duplicate guard: '{meta['title'][:60]}' uploaded within 24h — skipping, existing video {dup_id}")
+                return dup_id
+
             body = {
                 "snippet": {
                     "title": meta["title"][:100],

@@ -218,6 +218,79 @@ class YouTubeUploader:
             logger.error(f"[{language}] Verification failed: {e}")
             return False
 
+    @staticmethod
+    def _normalize_title(text: str) -> str:
+        """Case-insensitive, punctuation-insensitive title fingerprint."""
+        return " ".join(re.sub(r"[^\w\s]+", " ", str(text or "").lower()).split())
+
+    def _find_recent_duplicate(self, language: str, title: str, window_hours: int = 24) -> Optional[str]:
+        """
+        Idempotency guard against overlapping schedulers / workflow retries.
+        Pass A: channel uploads playlist scan (freshest & cheapest).
+        Pass B: search.list(forMine=True) fallback (covers delayed playlist indexing
+        after fast overlapping runs). A same-title upload inside the 24h window
+        returns the EXISTING video_id instead of uploading a duplicate copy.
+        """
+        service = self._get_service(language)
+        if not service:
+            return None
+
+        normalized = self._normalize_title(title)
+        if not normalized:
+            return None
+        prefix_match = normalized[:60]
+        cutoff = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=window_hours)
+
+        candidates: List[Tuple[str, str, str]] = []
+
+        # Pass A: uploads playlist (up to 25 most recent)
+        try:
+            channel_res = service.channels().list(mine=True, part="contentDetails").execute()
+            uploads_pl = channel_res["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
+            recent_items = service.playlistItems().list(
+                playlistId=uploads_pl, part="snippet", maxResults=25
+            ).execute().get("items", [])
+            for item in recent_items:
+                snippet = item.get("snippet", {})
+                candidates.append((
+                    snippet.get("resourceId", {}).get("videoId", ""),
+                    snippet.get("title", ""),
+                    snippet.get("publishedAt", ""),
+                ))
+        except Exception as e:
+            logger.debug(f"[{language}] Duplicate playlist scan notice: {e}")
+
+        # Pass B: search.list forMine (up to 15 most recent by date)
+        try:
+            found = service.search().list(
+                part="snippet", forMine=True, type="video", maxResults=15, order="date"
+            ).execute().get("items", [])
+            for item in found:
+                snippet = item.get("snippet", {})
+                candidates.append((
+                    item.get("id", {}).get("videoId", ""),
+                    snippet.get("title", ""),
+                    snippet.get("publishTime", ""),
+                ))
+        except Exception as e:
+            logger.debug(f"[{language}] Duplicate search.scan notice: {e}")
+
+        seen: set = set()
+        for video_id, video_title, published_at in candidates:
+            if not video_id or video_id in seen:
+                continue
+            seen.add(video_id)
+            norm = self._normalize_title(video_title)
+            if not published_at or not (norm == normalized or norm[:60] == prefix_match):
+                continue
+            try:
+                when = datetime.datetime.fromisoformat(str(published_at).replace("Z", "+00:00"))
+                if when >= cutoff:
+                    return video_id
+            except Exception:
+                continue
+        return None
+
     def upload_video(
         self,
         language: str,
@@ -313,39 +386,26 @@ class YouTubeUploader:
         if publish_at:
             body["status"]["publishAt"] = publish_at
 
-        # Prevent duplicate uploads: Check if a public video with identical title already exists
+        # Prevent duplicate uploads: same normalized title on the channel within 24h
         try:
-            channel_res = service.channels().list(mine=True, part="contentDetails").execute()
-            if channel_res and channel_res.get("items"):
-                uploads_pl = channel_res["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
-                recent_items = service.playlistItems().list(
-                    playlistId=uploads_pl,
-                    part="snippet",
-                    maxResults=20,
-                ).execute().get("items", [])
-
-                clean_target = re.sub(r"[^\w\s]", "", title.lower()).strip()
-                for itm in recent_items:
-                    snip = itm.get("snippet", {})
-                    v_title = snip.get("title", "")
-                    clean_v = re.sub(r"[^\w\s]", "", v_title.lower()).strip()
-                    v_id = snip.get("resourceId", {}).get("videoId")
-                    if clean_target and clean_target == clean_v and v_id:
-                        v_chk = service.videos().list(id=v_id, part="status").execute()
-                        v_status = v_chk.get("items", [{}])[0].get("status", {}).get("privacyStatus", "")
-                        if v_status == "public":
-                            existing_url = f"https://youtu.be/{v_id}"
-                            logger.warning(f"[{language}] Video '{v_title}' already exists on channel ({existing_url}). Preventing duplicate upload.")
-                            return {
-                                "success": True,
-                                "video_id": v_id,
-                                "url": existing_url,
-                                "title": v_title,
-                                "language": language,
-                                "already_existed": True,
-                            }
+            existing_video_id = self._find_recent_duplicate(language, title, window_hours=24)
         except Exception as dup_err:
             logger.debug(f"[{language}] Duplicate upload check notice: {dup_err}")
+            existing_video_id = None
+
+        if existing_video_id:
+            existing_url = f"https://youtu.be/{existing_video_id}"
+            logger.warning(
+                f"[{language}] Duplicate title detected on channel within 24h — SKIPPING upload, returning existing video: {existing_url}"
+            )
+            return {
+                "success": True,
+                "video_id": existing_video_id,
+                "url": existing_url,
+                "title": title[:100],
+                "language": language,
+                "already_existed": True,
+            }
 
         try:
             logger.info(f"[{language}] Uploading: {title[:60]}... ({os.path.getsize(video_path)/1024/1024:.1f}MB)")
