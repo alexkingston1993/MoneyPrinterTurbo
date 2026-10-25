@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-25T21:45:57Z",
+  "updated_at": "2026-10-25T21:47:28Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -9,15 +9,15 @@
       "vertical": "stock_market",
       "vertical_label": "Stock Market #1",
       "shorts_count": 2,
-      "status": "FAILED",
-      "overall_pct": 75,
-      "stage_pct": 80,
-      "current_stage": "Kaggle T4 GPU Render Farm",
-      "current_stage_index": 5,
+      "status": "RUNNING",
+      "overall_pct": 2,
+      "stage_pct": 10,
+      "current_stage": "SEO Topic Harvester (open-seo)",
+      "current_stage_index": 1,
       "archetype": "institutional_trap_expose",
       "topic": "Nifty 50 Liquidity Traps & Institutional Accumulation",
       "voice_persona": "AndrewNeural",
-      "run_id": "40236490933"
+      "run_id": "40236602477"
     },
     "2": {
       "slot": 2,
