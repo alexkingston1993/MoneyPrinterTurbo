@@ -88,6 +88,11 @@
       "ts": "13:04:21",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udd0d Harvesting live search intent... | open-seo dark-query loop \u00b7 slot 1"
+    },
+    {
+      "ts": "13:04:26",
+      "level": "INFO",
+      "msg": "[GEMINI]: \ud83d\udd0d Harvested `Nifty 50 today option chain` | source: autocomplete \u00b7 cluster: nifty 50 today option chain, nifty 50 today live chart, nifty 50 today chart"
     }
   ]
 }
