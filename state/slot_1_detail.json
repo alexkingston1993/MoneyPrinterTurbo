@@ -4,14 +4,14 @@
   "vertical": "crypto",
   "vertical_label": "Slot #1",
   "shorts_count": 2,
-  "status": "WAITING_APPROVAL",
+  "status": "FAILED",
   "overall_pct": 75,
   "stage_pct": 80,
   "current_stage_index": 5,
   "current_stage_name": "Kaggle T4 GPU Render Farm",
-  "current_subtask_label": "Whisper alignment & NVENC rendering",
+  "current_subtask_label": "Error: Kaggle GPU Kernel failed: alexytcreative/flipzon-gpu-video-renderer ha",
   "started_at": "2026-10-25T21:40:29Z",
-  "updated_at": "2026-10-25T21:45:49Z",
+  "updated_at": "2026-10-25T21:45:54Z",
   "eta_seconds": 0,
   "stages": [
     {
