@@ -59,8 +59,10 @@ try:
             os.environ["TELEGRAM_BOT_TOKEN"] = _cfg["telegram_bot_token"]
         if not os.getenv("TELEGRAM_CHAT_ID") and _cfg.get("telegram_chat_id"):
             os.environ["TELEGRAM_CHAT_ID"] = str(_cfg["telegram_chat_id"])
-        if not os.getenv("GEMINI_MODEL_NAME") and _cfg.get("gemini_model_name"):
-            os.environ["GEMINI_MODEL_NAME"] = _cfg["gemini_model_name"]
+        _m_val = _cfg.get("gemini_model_name", "gemini-flash-latest")
+        if not _m_val or "gemini-2.5-flash" in _m_val or "gemini-pro" in _m_val:
+            _m_val = "gemini-flash-latest"
+        os.environ["GEMINI_MODEL_NAME"] = _m_val
 except Exception:
     pass
 
@@ -377,9 +379,10 @@ def _enforce_master_keys(data: Dict) -> Dict:
             derived.append(str(meta.get("title", data.get("topic", "The Bull Print daily insight")))[:70])
         web["tldr_summary"] = derived
 
-    seo_meta = web.get("seo_meta")
-    if not isinstance(seo_meta, dict) or not str(seo_meta.get("h1_title", "")).strip():
-        web["seo_meta"] = {"h1_title": web.get("seo_title") or meta.get("title") or data.get("topic", "")}
+    if not data.get("campaign_id"):
+        title_cand = meta.get("title") or data.get("topic") or "market-insight"
+        clean_slug = re.sub(r"[^a-zA-Z0-9]+", "-", str(title_cand).lower()).strip("-")[:50]
+        data["campaign_id"] = f"{clean_slug}-{int(time.time())}"
 
     return data
 
@@ -512,9 +515,13 @@ def generate_master_json_via_ai_studio(topic: str, market_notes: str, chart_file
             client = genai.Client(api_key=api_key)
             schema_dict = json.loads(schema_file.read_text(encoding="utf-8")) if schema_file.exists() else {}
 
-            logger.info(f"🧠 Calling Google AI Studio ({os.getenv('GEMINI_MODEL_NAME', 'gemini-flash-latest')})...")
+            _chosen_model = os.getenv("GEMINI_MODEL_NAME", "gemini-flash-latest")
+            if not _chosen_model or "gemini-2.5-flash" in _chosen_model or "gemini-pro" in _chosen_model:
+                _chosen_model = "gemini-flash-latest"
+
+            logger.info(f"🧠 Calling Google AI Studio ({_chosen_model})...")
             response = client.models.generate_content(
-                model=os.getenv("GEMINI_MODEL_NAME", "gemini-flash-latest"),
+                model=_chosen_model,
                 contents=user_input,
                 config=types.GenerateContentConfig(
                     system_instruction=system_prompt,
@@ -970,7 +977,8 @@ async def main():
         mission.update_stage("gemini", "🚨 COMPLIANCE HALT", str(e)[:120])
         _send_telegram("🚨 *CRITICAL COMPLIANCE HALT*\n" + str(e)[:400])
         raise SystemExit(1)
-    slug = payload["campaign_id"]
+    slug = payload.get("campaign_id") or f"slot-{slot_index}-{int(time.time())}"
+    payload["campaign_id"] = slug
     mission.update_stage("gemini", f"✅ Generated + Compliance-Approved (`{slug}`)", _vertical_badge(vertical))
 
     # 🔬 THE CONTENT AUTHENTICITY ENGINE (anti-reuse trigram guard + vertical vocabulary + archetype rotation).
