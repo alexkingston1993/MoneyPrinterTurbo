@@ -9,9 +9,9 @@
   "stage_pct": 100,
   "current_stage_index": 2,
   "current_stage_name": "Gemini Script & Dossier Synthesis",
-  "current_subtask_label": "SEBI regex + freshness + LLM auditor",
+  "current_subtask_label": "\ud83d\udee1\ufe0f INSURANCE",
   "started_at": "2026-10-25T18:30:56Z",
-  "updated_at": "2026-10-25T18:32:04Z",
+  "updated_at": "2026-10-25T18:32:11Z",
   "eta_seconds": 0,
   "stages": [
     {
