@@ -195,7 +195,7 @@ jobs:
       - name: 📦 Install Cloud Dependencies & Headless Chromium
         run: |
           sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core
-          pip install google-genai playwright Pillow kaggle requests google-api-python-client google-auth edge-tts loguru
+          pip install google-genai playwright Pillow kaggle requests google-api-python-client google-auth edge-tts loguru numpy matplotlib
           playwright install chromium
 
       - name: 🔑 Materialize Cloud Credentials from GitHub Secrets
@@ -241,6 +241,7 @@ jobs:
 
       - name: 🚀 Run Cloud Orchestrator (Harvest -> Playwright -> AI Studio -> Kaggle GPU -> Vercel)
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
           KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}

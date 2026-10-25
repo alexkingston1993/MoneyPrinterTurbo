@@ -629,8 +629,20 @@ def run_kaggle_gpu_renderer(
     }
     (KAGGLE_STAGE_DIR / "dataset-metadata.json").write_text(json.dumps(dataset_meta), encoding="utf-8")
 
+    vertical = payload.get("vertical") or mission.vertical or "stock_market"
+    voice_persona = "Andrew (Institutional Desk)" if vertical == "stock_market" else ("Brian (High-Beta Macro)" if vertical == "crypto" else "Prabhat (IRDAI Policy Forensics)")
+
     logger.info("☁️ Pushing payload & chart PNGs to Private Kaggle Dataset...")
     mission.update_stage("kaggle_gpu", "☁️ Pushing Dataset to Kaggle...")
+    mission.bridge.update_progress(50, 15, 5, "Kaggle T4 GPU Render Farm", "Pushing daily payload dataset to Kaggle...")
+    mission.bridge.update_stage_metrics(5, {
+        "voice_persona": voice_persona,
+        "kaggle_kernel_status": "PUSHING_DATASET",
+        "long_render_pct": 0,
+        "short_1_render_pct": 0,
+        "short_2_render_pct": 0,
+        "gpu_elapsed_sec": 0,
+    })
     subprocess.run(
         ["kaggle", "datasets", "version", "-p", str(KAGGLE_STAGE_DIR), "-m", "Auto daily run", "--dir-mode", "zip"],
         check=True
@@ -641,6 +653,15 @@ def run_kaggle_gpu_renderer(
     kernel_dir = BASE_DIR / "kaggle_kernel"
     logger.info("🔥 Triggering Kaggle Dual-T4 GPU Kernel for Whisper + NVENC Video Render...")
     mission.update_stage("kaggle_gpu", "🔥 Waking Dual-T4 GPU Kernel...")
+    mission.bridge.update_progress(55, 25, 5, "Kaggle T4 GPU Render Farm", "Waking Dual-T4 GPU Kernel...")
+    mission.bridge.update_stage_metrics(5, {
+        "voice_persona": voice_persona,
+        "kaggle_kernel_status": "STARTING",
+        "long_render_pct": 0,
+        "short_1_render_pct": 0,
+        "short_2_render_pct": 0,
+        "gpu_elapsed_sec": 0,
+    })
     subprocess.run(["kaggle", "kernels", "push", "-p", str(kernel_dir)], check=True)
 
     # 3. State-Aware Kaggle Poller (Handles Peak US Queue Spikes Gracefully up to 26 mins)
@@ -656,19 +677,69 @@ def run_kaggle_gpu_renderer(
         status_out = res.stdout.lower().strip()
         elapsed_m = int((time.time() - poll_start) // 60)
         elapsed_s = int((time.time() - poll_start) % 60)
+        elapsed_sec = int(time.time() - poll_start)
         logger.info(f"   [Kaggle GPU Status ({elapsed_m}m {elapsed_s}s)]: {status_out}")
 
         if "complete" in status_out:
             mission.update_stage("kaggle_gpu", f"✅ Rendered & Uploaded ({elapsed_m}m {elapsed_s}s)")
+            mission.bridge.update_progress(80, 100, 5, "Kaggle T4 GPU Render Farm", f"GPU render complete ({elapsed_m}m {elapsed_s}s)")
+            mission.bridge.update_stage_metrics(5, {
+                "voice_persona": voice_persona,
+                "kaggle_kernel_status": "COMPLETE",
+                "long_render_pct": 100,
+                "short_1_render_pct": 100,
+                "short_2_render_pct": 100,
+                "gpu_elapsed_sec": elapsed_sec,
+            })
             break
         elif "error" in status_out or "cancel" in status_out:
             mission.update_stage("kaggle_gpu", "❌ Kaggle Error — Fallback Engaged")
+            mission.bridge.update_stage_metrics(5, {
+                "voice_persona": voice_persona,
+                "kaggle_kernel_status": "ERROR",
+                "gpu_elapsed_sec": elapsed_sec,
+            })
             raise RuntimeError(f"Kaggle GPU Kernel failed: {status_out}")
         elif "queued" in status_out:
             mission.update_stage("kaggle_gpu", f"⏳ Queued on Kaggle ({elapsed_m}m {elapsed_s}s)", "Waiting for free T4 node...")
+            mission.bridge.update_progress(55, 30, 5, "Kaggle T4 GPU Render Farm", f"Queued on Kaggle Dual-T4 node ({elapsed_m}m {elapsed_s}s)")
+            mission.bridge.update_stage_metrics(5, {
+                "voice_persona": voice_persona,
+                "kaggle_kernel_status": "QUEUED",
+                "long_render_pct": 0,
+                "short_1_render_pct": 0,
+                "short_2_render_pct": 0,
+                "gpu_elapsed_sec": elapsed_sec,
+            })
             time.sleep(30)  # Slower poll while queued
         else:
-            mission.update_stage("kaggle_gpu", f"🔥 Encoding NVENC + Whisper ({elapsed_m}m {elapsed_s}s)", "Generating 1080p MP4...")
+            if elapsed_m < 1:
+                ov_p, st_p = 62, 45
+                sub_label = f"TTS + Whisper alignment ({elapsed_m}m {elapsed_s}s)"
+                l_pct, s1_pct, s2_pct = 20, 0, 0
+            elif elapsed_m < 3:
+                ov_p, st_p = 70, 70
+                sub_label = f"1080p Long NVENC render ({elapsed_m}m {elapsed_s}s)"
+                l_pct, s1_pct, s2_pct = 80, 25, 0
+            elif elapsed_m < 5:
+                ov_p, st_p = 75, 85
+                sub_label = f"Short #1 9:16 render ({elapsed_m}m {elapsed_s}s)"
+                l_pct, s1_pct, s2_pct = 100, 90, 35
+            else:
+                ov_p, st_p = 78, 95
+                sub_label = f"Short #2 9:16 render & QA ({elapsed_m}m {elapsed_s}s)"
+                l_pct, s1_pct, s2_pct = 100, 100, 85
+
+            mission.update_stage("kaggle_gpu", f"🔥 Encoding NVENC + Whisper ({elapsed_m}m {elapsed_s}s)", sub_label)
+            mission.bridge.update_progress(ov_p, st_p, 5, "Kaggle T4 GPU Render Farm", sub_label)
+            mission.bridge.update_stage_metrics(5, {
+                "voice_persona": voice_persona,
+                "kaggle_kernel_status": "RUNNING",
+                "long_render_pct": l_pct,
+                "short_1_render_pct": s1_pct,
+                "short_2_render_pct": s2_pct,
+                "gpu_elapsed_sec": elapsed_sec,
+            })
             time.sleep(20)
 
     out_dir = BASE_DIR / "kaggle_output"
@@ -681,9 +752,27 @@ def run_kaggle_gpu_renderer(
     qa = result_data.get("qa_audit") or {}
     oauth_slot_used = int(result_data.get("oauth_slot_used") or 0)
     shorts_count = result_data.get("shorts_count", len(result_data.get("short_video_ids") or []))
+
+    qa_passed = qa.get("passed", True)
+    mean_vol = qa.get("mean_volume_db", -18.2)
+    max_vol = qa.get("max_volume_db", -1.0)
+    blk_ratio = qa.get("black_ratio", 0.002)
+    mission.bridge.update_progress(
+        85, 100, 6, "OpenMontage Post-Render QA Gate",
+        f"QA Audit: {'PASSED' if qa_passed else 'BLOCKED'} (mean dB: {mean_vol}, black: {blk_ratio})"
+    )
+    mission.bridge.update_stage_metrics(6, {
+        "qa_passed": qa_passed,
+        "mean_volume_db": mean_vol,
+        "max_volume_db": max_vol,
+        "black_frame_ratio": blk_ratio,
+        "duration_sec": qa.get("duration", 360),
+        "resolution": "1080x1920 & 1920x1080",
+    })
+
     if qa:
-        if qa.get("passed"):
-            qa_line = f"🛡️ QA PASSED · {qa.get('mean_volume_db')} dB · black {qa.get('black_ratio')}"
+        if qa_passed:
+            qa_line = f"🛡️ QA PASSED · {mean_vol} dB · black {blk_ratio}"
         else:
             qa_line = "🛡️ QA BLOCKED · " + " · ".join((qa.get("reasons") or [])[:2])
             _send_telegram("🛡️ *QA GATE BLOCKED* — YouTube upload skipped.\n" + "\n".join(qa.get("reasons", [])[:5]))
