@@ -83,6 +83,11 @@
       "ts": "21:47:26",
       "level": "INFO",
       "msg": "Slot #1 (insurance) initialized. Target: 1 Long + 2 Shorts."
+    },
+    {
+      "ts": "21:47:36",
+      "level": "INFO",
+      "msg": "[PLAYWRIGHT]: \ud83d\udcca Rendering insurance infographics... | "
     }
   ]
 }
