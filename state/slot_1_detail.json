@@ -1,35 +1,35 @@
 {
   "slot": 1,
-  "run_id": "40211774278",
+  "run_id": "40219365617",
   "vertical": "stock_market",
   "vertical_label": "Slot #1",
   "shorts_count": 2,
   "status": "RUNNING",
-  "overall_pct": 25,
-  "stage_pct": 100,
-  "current_stage_index": 2,
-  "current_stage_name": "Gemini Script & Dossier Synthesis",
-  "current_subtask_label": "30-day overlap vs 'institutional-order-flow-absorption-trap-2026' \u2192 title overlap ['absorption', 'flow', 'institutional'",
-  "started_at": "2026-10-25T16:28:56Z",
-  "updated_at": "2026-10-25T16:30:32Z",
+  "overall_pct": 2,
+  "stage_pct": 10,
+  "current_stage_index": 1,
+  "current_stage_name": "SEO Topic Harvester (open-seo)",
+  "current_subtask_label": "Harvesting search intent & clusters",
+  "started_at": "2026-10-25T18:04:02Z",
+  "updated_at": "2026-10-25T18:04:02Z",
   "eta_seconds": 0,
   "stages": [
     {
       "id": 1,
       "name": "SEO Topic Harvester (open-seo)",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-25T16:28:55Z",
-      "completed_at": "2026-10-25T16:29:00Z",
+      "status": "RUNNING",
+      "pct": 0,
+      "started_at": "2026-10-25T18:04:01Z",
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 2,
       "name": "Gemini Script & Dossier Synthesis",
-      "status": "RUNNING",
-      "pct": 100,
-      "started_at": "2026-10-25T16:29:00Z",
-      "completed_at": "2026-10-25T16:29:03Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
       "metrics": {}
     },
     {
@@ -37,22 +37,16 @@
       "name": "Authenticity & SEBI/IRDAI Compliance Gate",
       "status": "PENDING",
       "pct": 0,
-      "started_at": "2026-10-25T16:30:30Z",
-      "completed_at": "2026-10-25T16:29:03Z",
-      "metrics": {
-        "compliance_pass": true,
-        "authenticity_pass": true,
-        "trigram_similarity_pct": 8.4,
-        "regex_violations": 0,
-        "audit_notes": "Compliance and domain depth verified"
-      }
+      "started_at": null,
+      "completed_at": null,
+      "metrics": {}
     },
     {
       "id": 4,
       "name": "Chart & High-CTR Thumbnail Studio",
       "status": "PENDING",
       "pct": 0,
-      "started_at": "2026-10-25T16:29:03Z",
+      "started_at": null,
       "completed_at": null,
       "metrics": {}
     },
@@ -86,54 +80,9 @@
   ],
   "live_logs": [
     {
-      "ts": "16:28:56",
+      "ts": "18:04:02",
       "level": "INFO",
       "msg": "Slot #1 (stock_market) initialized. Target: 1 Long + 2 Shorts."
-    },
-    {
-      "ts": "16:29:00",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvesting live search intent... | open-seo dark-query loop \u00b7 slot 1"
-    },
-    {
-      "ts": "16:29:03",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvested `Nifty 50 today option chain` | source: autocomplete \u00b7 cluster: nifty 50 today option chain, nifty 50 today live chart, nifty 50 today chart"
-    },
-    {
-      "ts": "16:29:05",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \ud83d\udd04 Capturing 3 charts... | "
-    },
-    {
-      "ts": "16:29:21",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \u2705 Captured (3 charts) | "
-    },
-    {
-      "ts": "16:29:23",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83e\udde0 Synthesizing Dual Script + Article... | "
-    },
-    {
-      "ts": "16:30:24",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udee1\ufe0f Auditing Compliance Gate... | SEBI regex + freshness + LLM auditor"
-    },
-    {
-      "ts": "16:30:30",
-      "level": "INFO",
-      "msg": "[GEMINI]: \u2705 Generated + Compliance-Approved (`nifty-50-order-flow-absorption-institutional--1792945822`) | \ud83d\udcc8 STOCK MARKET"
-    },
-    {
-      "ts": "16:30:32",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd2c Auditing Authenticity Engine... | trigram dupe-check + domain vocabulary"
-    },
-    {
-      "ts": "16:30:34",
-      "level": "INFO",
-      "msg": "[GEMINI]: \u267b\ufe0f Authenticity regen 1/2... | 30-day overlap vs 'institutional-order-flow-absorption-trap-2026' \u2192 title overlap ['absorption', 'flow', 'institutional'"
     }
   ]
 }
