@@ -5,13 +5,13 @@
   "vertical_label": "Slot #2",
   "shorts_count": 2,
   "status": "WAITING_APPROVAL",
-  "overall_pct": 75,
-  "stage_pct": 80,
-  "current_stage_index": 5,
-  "current_stage_name": "Kaggle T4 GPU Render Farm",
-  "current_subtask_label": "Whisper alignment & NVENC rendering",
+  "overall_pct": 100,
+  "stage_pct": 100,
+  "current_stage_index": 7,
+  "current_stage_name": "Multi-Channel Distribution",
+  "current_subtask_label": "Published live & indexed",
   "started_at": "2026-10-25T18:13:14Z",
-  "updated_at": "2026-10-25T18:15:58Z",
+  "updated_at": "2026-10-25T18:16:00Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -63,10 +63,10 @@
     {
       "id": 5,
       "name": "Kaggle T4 GPU Render Farm",
-      "status": "RUNNING",
-      "pct": 80,
+      "status": "COMPLETED",
+      "pct": 100,
       "started_at": "2026-10-25T18:15:32Z",
-      "completed_at": null,
+      "completed_at": "2026-10-25T18:16:00Z",
       "metrics": {
         "voice_persona": "Brian (High-Beta Macro)",
         "kaggle_kernel_status": "PUSHING_DATASET",
@@ -79,18 +79,18 @@
     {
       "id": 6,
       "name": "OpenMontage Post-Render QA Gate",
-      "status": "PENDING",
-      "pct": 0,
+      "status": "COMPLETED",
+      "pct": 100,
       "started_at": null,
-      "completed_at": null,
+      "completed_at": "2026-10-25T18:16:00Z",
       "metrics": {}
     },
     {
       "id": 7,
       "name": "Multi-Channel Distribution",
-      "status": "PENDING",
-      "pct": 0,
-      "started_at": null,
+      "status": "RUNNING",
+      "pct": 100,
+      "started_at": "2026-10-25T18:16:00Z",
       "completed_at": null,
       "metrics": {}
     }
@@ -170,6 +170,11 @@
       "ts": "18:15:37",
       "level": "INFO",
       "msg": "[KAGGLE_GPU]: \u2601\ufe0f Pushing Dataset to Kaggle... | "
+    },
+    {
+      "ts": "18:16:00",
+      "level": "INFO",
+      "msg": "[KAGGLE_GPU]: \u2705 Rendered & Uploaded (0 Shorts) | "
     }
   ]
 }
