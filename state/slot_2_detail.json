@@ -9,9 +9,9 @@
   "stage_pct": 100,
   "current_stage_index": 2,
   "current_stage_name": "Gemini Script & Dossier Synthesis",
-  "current_subtask_label": "Synthesizing script & SEO dossier",
+  "current_subtask_label": "SEBI regex + freshness + LLM auditor",
   "started_at": "2026-10-25T18:13:14Z",
-  "updated_at": "2026-10-25T18:13:38Z",
+  "updated_at": "2026-10-25T18:14:53Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -103,6 +103,11 @@
       "ts": "18:13:38",
       "level": "INFO",
       "msg": "[PLAYWRIGHT]: \u2705 Captured (3 charts) | "
+    },
+    {
+      "ts": "18:13:40",
+      "level": "INFO",
+      "msg": "[GEMINI]: \ud83e\udde0 Synthesizing Dual Script + Article... | "
     }
   ]
 }
