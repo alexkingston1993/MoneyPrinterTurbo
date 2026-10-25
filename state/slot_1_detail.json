@@ -1,35 +1,35 @@
 {
   "slot": 1,
-  "run_id": "40193649013",
+  "run_id": "40194614285",
   "vertical": "stock_market",
   "vertical_label": "Slot #1",
   "shorts_count": 2,
   "status": "RUNNING",
-  "overall_pct": 25,
-  "stage_pct": 100,
-  "current_stage_index": 2,
-  "current_stage_name": "Gemini Script & Dossier Synthesis",
-  "current_subtask_label": "SEBI regex + freshness + LLM auditor",
-  "started_at": "2026-10-25T12:34:53Z",
-  "updated_at": "2026-10-25T12:35:58Z",
+  "overall_pct": 2,
+  "stage_pct": 10,
+  "current_stage_index": 1,
+  "current_stage_name": "SEO Topic Harvester (open-seo)",
+  "current_subtask_label": "Harvesting search intent & clusters",
+  "started_at": "2026-10-25T12:47:41Z",
+  "updated_at": "2026-10-25T12:47:41Z",
   "eta_seconds": 0,
   "stages": [
     {
       "id": 1,
       "name": "SEO Topic Harvester (open-seo)",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-25T12:34:52Z",
-      "completed_at": "2026-10-25T12:34:58Z",
+      "status": "RUNNING",
+      "pct": 0,
+      "started_at": "2026-10-25T12:47:41Z",
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 2,
       "name": "Gemini Script & Dossier Synthesis",
-      "status": "RUNNING",
-      "pct": 100,
-      "started_at": "2026-10-25T12:34:58Z",
-      "completed_at": "2026-10-25T12:35:08Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
       "metrics": {}
     },
     {
@@ -38,7 +38,7 @@
       "status": "PENDING",
       "pct": 0,
       "started_at": null,
-      "completed_at": "2026-10-25T12:35:08Z",
+      "completed_at": null,
       "metrics": {}
     },
     {
@@ -46,7 +46,7 @@
       "name": "Chart & High-CTR Thumbnail Studio",
       "status": "PENDING",
       "pct": 0,
-      "started_at": "2026-10-25T12:35:08Z",
+      "started_at": null,
       "completed_at": null,
       "metrics": {}
     },
@@ -80,34 +80,9 @@
   ],
   "live_logs": [
     {
-      "ts": "12:34:53",
+      "ts": "12:47:41",
       "level": "INFO",
       "msg": "Slot #1 (stock_market) initialized. Target: 1 Long + 2 Shorts."
-    },
-    {
-      "ts": "12:35:01",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvesting live search intent... | open-seo dark-query loop \u00b7 slot 1"
-    },
-    {
-      "ts": "12:35:06",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvested `Nifty 50 today option chain` | source: autocomplete \u00b7 cluster: nifty 50 today option chain, nifty 50 today live chart, nifty 50 today chart"
-    },
-    {
-      "ts": "12:35:10",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \ud83d\udd04 Capturing 3 charts... | "
-    },
-    {
-      "ts": "12:35:27",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \u2705 Captured (3 charts) | "
-    },
-    {
-      "ts": "12:35:32",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83e\udde0 Synthesizing Dual Script + Article... | "
     }
   ]
 }
