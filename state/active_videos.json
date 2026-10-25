@@ -1,4 +1,29 @@
 {
-  "videos": {},
-  "updated_at": "2026-10-26T00:41:00Z"
+  "updated_at": "2026-10-26T01:55:00Z",
+  "videos": {
+    "slot_1_long": {
+      "slot": 1,
+      "format": "16:9 LONG",
+      "vertical": "STOCK_MARKET",
+      "title": "Nifty 50 Liquidity Traps & Institutional Accumulation",
+      "current_stage": "Stage 4/7: Charts & Thumbnail Verification",
+      "stage_pct": 85,
+      "completion_pct": 55,
+      "eta_seconds": 180,
+      "compliance_status": "🛡️ Feedback Healed & Verified",
+      "updated_at": "2026-10-26T01:55:00Z"
+    },
+    "slot_1_short_1": {
+      "slot": 1,
+      "format": "9:16 SHORT",
+      "vertical": "STOCK_MARKET",
+      "title": "The 3:18 PM Expiry Day Trap Exposed #shorts",
+      "current_stage": "Stage 5/7: Fast-Paced Audio & GPU Render",
+      "stage_pct": 70,
+      "completion_pct": 65,
+      "eta_seconds": 120,
+      "compliance_status": "🛡️ Feedback Healed & Verified",
+      "updated_at": "2026-10-26T01:55:00Z"
+    }
+  }
 }

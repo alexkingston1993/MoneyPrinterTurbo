@@ -1,0 +1,109 @@
+{
+  "updated_at": "2026-10-25T20:22:34Z",
+  "channel_median_vph": 62.0,
+  "top_outperformers": [
+    {
+      "video_id": "dCjty24rhDU",
+      "title": "Why Insurers Legally Slash Your Hospital Claim? #Shorts",
+      "format": "SHORT",
+      "published_at": "2026-10-25 18:48:00",
+      "hours_live": 24.0,
+      "view_count": 2200,
+      "like_count": 155,
+      "comment_count": 12,
+      "views_per_hour": 80.0,
+      "engagement_rate": 0.082
+    },
+    {
+      "video_id": "FogU8YmM9m0",
+      "title": "Bitcoin Liquidation Heatmap & Funding Rate Delta (25 Oc #Shorts",
+      "format": "SHORT",
+      "published_at": "2026-10-25 18:32:00",
+      "hours_live": 30.0,
+      "view_count": 2155,
+      "like_count": 152,
+      "comment_count": 13,
+      "views_per_hour": 78.5,
+      "engagement_rate": 0.082
+    },
+    {
+      "video_id": "sim_2",
+      "title": "Indian Stock Market Guide for Beginners: What Big Bank Selling Means for Your Family Savings",
+      "format": "LONG",
+      "published_at": "2026-10-24 10:31:25",
+      "hours_live": 36.0,
+      "view_count": 2110,
+      "like_count": 149,
+      "comment_count": 14,
+      "views_per_hour": 77.0,
+      "engagement_rate": 0.082
+    }
+  ],
+  "bottom_underperformers": [
+    {
+      "video_id": "sim_22",
+      "title": "Nifty Today: Bears Tighten Grip as Nifty Cracks Critical Support | Full Analysis & Derivative Setup",
+      "format": "LONG",
+      "published_at": "2026-10-22 12:15:00",
+      "hours_live": 156.0,
+      "view_count": 1210,
+      "like_count": 89,
+      "comment_count": 34,
+      "views_per_hour": 47.0,
+      "engagement_rate": 0.082
+    },
+    {
+      "video_id": "sim_23",
+      "title": "Nifty Today: Bears Tighten Grip as Nifty Cracks Critical Support | Full Analysis & Derivative Setup. Please do your own due diligence and market research as I am not a SEBI-registered financial advisor. This analysis is strictly for educational purposes only.",
+      "format": "LONG",
+      "published_at": "2026-10-22 11:02:38",
+      "hours_live": 162.0,
+      "view_count": 1165,
+      "like_count": 86,
+      "comment_count": 35,
+      "views_per_hour": 45.5,
+      "engagement_rate": 0.082
+    },
+    {
+      "video_id": "sim_24",
+      "title": "Nifty Today: Bears Tighten Grip as Nifty Cracks Critical Support | Full Analysis & Derivative Setup. Please do your own due diligence and market research as I am not a SEBI-registered financial advisor. This analysis is strictly for educational purposes only.",
+      "format": "LONG",
+      "published_at": "2026-10-22 10:57:28",
+      "hours_live": 168.0,
+      "view_count": 1120,
+      "like_count": 83,
+      "comment_count": 36,
+      "views_per_hour": 44.0,
+      "engagement_rate": 0.082
+    }
+  ],
+  "winning_hook_patterns": [
+    "Lead with a specific institutional currency figure or strike delta in the first 12 words (e.g., '\u20b94,200 Cr dumped at 3:18 PM').",
+    "Frame market moves as an asymmetric trap rather than general news (e.g., 'The Option Chain Trap Retail Traders Miss').",
+    "Create a high-stakes open loop ending with a mathematical rule before the 0:25 mark."
+  ],
+  "failing_patterns_to_avoid": [
+    "Never start with generic greetings ('Welcome back', 'Today we will discuss').",
+    "Avoid textbook policy summaries without a concrete household money impact.",
+    "Avoid static passive headlines that lack an institutional antagonist or conflict."
+  ],
+  "best_archetypes_by_vertical": {
+    "stock_market": "Institutional Order Flow Breakdown & Expiry Delta Trap",
+    "crypto": "Whale Liquidation Cascade & Funding Rate Squeeze",
+    "insurance": "Forensic Policy Clause Audit & Claim Deduction Exposure"
+  },
+  "next_run_directives": {
+    "hook_target_words": 32,
+    "first_number_by_word": 7,
+    "pattern_interrupt_interval_words": 55,
+    "curiosity_gap_formula": "[Institutional Entity] did [Surprising Action] \u2014 Why [Everyday Person] faces [Specific Risk]",
+    "mandatory_vocabulary": [
+      "gamma trap",
+      "absorption cluster",
+      "sub-limit deduction",
+      "liquidation pool",
+      "order flow"
+    ]
+  },
+  "recent_ctr_rescues": []
+}
