@@ -2,7 +2,10 @@ import os
 import shutil
 import socket
 
-import toml
+try:
+    import toml
+except ImportError:
+    import tomllib as toml
 from loguru import logger
 
 root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
@@ -23,12 +26,24 @@ def load_config():
     logger.info(f"load config from file: {config_file}")
 
     try:
-        _config_ = toml.load(config_file)
+        if hasattr(toml, "loads"):
+            with open(config_file, mode="rb") as fp:
+                _cfg_bytes = fp.read()
+            try:
+                _config_ = toml.loads(_cfg_bytes.decode("utf-8"))
+            except Exception:
+                _config_ = toml.load(config_file)
+        else:
+            with open(config_file, mode="rb") as fp:
+                _config_ = toml.load(fp)
     except Exception as e:
         logger.warning(f"load config failed: {str(e)}, try to load as utf-8-sig")
-        with open(config_file, mode="r", encoding="utf-8-sig") as fp:
-            _cfg_content = fp.read()
-            _config_ = toml.loads(_cfg_content)
+        try:
+            with open(config_file, mode="r", encoding="utf-8-sig") as fp:
+                _cfg_content = fp.read()
+                _config_ = toml.loads(_cfg_content)
+        except Exception:
+            _config_ = {}
     return _config_
 
 
