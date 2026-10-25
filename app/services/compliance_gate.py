@@ -239,6 +239,16 @@ class ComplianceGate:
         improvement_suggestions = []
         violations = []
 
+        if isinstance(payload, str):
+            payload = {
+                "topic": "Market Analysis",
+                "youtube_payload": {
+                    "metadata": {"title": "Market Analysis"},
+                    "chapters": [{"chapter_title": "Script", "spoken_narration": payload}],
+                },
+                "youtube_script": payload,
+            }
+
         yt = payload.get("youtube_payload", {})
         meta = yt.get("metadata", {})
         title = meta.get("title", "") or payload.get("topic", "")
@@ -318,14 +328,33 @@ class ComplianceGate:
         replacements = [
             (re.compile(r"\b(\d+)\s*CE\b", re.IGNORECASE), r"\1 Call strike resistance cluster"),
             (re.compile(r"\b(\d+)\s*PE\b", re.IGNORECASE), r"\1 Put strike support cluster"),
-            (re.compile(r"\bbuy\s+(?:now|immediately|at)\b", re.IGNORECASE), "observe liquidity absorption around"),
-            (re.compile(r"\bsell\s+(?:now|immediately|at)\b", re.IGNORECASE), "observe distribution pressure around"),
-            (re.compile(r"\btarget\s+(?:price|of|at)?\s*₹?\d+", re.IGNORECASE), "potential liquidity pool"),
+            (re.compile(r"\bbuy\s+(?:now|immediately|at|ce|pe|calls|puts|shares|stocks)\b", re.IGNORECASE), "observe liquidity absorption in"),
+            (re.compile(r"\bsell\s+(?:now|immediately|at|ce|pe|calls|puts|shares|stocks)\b", re.IGNORECASE), "observe distribution pressure in"),
+            (re.compile(r"\bshort\s+(?:now|at|this)\b", re.IGNORECASE), "observe downward order flow in"),
+            (re.compile(r"\benter\s+(?:now|at)\b", re.IGNORECASE), "analyze entry structure around"),
+            (re.compile(r"\bexit\s+(?:now|at)\b", re.IGNORECASE), "analyze risk parameters around"),
+            (re.compile(r"\btarget\s+(?:price|of|at)?\s*₹?\d+", re.IGNORECASE), "historical liquidity pool reference"),
             (re.compile(r"\bstop\s*loss\s*(?:at)?\s*₹?\d+", re.IGNORECASE), "invalidation reference level"),
-            (re.compile(r"\bguaranteed\s+returns?\b", re.IGNORECASE), "historical statistical tendency"),
-            (re.compile(r"\b100\s*%\s+profit\b", re.IGNORECASE), "asymmetric risk-reward setup"),
-            (re.compile(r"\bbuy\s+(?:this|the|a|that)\s+policy\b", re.IGNORECASE), "analyze this policy wording"),
-            (re.compile(r"\bapply\s+(?:now|today)\b", re.IGNORECASE), "review the policy prospectus"),
+            (re.compile(r"\bguaranteed\s+(?:\d+%\s+)?(?:returns?|profits?|outcomes?|gains?)\b", re.IGNORECASE), "historical statistical tendency"),
+            (re.compile(r"\bguaranteed\b", re.IGNORECASE), "statistically observed"),
+            (re.compile(r"\b100\s*%\s+(?:returns?|profit|gains?)\b", re.IGNORECASE), "asymmetric risk-adjusted setup"),
+            (re.compile(r"\bpositional\s+call\b", re.IGNORECASE), "macro trend analysis"),
+            (re.compile(r"\bintraday\s+(?:tip|call|trade)\b", re.IGNORECASE), "order-flow momentum analysis"),
+            (re.compile(r"\bsure\s*[- ]?shot\s*(?:profits?|returns?|gains?|trades?|calls?)?\b", re.IGNORECASE), "high-probability technical pattern"),
+            (re.compile(r"\boption\s+buying\s+(?:call|tip)\b", re.IGNORECASE), "option chain delta analysis"),
+            (re.compile(r"\bbuy\s+(?:call\s+options?|calls?|puts?|options?|shares?)\s*(?:now|at)?\b", re.IGNORECASE), "observe order-flow delta"),
+            (re.compile(r"\bstop\s*[- ]?loss\s*(?:hit|level|triggered|at)?\s*(?:₹?\d+)?\b", re.IGNORECASE), "invalidation reference level"),
+            (re.compile(r"\btarget\s+(?:price|of|at)?\s*₹?\d+\s*(?:nifty|banknifty|sensex)?\b", re.IGNORECASE), "historical liquidity pool reference"),
+            (re.compile(r"\bbuy\s+(?:this|the|a|that)\s+(?:policy|plan|cover)\b", re.IGNORECASE), "analyze this policy structure"),
+            (re.compile(r"\bpurchase\s+(?:this|the|a|that)\s+(?:policy|plan)\b", re.IGNORECASE), "review the policy prospectus"),
+            (re.compile(r"\bbest\s+(?:policy|plan)\s+(?:to\s+buy|buy\s+now|now)\b", re.IGNORECASE), "benchmark policy format"),
+            (re.compile(r"\bown\s+(?:this|the)\s+(?:policy|plan)\b", re.IGNORECASE), "evaluate this coverage type"),
+            (re.compile(r"\bapply\s+(?:now|today)\b", re.IGNORECASE), "review statutory documentation"),
+            (re.compile(r"\bcover\s+yourself\s+(?:now|today|with\s+this)\b", re.IGNORECASE), "assess coverage parameters"),
+            (re.compile(r"\bclick\s+here\s+to\s+(?:buy|purchase)\b", re.IGNORECASE), "read statutory IRDAI guidelines"),
+            (re.compile(r"\b₹\s?\d+\s+(?:policy|premium)\s+only\b", re.IGNORECASE), "actuarial base pricing model"),
+            (re.compile(r"\bsave\s+tax\s+with\s+(?:this|our)\b", re.IGNORECASE), "examine Section 80D provisions"),
+            (re.compile(r"\bsold?\s+(?:in|within)\s+\d+\s*(?:minutes|hours)\b", re.IGNORECASE), "observed during peak settlement periods"),
         ]
 
         def _clean_str(s: str) -> str:
@@ -334,23 +363,41 @@ class ComplianceGate:
                 res = pat.sub(rep, res)
             return res
 
-        yt = payload.get("youtube_payload", {})
-        if "metadata" in yt and "title" in yt["metadata"]:
-            yt["metadata"]["title"] = _clean_str(yt["metadata"]["title"])
-        if "metadata" in yt and "description_body" in yt["metadata"]:
-            yt["metadata"]["description_body"] = _clean_str(yt["metadata"]["description_body"])
+        # Sanitize youtube_payload
+        yt = payload.get("youtube_payload", {}) or payload.get("youtube_script", {})
+        if "metadata" in yt and isinstance(yt["metadata"], dict):
+            if "title" in yt["metadata"]:
+                yt["metadata"]["title"] = _clean_str(yt["metadata"]["title"])
+            if "description_body" in yt["metadata"]:
+                yt["metadata"]["description_body"] = _clean_str(yt["metadata"]["description_body"])
 
         for ch in yt.get("chapters", []):
-            if "spoken_narration" in ch:
+            if isinstance(ch, dict) and "spoken_narration" in ch:
                 ch["spoken_narration"] = _clean_str(ch["spoken_narration"])
 
         for sh in yt.get("short_extractions", []):
-            if "spoken_hook_and_body" in sh:
-                sh["spoken_hook_and_body"] = _clean_str(sh["spoken_hook_and_body"])
-            if "cta_to_long_video" in sh:
-                sh["cta_to_long_video"] = _clean_str(sh["cta_to_long_video"])
-            if "short_title" in sh:
-                sh["short_title"] = _clean_str(sh["short_title"])
+            if isinstance(sh, dict):
+                if "spoken_hook_and_body" in sh:
+                    sh["spoken_hook_and_body"] = _clean_str(sh["spoken_hook_and_body"])
+                if "cta_to_long_video" in sh:
+                    sh["cta_to_long_video"] = _clean_str(sh["cta_to_long_video"])
+                if "short_title" in sh:
+                    sh["short_title"] = _clean_str(sh["short_title"])
+
+        if "youtube_script" in payload and isinstance(payload["youtube_script"], str):
+            payload["youtube_script"] = _clean_str(payload["youtube_script"])
+
+        # Sanitize website article payload if present
+        art = payload.get("website_article_payload", {})
+        if isinstance(art, dict):
+            if "headline" in art:
+                art["headline"] = _clean_str(art["headline"])
+            for sec in art.get("article_sections", []):
+                if isinstance(sec, dict) and "body" in sec:
+                    sec["body"] = _clean_str(sec["body"])
+
+        if "topic" in payload:
+            payload["topic"] = _clean_str(payload["topic"])
 
         return payload
 
@@ -367,7 +414,19 @@ class ComplianceGate:
         Runs immediately after script generation and STRICTLY BEFORE any TTS audio synthesis or video rendering.
         Scans for SEBI/IRDAI/YPP violations, generates actionable critique, and iterates up to max_retries.
         """
-        current_payload = payload
+        is_raw_str = isinstance(payload, str)
+        if is_raw_str:
+            current_payload = {
+                "topic": "Market Analysis",
+                "youtube_payload": {
+                    "metadata": {"title": "Market Analysis"},
+                    "chapters": [{"chapter_title": "Script", "spoken_narration": payload}],
+                },
+                "youtube_script": payload,
+            }
+        else:
+            current_payload = payload
+
         client = cls._gemini_client()
 
         for attempt in range(1, max_retries + 1):
@@ -383,6 +442,8 @@ class ComplianceGate:
                         "compliance_verdict": "PASSED" if attempt == 1 else "PASSED_AFTER_FEEDBACK",
                         "status": "COMPLIANCE_PASSED"
                     })
+                if is_raw_str:
+                    return current_payload.get("youtube_script") or current_payload.get("youtube_payload", {}).get("chapters", [{}])[0].get("spoken_narration", "")
                 return current_payload
 
             logger.warning(
@@ -435,6 +496,11 @@ INSTRUCTIONS:
                             "compliance_verdict": "PASSED_AFTER_SURGICAL_HEAL",
                             "status": "COMPLIANCE_PASSED"
                         })
+                    if is_raw_str:
+                        return current_payload.get("youtube_script") or current_payload.get("youtube_payload", {}).get("chapters", [{}])[0].get("spoken_narration", "")
                     return current_payload
 
-        return cls.deterministic_sanitize(current_payload)
+        sanitized = cls.deterministic_sanitize(current_payload)
+        if is_raw_str:
+            return sanitized.get("youtube_script") or sanitized.get("youtube_payload", {}).get("chapters", [{}])[0].get("spoken_narration", "")
+        return sanitized

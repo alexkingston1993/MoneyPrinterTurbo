@@ -773,6 +773,265 @@
       border-radius: 12px;
       padding: 16px 18px;
     }
+
+    /* Kinetic Animations & Cyber Enhancements */
+    @keyframes progressShimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .is-running .prog-fill-overall,
+    .is-running .prog-fill-stage {
+      background-size: 200% 100% !important;
+      background-image: linear-gradient(90deg, #10B981 0%, #34D399 25%, rgba(255,255,255,0.4) 50%, #34D399 75%, #10B981 100%) !important;
+      animation: progressShimmer 2.2s linear infinite !important;
+    }
+    .slot-card.active-selected {
+      border-color: var(--emerald) !important;
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.28), 0 12px 30px -10px rgba(0, 0, 0, 0.5) !important;
+      transform: translateY(-2px);
+    }
+    .radar-pulse-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      background: var(--emerald);
+      border-radius: 50%;
+      position: relative;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+    .radar-pulse-dot::after {
+      content: "";
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1px solid var(--emerald);
+      animation: radarPulse 1.8s ease-out infinite;
+    }
+    @keyframes radarPulse {
+      0% { transform: scale(0.8); opacity: 1; }
+      100% { transform: scale(2.4); opacity: 0; }
+    }
+    .velocity-heat-track {
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 5px;
+    }
+    .velocity-heat-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #f59e0b, #ef4444);
+      border-radius: 2px;
+      transition: width 0.6s ease;
+    }
+    .radar-filter-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .radar-tab-btn {
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-dim);
+      border: 1px solid var(--border-subtle);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: var(--font-mono);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .radar-tab-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-main);
+    }
+    .radar-tab-btn.active {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--emerald);
+      border-color: rgba(16, 185, 129, 0.4);
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.25);
+    }
+    .radar-search-input {
+      background: var(--bg-obsidian);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 6px 12px;
+      color: var(--text-main);
+      font-size: 11.5px;
+      font-family: var(--font-mono);
+      min-width: 180px;
+      transition: border-color 0.2s;
+    }
+    .radar-search-input:focus {
+      outline: none;
+      border-color: var(--emerald);
+    }
+    .radar-sort-select {
+      background: var(--bg-obsidian);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 6px 10px;
+      color: var(--text-main);
+      font-size: 11px;
+      font-family: var(--font-mono);
+      cursor: pointer;
+    }
+    .holo-card-inner {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 14px;
+      background: radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.16), transparent 60%),
+                  linear-gradient(135deg, #090e17 0%, #0d1522 100%);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+    .holo-card-inner::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      background-size: 16px 16px;
+      pointer-events: none;
+    }
+    .holo-card-inner.theme-crypto {
+      background: radial-gradient(circle at 80% 20%, rgba(245, 158, 11, 0.2), transparent 60%),
+                  linear-gradient(135deg, #090e17 0%, #17120a 100%);
+    }
+    .holo-card-inner.theme-insurance {
+      background: radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.2), transparent 60%),
+                  linear-gradient(135deg, #090e17 0%, #130c1d 100%);
+    }
+    .holo-top-tag {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 2;
+    }
+    .holo-badge-pill {
+      font-size: 9.5px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--emerald);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+    .holo-card-inner.theme-crypto .holo-badge-pill {
+      background: rgba(245, 158, 11, 0.2);
+      color: var(--amber);
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+    .holo-card-inner.theme-insurance .holo-badge-pill {
+      background: rgba(139, 92, 246, 0.2);
+      color: var(--purple);
+      border-color: rgba(139, 92, 246, 0.4);
+    }
+    .holo-watermark {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      color: var(--text-dim);
+      letter-spacing: 0.05em;
+    }
+    .holo-headline-text {
+      font-size: 15px;
+      font-weight: 900;
+      line-height: 1.25;
+      color: #ffffff;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9), 0 0 16px rgba(16, 185, 129, 0.35);
+      z-index: 2;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      margin: 8px 0;
+    }
+    .holo-card-inner.theme-crypto .holo-headline-text {
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9), 0 0 16px rgba(245, 158, 11, 0.35);
+    }
+    .holo-card-inner.theme-insurance .holo-headline-text {
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.9), 0 0 16px rgba(139, 92, 246, 0.35);
+    }
+    .holo-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 2;
+    }
+    .holo-subtext {
+      font-size: 9px;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+    }
+    .holo-chart-line {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40%;
+      opacity: 0.25;
+      pointer-events: none;
+      z-index: 1;
+    }
+    #toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+    .cyber-toast {
+      background: rgba(19, 27, 43, 0.96);
+      border: 1px solid var(--border-active);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7), 0 0 20px rgba(16, 185, 129, 0.2);
+      backdrop-filter: blur(16px);
+      padding: 12px 18px;
+      border-radius: 10px;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 300px;
+      max-width: 440px;
+      pointer-events: auto;
+      animation: toastSlideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      transition: opacity 0.3s, transform 0.3s;
+    }
+    .cyber-toast.toast-error {
+      border-color: rgba(239, 68, 68, 0.4);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7), 0 0 20px rgba(239, 68, 68, 0.2);
+    }
+    @keyframes toastSlideIn {
+      from { transform: translateX(110%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    .btn-spinner {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: btnSpin 0.7s linear infinite;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+    @keyframes btnSpin {
+      to { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -940,22 +1199,57 @@
           <div class="thumbs-preview-row">
             <div class="thumb-box-169">
               <img id="insp-thumb-169" class="thumb-img" style="display: none;" src="" alt="16:9 Thumbnail">
-              <div id="insp-thumb-169-empty" class="thumb-placeholder">16:9 Master Thumbnail<br>(Rendered in Stage 4)</div>
+              <div id="holo-card-169" class="holo-card-inner">
+                <div class="holo-top-tag">
+                  <span class="holo-badge-pill" id="holo-badge-169">📈 STOCK MARKET</span>
+                  <span class="holo-watermark">THE BULL PRINT // 16:9 MASTER</span>
+                </div>
+                <div class="holo-headline-text" id="holo-headline-169">DELTA TRAP EXPOSED: INSTITUTIONAL LIQUIDITY CASCADE</div>
+                <div class="holo-footer">
+                  <span class="holo-subtext">FORENSIC BREAKDOWN</span>
+                  <span class="holo-subtext" style="color: var(--amber);">4K ULTRA-CONTRAST</span>
+                </div>
+                <svg class="holo-chart-line" viewBox="0 0 300 80" preserveAspectRatio="none">
+                  <path d="M0,70 Q50,60 90,40 T180,25 T240,45 T300,10 L300,80 L0,80 Z" fill="rgba(16, 185, 129, 0.15)" stroke="var(--emerald)" stroke-width="2"></path>
+                </svg>
+              </div>
             </div>
             <div class="thumb-box-916">
               <img id="insp-thumb-916-1" class="thumb-img" style="display: none;" src="" alt="Short #1 Shelf">
-              <div id="insp-thumb-916-1-empty" class="thumb-placeholder">Short #1 Shelf<br>(9:16)</div>
+              <div id="holo-card-916-1" class="holo-card-inner">
+                <div class="holo-top-tag">
+                  <span class="holo-badge-pill" id="holo-badge-916-1">9:16 SHORT</span>
+                </div>
+                <div class="holo-headline-text" id="holo-headline-916-1" style="font-size: 12px;">NIFTY TRAP ALERT</div>
+                <div class="holo-footer">
+                  <span class="holo-subtext" style="font-size: 8px;">SHELF #1</span>
+                </div>
+                <svg class="holo-chart-line" viewBox="0 0 100 80" preserveAspectRatio="none">
+                  <path d="M0,60 Q25,30 50,45 T100,15 L100,80 L0,80 Z" fill="rgba(16, 185, 129, 0.15)" stroke="var(--emerald)" stroke-width="1.5"></path>
+                </svg>
+              </div>
             </div>
             <div class="thumb-box-916">
               <img id="insp-thumb-916-2" class="thumb-img" style="display: none;" src="" alt="Short #2 Shelf">
-              <div id="insp-thumb-916-2-empty" class="thumb-placeholder">Short #2 Shelf<br>(9:16)</div>
+              <div id="holo-card-916-2" class="holo-card-inner">
+                <div class="holo-top-tag">
+                  <span class="holo-badge-pill" id="holo-badge-916-2">9:16 SHORT</span>
+                </div>
+                <div class="holo-headline-text" id="holo-headline-916-2" style="font-size: 12px;">LIQUIDITY HUNTER</div>
+                <div class="holo-footer">
+                  <span class="holo-subtext" style="font-size: 8px;">SHELF #2</span>
+                </div>
+                <svg class="holo-chart-line" viewBox="0 0 100 80" preserveAspectRatio="none">
+                  <path d="M0,50 Q30,65 60,30 T100,10 L100,80 L0,80 Z" fill="rgba(16, 185, 129, 0.15)" stroke="var(--emerald)" stroke-width="1.5"></path>
+                </svg>
+              </div>
             </div>
           </div>
 
           <div class="approval-toolbar">
             <input type="text" id="regen-headline" class="regen-input" placeholder="New 3-word headline (e.g. DELTA TRAP EXPOSED)">
-            <button class="btn-regen" onclick="regenerateThumbnail()">🎨 Regenerate</button>
-            <button class="btn-approve" onclick="approveThumbnail()">✅ Approve & Send to GPU</button>
+            <button class="btn-regen" id="btn-regen" onclick="regenerateThumbnail()">🎨 Regenerate</button>
+            <button class="btn-approve" id="btn-approve" onclick="approveThumbnail()">✅ Approve & Send to GPU</button>
           </div>
         </div>
 
@@ -1031,7 +1325,7 @@
     <!-- ACTIVE IN-PROGRESS VIDEO PRODUCTIONS -->
     <section style="margin-bottom: 32px;">
       <h3 class="section-title">
-        🎬 ACTIVE IN-PROGRESS VIDEO PRODUCTIONS
+        <span class="radar-pulse-dot"></span> 🎬 ACTIVE IN-PROGRESS VIDEO PRODUCTIONS
         <span>LIVE RENDER & PIPELINE QUEUE</span>
       </h3>
       <div class="archive-card">
@@ -1054,15 +1348,33 @@
 
     <!-- COMPETITOR VIRAL RADAR -->
     <section style="margin-bottom: 32px;">
-      <h3 class="section-title">
-        🏇 LIVE NICHE OUTLIER RADAR
-        <span>WINNING HORSES & EXTRACTED STRUCTURAL PATTERNS (ZERO API QUOTA)</span>
-      </h3>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
+        <h3 class="section-title" style="margin-bottom: 0;">
+          <span class="radar-pulse-dot"></span> 🏇 LIVE NICHE OUTLIER RADAR
+          <span>WINNING HORSES & EXTRACTED STRUCTURAL PATTERNS (ZERO API QUOTA)</span>
+        </h3>
+        <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+          <input type="text" id="radar-search" class="radar-search-input" placeholder="🔍 Filter outliers..." oninput="onRadarFilterChange()">
+          <select id="radar-sort" class="radar-sort-select" onchange="onRadarFilterChange()">
+            <option value="multiplier">Sort: Outlier Multiplier ↓</option>
+            <option value="vph">Sort: Views/Hr ↓</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Outlier Radar Filter Tabs -->
+      <div class="radar-filter-tabs" id="radar-tabs">
+        <button class="radar-tab-btn active" id="tab-all" onclick="setRadarFilter('all')">🔥 Top Outliers (Mixed)</button>
+        <button class="radar-tab-btn" id="tab-stock" onclick="setRadarFilter('stock_market')">📈 Stock Market (<span id="count-stock">8</span>)</button>
+        <button class="radar-tab-btn" id="tab-crypto" onclick="setRadarFilter('crypto')">🪙 Crypto (<span id="count-crypto">8</span>)</button>
+        <button class="radar-tab-btn" id="tab-insurance" onclick="setRadarFilter('insurance')">🛡️ Insurance (<span id="count-insurance">8</span>)</button>
+      </div>
+
       <div class="archive-card">
         <table class="archive-table">
           <thead>
             <tr>
-              <th style="min-width: 130px;">Outlier Signal</th>
+              <th style="min-width: 140px;">Outlier Signal</th>
               <th style="min-width: 220px;">Competitor Viral Signal</th>
               <th style="min-width: 200px;">Extracted Structural Skeleton</th>
               <th style="min-width: 220px;">The Bull Print Counter-Angle</th>
@@ -1363,6 +1675,54 @@
         }).join('');
         logContainer.scrollTop = logContainer.scrollHeight;
       }
+
+      // Visual Studio Holographic Cards & Real-Time Sync
+      const slotsMeta = {
+        1: { vertical: 'stock_market', label: 'STOCK MARKET #1', defaultHl: 'DELTA TRAP EXPOSED: INSTITUTIONAL LIQUIDITY CASCADE' },
+        2: { vertical: 'crypto', label: 'CRYPTO #1', defaultHl: 'BITCOIN LIQUIDATION CASCADE: ORDER-FLOW CRACKDOWN' },
+        3: { vertical: 'insurance', label: 'INSURANCE #1', defaultHl: 'HEALTH INSURANCE CLAIM SECRETS: ROOM RENT TRAP' },
+        4: { vertical: 'stock_market', label: 'STOCK MARKET #2', defaultHl: 'NIFTY EXPIRY SURGE: SMART MONEY ACCUMULATION' },
+        5: { vertical: 'crypto', label: 'CRYPTO #2', defaultHl: 'ETHEREUM PROTOCOL DRAIN: ON-CHAIN FORENSICS' },
+        6: { vertical: 'insurance', label: 'INSURANCE #2', defaultHl: 'TERM INSURANCE DEADFALL: HIDDEN EXCLUSION CLAUSES' },
+      };
+      const meta = slotsMeta[slotNum] || { vertical: 'stock_market', label: 'STOCK MARKET', defaultHl: 'MARKET FORENSIC BREAKDOWN' };
+      const vert = (detail.vertical || meta.vertical || '').toLowerCase();
+
+      const card169 = document.getElementById('holo-card-169');
+      const card916_1 = document.getElementById('holo-card-916-1');
+      const card916_2 = document.getElementById('holo-card-916-2');
+
+      [card169, card916_1, card916_2].forEach(c => {
+        if (!c) return;
+        c.classList.remove('theme-crypto', 'theme-insurance');
+        if (vert.includes('crypto')) c.classList.add('theme-crypto');
+        else if (vert.includes('insur')) c.classList.add('theme-insurance');
+      });
+
+      const badge169 = document.getElementById('holo-badge-169');
+      if (badge169) {
+        if (vert.includes('crypto')) badge169.textContent = '🪙 CRYPTO ASSET';
+        else if (vert.includes('insur')) badge169.textContent = '🛡️ INSURANCE & CLAIMS';
+        else badge169.textContent = '📈 STOCK MARKET';
+      }
+
+      const hl169 = document.getElementById('holo-headline-169');
+      const regenInput = document.getElementById('regen-headline');
+      if (hl169) {
+        const customInput = regenInput ? regenInput.value.trim() : '';
+        hl169.textContent = (customInput || detail.topic || detail.current_stage_name || meta.defaultHl).toUpperCase();
+      }
+
+      // Live typing listener on regenInput
+      if (regenInput && !regenInput.dataset.bound) {
+        regenInput.dataset.bound = 'true';
+        regenInput.addEventListener('input', (e) => {
+          const val = e.target.value.trim();
+          if (hl169) {
+            hl169.textContent = val ? val.toUpperCase() : (detail.topic || detail.current_stage_name || meta.defaultHl).toUpperCase();
+          }
+        });
+      }
     }
 
     function renderActiveQueue(videos) {
@@ -1511,28 +1871,88 @@
       if (saves.ctr_rescues_performed !== undefined) document.getElementById('stat-ctr-rescues').textContent = saves.ctr_rescues_performed;
     }
 
+    let currentRadarFilter = 'all';
+
+    function setRadarFilter(filter) {
+      currentRadarFilter = filter;
+      document.querySelectorAll('.radar-tab-btn').forEach(b => b.classList.remove('active'));
+      let tabId = 'tab-all';
+      if (filter === 'stock_market') tabId = 'tab-stock';
+      else if (filter === 'crypto') tabId = 'tab-crypto';
+      else if (filter === 'insurance') tabId = 'tab-insurance';
+      const activeBtn = document.getElementById(tabId);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      if (telemetryCache && telemetryCache.competitor_radar) {
+        renderCompetitorRadar(telemetryCache.competitor_radar);
+      }
+    }
+
+    function onRadarFilterChange() {
+      if (telemetryCache && telemetryCache.competitor_radar) {
+        renderCompetitorRadar(telemetryCache.competitor_radar);
+      }
+    }
+
     function renderCompetitorRadar(radar) {
       const tbody = document.getElementById('radar-tbody');
       if (!tbody) return;
-      let outliers = [];
+
+      const stockItems = [];
+      const cryptoItems = [];
+      const insuranceItems = [];
+
       if (radar) {
         if (radar.verticals && typeof radar.verticals === 'object') {
           for (const [vKey, list] of Object.entries(radar.verticals)) {
             if (Array.isArray(list)) {
               for (const it of list) {
-                outliers.push({
-                  ...it,
-                  vertical: vKey || it.vertical || 'stock_market',
-                });
+                const item = { ...it, vertical: it.vertical || vKey };
+                const rawVert = (item.vertical || '').toLowerCase();
+                const textSig = ((item.title || item.winning_source_title || '') + ' ' + (item.safe_original_research_angle || '') + ' ' + (item.query_source || '')).toLowerCase();
+
+                if (rawVert.includes('crypto') || textSig.includes('bitcoin') || textSig.includes('crypto') || textSig.includes('liquidation') || textSig.includes('coin') || textSig.includes('binance') || textSig.includes('altcoin')) {
+                  item.canonicalVertical = 'crypto';
+                  cryptoItems.push(item);
+                } else if (rawVert.includes('insur') || textSig.includes('insurance') || textSig.includes('claim') || textSig.includes('policy') || textSig.includes('irdai') || textSig.includes('ditto') || textSig.includes('room rent')) {
+                  item.canonicalVertical = 'insurance';
+                  insuranceItems.push(item);
+                } else {
+                  item.canonicalVertical = 'stock_market';
+                  stockItems.push(item);
+                }
               }
             }
           }
         }
-        if (!outliers.length && Array.isArray(radar.viral_outliers)) {
-          outliers = radar.viral_outliers;
+        if (!stockItems.length && !cryptoItems.length && !insuranceItems.length && Array.isArray(radar.viral_outliers)) {
+          for (const it of radar.viral_outliers) {
+            const rawVert = (it.vertical || '').toLowerCase();
+            const textSig = ((it.title || it.winning_source_title || '') + ' ' + (it.safe_original_research_angle || '')).toLowerCase();
+            if (rawVert.includes('crypto') || textSig.includes('crypto') || textSig.includes('bitcoin')) {
+              it.canonicalVertical = 'crypto';
+              cryptoItems.push(it);
+            } else if (rawVert.includes('insur') || textSig.includes('insurance') || textSig.includes('claim')) {
+              it.canonicalVertical = 'insurance';
+              insuranceItems.push(it);
+            } else {
+              it.canonicalVertical = 'stock_market';
+              stockItems.push(it);
+            }
+          }
         }
       }
-      if (outliers.length === 0) {
+
+      // Update Tab Counts
+      const cStock = document.getElementById('count-stock');
+      if (cStock) cStock.textContent = stockItems.length;
+      const cCrypto = document.getElementById('count-crypto');
+      if (cCrypto) cCrypto.textContent = cryptoItems.length;
+      const cInsur = document.getElementById('count-insurance');
+      if (cInsur) cInsur.textContent = insuranceItems.length;
+
+      const totalFound = stockItems.length + cryptoItems.length + insuranceItems.length;
+      if (totalFound === 0) {
         tbody.innerHTML = `
           <tr>
             <td colspan="5" style="text-align:center; color: var(--text-dim); padding: 22px; font-family: var(--font-mono); font-size: 11px;">
@@ -1542,43 +1962,96 @@
         return;
       }
 
-      tbody.innerHTML = outliers.map(item => {
+      // Sort within each vertical
+      const sortMode = (document.getElementById('radar-sort') ? document.getElementById('radar-sort').value : 'multiplier');
+      const sortFn = (a, b) => {
+        if (sortMode === 'vph') return (b.views_per_hour || 0) - (a.views_per_hour || 0);
+        return (b.outlier_multiplier || 0) - (a.outlier_multiplier || 0);
+      };
+      stockItems.sort(sortFn);
+      cryptoItems.sort(sortFn);
+      insuranceItems.sort(sortFn);
+
+      let displayList = [];
+      if (currentRadarFilter === 'all') {
+        // Interleave top 3 from each niche at the top so all 3 niches are visible without scrolling!
+        const maxLen = Math.max(stockItems.length, cryptoItems.length, insuranceItems.length);
+        for (let i = 0; i < Math.min(3, maxLen); i++) {
+          if (stockItems[i]) displayList.push(stockItems[i]);
+          if (cryptoItems[i]) displayList.push(cryptoItems[i]);
+          if (insuranceItems[i]) displayList.push(insuranceItems[i]);
+        }
+        for (let i = 3; i < maxLen; i++) {
+          if (stockItems[i]) displayList.push(stockItems[i]);
+          if (cryptoItems[i]) displayList.push(cryptoItems[i]);
+          if (insuranceItems[i]) displayList.push(insuranceItems[i]);
+        }
+      } else if (currentRadarFilter === 'stock_market') {
+        displayList = stockItems;
+      } else if (currentRadarFilter === 'crypto') {
+        displayList = cryptoItems;
+      } else if (currentRadarFilter === 'insurance') {
+        displayList = insuranceItems;
+      }
+
+      // Keyword Search Filter
+      const searchVal = (document.getElementById('radar-search') ? document.getElementById('radar-search').value.trim().toLowerCase() : '');
+      if (searchVal) {
+        displayList = displayList.filter(item => {
+          const hay = ((item.winning_source_title || '') + ' ' + (item.title || '') + ' ' + (item.safe_original_research_angle || '') + ' ' + (item.title_skeleton_template || '')).toLowerCase();
+          return hay.includes(searchVal);
+        });
+      }
+
+      if (displayList.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align:center; color: var(--text-dim); padding: 22px; font-family: var(--font-mono); font-size: 11px;">
+              No matching outlier signals for "${searchVal}".
+            </td>
+          </tr>`;
+        return;
+      }
+
+      tbody.innerHTML = displayList.map(item => {
         const isShort = (item.format || '').includes('SHORT') || (item.title || '').includes('#shorts');
         const formatBadge = isShort
           ? `<span class="badge-format badge-format-short">9:16 SHORT</span>`
           : `<span class="badge-format badge-format-long">16:9 LONG</span>`;
 
-        const rawVert = (item.vertical || '').toLowerCase();
-        const textSignature = ((item.title || item.winning_source_title || '') + ' ' + (item.safe_original_research_angle || '') + ' ' + (item.query_source || '')).toLowerCase();
-
         let vertBadge = 'badge-stock';
         let vertLabel = '📈 STOCK';
         let vertClean = 'stock_market';
 
-        if (rawVert.includes('crypto') || textSignature.includes('bitcoin') || textSignature.includes('crypto') || textSignature.includes('liquidation') || textSignature.includes('coin') || textSignature.includes('binance') || textSignature.includes('altcoin')) {
+        if (item.canonicalVertical === 'crypto') {
           vertBadge = 'badge-crypto';
           vertLabel = '🪙 CRYPTO';
           vertClean = 'crypto';
-        } else if (rawVert.includes('insur') || textSignature.includes('insurance') || textSignature.includes('claim') || textSignature.includes('policy') || textSignature.includes('irdai') || textSignature.includes('ditto') || textSignature.includes('room rent')) {
+        } else if (item.canonicalVertical === 'insurance') {
           vertBadge = 'badge-insurance';
           vertLabel = '🛡️ INSURANCE';
           vertClean = 'insurance';
-        } else {
-          vertBadge = 'badge-stock';
-          vertLabel = '📈 STOCK';
-          vertClean = 'stock_market';
         }
 
-        const mult = item.outlier_multiplier ? `${item.outlier_multiplier.toFixed(1)}x` : '3.5x';
+        const multNum = item.outlier_multiplier ? Number(item.outlier_multiplier) : 3.5;
+        const mult = `${multNum.toFixed(1)}x`;
         const vph = (item.views_per_hour || 0).toLocaleString();
+        const heatPct = Math.min(100, Math.max(12, Math.round((multNum / 10) * 100)));
 
         const encodedTopic = encodeURIComponent(item.safe_original_research_angle || item.winning_source_title || '');
+
+        const vidId = item.video_id || '';
+        const ytUrl = vidId ? (isShort ? `https://www.youtube.com/shorts/${vidId}` : `https://www.youtube.com/watch?v=${vidId}`) : (item.url || `https://www.youtube.com/results?search_query=${encodeURIComponent(item.winning_source_title || '')}`);
+        const channelName = item.channel_name || item.author || 'Forensic Outlier Source';
 
         return `
           <tr>
             <td>
               <div style="display: flex; flex-direction: column; gap: 4px;">
                 <span class="badge-outlier">🔥 ${mult} OUTLIER</span>
+                <div class="velocity-heat-track">
+                  <div class="velocity-heat-fill" style="width: ${heatPct}%;"></div>
+                </div>
                 <span style="font-family: var(--font-mono); font-size: 10px; color: var(--emerald);">⚡ ${vph} VPH</span>
                 ${formatBadge}
               </div>
@@ -1587,7 +2060,15 @@
               <div style="font-weight: 700; color: var(--text-main); font-size: 12.5px; line-height: 1.3; margin-bottom: 4px;">
                 ${item.winning_source_title || 'Niche Trending Video'}
               </div>
-              <span class="slot-badge ${vertBadge}" style="font-size: 9.5px; padding: 2px 7px; font-weight: 700;">${vertLabel}</span>
+              <div style="display: flex; gap: 6px; align-items: center; flex-wrap: wrap;">
+                <span class="slot-badge ${vertBadge}" style="font-size: 9.5px; padding: 2px 7px; font-weight: 700;">${vertLabel}</span>
+                <a class="link-pill" href="${ytUrl}" target="_blank" rel="noopener noreferrer" style="font-size: 10px; padding: 2px 6px;">
+                  🔗 Watch Source ↗
+                </a>
+              </div>
+              <div style="font-size: 10px; color: var(--text-dim); margin-top: 3px; font-family: var(--font-mono);">
+                ${channelName}
+              </div>
             </td>
             <td style="font-family: var(--font-mono); font-size: 11px; color: var(--purple); line-height: 1.4;">
               ${item.title_skeleton_template || 'Why [X%] Fall For [Mechanism]'}
@@ -1596,7 +2077,7 @@
               🛡️ ${item.safe_original_research_angle || 'Independent institutional order-flow forensic breakdown'}
             </td>
             <td>
-              <button class="btn-slot-action btn-slot-dispatch" style="padding: 6px 12px; font-size: 10.5px; white-space: nowrap;" onclick="rideViralWave('${vertClean}', decodeURIComponent('${encodedTopic}'), 2)">
+              <button class="btn-slot-action btn-slot-dispatch" style="padding: 6px 12px; font-size: 10.5px; white-space: nowrap;" onclick="rideViralWave('${vertClean}', decodeURIComponent('${encodedTopic}'), 2, this)">
                 ⚡ Ride Wave
               </button>
             </td>
@@ -1605,28 +2086,66 @@
       }).join('');
     }
 
+    // Cyber Toast Notification System
+    function showCyberToast(title, message, type = 'success') {
+      let container = document.getElementById('toast-container');
+      if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        document.body.appendChild(container);
+      }
+      const toast = document.createElement('div');
+      toast.className = `cyber-toast ${type === 'error' ? 'toast-error' : ''}`;
+      const icon = type === 'error' ? '❌' : (type === 'warn' ? '⚠️' : '⚡');
+      toast.innerHTML = `
+        <div style="font-size: 18px;">${icon}</div>
+        <div style="flex: 1;">
+          <div style="font-weight: 700; font-size: 12px; color: ${type === 'error' ? 'var(--crimson)' : 'var(--emerald)'}; font-family: var(--font-mono);">${title}</div>
+          <div style="font-size: 11.5px; color: var(--text-secondary); margin-top: 2px;">${message}</div>
+        </div>
+      `;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateX(110%)';
+        setTimeout(() => toast.remove(), 300);
+      }, 4200);
+    }
+
+    function setBtnLoading(btn, isLoading, originalHtml) {
+      if (!btn) return;
+      if (isLoading) {
+        btn.dataset.original = originalHtml || btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = `<span class="btn-spinner"></span> Dispatching...`;
+      } else {
+        btn.disabled = false;
+        btn.innerHTML = btn.dataset.original || originalHtml || 'Submit';
+      }
+    }
+
     async function runViralAudit() {
+      const btn = document.querySelector('.btn-viral-audit');
+      if (btn) setBtnLoading(btn, true, '🧠 Run Viral Channel Audit Now');
       try {
-        const btn = document.querySelector('.btn-viral-audit');
-        if (btn) btn.textContent = '⏳ Auditing YouTube Channel...';
         const res = await fetch('/api/mission-control/action', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: 'RUN_VIRAL_AUDIT' }),
         });
         const data = await res.json();
-        alert(data.message || 'Viral channel audit executed!');
+        showCyberToast('VIRAL AUDIT COMPLETE', data.message || 'Viral channel audit executed successfully!', 'success');
         fetchTelemetry(true);
       } catch (err) {
-        alert('Failed to run viral audit: ' + err.message);
+        showCyberToast('AUDIT FAILED', err.message, 'error');
       } finally {
-        const btn = document.querySelector('.btn-viral-audit');
-        if (btn) btn.textContent = '🧠 Run Viral Channel Audit Now';
+        if (btn) setBtnLoading(btn, false, '🧠 Run Viral Channel Audit Now');
       }
     }
 
-    async function rideViralWave(vertical, topic, shortsCount = 2) {
+    async function rideViralWave(vertical, topic, shortsCount = 2, btnElement = null) {
       if (!confirm(`Launch an original forensic counter-video for: "${topic}"?`)) return;
+      if (btnElement) setBtnLoading(btnElement, true, '⚡ Ride Wave');
       try {
         const res = await fetch('/api/mission-control/action', {
           method: 'POST',
@@ -1640,15 +2159,18 @@
           }),
         });
         const data = await res.json();
-        alert(data.message || 'Viral wave slot dispatched to GitHub Actions!');
+        showCyberToast('VIRAL WAVE DISPATCHED', data.message || `Counter-video slot dispatched for ${vertical.toUpperCase()}!`, 'success');
         fetchTelemetry(true);
       } catch (err) {
-        alert('Failed to dispatch viral wave: ' + err.message);
+        showCyberToast('DISPATCH FAILED', err.message, 'error');
+      } finally {
+        if (btnElement) setBtnLoading(btnElement, false, '⚡ Ride Wave');
       }
     }
 
     // Actions
-    async function dispatchSlot(slot, vertical, shortsCount) {
+    async function dispatchSlot(slot, vertical, shortsCount, btnElement = null) {
+      if (btnElement) setBtnLoading(btnElement, true, '▶️ Run');
       try {
         const res = await fetch('/api/mission-control/action', {
           method: 'POST',
@@ -1656,15 +2178,19 @@
           body: JSON.stringify({ action: 'DISPATCH_SLOT', slot, vertical, shorts_count: shortsCount }),
         });
         const data = await res.json();
-        alert(data.message || 'Slot dispatched to GitHub Actions!');
+        showCyberToast(`SLOT #${slot} DISPATCHED`, data.message || `Dispatched Slot #${slot} (${vertical.toUpperCase()}) to GitHub Actions!`, 'success');
         fetchTelemetry(true);
       } catch (err) {
-        alert('Failed to dispatch slot: ' + err.message);
+        showCyberToast('DISPATCH ERROR', err.message, 'error');
+      } finally {
+        if (btnElement) setBtnLoading(btnElement, false, '▶️ Run');
       }
     }
 
     async function dispatchAllSlots() {
       if (!confirm('Are you sure you want to fire all 6 production market slots to GitHub Actions?')) return;
+      const btn = document.querySelector('.btn-fire-all');
+      if (btn) setBtnLoading(btn, true, '<span>⚡</span> Force-Dispatch All 6 Slots');
       try {
         const res = await fetch('/api/mission-control/action', {
           method: 'POST',
@@ -1672,14 +2198,18 @@
           body: JSON.stringify({ action: 'DISPATCH_ALL_6' }),
         });
         const data = await res.json();
-        alert(data.message || 'All 6 slots dispatched!');
+        showCyberToast('ALL 6 SLOTS DISPATCHED', data.message || 'All 6 market production slots successfully fired to GitHub Actions!', 'success');
         fetchTelemetry(true);
       } catch (err) {
-        alert('Failed to fire slots: ' + err.message);
+        showCyberToast('DISPATCH ERROR', err.message, 'error');
+      } finally {
+        if (btn) setBtnLoading(btn, false, '<span>⚡</span> Force-Dispatch All 6 Slots');
       }
     }
 
     async function approveThumbnail() {
+      const btn = document.getElementById('btn-approve');
+      if (btn) setBtnLoading(btn, true, '✅ Approve & Send to GPU');
       try {
         const res = await fetch('/api/mission-control/action', {
           method: 'POST',
@@ -1687,16 +2217,23 @@
           body: JSON.stringify({ action: 'APPROVE_THUMBS', slot: activeSlot }),
         });
         const data = await res.json();
-        alert(data.message || 'Thumbnail approved! Worker advancing to GPU.');
+        showCyberToast(`SLOT #${activeSlot} APPROVED`, data.message || 'Thumbnail approved! Worker advancing to Kaggle GPU.', 'success');
         fetchTelemetry(true);
       } catch (err) {
-        alert('Failed to approve thumbnail: ' + err.message);
+        showCyberToast('APPROVAL ERROR', err.message, 'error');
+      } finally {
+        if (btn) setBtnLoading(btn, false, '✅ Approve & Send to GPU');
       }
     }
 
     async function regenerateThumbnail() {
       const hl = document.getElementById('regen-headline').value.trim();
-      if (!hl) return alert('Enter a 3-4 word headline to regenerate');
+      if (!hl) {
+        showCyberToast('INPUT REQUIRED', 'Enter a 3-4 word headline to regenerate', 'warn');
+        return;
+      }
+      const btn = document.getElementById('btn-regen');
+      if (btn) setBtnLoading(btn, true, '🎨 Regenerate');
       try {
         const res = await fetch('/api/mission-control/action', {
           method: 'POST',
@@ -1704,10 +2241,12 @@
           body: JSON.stringify({ action: 'REGENERATE_THUMBS', slot: activeSlot, custom_headline: hl }),
         });
         const data = await res.json();
-        alert(data.message || 'Regeneration command queued.');
+        showCyberToast(`SLOT #${activeSlot} REGENERATING`, data.message || 'Regeneration command queued for high-contrast typography.', 'success');
         fetchTelemetry(true);
       } catch (err) {
-        alert('Failed to regenerate: ' + err.message);
+        showCyberToast('REGENERATION ERROR', err.message, 'error');
+      } finally {
+        if (btn) setBtnLoading(btn, false, '🎨 Regenerate');
       }
     }
 
@@ -1733,12 +2272,13 @@
           body: JSON.stringify({ action: 'HALT_RUN', slot: activeSlot }),
         });
         const data = await res.json();
-        alert(data.message || 'Halt signal sent.');
+        showCyberToast(`SLOT #${activeSlot} HALTED`, data.message || 'Halt signal broadcasted to worker.', 'warn');
         fetchTelemetry(true);
       } catch (err) {
-        alert('Failed to halt: ' + err.message);
+        showCyberToast('HALT ERROR', err.message, 'error');
       }
     }
   </script>
+  <div id="toast-container"></div>
 </body>
 </html>
