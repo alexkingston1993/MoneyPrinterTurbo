@@ -113,6 +113,11 @@
       "ts": "12:49:59",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udee1\ufe0f Auditing Compliance Gate... | SEBI regex + freshness + LLM auditor"
+    },
+    {
+      "ts": "12:50:07",
+      "level": "INFO",
+      "msg": "[GEMINI]: \u2705 Generated + Compliance-Approved (`institutional-order-flow-absorption-trap-2026`) | \ud83d\udee1\ufe0f INSURANCE"
     }
   ]
 }
