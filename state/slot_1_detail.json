@@ -5,13 +5,13 @@
   "vertical_label": "Slot #1",
   "shorts_count": 2,
   "status": "WAITING_APPROVAL",
-  "overall_pct": 75,
-  "stage_pct": 80,
+  "overall_pct": 50,
+  "stage_pct": 15,
   "current_stage_index": 5,
   "current_stage_name": "Kaggle T4 GPU Render Farm",
-  "current_subtask_label": "Whisper alignment & NVENC rendering",
+  "current_subtask_label": "Pushing daily payload dataset to Kaggle...",
   "started_at": "2026-10-25T20:59:57Z",
-  "updated_at": "2026-10-25T21:03:29Z",
+  "updated_at": "2026-10-25T21:03:32Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -68,7 +68,7 @@
       "id": 5,
       "name": "Kaggle T4 GPU Render Farm",
       "status": "RUNNING",
-      "pct": 80,
+      "pct": 15,
       "started_at": "2026-10-25T21:03:27Z",
       "completed_at": null,
       "metrics": {}
@@ -157,6 +157,11 @@
       "ts": "21:03:29",
       "level": "INFO",
       "msg": "[KAGGLE_GPU]: \ud83d\ude80 Dispatching to Kaggle Dual-T4 GPU... | "
+    },
+    {
+      "ts": "21:03:31",
+      "level": "INFO",
+      "msg": "[KAGGLE_GPU]: \u2601\ufe0f Pushing Dataset to Kaggle... | "
     }
   ]
 }
