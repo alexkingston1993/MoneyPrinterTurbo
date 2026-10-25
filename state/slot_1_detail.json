@@ -5,13 +5,13 @@
   "vertical_label": "Slot #1",
   "shorts_count": 2,
   "status": "RUNNING",
-  "overall_pct": 45,
-  "stage_pct": 70,
+  "overall_pct": 50,
+  "stage_pct": 60,
   "current_stage_index": 4,
   "current_stage_name": "Chart & High-CTR Thumbnail Studio",
-  "current_subtask_label": "Thumbnails rendered & staged",
+  "current_subtask_label": "Thumbnails & charts staged for approval",
   "started_at": "2026-10-25T20:35:25Z",
-  "updated_at": "2026-10-25T20:37:08Z",
+  "updated_at": "2026-10-25T20:37:13Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -55,7 +55,7 @@
       "id": 4,
       "name": "Chart & High-CTR Thumbnail Studio",
       "status": "RUNNING",
-      "pct": 70,
+      "pct": 60,
       "started_at": "2026-10-25T20:35:33Z",
       "completed_at": null,
       "metrics": {}
