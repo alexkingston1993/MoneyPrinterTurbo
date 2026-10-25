@@ -146,7 +146,44 @@ class TelemetryBridge:
                 logger.debug(f"[TelemetryBridge] Push exception for {rel_path}: {e}")
                 time.sleep(0.5)
 
-        return False
+        # Fallback: If REST API failed or no token was provided, attempt push via Git worktree
+        return self._push_file_via_git(rel_path, content_dict, message)
+
+    def _push_file_via_git(self, rel_path: str, content_dict: Dict[str, Any], message: str) -> bool:
+        """
+        Fallback push to telemetry-live using local git credentials when GITHUB_TOKEN is not in env.
+        """
+        import tempfile
+        import shutil
+        import uuid
+        wt_dir = Path(tempfile.gettempdir()) / f"tel_wt_{uuid.uuid4().hex[:8]}"
+        try:
+            # Create worktree for telemetry-live
+            subprocess.run(["git", "fetch", "origin", BRANCH], capture_output=True, timeout=10)
+            res = subprocess.run(["git", "worktree", "add", str(wt_dir), BRANCH], capture_output=True, text=True, timeout=10)
+            if res.returncode != 0:
+                return False
+
+            target_file = wt_dir / rel_path
+            target_file.parent.mkdir(parents=True, exist_ok=True)
+            target_file.write_text(json.dumps(content_dict, indent=2), encoding="utf-8")
+
+            subprocess.run(["git", "-C", str(wt_dir), "add", rel_path], check=True, capture_output=True, timeout=5)
+            # Commit if changes
+            status = subprocess.run(["git", "-C", str(wt_dir), "status", "--porcelain"], capture_output=True, text=True, timeout=5)
+            if status.stdout.strip():
+                subprocess.run(["git", "-C", str(wt_dir), "commit", "-m", message], check=True, capture_output=True, timeout=5)
+                push_res = subprocess.run(["git", "-C", str(wt_dir), "push", "origin", BRANCH], capture_output=True, text=True, timeout=15)
+                return push_res.returncode == 0
+            return True
+        except Exception as ge:
+            logger.debug(f"[TelemetryBridge] Git fallback push error for {rel_path}: {ge}")
+            return False
+        finally:
+            if wt_dir.exists():
+                subprocess.run(["git", "worktree", "remove", "--force", str(wt_dir)], capture_output=True, timeout=5)
+                if wt_dir.exists():
+                    shutil.rmtree(wt_dir, ignore_errors=True)
 
     def init_slot(
         self,
