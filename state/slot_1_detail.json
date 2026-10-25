@@ -11,7 +11,7 @@
   "current_stage_name": "Chart & High-CTR Thumbnail Studio",
   "current_subtask_label": "Capturing market charts / infographics",
   "started_at": "2026-10-25T18:04:02Z",
-  "updated_at": "2026-10-25T18:04:09Z",
+  "updated_at": "2026-10-25T18:04:25Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -93,6 +93,11 @@
       "ts": "18:04:08",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udd0d Harvested `Nifty 50 today option chain` | source: autocomplete \u00b7 cluster: nifty 50 today option chain, nifty 50 today live chart, nifty 50 today chart"
+    },
+    {
+      "ts": "18:04:11",
+      "level": "INFO",
+      "msg": "[PLAYWRIGHT]: \ud83d\udd04 Capturing 3 charts... | "
     }
   ]
 }
