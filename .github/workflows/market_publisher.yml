@@ -297,7 +297,7 @@ jobs:
         run: |
           git config --global user.name "The Bull Print Autonomous Bot"
           git config --global user.email "bot@thebullprint.media"
-          git add content/ assets/ output/thumbnails/
+          git add -f content/ assets/ output/thumbnails/ 2>/dev/null || git add content/ assets/
           if git diff --staged --quiet; then
             echo "No new assets to commit."
           else

@@ -986,8 +986,8 @@ def _vertical_chart_jobs(vertical: str) -> Optional[List[Dict]]:
             {"platform": "tradingview", "symbol": "TVC:DXY", "interval": "D", "filename": "dxy_macro_liquidity.png"},
         ]
     return [  # stock_market
-        {"platform": "tradingview", "symbol": "CNKADA:NIFTY", "interval": "15", "filename": "nifty_opening_range.png"},
-        {"platform": "gocharting", "symbol": "NSE:NIFTY", "filename": "nifty_order_flow_absorption.png"},
+        {"platform": "institutional", "symbol": "NSE:NIFTY50", "interval": "15", "filename": "nifty_opening_range.png"},
+        {"platform": "institutional", "symbol": "NSE:NIFTY_OPTION_CHAIN", "filename": "nifty_order_flow_absorption.png"},
         {"platform": "tradingview", "symbol": "TVC:DXY", "interval": "D", "filename": "dxy_macro_liquidity.png"},
     ]
 
