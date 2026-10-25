@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-25T21:45:00Z",
+  "updated_at": "2026-10-25T21:45:02Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -10,8 +10,8 @@
       "vertical_label": "Stock Market #1",
       "shorts_count": 2,
       "status": "WAITING_APPROVAL",
-      "overall_pct": 75,
-      "stage_pct": 80,
+      "overall_pct": 55,
+      "stage_pct": 25,
       "current_stage": "Kaggle T4 GPU Render Farm",
       "current_stage_index": 5,
       "archetype": "institutional_trap_expose",
