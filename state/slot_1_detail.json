@@ -113,6 +113,11 @@
       "ts": "18:48:06",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udee1\ufe0f Auditing Compliance Gate... | SEBI regex + freshness + LLM auditor"
+    },
+    {
+      "ts": "18:48:11",
+      "level": "INFO",
+      "msg": "[GEMINI]: \u2705 Generated + Compliance-Approved (`market-insight-1792954083`) | \ud83d\udcc8 STOCK MARKET"
     }
   ]
 }
