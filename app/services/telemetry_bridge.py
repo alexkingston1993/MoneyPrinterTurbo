@@ -177,6 +177,7 @@ class TelemetryBridge:
             status = subprocess.run(["git", "-C", str(wt_dir), "status", "--porcelain"], capture_output=True, text=True, timeout=5)
             if status.stdout.strip():
                 subprocess.run(["git", "-C", str(wt_dir), "commit", "-m", message], check=True, capture_output=True, timeout=5)
+                subprocess.run(["git", "-C", str(wt_dir), "pull", "--rebase", "origin", BRANCH], capture_output=True, timeout=10)
                 push_res = subprocess.run(["git", "-C", str(wt_dir), "push", "origin", BRANCH], capture_output=True, text=True, timeout=15)
                 return push_res.returncode == 0
             return True
