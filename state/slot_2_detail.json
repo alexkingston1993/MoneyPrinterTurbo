@@ -133,6 +133,11 @@
       "ts": "12:50:07",
       "level": "INFO",
       "msg": "[GEMINI]: \u267b\ufe0f Authenticity regen 2/2... | 30-day overlap vs 'institutional-order-flow-absorption-trap-2026' \u2192 title overlap ['banks', 'institutional', 'moving', '"
+    },
+    {
+      "ts": "12:50:49",
+      "level": "INFO",
+      "msg": "[GEMINI]: \ud83d\udea8 AUTHENTICITY HALT | 30-day overlap vs 'institutional-order-flow-absorption-trap-2026' \u2192 title overlap ['banks', 'institutional', 'moving', '"
     }
   ]
 }
