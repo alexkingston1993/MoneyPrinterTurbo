@@ -108,6 +108,11 @@
       "ts": "13:04:54",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83e\udde0 Synthesizing Dual Script + Article... | "
+    },
+    {
+      "ts": "13:05:15",
+      "level": "INFO",
+      "msg": "[GEMINI]: \ud83d\udee1\ufe0f Auditing Compliance Gate... | SEBI regex + freshness + LLM auditor"
     }
   ]
 }
