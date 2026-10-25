@@ -5,13 +5,13 @@
   "vertical_label": "Slot #2",
   "shorts_count": 2,
   "status": "WAITING_APPROVAL",
-  "overall_pct": 50,
-  "stage_pct": 60,
+  "overall_pct": 45,
+  "stage_pct": 70,
   "current_stage_index": 4,
   "current_stage_name": "Chart & High-CTR Thumbnail Studio",
-  "current_subtask_label": "Waiting for operator approval (Telegram or Dashboard)",
+  "current_subtask_label": "Thumbnails rendered & staged",
   "started_at": "2026-10-25T18:13:14Z",
-  "updated_at": "2026-10-25T18:15:14Z",
+  "updated_at": "2026-10-25T18:15:29Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -51,7 +51,7 @@
       "id": 4,
       "name": "Chart & High-CTR Thumbnail Studio",
       "status": "RUNNING",
-      "pct": 60,
+      "pct": 70,
       "started_at": "2026-10-25T18:13:21Z",
       "completed_at": null,
       "metrics": {
@@ -143,6 +143,11 @@
       "ts": "18:15:10",
       "level": "INFO",
       "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering Pillow Graphics... | "
+    },
+    {
+      "ts": "18:15:28",
+      "level": "INFO",
+      "msg": "[THUMBNAIL]: \u2705 Approved by Alex (`LIQUIDATION CLUSTERS`) | "
     }
   ]
 }
