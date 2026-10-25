@@ -1212,24 +1212,24 @@ async def _async_main():
     # 5. Render Video via Kaggle GPU NVENC / Faster-Whisper (payload shorts_count drives the kernel loop)
     payload["shorts_count"] = shorts_count
     if shorts_only:
-        # 🚀 DUAL PARALLEL EXECUTION: 1 Short on GHA (CPU FFmpeg) + 1 Short on Kaggle Dual-T4 GPU
-        mission.update_stage("kaggle_gpu", "⚡ Parallel Dual Render: Short #1 (GHA) + Short #2 (Kaggle GPU)...")
+        # 🚀 DUAL PARALLEL EXECUTION: Short #1 on Kaggle Dual-T4 GPU + Short #2 on GHA (CPU FFmpeg)
+        mission.update_stage("kaggle_gpu", "⚡ Parallel Dual Render: Short #1 (Kaggle GPU) + Short #2 (GHA)...")
         from app.services.short_renderer import render_and_upload_short_local
 
         async def _run_local_short():
-            st_path = short_thumb_paths[0] if short_thumb_paths else None
+            st_path = short_thumb_paths[1] if len(short_thumb_paths) > 1 else (short_thumb_paths[0] if short_thumb_paths else None)
             try:
-                return await render_and_upload_short_local(payload, short_index=1, thumb_path=st_path, vertical=vertical)
+                return await render_and_upload_short_local(payload, short_index=2, thumb_path=st_path, vertical=vertical)
             except Exception as e:
-                logger.error(f"GHA local Short #1 failed: {e}")
+                logger.error(f"GHA local Short #2 failed: {e}")
                 return ""
 
         def _run_kaggle_short():
             kp = dict(payload)
             kp["vertical"] = vertical
             kp["only_shorts"] = True
-            kp["target_short_index"] = 2
-            st_path = short_thumb_paths[1] if len(short_thumb_paths) > 1 else (short_thumb_paths[0] if short_thumb_paths else None)
+            kp["target_short_index"] = 1
+            st_path = short_thumb_paths[0] if short_thumb_paths else None
             try:
                 _, _, s_ids, used = run_kaggle_gpu_renderer(
                     kp, chart_files, yt_thumb, mission,
@@ -1238,7 +1238,7 @@ async def _async_main():
                 )
                 return s_ids, used
             except Exception as e:
-                logger.error(f"Kaggle GPU Short #2 failed: {e}")
+                logger.error(f"Kaggle GPU Short #1 failed: {e}")
                 return [], 0
 
         local_task = asyncio.create_task(_run_local_short())

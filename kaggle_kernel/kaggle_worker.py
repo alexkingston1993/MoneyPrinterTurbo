@@ -526,7 +526,10 @@ def _upload_with_slot(slot: dict, mp4_path: Path, thumb_path: Path, yt_payload: 
     video_id = resp["id"]
 
     if thumb_path.exists():
-        youtube.thumbnails().set(videoId=video_id, media_body=MediaFileUpload(str(thumb_path))).execute()
+        try:
+            youtube.thumbnails().set(videoId=video_id, media_body=MediaFileUpload(str(thumb_path))).execute()
+        except Exception as te:
+            print(f"⚠️ Custom thumbnail upload skipped (channel requires phone verification): {te}")
 
     return video_id
 
