@@ -83,6 +83,11 @@
       "ts": "21:40:29",
       "level": "INFO",
       "msg": "Slot #1 (crypto) initialized. Target: 1 Long + 2 Shorts."
+    },
+    {
+      "ts": "21:40:39",
+      "level": "INFO",
+      "msg": "[PLAYWRIGHT]: \ud83d\udd04 Capturing 3 charts... | "
     }
   ]
 }
