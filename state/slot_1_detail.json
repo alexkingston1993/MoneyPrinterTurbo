@@ -123,6 +123,11 @@
       "ts": "13:08:59",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udd2c Auditing Authenticity Engine... | trigram dupe-check + domain vocabulary"
+    },
+    {
+      "ts": "13:09:06",
+      "level": "INFO",
+      "msg": "[GEMINI]: \u267b\ufe0f Authenticity regen 1/2... | Vertical 'stock_market' needs >= 2 domain-term hits but content scored only 0. Script reads like generic fluff \u2014 deep-di"
     }
   ]
 }
