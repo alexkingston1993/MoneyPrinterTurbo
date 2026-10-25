@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-25T21:42:55Z",
+  "updated_at": "2026-10-25T21:42:57Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -9,7 +9,7 @@
       "vertical": "stock_market",
       "vertical_label": "Stock Market #1",
       "shorts_count": 2,
-      "status": "RUNNING",
+      "status": "WAITING_APPROVAL",
       "overall_pct": 50,
       "stage_pct": 60,
       "current_stage": "Chart & High-CTR Thumbnail Studio",
