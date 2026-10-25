@@ -15,6 +15,10 @@ import random
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+import subprocess
+import shutil
+import tempfile
+import uuid
 import requests
 from loguru import logger
 
@@ -101,7 +105,7 @@ class TelemetryBridge:
         local_file.write_text(json.dumps(content_dict, indent=2), encoding="utf-8")
 
         if not self.token:
-            return False
+            return self._push_file_via_git(rel_path, content_dict, message)
 
         url = f"{self.base_url}/{rel_path}"
 
