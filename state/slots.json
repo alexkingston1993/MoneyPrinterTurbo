@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-25T14:23:06Z",
+  "updated_at": "2026-10-25T14:23:38Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -73,7 +73,7 @@
       "vertical": "crypto",
       "vertical_label": "Crypto #2",
       "shorts_count": 1,
-      "status": "RUNNING",
+      "status": "FAILED",
       "overall_pct": 25,
       "stage_pct": 100,
       "current_stage": "Gemini Script & Dossier Synthesis",
