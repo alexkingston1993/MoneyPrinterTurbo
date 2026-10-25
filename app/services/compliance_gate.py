@@ -17,6 +17,7 @@ run (workflow fails) rather than letting non-compliant content publish.
 """
 
 import json
+import os
 import re
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -28,6 +29,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 POSTS_MANIFEST = BASE_DIR / "content" / "posts.json"
 SCHEMA_PATH = BASE_DIR / "master_schema.json"
 SYSTEM_PROMPT_PATH = BASE_DIR / "master_system_prompt.txt"
+
+# Live Gemini model alias (gemini-2.5-flash 404s for new projects — 'gemini-flash-latest'
+# always resolves to the currently served GA Flash model).
+LIVE_GEMINI_MODEL = os.getenv("GEMINI_MODEL_NAME", "gemini-flash-latest")
 
 # Deterministic Regex Patterns for Illegal Financial Advisory Triggers
 _BANNED_RAW = [
@@ -168,7 +173,7 @@ class ComplianceGate:
             from google.genai import types
 
             res = client.models.generate_content(
-                model="gemini-2.5-flash",
+                model=LIVE_GEMINI_MODEL,
                 contents=audit_prompt,
                 config=types.GenerateContentConfig(response_mime_type="application/json", temperature=0.1),
             )
@@ -197,7 +202,7 @@ class ComplianceGate:
         - Keep the SEBI educational disclaimer structure intact.
         """
         res = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model=LIVE_GEMINI_MODEL,
             contents=correction_prompt,
             config=types.GenerateContentConfig(
                 system_instruction=system_prompt,

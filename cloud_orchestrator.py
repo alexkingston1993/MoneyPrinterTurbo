@@ -32,7 +32,38 @@ BASE_DIR = Path(__file__).parent
 KAGGLE_STAGE_DIR = BASE_DIR / "kaggle_stage"
 KAGGLE_STAGE_DIR.mkdir(parents=True, exist_ok=True)
 
+# Auto-discover Kaggle credentials if not in environment
 KAGGLE_USERNAME = os.getenv("KAGGLE_USERNAME", "")
+if not KAGGLE_USERNAME or not os.getenv("KAGGLE_KEY"):
+    kaggle_json_path = Path.home() / ".kaggle" / "kaggle.json"
+    if kaggle_json_path.exists():
+        try:
+            _kd = json.loads(kaggle_json_path.read_text(encoding="utf-8"))
+            if not KAGGLE_USERNAME:
+                KAGGLE_USERNAME = _kd.get("username", "")
+                os.environ["KAGGLE_USERNAME"] = KAGGLE_USERNAME
+            if not os.getenv("KAGGLE_KEY"):
+                os.environ["KAGGLE_KEY"] = _kd.get("key", "")
+        except Exception:
+            pass
+
+# Auto-discover config.toml secrets if not in environment
+try:
+    import tomllib
+    _cfg_path = BASE_DIR / "config.toml"
+    if _cfg_path.exists():
+        _cfg = tomllib.load(open(_cfg_path, "rb")).get("app", {})
+        if not os.getenv("GEMINI_API_KEY") and _cfg.get("gemini_api_key"):
+            os.environ["GEMINI_API_KEY"] = _cfg["gemini_api_key"]
+        if not os.getenv("TELEGRAM_BOT_TOKEN") and _cfg.get("telegram_bot_token"):
+            os.environ["TELEGRAM_BOT_TOKEN"] = _cfg["telegram_bot_token"]
+        if not os.getenv("TELEGRAM_CHAT_ID") and _cfg.get("telegram_chat_id"):
+            os.environ["TELEGRAM_CHAT_ID"] = str(_cfg["telegram_chat_id"])
+        if not os.getenv("GEMINI_MODEL_NAME") and _cfg.get("gemini_model_name"):
+            os.environ["GEMINI_MODEL_NAME"] = _cfg["gemini_model_name"]
+except Exception:
+    pass
+
 DATASET_SLUG = "flipzon-daily-payload"
 KERNEL_SLUG = "flipzon-gpu-video-renderer"
 
@@ -424,9 +455,9 @@ def generate_master_json_via_ai_studio(topic: str, market_notes: str, chart_file
             client = genai.Client(api_key=api_key)
             schema_dict = json.loads(schema_file.read_text(encoding="utf-8")) if schema_file.exists() else {}
 
-            logger.info("🧠 Calling Google AI Studio (Gemini 2.5 Flash / Pro)...")
+            logger.info(f"🧠 Calling Google AI Studio ({os.getenv('GEMINI_MODEL_NAME', 'gemini-flash-latest')})...")
             response = client.models.generate_content(
-                model="gemini-2.5-flash",
+                model=os.getenv("GEMINI_MODEL_NAME", "gemini-flash-latest"),
                 contents=user_input,
                 config=types.GenerateContentConfig(
                     system_instruction=system_prompt,
@@ -490,7 +521,9 @@ def run_kaggle_gpu_renderer(
             m, s = divmod(int(cumulative), 60)
             timestamps.append(f"{m:02d}:{s:02d} - {seg['chapter_title']}")
             
-            dur = asyncio.run(generate_tts_audio(seg["spoken_narration"], mp3))
+            import concurrent.futures
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as executor:
+                dur = executor.submit(asyncio.run, generate_tts_audio(seg["spoken_narration"], mp3)).result()
             render_segment_mp4(seg, mp3, dur, mp4)
             rendered_files.append(mp4)
             cumulative += dur

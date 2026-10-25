@@ -108,7 +108,7 @@ jobs:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
           LLM_PROVIDER: "gemini"
-          GEMINI_MODEL_NAME: "gemini-2.5-flash"
+          GEMINI_MODEL_NAME: "gemini-flash-latest"
           VOICE_NAME: "xtts:prabhat"
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPO: ${{ github.repository }}

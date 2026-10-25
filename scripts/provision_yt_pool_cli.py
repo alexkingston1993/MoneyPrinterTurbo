@@ -273,9 +273,37 @@ def main() -> int:
     args = ap.parse_args()
 
     if args.bootstrap:
+        cache = json.loads(POOL_CACHE.read_text()) if POOL_CACHE.exists() else []
+        existing_ids = {s.get("client_id") for s in cache}
+
+        secret_path = TOKEN_DIR / f"client_secrets_{args.bootstrap}.json"
+        if not secret_path.exists():
+            fallbacks = sorted(ROOT.glob("client_secret*.json"))
+            secret_path = fallbacks[0] if fallbacks else None
+
+        if secret_path and secret_path.exists():
+            cid = load_client_secret_json(secret_path).get("client_id")
+            if cid and cid in existing_ids:
+                print(
+                    f"✗ REFUSED: '{secret_path.name}' uses an OAuth client ID that already exists in the pool:\n"
+                    f"  (Client ID: …{cid[-25:]})\n"
+                    "  Google Cloud enforces the 10,000 units/day quota per GCP Project (OAuth Client).\n"
+                    "  Minting a new token under the same client does NOT increase your daily quota.\n\n"
+                    "  To add Slot #2 / Slot #3 with an additional 10k units/day quota each:\n"
+                    "  1. Go to console.cloud.google.com and create a NEW project (e.g. 'the-bull-print-ta')\n"
+                    "  2. Enable 'YouTube Data API v3' in that project\n"
+                    "  3. Configure OAuth consent screen (External, add your Google account as test user)\n"
+                    "  4. Credentials → Create Credentials → OAuth client ID → Desktop application\n"
+                    "  5. Download JSON and save as: data/youtube_tokens/client_secrets_{args.bootstrap}.json\n"
+                    "  6. Then rerun: python3 scripts/provision_yt_pool_cli.py --bootstrap {args.bootstrap}\n"
+                )
+                return 2
+
         slot = bootstrap_slot(args.bootstrap)
         if slot:
-            cache = json.loads(POOL_CACHE.read_text()) if POOL_CACHE.exists() else []
+            if slot.get("client_id") in existing_ids:
+                print("✗ REFUSED: this OAuth client already exists in the pool.")
+                return 2
             cache.append(slot)
             POOL_CACHE.parent.mkdir(parents=True, exist_ok=True)
             POOL_CACHE.write_text(json.dumps(cache, indent=1))
