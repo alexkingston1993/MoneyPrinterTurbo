@@ -1516,10 +1516,20 @@
       if (!tbody) return;
       let outliers = [];
       if (radar) {
-        if (Array.isArray(radar.viral_outliers)) {
+        if (radar.verticals && typeof radar.verticals === 'object') {
+          for (const [vKey, list] of Object.entries(radar.verticals)) {
+            if (Array.isArray(list)) {
+              for (const it of list) {
+                outliers.push({
+                  ...it,
+                  vertical: it.vertical || vKey,
+                });
+              }
+            }
+          }
+        }
+        if (!outliers.length && Array.isArray(radar.viral_outliers)) {
           outliers = radar.viral_outliers;
-        } else if (radar.verticals) {
-          outliers = Object.values(radar.verticals).flat();
         }
       }
       if (outliers.length === 0) {
@@ -1538,10 +1548,24 @@
           ? `<span class="badge-format badge-format-short">9:16 SHORT</span>`
           : `<span class="badge-format badge-format-long">16:9 LONG</span>`;
 
+        const rawVert = (item.vertical || '').toLowerCase();
         let vertBadge = 'badge-stock';
-        const vert = (item.vertical || 'stock_market').toUpperCase();
-        if (vert.includes('CRYPTO')) vertBadge = 'badge-crypto';
-        else if (vert.includes('INSUR')) vertBadge = 'badge-insurance';
+        let vertLabel = '📈 STOCK';
+        let vertClean = 'stock_market';
+
+        if (rawVert.includes('crypto')) {
+          vertBadge = 'badge-crypto';
+          vertLabel = '🪙 CRYPTO';
+          vertClean = 'crypto';
+        } else if (rawVert.includes('insur')) {
+          vertBadge = 'badge-insurance';
+          vertLabel = '🛡️ INSURANCE';
+          vertClean = 'insurance';
+        } else {
+          vertBadge = 'badge-stock';
+          vertLabel = '📈 STOCK';
+          vertClean = 'stock_market';
+        }
 
         const mult = item.outlier_multiplier ? `${item.outlier_multiplier.toFixed(1)}x` : '3.5x';
         const vph = (item.views_per_hour || 0).toLocaleString();
@@ -1561,7 +1585,7 @@
               <div style="font-weight: 700; color: var(--text-main); font-size: 12.5px; line-height: 1.3; margin-bottom: 4px;">
                 ${item.winning_source_title || 'Niche Trending Video'}
               </div>
-              <span class="slot-badge ${vertBadge}" style="font-size: 9px; padding: 1px 6px;">${item.vertical || 'stock_market'}</span>
+              <span class="slot-badge ${vertBadge}" style="font-size: 9.5px; padding: 2px 7px; font-weight: 700;">${vertLabel}</span>
             </td>
             <td style="font-family: var(--font-mono); font-size: 11px; color: var(--purple); line-height: 1.4;">
               ${item.title_skeleton_template || 'Why [X%] Fall For [Mechanism]'}
@@ -1570,7 +1594,7 @@
               🛡️ ${item.safe_original_research_angle || 'Independent institutional order-flow forensic breakdown'}
             </td>
             <td>
-              <button class="btn-slot-action btn-slot-dispatch" style="padding: 6px 12px; font-size: 10.5px; white-space: nowrap;" onclick="rideViralWave('${item.vertical || 'stock_market'}', decodeURIComponent('${encodedTopic}'), 2)">
+              <button class="btn-slot-action btn-slot-dispatch" style="padding: 6px 12px; font-size: 10.5px; white-space: nowrap;" onclick="rideViralWave('${vertClean}', decodeURIComponent('${encodedTopic}'), 2)">
                 ⚡ Ride Wave
               </button>
             </td>

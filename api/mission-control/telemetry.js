@@ -195,10 +195,28 @@ module.exports = async function handler(req, res) {
       posts_archive: combinedPosts.slice(0, 30),
       viral_memory: viralMemoryData || null,
       competitor_radar: competitorRadarData
-        ? {
-            ...competitorRadarData,
-            viral_outliers: competitorRadarData.viral_outliers || Object.values(competitorRadarData.verticals || {}).flat(),
-          }
+        ? (() => {
+            const flattened = [];
+            const verts = competitorRadarData.verticals || {};
+            for (const [vKey, items] of Object.entries(verts)) {
+              if (Array.isArray(items)) {
+                for (const it of items) {
+                  flattened.push({
+                    ...it,
+                    vertical: it.vertical || vKey,
+                  });
+                }
+              }
+            }
+            if (!flattened.length && Array.isArray(competitorRadarData.viral_outliers)) {
+              flattened.push(...competitorRadarData.viral_outliers);
+            }
+            return {
+              ...competitorRadarData,
+              verticals: verts,
+              viral_outliers: flattened,
+            };
+          })()
         : null,
       gpu_telemetry: {
         kernel_slug: 'flipzon-gpu-video-renderer',

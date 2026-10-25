@@ -164,6 +164,7 @@ class CompetitorViralRadar:
                                 "view_count": view_count,
                                 "format": "SHORT" if is_short else "LONG",
                                 "query_source": q,
+                                "vertical": vertical,
                             })
                         except Exception:
                             continue
@@ -275,6 +276,7 @@ class CompetitorViralRadar:
                 "title": d["title"],
                 "channel": "Market Benchmark",
                 "format": d["format"],
+                "vertical": vertical,
                 "views_per_hour": d["vph"],
                 "outlier_multiplier": d["outlier_multiplier"],
                 "viral_horse_score": round(d["outlier_multiplier"] * 10.0, 1),
