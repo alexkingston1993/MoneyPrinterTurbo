@@ -766,7 +766,7 @@ def run_kaggle_gpu_renderer(
     }
     (KAGGLE_STAGE_DIR / "dataset-metadata.json").write_text(json.dumps(dataset_meta), encoding="utf-8")
 
-    vertical = payload.get("vertical") or mission.vertical or "stock_market"
+    vertical = payload.get("vertical") or getattr(mission, "vertical", None) or "stock_market"
     voice_persona = "Andrew (Institutional Desk)" if vertical == "stock_market" else ("Brian (High-Beta Macro)" if vertical == "crypto" else "Prabhat (IRDAI Policy Forensics)")
 
     logger.info("☁️ Pushing payload & chart PNGs to Private Kaggle Dataset...")
@@ -780,10 +780,19 @@ def run_kaggle_gpu_renderer(
         "short_2_render_pct": 0,
         "gpu_elapsed_sec": 0,
     })
-    subprocess.run(
-        ["kaggle", "datasets", "version", "-p", str(KAGGLE_STAGE_DIR), "-m", "Auto daily run", "--dir-mode", "zip"],
-        check=True
-    )
+    for retry in range(4):
+        try:
+            subprocess.run(
+                ["kaggle", "datasets", "version", "-p", str(KAGGLE_STAGE_DIR), "-m", "Auto daily run", "--dir-mode", "zip"],
+                check=True
+            )
+            break
+        except subprocess.CalledProcessError as e:
+            if retry < 3:
+                logger.warning(f"Kaggle dataset push failed ({e}), waiting 15s before retry {retry+1}/3...")
+                time.sleep(15)
+            else:
+                raise
     time.sleep(12)
 
     # 2. Push & Trigger Kaggle Dual-T4 GPU Kernel
@@ -1217,6 +1226,7 @@ async def _async_main():
 
         def _run_kaggle_short():
             kp = dict(payload)
+            kp["vertical"] = vertical
             kp["only_shorts"] = True
             kp["target_short_index"] = 2
             st_path = short_thumb_paths[1] if len(short_thumb_paths) > 1 else (short_thumb_paths[0] if short_thumb_paths else None)
