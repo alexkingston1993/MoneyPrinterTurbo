@@ -1,26 +1,44 @@
 name: Flipzon & The Bull Print 100% Cloud Media Engine
 
 on:
-  # 1. Automatic Schedule (Every day at 8:30 AM IST / 03:00 UTC)
+  # Automatic Schedule — 6 slots/day → 6 Long-Form + 10 Shorts (16 videos)
+  # Slot 1 Stock pre-open 08:30 IST · Slot 2 Crypto 11:00 IST · Slot 3 Insurance 13:30 IST
+  # Slot 4 Stock close 15:45 IST · Slot 5 Crypto evening 18:30 IST · Slot 6 Insurance night 21:00 IST
   schedule:
-    - cron: '0 3 * * *'
-  
-  # 2. Manual Trigger via GitHub Mobile App / Browser UI
+    - cron: '0 3 * * *'      # Slot 1 — Stock pre-market
+    - cron: '30 5 * * *'     # Slot 2 — Crypto midday
+    - cron: '0 8 * * *'      # Slot 3 — Insurance lunch
+    - cron: '15 10 * * *'    # Slot 4 — Stock closing
+    - cron: '0 13 * * *'     # Slot 5 — Crypto evening (1 Short)
+    - cron: '30 15 * * *'    # Slot 6 — Insurance night (1 Short)
+
+  # Manual Trigger via GitHub Mobile App / Browser UI
   workflow_dispatch:
     inputs:
       topic:
-        description: 'Market Topic to Analyze'
-        required: true
-        default: 'Bitcoin Order Flow Absorption & Global Macro Liquidity'
-      notes:
-        description: 'Research Notes / Context'
+        description: 'Market Topic to Analyze (leave default to use the slot registry topic)'
         required: false
-        default: 'Analyze BTC footprint delta traps alongside DXY liquidity shifts and historical Nifty macro structure.'
+        default: ''
+      notes:
+        description: 'Research Notes / Context (optional)'
+        required: false
+        default: ''
+      vertical:
+        description: 'Vertical override: stock_market | crypto | insurance'
+        required: false
+        default: ''
+      shorts_count:
+        description: '9:16 Shorts to render from this session (1 or 2)'
+        required: false
+        default: ''
+      slot:
+        description: 'Daily slot 1-6 (sets vertical + shorts + topic when left to registry)'
+        required: false
+        default: ''
 
   # 3. External Webhook Trigger (From Telegram / Vercel / n8n / RSS)
   repository_dispatch:
     types: [trigger_media_engine]
-
 permissions:
   contents: write
 
@@ -57,6 +75,36 @@ jobs:
             chmod 600 ~/.kaggle/kaggle.json
           fi
 
+      - name: 🧭 Resolve Daily Slot (vertical cadence + Shorts count)
+        env:
+          MANUAL_SLOT: ${{ github.event.inputs.slot || github.event.client_payload.slot || '' }}
+          MANUAL_VERTICAL: ${{ github.event.inputs.vertical || github.event.client_payload.vertical || '' }}
+          MANUAL_SHORTS: ${{ github.event.inputs.shorts_count || github.event.client_payload.shorts_count || '' }}
+        run: |
+          if [ -n "$MANUAL_SLOT" ]; then
+            RESOLVED_SLOT="$MANUAL_SLOT"
+          else
+            RESOLVED_SLOT=$(python3 - <<'PY'
+          from datetime import datetime, timezone
+          now = datetime.now(timezone.utc)
+          mins = now.hour * 60 + now.minute
+          if mins >= 15 * 60 + 30: print(6)
+          elif mins >= 13 * 60: print(5)
+          elif mins >= 10 * 60 + 15: print(4)
+          elif mins >= 8 * 60: print(3)
+          elif mins >= 5 * 60 + 30: print(2)
+          elif mins >= 3 * 60: print(1)
+          else: print(1)
+          PY
+          )
+          fi
+          {
+            echo "INPUT_SLOT=$RESOLVED_SLOT"
+            echo "INPUT_VERTICAL=$MANUAL_VERTICAL"
+            echo "INPUT_SHORTS_COUNT=$MANUAL_SHORTS"
+          } >> "$GITHUB_ENV"
+          echo "🧭 Resolved slot=$RESOLVED_SLOT vertical=${MANUAL_VERTICAL:-<registry>} shorts=${MANUAL_SHORTS:-<registry>}"
+
       - name: 🚀 Run Cloud Orchestrator (Playwright -> AI Studio -> Kaggle GPU -> Vercel)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
@@ -64,8 +112,11 @@ jobs:
           KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-          INPUT_TOPIC: ${{ github.event.inputs.topic || github.event.client_payload.topic || 'Institutional Order Flow Absorption & Macro Liquidity Shift' }}
-          INPUT_NOTES: ${{ github.event.inputs.notes || github.event.client_payload.notes || 'Break down BTC footprint delta absorption and 30-day+ historical Nifty macro structure.' }}
+          INPUT_TOPIC: ${{ github.event.inputs.topic || github.event.client_payload.topic || '' }}
+          INPUT_NOTES: ${{ github.event.inputs.notes || github.event.client_payload.notes || '' }}
+          INPUT_SLOT: ${{ env.INPUT_SLOT }}
+          INPUT_VERTICAL: ${{ env.INPUT_VERTICAL }}
+          INPUT_SHORTS_COUNT: ${{ env.INPUT_SHORTS_COUNT }}
           YT_OAUTH_POOL_JSON: ${{ secrets.YT_OAUTH_POOL_JSON }}
           YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
           YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}

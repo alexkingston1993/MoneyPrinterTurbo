@@ -14,6 +14,7 @@ import re
 import json
 import time
 import shutil
+import argparse
 import asyncio
 import subprocess
 from pathlib import Path
@@ -25,6 +26,7 @@ from chart_fetcher import capture_batch_charts
 from thumbnail_generator import create_marketing_images, create_short_thumbnail
 from engine import generate_website_article_file
 from publisher import publish_and_index_article
+from app.services.content_authenticity_engine import infer_vertical
 
 BASE_DIR = Path(__file__).parent
 KAGGLE_STAGE_DIR = BASE_DIR / "kaggle_stage"
@@ -252,6 +254,31 @@ def _enforce_master_keys(data: Dict) -> Dict:
             "chart_image_ref": first_chart,
         }
 
+    shorts_list = yt.get("short_extractions")
+    if not isinstance(shorts_list, list) or len(shorts_list) < 2 or not all(
+        isinstance(s, dict) and s.get("spoken_hook_and_body") for s in shorts_list[:2]
+    ):
+        primary = yt["short_extraction"]
+        segs = yt.get("segments") or []
+        seg1 = segs[1] if len(segs) > 1 else (segs[0] if segs else {})
+        alt_chart = next(
+            (str(s.get("chart_image_ref", "")).strip() for s in sections[1:] if s.get("chart_image_ref")),
+            "",
+        )
+        if not alt_chart or alt_chart == str(primary.get("chart_image_ref", "")):
+            alt_chart = str(sections[-1].get("chart_image_ref", "")).strip() if sections else ""
+        secondary = {
+            "short_title": str(
+                seg1.get("visual_title") or meta.get("title", data.get("topic", "Market insight"))
+            )[:60],
+            "spoken_hook_and_body": str(seg1.get("spoken_narration", ""))[:400] or str(primary.get("spoken_hook_and_body", "")),
+            "cta_to_long_video": "The numbers get deeper in the full masterclass - watch it on The Bull Print.",
+            "chart_image_ref": alt_chart or str(primary.get("chart_image_ref", "")),
+            "angle": "quantitative_proof_rule",
+        }
+        primary.setdefault("angle", "core_trap_hook")
+        yt["short_extractions"] = [primary, secondary]
+
     tldr = web.get("tldr_summary")
     if not isinstance(tldr, list) or len([t for t in tldr if str(t).strip()]) < 3:
         derived = [str(s.get("direct_answer_passage", "")).strip()[:70] for s in sections[:3]]
@@ -302,7 +329,10 @@ def _free_llm_json_fallback(system_prompt: str, user_input: str) -> Optional[Dic
             f"{user_input}\n\nIMPORTANT: Respond with ONLY one valid JSON object matching the required "
             f"schema. No markdown fences and no commentary.\n"
             f"MANDATORY KEYS (must be present): youtube_payload.short_extraction "
-            f"(short_title, spoken_hook_and_body, cta_to_long_video, chart_image_ref), "
+            f"(short_title, spoken_hook_and_body, cta_to_long_video, chart_image_ref) AND "
+            f"youtube_payload.short_extractions (array of EXACTLY 2 distinct Short objects, each with "
+            f"short_title, spoken_hook_and_body, cta_to_long_video, chart_image_ref; angle "
+            f"core_trap_hook for #1 and quantitative_proof_rule for #2), "
             f"website_article_payload.tldr_summary (exactly 3 bullets), "
             f"website_article_payload.seo_meta.h1_title."
         )},
@@ -369,9 +399,10 @@ def _free_llm_json_fallback(system_prompt: str, user_input: str) -> Optional[Dic
     return None
 
 
-def generate_master_json_via_ai_studio(topic: str, market_notes: str, chart_files: List[str]) -> Dict:
+def generate_master_json_via_ai_studio(topic: str, market_notes: str, chart_files: List[str], archetype_hint: str = "") -> Dict:
     """Calls Google AI Studio Free Tier with Structured Outputs to generate dual script + article.
-    If GEMINI_API_KEY is depleted (429 ResourceExhausted) or the call errors, engages _free_llm_json_fallback."""
+    If GEMINI_API_KEY is depleted (429 ResourceExhausted) or the call errors, engages _free_llm_json_fallback.
+    archetype_hint forces a specific Narrative Archetype when the Authenticity Engine demands a fresh angle."""
     api_key = os.getenv("GEMINI_API_KEY")
     prompt_file = BASE_DIR / "master_system_prompt.txt"
     schema_file = BASE_DIR / "master_schema.json"
@@ -381,7 +412,8 @@ def generate_master_json_via_ai_studio(topic: str, market_notes: str, chart_file
         "topic": topic,
         "market_data_notes": market_notes,
         "chart_screenshots": chart_files,
-        "website_domain": "flipzon.work.gd"
+        "website_domain": "flipzon.work.gd",
+        "narrative_archetype_hint": archetype_hint,
     })
 
     if api_key:
@@ -430,11 +462,12 @@ def run_kaggle_gpu_renderer(
     yt_thumb: Path,
     mission: AriaMissionControl,
     short_thumb_path: Optional[Path] = None,
-) -> Tuple[str, List[str], str, int]:
+    short_thumb_paths: Optional[List[Path]] = None,
+) -> Tuple[str, List[str], List[str], int]:
     """
     Pushes payload + charts to private Kaggle dataset, triggers T4 GPU kernel,
     and runs a 26-minute state-aware poller. Returns (long_video_id, timestamps,
-    short_video_id, oauth_slot_used). Falls back to local engine if Kaggle is
+    short_video_ids, oauth_slot_used). Falls back to local engine if Kaggle is
     unconfigured.
     """
     import shutil
@@ -467,12 +500,18 @@ def run_kaggle_gpu_renderer(
         vid_id = upload_to_youtube(final_mp4, payload["youtube_payload"])
         mission.update_stage("kaggle_gpu", f"✅ Rendered Locally (`{vid_id}`)")
         logger.info("ℹ️ No 9:16 Short generated in local fallback mode (Kaggle GPU required).")
-        return vid_id, timestamps, "", 0
+        return vid_id, timestamps, [], 0
 
     # 1. Stage Kaggle Dataset — include the YT OAuth quota pool so the GPU kernel rotates slots
     if short_thumb_path and Path(short_thumb_path).exists():
         shutil.copy2(short_thumb_path, KAGGLE_STAGE_DIR / "yt_short_thumb.jpg")
-        logger.info(f"🎬 Staged 9:16 Shorts shelf thumbnail into Kaggle dataset")
+        logger.info("🎬 Staged 9:16 Shorts shelf thumbnail into Kaggle dataset")
+    for i, st_path in enumerate(short_thumb_paths or [], start=1):
+        if st_path and Path(st_path).exists():
+            shutil.copy2(st_path, KAGGLE_STAGE_DIR / f"short_thumb_{i}.jpg")
+    short_count = len([p for p in (short_thumb_paths or []) if p and Path(p).exists()])
+    if short_count:
+        logger.info(f"🎬 Staged {short_count} per-Short shelf thumbnail(s) into Kaggle dataset")
     pool_json = os.getenv("YT_OAUTH_POOL_JSON", "")
     if not pool_json:
         local_pool = BASE_DIR / "data" / "youtube_tokens" / "oauth_pool.json"
@@ -551,63 +590,195 @@ def run_kaggle_gpu_renderer(
     # Surface which Google Cloud OAuth slot served the upload → Mission Control 🔑 line
     oauth_slot_used = int(result_data.get("oauth_slot_used") or 0)
     if oauth_slot_used > 0:
-        mission.update_stage("kaggle_gpu", f"🔥 Encoding NVENC + Whisper (done)", f"🔑 YT Quota Slot #{oauth_slot_used}")
-    return result_data["youtube_video_id"], result_data["timestamps_log"], result_data.get("short_video_id", ""), oauth_slot_used
+        mission.update_stage("kaggle_gpu", "🔥 Encoding NVENC + Whisper (done)",
+                             f"🔑 YT Quota Slot #{oauth_slot_used} · 🎬 {result_data.get('shorts_count', len(result_data.get('short_video_ids', [])))} Short(s)")
+    return (
+        result_data["youtube_video_id"],
+        result_data["timestamps_log"],
+        result_data.get("short_video_ids") or ([result_data["short_video_id"]] if result_data.get("short_video_id") else []),
+        oauth_slot_used,
+    )
 
 
 # =====================================================================
-# MAIN CLOUD PIPELINE EXECUTION
+# DAILY SLOT REGISTRY — 6 Long-Form + 10 Shorts every day (16 videos)
+# Slots: 1 Stock pre-open (08:30 IST) · 2 Crypto (11:00 IST) ·
+#        3 Insurance (13:30 IST) · 4 Stock close (15:45 IST) ·
+#        5 Crypto evening (18:30 IST) · 6 Insurance night (21:00 IST)
 # =====================================================================
+def _slot_registry() -> Dict[int, Dict]:
+    return {
+        1: {
+            "vertical": "stock_market", "shorts_count": 2,
+            "topic": "Nifty Bank Opening Range Absorption & FII Order Flow Book Unwind",
+            "notes": "Institutional opening range: Nifty & BankNifty pre-open build-up, FII/DII cash-market flows, spot order-flow absorption, opening drive liquidity mechanics.",
+        },
+        2: {
+            "vertical": "crypto", "shorts_count": 2,
+            "topic": "Bitcoin Liquidation Cluster Map & Funding-Rate Stress Indicators",
+            "notes": "Perpetual futures structure: liquidation heatmap clusters, funding-rate extremes, open-interest delta, exchange inflow/outflow footprints.",
+        },
+        3: {
+            "vertical": "insurance", "shorts_count": 2,
+            "topic": "Health Insurance Room-Rent Deduction Traps & CSR Forensics",
+            "notes": "Policy-wording forensics: IRDAI room-rent caps & proportional deduction math, co-pay mechanics, CSR vs ICR misuse, solvency-ratio context. No product recommendations.",
+        },
+        4: {
+            "vertical": "stock_market", "shorts_count": 2,
+            "topic": "FII Closing-Session Flows & Option Ring Reading Without Market-Peak Traps",
+            "notes": "Closing auction mechanics: FII/DII end-of-day repositioning, option ring value, straddle Pierre-iv points vocabulary with everyday analogies, delivery percentage tells.",
+        },
+        5: {
+            "vertical": "crypto", "shorts_count": 1,
+            "topic": "Ethereum CVD Divergence & Exchange Reserve Exit Signals",
+            "notes": "ETH microstructure: cumulative volume delta divergence vs price, exchange-reserve exits, stablecoin flows, funding reset mechanics.",
+        },
+        6: {
+            "vertical": "insurance", "shorts_count": 1,
+            "topic": "Claim Settlement Ratio vs Incurred Claim Ratio - Which Number Lies",
+            "notes": "IRDAI annual-report math: CSR optics vs incurred claim ratio reality, 3-year averaging claims, waiting-period clauses, hospital-network exclusions. No product recommendations.",
+        },
+    }
+
+
+def _vertical_chart_jobs(vertical: str) -> Optional[List[Dict]]:
+    """Playwright capture jobs per domain; insurance uses the infographic engine instead (None)."""
+    if vertical == "insurance":
+        return None
+    if vertical == "crypto_ethereum":
+        return [
+            {"platform": "tradingview", "symbol": "BINANCE:ETHUSDT", "interval": "60", "filename": "eth_cvd_structure.png"},
+            {"platform": "gocharting", "symbol": "BINANCE:ETHUSDT", "filename": "eth_liquidation_map.png"},
+            {"platform": "tradingview", "symbol": "TVC:DXY", "interval": "D", "filename": "dxy_macro_liquidity.png"},
+        ]
+    if vertical == "crypto":
+        return [
+            {"platform": "tradingview", "symbol": "BINANCE:BTCUSDT", "interval": "60", "filename": "btc_hourly_structure.png"},
+            {"platform": "gocharting", "symbol": "BINANCE:BTCUSDT", "filename": "btc_footprint_absorption.png"},
+            {"platform": "tradingview", "symbol": "TVC:DXY", "interval": "D", "filename": "dxy_macro_liquidity.png"},
+        ]
+    return [  # stock_market
+        {"platform": "tradingview", "symbol": "CNKADA:NIFTY", "interval": "15", "filename": "nifty_opening_range.png"},
+        {"platform": "gocharting", "symbol": "NSE:NIFTY", "filename": "nifty_order_flow_absorption.png"},
+        {"platform": "tradingview", "symbol": "TVC:DXY", "interval": "D", "filename": "dxy_macro_liquidity.png"},
+    ]
+
+
+def _send_telegram(text: str):
+    """Fire-and-forget operator alert (only when Telegram credentials exist)."""
+    if not (os.getenv("TELEGRAM_BOT_TOKEN") and os.getenv("TELEGRAM_CHAT_ID")):
+        return
+    try:
+        import urllib.request
+        _body = urllib.parse.urlencode({
+            "chat_id": os.getenv("TELEGRAM_CHAT_ID"),
+            "text": text,
+            "parse_mode": "Markdown",
+        }).encode()
+        urllib.request.urlopen(urllib.request.Request(
+            f"https://api.telegram.org/bot{os.getenv('TELEGRAM_BOT_TOKEN')}/sendMessage", _body
+        ))
+    except Exception:
+        pass
+
+
 async def main():
-    topic = os.getenv("INPUT_TOPIC", "Bitcoin Order Flow Absorption & Global Macro Liquidity")
-    notes = os.getenv("INPUT_NOTES", "Analyze BTC footprint delta absorption and 30-day+ historical Nifty macro structure.")
+    # -- Daily slot routing: CLI args > GITHUB Action env > default stock pre-open slot
+    reg = _slot_registry()
+    parser = argparse.ArgumentParser(description="The Bull Print autonomous cloud pipeline")
+    parser.add_argument("--slot", type=int, default=0, help="Daily slot 1-6 (vertical cadence)")
+    parser.add_argument("--vertical", type=str, default="", help="Explicit vertical override (stock_market|crypto|insurance|crypto_ethereum)")
+    parser.add_argument("--shorts-count", type=int, default=0, help="How many 9:16 Shorts to render from this session (1-2)")
+    parser.add_argument("--topic", type=str, default="", help="Explicit topic override")
+    args, _unknown = parser.parse_known_args()
+
+    env_slot = int(os.getenv("INPUT_SLOT", "0") or 0)
+    slot_index = args.slot or env_slot
+    slot_cfg = reg.get(slot_index, reg[1])
+
+    env_topic = os.getenv("INPUT_TOPIC", "")
+    env_notes = os.getenv("INPUT_NOTES", "")
+    env_vertical = os.getenv("INPUT_VERTICAL", "")
+    env_shorts = int(os.getenv("INPUT_SHORTS_COUNT", "0") or 0)
+
+    topic = args.topic or env_topic or slot_cfg["topic"]
+    notes = env_notes or slot_cfg["notes"]
+    vertical = args.vertical or env_vertical or infer_vertical(topic) or slot_cfg["vertical"]
+    shorts_count = max(1, min(2, args.shorts_count or env_shorts or slot_cfg["shorts_count"]))
 
     # 1. Initialize Single Editable Mission Control Card
     mission = AriaMissionControl(topic=topic)
     mission.init_card()
 
-    # 2. Capture Dark-Mode Charts via Playwright
-    chart_jobs = [
-        {"platform": "tradingview", "symbol": "BINANCE:BTCUSDT", "interval": "60", "filename": "btc_hourly_structure.png"},
-        {"platform": "gocharting", "symbol": "BINANCE:BTCUSDT", "filename": "btc_footprint_absorption.png"},
-        {"platform": "tradingview", "symbol": "TVC:DXY", "interval": "D", "filename": "dxy_macro_liquidity.png"}
-    ]
-    mission.update_stage("playwright", "🔄 Capturing 3 charts...")
-    chart_files = await capture_batch_charts(chart_jobs, headless=True)
-    mission.update_stage("playwright", f"✅ Captured ({len(chart_files)} charts)")
+    # 2. Domain capture: Insurance → infographic engine, everything else → live Playwright
+    insurance_jobs = _vertical_chart_jobs(vertical)
+    if insurance_jobs is None:
+        mission.update_stage("playwright", f"📊 Rendering {vertical} infographics...")
+        try:
+            from chart_fetcher import generate_insurance_charts
+            chart_files = generate_insurance_charts(topic)
+        except Exception as i_err:
+            logger.warning(f"Insurance infographic engine failed, falling back to generic capture: {i_err}")
+            chart_files = await capture_batch_charts(_vertical_chart_jobs("stock_market"), headless=True)
+        mission.update_stage("playwright", f"✅ Rendered ({len(chart_files)} infographics)")
+    else:
+        mission.update_stage("playwright", f"🔄 Capturing {len(insurance_jobs)} charts...")
+        chart_files = await capture_batch_charts(insurance_jobs, headless=True)
+        mission.update_stage("playwright", f"✅ Captured ({len(chart_files)} charts)")
+    if not chart_files:
+        raise SystemExit("❌ No charts captured — aborting run.")
 
     # 3. Call Google AI Studio / Gemini
     mission.update_stage("gemini", "🧠 Synthesizing Dual Script + Article...")
     payload = generate_master_json_via_ai_studio(topic, notes, chart_files)
 
-    # 🛡️ THE COMPLIANCE GATE (zero-tolerance SEBI + YouTube audit & 30-day freshness)
+    # 🛡️ THE COMPLIANCE GATE (zero-tolerance SEBI + IRDAI + YouTube audit & 30-day freshness)
     mission.update_stage("gemini", "🛡️ Auditing Compliance Gate...", "SEBI regex + freshness + LLM auditor")
     try:
         from app.services.compliance_gate import ComplianceGate, ComplianceGateError
 
         payload = ComplianceGate.audit_and_enforce(payload)
-        mission.update_stage("gemini", f"✅ Generated + Compliance-Approved (`{payload['campaign_id']}`)")
     except ComplianceGateError as e:
         logger.error(str(e))
         mission.update_stage("gemini", "🚨 COMPLIANCE HALT", str(e)[:120])
-        _alert = os.getenv("TELEGRAM_BOT_TOKEN") and os.getenv("TELEGRAM_CHAT_ID")
-        if _alert:
-            try:
-                import urllib.request
-
-                _body = urllib.parse.urlencode({
-                    "chat_id": os.getenv("TELEGRAM_CHAT_ID"),
-                    "text": "🚨 *CRITICAL COMPLIANCE HALT*\n" + str(e)[:400],
-                    "parse_mode": "Markdown",
-                }).encode()
-                urllib.request.urlopen(urllib.request.Request(
-                    f"https://api.telegram.org/bot{os.getenv('TELEGRAM_BOT_TOKEN')}/sendMessage", _body
-                ))
-            except Exception:
-                pass
+        _send_telegram("🚨 *CRITICAL COMPLIANCE HALT*\n" + str(e)[:400])
         raise SystemExit(1)
     slug = payload["campaign_id"]
-    mission.update_stage("gemini", f"✅ Generated (`{slug}`)")
+    mission.update_stage("gemini", f"✅ Generated + Compliance-Approved (`{slug}`)")
+
+    # 🔬 THE CONTENT AUTHENTICITY ENGINE (anti-reuse trigram guard + vertical vocabulary + archetype rotation).
+    # Verdict failures force a full LLM regeneration (max 2) — rejected angles must NEVER reach YouTube (YPP).
+    mission.update_stage("gemini", "🔬 Auditing Authenticity Engine...", "trigram dupe-check + domain vocabulary")
+    try:
+        from app.services.content_authenticity_engine import ContentAuthenticityEngine, infer_vertical as _iv
+
+        engine = ContentAuthenticityEngine()
+        auth_vertical = vertical if vertical in ("stock_market", "crypto", "insurance") else _iv(topic)
+        ok, report = engine.verify_and_transform(payload, auth_vertical, slot_index)
+        _regens = 0
+        while not ok and _regens < 2:
+            _regens += 1
+            mission.update_stage("gemini", f"♻️ Authenticity regen {_regens}/2...", str(report.get("failure", ""))[:120])
+            logger.warning(f"[Authenticity] rejected → regenerating (attempt {_regens}): {report}")
+            payload = generate_master_json_via_ai_studio(
+                topic, notes, chart_files, archetype_hint=report.get("archetype", "")
+            )
+            payload = ComplianceGate.audit_and_enforce(payload)
+            ok, report = engine.verify_and_transform(payload, auth_vertical, slot_index)
+        if not ok:
+            mission.update_stage("gemini", "🚨 AUTHENTICITY HALT", str(report.get("failure", ""))[:120])
+            _send_telegram(
+                "🚨 *AUTHENTICITY HALT* — rejected angle would be duplicate/fluff.\n"
+                f"Offender check: {str(report.get('failure', ''))[:300]}"
+            )
+            raise SystemExit(1)
+        mission.update_stage(
+            "gemini", f"✅ Original ({report['archetype']})", str(report.get("vertical_terms", ""))[:100]
+        )
+    except SystemExit:
+        raise
+    except Exception as a_err:
+        logger.warning(f"Authenticity Engine skipped this run: {a_err}")
 
     # 4. Generate Thumbnail & Enter 5-Min Human-in-the-Loop Approval Gate
     mission.update_stage("thumbnail", "🎨 Rendering Pillow Graphics...")
@@ -626,22 +797,38 @@ async def main():
         timeout_sec=300
     )
 
-    # High-CTR vertical shelf thumb for the 9:16 Short (Khaby-style top-chart/bottom-avatar)
+    # Per-Short 9:16 shelf thumbs — each Short gets ITS OWN headline punchline, not the long thumb's
+    short_thumb_paths: List[Path] = []
     try:
-        mission.update_stage("thumbnail", "🎨 Rendering 9:16 Shorts Shelf Thumbnail...")
-        short_thumb_path = create_short_thumbnail(primary_chart, avatar_1, headline_words, slug)
-        logger.info(f"🎬 Shorts shelf thumbnail staged: {short_thumb_path.name}")
+        shorts_list = payload["youtube_payload"].get("short_extractions") or []
+        shorts_to_render = [s for s in shorts_list if isinstance(s, dict) and str(s.get("spoken_hook_and_body", "")).strip()][:shorts_count]
+        if not shorts_to_render and payload["youtube_payload"].get("short_extraction"):
+            shorts_to_render = [payload["youtube_payload"]["short_extraction"]]
+        mission.update_stage("thumbnail", f"🎨 Rendering {len(shorts_to_render)} 9:16 Shelf Thumbnails...")
+        for i, sd in enumerate(shorts_to_render, start=1):
+            try:
+                st_headline = str(sd.get("short_title", "")).split()[:4] or headline_words
+                st_path = create_short_thumbnail(primary_chart, avatar_1, st_headline, f"{slug}_short{i}")
+                short_thumb_paths.append(st_path)
+            except Exception as st_err:
+                logger.warning(f"Short #{i} shelf thumb failed (falls back to shared banner): {st_err}")
+        if short_thumb_paths:
+            # legacy single-banner field keeps old kernel versions working if staging lags
+            legacy_short_thumb = short_thumb_paths[0]
+            logger.info(f"🎬 {len(short_thumb_paths)} per-Short thumbnails staged (legacy: {legacy_short_thumb.name})")
     except Exception as s_err:
-        short_thumb_path = None
-        logger.warning(f"Shorts thumbnail generation failed (Short falls back to long thumb): {s_err}")
+        logger.warning(f"Shorts thumbnail generation failed entirely (Shorts fall back to long thumb): {s_err}")
 
-    # 5. Render Video via Kaggle GPU NVENC / Faster-Whisper
+    # 5. Render Video via Kaggle GPU NVENC / Faster-Whisper (payload shorts_count drives the kernel loop)
+    payload["shorts_count"] = shorts_count
     mission.update_stage("kaggle_gpu", "🚀 Dispatching to Kaggle Dual-T4 GPU...")
-    yt_video_id, timestamps_log, short_video_id, oauth_slot_used = run_kaggle_gpu_renderer(
-        payload, chart_files, yt_thumb, mission, short_thumb_path=short_thumb_path
+    yt_video_id, timestamps_log, short_video_ids, oauth_slot_used = run_kaggle_gpu_renderer(
+        payload, chart_files, yt_thumb, mission,
+        short_thumb_path=(short_thumb_paths[0] if short_thumb_paths else None),
+        short_thumb_paths=short_thumb_paths,
     )
-    if short_video_id:
-        logger.info(f"🎬 9:16 #Shorts published: https://youtube.com/shorts/{short_video_id}")
+    for sid in short_video_ids:
+        logger.info(f"🎬 9:16 #Shorts published: https://youtube.com/shorts/{sid}")
 
     # 6. Generate MDX Article + Deploy to Vercel + Ping Search Indexers
     mission.update_stage("vercel", "📝 Compiling MDX & IndexNow Ping...")
@@ -653,21 +840,22 @@ async def main():
         from app.services.x_thread_publisher import publish_x_thread
 
         chart_paths = [str(BASE_DIR / "assets" / "charts" / cf) for cf in chart_files]
-        x_thread_status = publish_x_thread(payload, chart_paths, yt_video_id, short_video_id, live_url)
+        x_thread_status = publish_x_thread(payload, chart_paths, yt_video_id, (short_video_ids[0] if short_video_ids else ""), live_url)
     except Exception as x_err:
         x_thread_status = f"Error ({x_err.__class__.__name__})"
         logger.warning(f"X thread distribution failed: {x_err}")
     logger.info(f"🐦 X Thread status: {x_thread_status}")
 
+    shorts_note = " · ".join(short_video_ids[:2]) if short_video_ids else "skipped"
     final_note = f"🐦 X Thread: {x_thread_status}"
-    if short_video_id:
-        final_note = f"🎬 Short: youtube.com/shorts/{short_video_id} · 🐦 X Thread: {x_thread_status}"
+    if short_video_ids:
+        final_note = f"🎬 Shorts ({len(short_video_ids)}): {shorts_note} · 🐦 X Thread: {x_thread_status}"
     if oauth_slot_used > 0:
         final_note = f"🔑 YT Quota Slot #{oauth_slot_used} · " + final_note
     mission.update_stage("vercel", f"✅ Live & Indexed (`{live_url}`)", final_note)
 
     print(f"\n🎉 Cloud pipeline completed successfully! Live URL: {live_url}")
-    print(f"🎬 Short: {'youtube.com/shorts/' + short_video_id if short_video_id else 'skipped'} | 🐦 X Thread: {x_thread_status}")
+    print(f"🎬 Shorts ({len(short_video_ids)}): {shorts_note} | 🐦 X Thread: {x_thread_status}")
 
 
 if __name__ == "__main__":

@@ -159,23 +159,29 @@ function buildYtQuotaCard(): string {
   }
 
   const n = poolSources.length;
-  const capacity = n * 6; // 10,000 units/day ÷ 1,600 units per upload ≈ 6 videos/day/slot
+  const capacity = n * 6; // 10,000 units/day ÷ 1,650 units per upload ≈ 6 videos/day/slot
+  const dailyTarget = 16; // 6 Long-Form + 10 Shorts across stock×2 / crypto×2 / insurance×2
+  const neededSlots = Math.ceil(dailyTarget / 6); // 3 slots minimum for the full cadence
   const lines = [
     '🔑 *AGENT ARIA: YT QUOTA ROTATOR STATUS* ⛽⚡',
     '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
     `🧩 *Active OAuth Slots:* \`${n}\` project slot(s)`,
     ...poolSources,
     '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
-    `📊 *Daily Upload Capacity:* \`≈ ${capacity} videos/day\` (${n} × 6)`,
-    'ℹ️ *Math:* 10,000 quota units/day/project ÷ 1,600 units per upload',
+    `📊 *Daily Upload Capacity:* \`≈ ${capacity}/16 videos\` (${n} × 6 → target ${dailyTarget}: 6 Long + 10 Shorts)`,
+    'ℹ️ *Math:* 10,000 quota units/day/project ÷ 1,650 units per upload',
   ];
   if (n === 0) {
     lines.push('⚠️ *No pool detected on Vercel* (run scripts/provision_yt_pool_cli.py --sync)');
+  } else if (n < neededSlots) {
+    lines.push(
+      `🚨 *DEFICIT:* the 16-video/day cadence needs \`3\` slots (16 × 1,650 = 26,400 units) but only \`${n}\` armed — run scripts/provision_yt_pool_cli.py --bootstrap ta to add projects`
+    );
   } else {
     lines.push('🚀 *Rotation:* quotaExceeded on Slot #N auto-fails over to Slot #N+1 mid-upload');
   }
   lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
-  lines.push('🛡️ *Verdict:* the pipeline is duplicate-proof & quota-rotated 🐂');
+  lines.push('🛡️ *Verdict:* ' + (n >= neededSlots ? 'duplicate-proof & quota-rotated 🐂' : `\`${n}/3 slots\` — self-rotates, cadence ceiling ≈ ${capacity}`));
   return lines.join('\n');
 }
 

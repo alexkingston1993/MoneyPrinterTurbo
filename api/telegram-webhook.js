@@ -1,5 +1,5 @@
 // Vercel Serverless Function: Agent Aria Telegram Webhook (The Bull Print)
-// Handles /status /diagnose /health /run /revenue /clicks /analytics + inline callback buttons.
+// Handles /status /diagnose /health /run /revenue /clicks /analytics /ytquota + inline callback buttons.
 const TG_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const AUTH_CHAT_ID = process.env.TELEGRAM_CHAT_ID || '';
 const GH_REPO = process.env.GITHUB_REPO || 'alexkingston1993/MoneyPrinterTurbo';
@@ -106,6 +106,52 @@ function buildRevenueLedgerCard(t, content) {
 async function handleRevenueCommand(chatId) {
   const [t, content] = await Promise.all([fetchAffiliateTelemetry(), fetchPostStats()]);
   await sendTelegram(chatId, buildRevenueLedgerCard(t, content));
+}
+
+// ---- 🔑 YT Quota Rotator (multi-project Google Cloud slot intelligence) ----
+function buildYtQuotaCard() {
+  let poolSources = [];
+  try {
+    const raw = process.env.YT_OAUTH_POOL_JSON || '';
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      const slots = Array.isArray(parsed) ? parsed : [parsed];
+      for (const s of slots) {
+        if (s?.client_id) poolSources.push(`▫️ \`pool.json (ends …${String(s.client_id).slice(-14)})\``);
+      }
+    }
+  } catch {
+    // malformed pool json — report empty
+  }
+  for (let i = 1; i <= 4; i++) {
+    if (process.env[`YT_CLIENT_ID_${i}`] && process.env[`YT_REFRESH_TOKEN_${i}`]) {
+      poolSources.push(`▫️ \`env YT_CLIENT_ID_${i} (ends …${process.env[`YT_CLIENT_ID_${i}`].slice(-14)})\``);
+    }
+  }
+
+  const n = poolSources.length;
+  const capacity = n * 6; // 10,000 units/day ÷ 1,650 units per upload ≈ 6 videos/day/slot
+  const dailyTarget = 16; // 6 Long-Form + 10 Shorts (stock×2 / crypto×2 / insurance×2)
+  const neededSlots = Math.ceil(dailyTarget / 6);
+  const lines = [
+    '🔑 *AGENT ARIA: YT QUOTA ROTATOR STATUS* ⛽⚡',
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    `🧩 *Active OAuth Slots:* \`${n}\` project slot(s)`,
+    ...poolSources,
+    '━━━━━━━━━━━━━━━━━━━━━━━━━━━━━',
+    `📊 *Daily Upload Capacity:* \`≈ ${capacity}/16 videos\` (${n} × 6 → target 16: 6 Long + 10 Shorts)`,
+    'ℹ️ *Math:* 10,000 quota units/day/project ÷ 1,650 units per upload',
+  ];
+  if (n === 0) {
+    lines.push('⚠️ *No pool detected on Vercel* (check YT_OAUTH_POOL_JSON secret)');
+  } else if (n < neededSlots) {
+    lines.push(`🚨 *DEFICIT:* the 16-video/day cadence needs \`3\` slots (26,400 units) but only \`${n}\` armed — add GCP projects via scripts/provision_yt_pool_cli.py --bootstrap ta`);
+  } else {
+    lines.push('🚀 *Rotation:* quotaExceeded on Slot #N auto-fails over to Slot #N+1 mid-upload');
+  }
+  lines.push('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━');
+  lines.push('🛡️ *Verdict:* ' + (n >= neededSlots ? 'duplicate-proof & quota-rotated 🐂' : `\`${n}/3 slots\` — self-rotates, cadence ceiling ≈ ${capacity}`));
+  return lines.join('\n');
 }
 
 function readJsonBody(req) {
@@ -255,6 +301,12 @@ export default async function handler(req, res) {
     if (['/revenue', '/clicks', '/analytics', 'revenue', 'clicks'].includes(lower)) {
       await handleRevenueCommand(chatId);
       return res.status(200).json({ ok: true, handler: 'revenue_ledger' });
+    }
+
+    // /ytquota /quota — 🔑 YouTube Quota Rotator capacity card
+    if (['/ytquota', '/quota', 'yt quota', 'quota slots'].includes(lower)) {
+      await sendTelegram(chatId, buildYtQuotaCard());
+      return res.status(200).json({ ok: true, handler: 'yt_quota' });
     }
 
     return res.status(200).json({ ok: true });

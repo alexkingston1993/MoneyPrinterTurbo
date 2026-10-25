@@ -334,10 +334,17 @@ def upload_youtube_headless(mp4_path: Path, thumb_path: Path, yt_payload: dict) 
     return "QUOTA_EXHAUSTED_ALL_SLOTS"
 
 
-async def render_and_upload_short_gpu(payload: dict, long_video_id: str) -> str:
-    """Renders the 9:16 companion #Shorts (chart top / avatar bottom / emerald divider)
-    with vertical Hormozi subtitles and uploads headless to YouTube with #Shorts branding."""
-    short_data = payload.get("youtube_payload", {}).get("short_extraction")
+async def render_and_upload_short_gpu(payload: dict, long_video_id: str, short_data: dict = None, short_index: int = 1) -> str:
+    """Renders ONE 9:16 companion #Short (chart top / avatar bottom / emerald divider)
+    with vertical Hormozi subtitles and uploads headless to YouTube with #Shorts branding.
+
+    short_data: the Short block (short_title / spoken_hook_and_body / cta_to_long_video / chart_image_ref).
+                Defaults to youtube_payload.short_extraction for backward compatibility.
+    short_index: 1-based position in today's Shorts batch — drives the per-short thumbnail
+                 file lookup (short_thumb_1.jpg / short_thumb_2.jpg staged by the orchestrator)."""
+    yt_payload_block = payload.get("youtube_payload", {})
+    if not short_data:
+        short_data = yt_payload_block.get("short_extraction")
     if not short_data:
         print("No short_extraction block in payload — skipping 9:16 Short.")
         return ""
@@ -347,11 +354,12 @@ async def render_and_upload_short_gpu(payload: dict, long_video_id: str) -> str:
         str(short_data.get("cta_to_long_video", "")).strip(),
     ]))
     if not narration:
-        print("short_extraction contained no narration — skipping 9:16 Short.")
+        print(f"Short #{short_index} contained no narration — skipping.")
         return ""
 
-    mp3 = WORK_DIR / "short_00.mp3"
-    ass = WORK_DIR / "short_00.ass"
+    tag = f"{short_index:02d}"
+    mp3 = WORK_DIR / f"short_{tag}.mp3"
+    ass = WORK_DIR / f"short_{tag}.ass"
     dur = await make_tts_and_subtitles(narration, mp3, ass)
 
     # Retint the Hormozi .ass for vertical 9:16: 1080x1920 resolution header + larger 64pt font
@@ -394,7 +402,7 @@ async def render_and_upload_short_gpu(payload: dict, long_video_id: str) -> str:
         f"subtitles='{ass.as_posix()}'[v]"
     )
 
-    out_mp4 = WORK_DIR / "final_short_9x16.mp4"
+    out_mp4 = WORK_DIR / f"final_short_{tag}.mp4"
     cmd = [
         "ffmpeg", "-y",
         "-loop", "1", "-i", str(chart_png),
@@ -410,8 +418,13 @@ async def render_and_upload_short_gpu(payload: dict, long_video_id: str) -> str:
     ]
     subprocess.run(cmd, check=True)
 
-    meta = payload.get("youtube_payload", {}).get("metadata", {})
+    meta = yt_payload_block.get("metadata", {})
+    angle_tag = str(short_data.get("angle", "") or "").strip()
+    angle_suffix = {"core_trap_hook": "The Trap Nobody Talks About",
+                    "quantitative_proof_rule": "The Math That Settles It"}.get(angle_tag, "")
     short_title = str(short_data.get("short_title", "") or meta.get("title", "The Bull Print Daily Brief"))
+    if angle_suffix and angle_suffix.lower() not in short_title.lower():
+        short_title = f"{short_title} | {angle_suffix}"
     description_body = (
         f"{str(short_data.get('spoken_hook_and_body', ''))[:180]}\n\n"
         f"▶️ Watch the FULL MASTERCLASS: https://youtu.be/{long_video_id}\n"
@@ -425,13 +438,38 @@ async def render_and_upload_short_gpu(payload: dict, long_video_id: str) -> str:
             "tags": (meta.get("tags", []) or [])[:15] + ["shorts"],
         }
     }
-    # Dedicated 9:16 shelf thumbnail (top-chart / bottom-avatar banner) staged by the orchestrator
-    short_thumb = PAYLOAD_DIR / "yt_short_thumb.jpg"
+    # Per-short 9:16 shelf thumbnail staged by the orchestrator (short_thumb_1.jpg / short_thumb_2.jpg),
+    # falling back to the shared short banner, then the long-form thumb.
+    short_thumb = PAYLOAD_DIR / f"short_thumb_{short_index}.jpg"
+    if not short_thumb.exists():
+        short_thumb = PAYLOAD_DIR / "yt_short_thumb.jpg"
     if not short_thumb.exists():
         short_thumb = PAYLOAD_DIR / "yt_thumb.jpg"
     short_vid_id = upload_youtube_headless(out_mp4, short_thumb, short_yt_payload)
-    print(f"9:16 Short render and upload completed! Short Video ID: {short_vid_id}")
+    print(f"9:16 Short #{short_index} render and upload completed! Short Video ID: {short_vid_id}")
     return short_vid_id
+
+
+def gather_shorts_batch(payload: dict) -> list:
+    """Builds today's Shorts batch: explicit short_extractions first (orchestrator enforces 2),
+    padded / replaced by the legacy short_extraction block so single-short payloads still render."""
+    yt = payload.get("youtube_payload", {})
+    batch = []
+    for item in yt.get("short_extractions") or []:
+        if isinstance(item, dict) and str(item.get("spoken_hook_and_body", "")).strip():
+            batch.append(item)
+    legacy = yt.get("short_extraction")
+    if isinstance(legacy, dict) and str(legacy.get("spoken_hook_and_body", "")).strip():
+        if not batch:
+            batch = [legacy]
+        elif len(batch) == 1 and json.dumps(batch[0], sort_keys=True) != json.dumps(legacy, sort_keys=True):
+            batch.append(legacy)
+    target = int(payload.get("shorts_count", 0) or 0)
+    if target > 0:
+        batch = batch[:target]
+    else:
+        batch = batch[:2]
+    return batch
 
 
 async def run_kaggle_job():
@@ -466,15 +504,29 @@ async def run_kaggle_job():
     payload["youtube_payload"]["metadata"]["description_body"] += "\n\n⏱️ CHAPTERS:\n" + "\n".join(timestamps)
     vid_id = upload_youtube_headless(final_mp4, PAYLOAD_DIR / "yt_thumb.jpg", payload["youtube_payload"])
 
-    short_vid_id = await render_and_upload_short_gpu(payload, vid_id)
+    shorts_batch = gather_shorts_batch(payload)
+    print(f"Shorts batch for this slot: {len(shorts_batch)} video(s) -> " +
+          ", ".join(s.get('angle') or 'legacy' for s in shorts_batch))
+    short_video_ids = []
+    for i, short_data in enumerate(shorts_batch, start=1):
+        try:
+            short_vid_id = await render_and_upload_short_gpu(payload, vid_id, short_data=short_data, short_index=i)
+        except Exception as exc:
+            print(f"Short #{i} render/upload failed — continuing batch: {exc}")
+            short_vid_id = ""
+        if short_vid_id:
+            short_video_ids.append(short_vid_id)
 
-    (WORK_DIR / "render_result.json").write_text(json.dumps({
+    result = {
         "youtube_video_id": vid_id,
-        "short_video_id": short_vid_id,
+        "short_video_ids": short_video_ids,
+        "short_video_id": short_video_ids[0] if short_video_ids else "",
+        "shorts_count": len(short_video_ids),
         "oauth_slot_used": LAST_OAUTH_SLOT["value"],
         "timestamps_log": timestamps
-    }), encoding="utf-8")
-    print(f"Kaggle render and upload completed! Long Video ID: {vid_id} | Short Video ID: {short_vid_id}")
+    }
+    (WORK_DIR / "render_result.json").write_text(json.dumps(result), encoding="utf-8")
+    print(f"Kaggle render and upload completed! Long Video ID: {vid_id} | Shorts: {short_video_ids}")
 
 
 if __name__ == "__main__":

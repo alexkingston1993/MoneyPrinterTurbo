@@ -41,6 +41,23 @@
             "chart_image_ref": { "type": "string" }
           },
           "required": ["short_title", "spoken_hook_and_body", "cta_to_long_video", "chart_image_ref"]
+        },
+        "short_extractions": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "description": "Exactly 2 DISTINCT 45-second Short angles cut from this research session. Short #1 = 'The Core Trap/Hook' (emotional punch, contrarian claim). Short #2 = 'The Quantitative Proof/Rule' (a number-driven mechanics breakdown). Both must map to DIFFERENT chart_image_refs when possible.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "short_title": { "type": "string" },
+              "spoken_hook_and_body": { "type": "string" },
+              "cta_to_long_video": { "type": "string" },
+              "chart_image_ref": { "type": "string" },
+              "angle": { "type": "string", "enum": ["core_trap_hook", "quantitative_proof_rule"] }
+            },
+            "required": ["short_title", "spoken_hook_and_body", "cta_to_long_video", "chart_image_ref"]
+          }
         }
       },
       "required": ["metadata", "segments", "short_extraction"]

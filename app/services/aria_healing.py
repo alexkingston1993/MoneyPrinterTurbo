@@ -527,10 +527,16 @@ class AriaCommandToolkit:
         # 3. YouTube OAuth Pool Verification (Multi-Project Quota Rotator)
         try:
             pool = cls.fetch_yt_quota_slots()
-            if pool["count"] > 0:
+            needed = -(-16 // 6)  # 16 videos/day target ⇒ 3 minimum slots
+            if pool["count"] > 0 and pool["count"] >= needed:
                 results.append(
-                    f"✅ *YouTube Quota Rotator:* {pool['count']} project slot(s) verified · "
-                    f"capacity ≈ {pool['count'] * 6} uploads/day"
+                    f"✅ *YouTube Quota Rotator:* {pool['count']} slot(s) verified · "
+                    f"capacity ≈ {pool['count'] * 6}/16 uploads/day"
+                )
+            elif pool["count"] == 1:
+                results.append(
+                    "⚠️ *YouTube Quota Rotator:* 1 slot only — 16-video daily cadence exceeds "
+                    "its 6-upload ceiling. Run `scripts/provision_yt_pool_cli.py --bootstrap ta` to add projects."
                 )
             else:
                 results.append("ℹ️ *YouTube Credentials:* Restored via Cloud Secret (pool empty)")
@@ -627,10 +633,12 @@ class AriaCommandToolkit:
 
     @classmethod
     def generate_yt_quota_report(cls) -> str:
-        """The /ytquota command — 🔑 YouTube Quota Rotator capacity card."""
+        """The /ytquota command — 🔑 YouTube Quota Rotator capacity card (16-video daily target)."""
         pool = cls.fetch_yt_quota_slots()
         n = pool["count"]
-        capacity = n * 6  # videos().insert ≈ 1,600 units → 10,000/1,600 ≈ 6 uploads/day/slot
+        capacity = n * 6  # videos().insert ≈ 1,650 units → 10,000/1,650 ≈ 6 uploads/day/slot
+        daily_target = 16  # 6 Long-Form + 10 Shorts across stock×2 / crypto×2 / insurance×2
+        needed_slots = -(-daily_target // 6)  # ceil: 1,650-unit uploads ⇒ 3 slots minimum
         lines = [
             "🔑 *AGENT ARIA: YT QUOTA ROTATOR STATUS* ⛽⚡",
             "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
@@ -641,19 +649,24 @@ class AriaCommandToolkit:
                 lines.append(f"   ▫️ `{src}`")
         lines += [
             "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
-            f"📊 *Daily Upload Capacity:* `≈ {capacity} videos/day` ({n} × 6)",
-            "ℹ️ *Math:* 10,000 quota units/day/project ÷ 1,600 units per upload",
+            f"📊 *Daily Upload Capacity:* `≈ {capacity}/16 videos` ({n} × 6 → target {daily_target}: 6 Long + 10 Shorts)",
+            "ℹ️ *Math:* 10,000 quota units/day/project ÷ 1,650 units per upload",
         ]
         if n == 0:
             lines.append("⚠️ *No pool detected in this environment* (slots live in cloud secrets)")
-        elif n == 1:
-            lines.append("💡 *Tip:* Run `scripts/provision_yt_pool_cli.py --bootstrap ta` to add Google Cloud projects → capacity grows ×6 per slot")
+        elif n < needed_slots:
+            lines.append(
+                f"🚨 *DEFICIT:* cadence needs `{needed_slots}` slots for {daily_target} videos/day "
+                f"(16 × 1,650 = 26,400 units) but only `{n}` armed — run "
+                f"`scripts/provision_yt_pool_cli.py --bootstrap ta` to add projects"
+            )
         else:
-            lines.append(f"🚀 *Rotation:* quotaExceeded on Slot #N auto-fails over to Slot #N+1 mid-upload")
+            lines.append("🚀 *Rotation:* quotaExceeded on Slot #N auto-fails over to Slot #N+1 mid-upload")
         lines.append("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
         lines.append("🛡️ *Verdict:* " + (
-            f"`{n} slots armed` — pipeline is duplicate-proof & quota-rotated 💪"
-            if n else "`run /status` after syncing pool secrets"
+            f"`{n} slots armed` — duplicate-proof & quota-rotated 💪"
+            if n >= needed_slots
+            else (f"`{n}/{needed_slots} slots` — pipeline will self-rotate but the 16-video/day ceiling drops to ~{capacity}" if n else "`run /status` after syncing pool secrets")
         ))
         return "\n".join(lines)
 
@@ -782,7 +795,7 @@ class AriaCommandToolkit:
             f"(library total: `{content['total']}`)\n"
         )
         body = cls.format_revenue_card(telemetry)
-        closing = "🎯 *Sunday Directive:* keep the 5-slot weekday cadence, Akshev — the RevShare flywheel rewards volume. 🚀"
+        closing = "🎯 *Sunday Directive:* keep the 16-video daily cadence (6 Long + 10 Shorts across Stock / Crypto / Insurance), Akshev — the RevShare flywheel rewards volume. 🚀"
         report = f"{header}{body}\n{closing}"
 
         bot_token = os.getenv("TELEGRAM_BOT_TOKEN") or config.app.get("telegram_bot_token") or ""

@@ -45,6 +45,17 @@ _BANNED_RAW = [
     r"\bintraday\s+(?:tip|call|trade)\b",
     r"\bsure\s*[- ]?shot\b",
     r"\boption\s+buying\s+(?:call|tip)\b",
+    # IRDAI insurance solicitation bans (educational policy-wording forensics stay allowed)
+    r"\bbuy\s+(?:this|the|a|that)\s+(?:policy|plan|cover)\b",
+    r"\bpurchase\s+(?:this|the|a|that)\s+(?:policy|plan)\b",
+    r"\bbest\s+(?:policy|plan)\s+(?:to\s+buy|buy\s+now|now)\b",
+    r"\bown\s+(?:this|the)\s+(?:policy|plan)\b",
+    r"\bapply\s+(?:now|today)\b",
+    r"\bcover\s+yourself\s+(?:now|today|with\s+this)\b",
+    r"\bclick\s+here\s+to\s+(?:buy|purchase)\b",
+    r"\b₹\s?\d+\s+(?:policy|premium)\s+only\b",
+    r"\bsave\s+tax\s+with\s+(?:this|our)\b",
+    r"\bsold?\s+(?:in|within)\s+\d+\s*(?:minutes|hours)\b",
 ]
 BANNED_PATTERNS = [re.compile(p, re.IGNORECASE) for p in _BANNED_RAW]
 
