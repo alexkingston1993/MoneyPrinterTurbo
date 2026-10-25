@@ -11,7 +11,7 @@
   "current_stage_name": "Gemini Script & Dossier Synthesis",
   "current_subtask_label": "Vertical 'insurance' needs >= 2 domain-term hits but content scored only 0. Script reads like generic fluff \u2014 deep-dive ",
   "started_at": "2026-10-25T12:47:58Z",
-  "updated_at": "2026-10-25T12:50:07Z",
+  "updated_at": "2026-10-25T12:50:14Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -133,6 +133,11 @@
       "ts": "12:50:10",
       "level": "INFO",
       "msg": "[GEMINI]: \u267b\ufe0f Authenticity regen 2/2... | Vertical 'insurance' needs >= 2 domain-term hits but content scored only 0. Script reads like generic fluff \u2014 deep-dive "
+    },
+    {
+      "ts": "12:50:18",
+      "level": "INFO",
+      "msg": "[GEMINI]: \ud83d\udea8 AUTHENTICITY HALT | Vertical 'insurance' needs >= 2 domain-term hits but content scored only 0. Script reads like generic fluff \u2014 deep-dive "
     }
   ]
 }
