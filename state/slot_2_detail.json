@@ -9,9 +9,9 @@
   "stage_pct": 100,
   "current_stage_index": 2,
   "current_stage_name": "Gemini Script & Dossier Synthesis",
-  "current_subtask_label": "\ud83e\ude99 CRYPTO",
+  "current_subtask_label": "trigram dupe-check + domain vocabulary",
   "started_at": "2026-10-25T12:48:02Z",
-  "updated_at": "2026-10-25T12:49:43Z",
+  "updated_at": "2026-10-25T12:49:49Z",
   "eta_seconds": 0,
   "stages": [
     {
