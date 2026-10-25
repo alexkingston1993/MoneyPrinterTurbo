@@ -5,13 +5,13 @@
   "vertical_label": "Slot #1",
   "shorts_count": 2,
   "status": "RUNNING",
-  "overall_pct": 30,
-  "stage_pct": 90,
-  "current_stage_index": 4,
-  "current_stage_name": "Chart & High-CTR Thumbnail Studio",
-  "current_subtask_label": "Capturing market charts / infographics",
+  "overall_pct": 25,
+  "stage_pct": 100,
+  "current_stage_index": 2,
+  "current_stage_name": "Gemini Script & Dossier Synthesis",
+  "current_subtask_label": "Synthesizing script & SEO dossier",
   "started_at": "2026-10-25T12:47:41Z",
-  "updated_at": "2026-10-25T12:47:52Z",
+  "updated_at": "2026-10-25T12:48:14Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -26,7 +26,7 @@
     {
       "id": 2,
       "name": "Gemini Script & Dossier Synthesis",
-      "status": "COMPLETED",
+      "status": "RUNNING",
       "pct": 100,
       "started_at": "2026-10-25T12:47:45Z",
       "completed_at": "2026-10-25T12:47:52Z",
@@ -35,8 +35,8 @@
     {
       "id": 3,
       "name": "Authenticity & SEBI/IRDAI Compliance Gate",
-      "status": "COMPLETED",
-      "pct": 100,
+      "status": "PENDING",
+      "pct": 0,
       "started_at": null,
       "completed_at": "2026-10-25T12:47:52Z",
       "metrics": {}
@@ -44,8 +44,8 @@
     {
       "id": 4,
       "name": "Chart & High-CTR Thumbnail Studio",
-      "status": "RUNNING",
-      "pct": 90,
+      "status": "PENDING",
+      "pct": 0,
       "started_at": "2026-10-25T12:47:52Z",
       "completed_at": null,
       "metrics": {}
@@ -93,6 +93,16 @@
       "ts": "12:47:49",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udd0d Harvested `Nifty 50 today option chain` | source: autocomplete \u00b7 cluster: nifty 50 today option chain, nifty 50 today live chart, nifty 50 today chart"
+    },
+    {
+      "ts": "12:47:53",
+      "level": "INFO",
+      "msg": "[PLAYWRIGHT]: \ud83d\udd04 Capturing 3 charts... | "
+    },
+    {
+      "ts": "12:48:10",
+      "level": "INFO",
+      "msg": "[PLAYWRIGHT]: \u2705 Captured (3 charts) | "
     }
   ]
 }
