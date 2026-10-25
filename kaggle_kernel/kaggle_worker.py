@@ -109,34 +109,33 @@ async def make_tts_and_subtitles(text: str, mp3_path: Path, ass_path: Path, pers
     )
     duration = float(res.stdout.strip())
 
-    try:
-        model = WhisperModel("base.en", device="cuda", compute_type="float16")
-        segments, _ = model.transcribe(str(mp3_path), word_timestamps=True)
-    except Exception:
-        model = WhisperModel("base.en", device="cpu", compute_type="int8")
-        segments, _ = model.transcribe(str(mp3_path), word_timestamps=True)
-
-    ass_header = """[Script Info]
-ScriptType: v4.00+
-PlayResX: 1920
-PlayResY: 1080
-
-[V4+ Styles]
-Format: Name, Fontname, Fontsize, PrimaryColour, BackColour, Bold, Outline, Shadow, Alignment, MarginV
-Style: Hormozi,Arial,56,&H0081B910,&H80000000,-1,4,2,2,140
-
-[Events]
-Format: Layer, Start, End, Style, Text
-"""
     events = []
-    for seg in segments:
-        for w in (seg.words or []):
-            s_m, s_s = divmod(w.start, 60)
-            e_m, e_s = divmod(w.end, 60)
-            start_ts = f"0:{int(s_m):02d}:{s_s:05.2f}"
-            end_ts = f"0:{int(e_m):02d}:{e_s:05.2f}"
-            clean_word = w.word.strip().upper()
-            events.append(f"Dialogue: 0,{start_ts},{end_ts},Hormozi,{clean_word}")
+    try:
+        try:
+            model = WhisperModel("base.en", device="cuda", compute_type="float16")
+            segments, _ = model.transcribe(str(mp3_path), word_timestamps=True)
+        except Exception:
+            model = WhisperModel("base.en", device="cpu", compute_type="int8")
+            segments, _ = model.transcribe(str(mp3_path), word_timestamps=True)
+        for seg in segments:
+            for w in (seg.words or []):
+                s_m, s_s = divmod(w.start, 60)
+                e_m, e_s = divmod(w.end, 60)
+                start_ts = f"0:{int(s_m):02d}:{s_s:05.2f}"
+                end_ts = f"0:{int(e_m):02d}:{e_s:05.2f}"
+                clean_word = w.word.strip().upper()
+                events.append(f"Dialogue: 0,{start_ts},{end_ts},Hormozi,{clean_word}")
+    except Exception as whisper_err:
+        print(f"Faster-Whisper unavailable ({whisper_err}) — dynamic word timing fallback engaged.")
+        words = text.strip().split()
+        if words and duration > 0:
+            word_dur = duration / len(words)
+            for i, w in enumerate(words):
+                w_start = i * word_dur
+                w_end = min(duration, (i + 1) * word_dur)
+                s_m, s_s = divmod(w_start, 60)
+                e_m, e_s = divmod(w_end, 60)
+                events.append(f"Dialogue: 0,0:{int(s_m):02d}:{s_s:05.2f},0:{int(e_m):02d}:{e_s:05.2f},Hormozi,{w.upper()}")
 
     ass_path.write_text(ass_header + "\n".join(events), encoding="utf-8")
     return duration
@@ -727,44 +726,55 @@ async def run_kaggle_job():
     persona = select_voice_persona(vertical)
     if persona.get("desc"):
         print(f"🎙️ Voice persona for this slot: {persona['voice']} ({persona['desc']})")
-    seg_files = []
-    cumulative = 0.0
+    only_shorts = bool(payload.get("only_shorts", False))
+    vid_id = payload.get("existing_long_video_id", "")
+    qa = {"passed": True, "mean_volume_db": -16.0, "max_volume_db": -1.0, "black_ratio": 0.0, "duration": 0.0, "reasons": []}
     timestamps = []
 
-    for seg in payload["youtube_payload"]["segments"]:
-        idx = seg["segment_index"]
-        mp3 = WORK_DIR / f"seg_{idx:02d}.mp3"
-        ass = WORK_DIR / f"seg_{idx:02d}.ass"
-        mp4 = WORK_DIR / f"seg_{idx:02d}.mp4"
+    if not only_shorts:
+        seg_files = []
+        cumulative = 0.0
+        for seg in payload["youtube_payload"]["segments"]:
+            idx = seg["segment_index"]
+            mp3 = WORK_DIR / f"seg_{idx:02d}.mp3"
+            ass = WORK_DIR / f"seg_{idx:02d}.ass"
+            mp4 = WORK_DIR / f"seg_{idx:02d}.mp4"
 
-        m, s = divmod(int(cumulative), 60)
-        timestamps.append(f"{m:02d}:{s:02d} - {seg['chapter_title']}")
+            m, s = divmod(int(cumulative), 60)
+            timestamps.append(f"{m:02d}:{s:02d} - {seg['chapter_title']}")
 
-        dur = await make_tts_and_subtitles(seg["spoken_narration"], mp3, ass, persona=persona)
-        render_gpu_segment(seg, mp3, ass, dur, mp4, vertical=vertical)
-        seg_files.append(mp4)
-        cumulative += dur
+            dur = await make_tts_and_subtitles(seg["spoken_narration"], mp3, ass, persona=persona)
+            render_gpu_segment(seg, mp3, ass, dur, mp4, vertical=vertical)
+            seg_files.append(mp4)
+            cumulative += dur
 
-    concat_txt = WORK_DIR / "concat.txt"
-    concat_txt.write_text("\n".join([f"file '{f.as_posix()}'" for f in seg_files]), encoding="utf-8")
-    final_mp4 = WORK_DIR / "final_longform.mp4"
-    subprocess.run(["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", str(concat_txt), "-c", "copy", str(final_mp4)], check=True)
+        concat_txt = WORK_DIR / "concat.txt"
+        concat_txt.write_text("\n".join([f"file '{f.as_posix()}'" for f in seg_files]), encoding="utf-8")
+        final_mp4 = WORK_DIR / "final_longform.mp4"
+        subprocess.run(["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", str(concat_txt), "-c", "copy", str(final_mp4)], check=True)
 
-    # 🛡️ OpenMontage QA gate on the long master — silent audio / black frames never reach YouTube
-    qa = verify_rendered_video_qa(final_mp4, expected_min_dur=cumulative)
+        # 🛡️ OpenMontage QA gate on the long master — silent audio / black frames never reach YouTube
+        qa = verify_rendered_video_qa(final_mp4, expected_min_dur=cumulative)
 
-    payload["youtube_payload"]["metadata"]["description_body"] += "\n\n⏱️ CHAPTERS:\n" + "\n".join(timestamps)
-    vid_id = ""
-    if qa["passed"]:
-        vid_id = upload_youtube_headless(final_mp4, PAYLOAD_DIR / "yt_thumb.jpg", payload["youtube_payload"])
+        payload["youtube_payload"]["metadata"]["description_body"] += "\n\n⏱️ CHAPTERS:\n" + "\n".join(timestamps)
+        if qa["passed"]:
+            vid_id = upload_youtube_headless(final_mp4, PAYLOAD_DIR / "yt_thumb.jpg", payload["youtube_payload"])
+        else:
+            print(f"❌ Long-form failed QA — upload SKIPPED (quota protected): {qa['reasons']}")
     else:
-        print(f"❌ Long-form failed QA — upload SKIPPED (quota protected): {qa['reasons']}")
+        print("⚡ ONLY_SHORTS mode active — skipping longform rendering!")
 
     shorts_batch = gather_shorts_batch(payload)
-    print(f"Shorts batch for this slot: {len(shorts_batch)} video(s) -> " +
-          ", ".join(s.get('angle') or 'legacy' for s in shorts_batch))
+    target_idx = payload.get("target_short_index")
+    if target_idx and 1 <= int(target_idx) <= len(shorts_batch):
+        shorts_batch = [shorts_batch[int(target_idx) - 1]]
+        start_idx = int(target_idx)
+    else:
+        start_idx = 1
+
+    print(f"Shorts batch for this slot: {len(shorts_batch)} video(s)")
     short_video_ids = []
-    for i, short_data in enumerate(shorts_batch, start=1):
+    for i, short_data in enumerate(shorts_batch, start=start_idx):
         try:
             short_vid_id = await render_and_upload_short_gpu(payload, vid_id, short_data=short_data, short_index=i, vertical=vertical)
         except Exception as exc:

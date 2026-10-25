@@ -39,6 +39,14 @@ on:
         description: '9:16 Shorts to render from this session (1 or 2)'
         required: false
         default: ''
+      shorts_only:
+        description: 'Render ONLY 9:16 Shorts (skip longform video)'
+        required: false
+        default: 'false'
+      batch_shorts:
+        description: 'Sequentially produce 10 Shorts across 5 slots (1 GHA + 1 Kaggle GPU per slot)'
+        required: false
+        default: 'false'
       article_slot:
         description: 'Market slot name — run ARTICLE engine only (leave empty for video engine)'
         required: false
@@ -183,7 +191,7 @@ jobs:
       )) ||
       (github.event_name == 'workflow_dispatch' && github.event.inputs.article_slot == '')
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 60
 
     steps:
       - name: 📥 Checkout Website & Engine Repo
@@ -257,6 +265,8 @@ jobs:
           INPUT_SLOT: ${{ env.INPUT_SLOT }}
           INPUT_VERTICAL: ${{ env.INPUT_VERTICAL }}
           INPUT_SHORTS_COUNT: ${{ env.INPUT_SHORTS_COUNT }}
+          INPUT_SHORTS_ONLY: ${{ github.event.inputs.shorts_only || 'false' }}
+          INPUT_BATCH_SHORTS: ${{ github.event.inputs.batch_shorts || 'false' }}
           YT_OAUTH_POOL_JSON: ${{ secrets.YT_OAUTH_POOL_JSON }}
           YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
           YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
@@ -274,7 +284,12 @@ jobs:
           YT_CLIENT_SECRET_4: ${{ secrets.YT_CLIENT_SECRET_4 }}
           YT_REFRESH_TOKEN_4: ${{ secrets.YT_REFRESH_TOKEN_4 }}
         run: |
-          python cloud_orchestrator.py
+          if [ "${{ github.event.inputs.batch_shorts }}" = "true" ] || [ "${{ env.INPUT_BATCH_SHORTS }}" = "true" ]; then
+            echo "🚀 Launching Master 10-Shorts Sequential Production Run..."
+            python run_batch_shorts.py
+          else
+            python cloud_orchestrator.py
+          fi
 
       - name: 💾 Commit & Push Generated Articles, Thumbnails and Posts Manifest
         run: |

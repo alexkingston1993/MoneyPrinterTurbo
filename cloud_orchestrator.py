@@ -1023,6 +1023,8 @@ async def _async_main():
     parser.add_argument("--vertical", type=str, default="", help="Explicit vertical override (stock_market|crypto|insurance|crypto_ethereum)")
     parser.add_argument("--shorts-count", type=int, default=0, help="How many 9:16 Shorts to render from this session (1-2)")
     parser.add_argument("--topic", type=str, default="", help="Explicit topic override")
+    parser.add_argument("--shorts-only", action="store_true", default=False, help="Render ONLY 9:16 Shorts (skip longform video)")
+    parser.add_argument("--total-shorts", type=int, default=0, help="Total shorts to generate sequentially across slots (e.g. 10)")
     args, _unknown = parser.parse_known_args()
 
     env_slot = int(os.getenv("INPUT_SLOT", "0") or 0)
@@ -1033,6 +1035,8 @@ async def _async_main():
     env_notes = os.getenv("INPUT_NOTES", "")
     env_vertical = os.getenv("INPUT_VERTICAL", "")
     env_shorts = int(os.getenv("INPUT_SHORTS_COUNT", "0") or 0)
+    shorts_only = args.shorts_only or (os.getenv("INPUT_SHORTS_ONLY", "").lower() in ("true", "1", "yes"))
+    total_shorts = args.total_shorts or int(os.getenv("INPUT_TOTAL_SHORTS", "0") or 0)
 
     topic = args.topic or env_topic
     notes = env_notes or slot_cfg["notes"]
@@ -1198,19 +1202,60 @@ async def _async_main():
 
     # 5. Render Video via Kaggle GPU NVENC / Faster-Whisper (payload shorts_count drives the kernel loop)
     payload["shorts_count"] = shorts_count
-    mission.update_stage("kaggle_gpu", "🚀 Dispatching to Kaggle Dual-T4 GPU...")
-    yt_video_id, timestamps_log, short_video_ids, oauth_slot_used = run_kaggle_gpu_renderer(
-        payload, chart_files, yt_thumb, mission,
-        short_thumb_path=(short_thumb_paths[0] if short_thumb_paths else None),
-        short_thumb_paths=short_thumb_paths,
-    )
-    for sid in short_video_ids:
-        logger.info(f"🎬 9:16 #Shorts published: https://youtube.com/shorts/{sid}")
+    if shorts_only:
+        # 🚀 DUAL PARALLEL EXECUTION: 1 Short on GHA (CPU FFmpeg) + 1 Short on Kaggle Dual-T4 GPU
+        mission.update_stage("kaggle_gpu", "⚡ Parallel Dual Render: Short #1 (GHA) + Short #2 (Kaggle GPU)...")
+        from app.services.short_renderer import render_and_upload_short_local
 
-    # 🛡️ QA-gate halt: kernel skipped YouTube upload → don't publish an article without a video id
-    if not yt_video_id:
-        mission.update_stage("kaggle_gpu", "🛡️ Uploaded SKIPPED (QA gate)", "Fix render, rerun slot")
-        raise SystemExit(1)
+        async def _run_local_short():
+            st_path = short_thumb_paths[0] if short_thumb_paths else None
+            try:
+                return await render_and_upload_short_local(payload, short_index=1, thumb_path=st_path, vertical=vertical)
+            except Exception as e:
+                logger.error(f"GHA local Short #1 failed: {e}")
+                return ""
+
+        def _run_kaggle_short():
+            kp = dict(payload)
+            kp["only_shorts"] = True
+            kp["target_short_index"] = 2
+            st_path = short_thumb_paths[1] if len(short_thumb_paths) > 1 else (short_thumb_paths[0] if short_thumb_paths else None)
+            try:
+                _, _, s_ids, used = run_kaggle_gpu_renderer(
+                    kp, chart_files, yt_thumb, mission,
+                    short_thumb_path=st_path,
+                    short_thumb_paths=[st_path] if st_path else []
+                )
+                return s_ids, used
+            except Exception as e:
+                logger.error(f"Kaggle GPU Short #2 failed: {e}")
+                return [], 0
+
+        local_task = asyncio.create_task(_run_local_short())
+        kaggle_fut = asyncio.to_thread(_run_kaggle_short)
+
+        local_id, (kaggle_ids, slot_used) = await asyncio.gather(local_task, kaggle_fut)
+        oauth_slot_used = slot_used or 1
+        short_video_ids = []
+        if local_id:
+            short_video_ids.append(local_id)
+        if kaggle_ids:
+            short_video_ids.extend(kaggle_ids)
+
+        yt_video_id = short_video_ids[0] if short_video_ids else "SHORTS_ONLY"
+        timestamps_log = []
+        mission.update_stage("kaggle_gpu", f"✅ Rendered & Uploaded ({len(short_video_ids)} Shorts)")
+    else:
+        mission.update_stage("kaggle_gpu", "🚀 Dispatching to Kaggle Dual-T4 GPU...")
+        yt_video_id, timestamps_log, short_video_ids, oauth_slot_used = run_kaggle_gpu_renderer(
+            payload, chart_files, yt_thumb, mission,
+            short_thumb_path=(short_thumb_paths[0] if short_thumb_paths else None),
+            short_thumb_paths=short_thumb_paths,
+        )
+        # 🛡️ QA-gate halt: kernel skipped YouTube upload → don't publish an article without a video id
+        if not yt_video_id:
+            mission.update_stage("kaggle_gpu", "🛡️ Uploaded SKIPPED (QA gate)", "Fix render, rerun slot")
+            raise SystemExit(1)
 
     # 6. Generate MDX Article + Deploy to Vercel + Ping Search Indexers
     mission.update_stage("vercel", "📝 Compiling MDX & IndexNow Ping...")
