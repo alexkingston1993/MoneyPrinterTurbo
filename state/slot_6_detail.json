@@ -9,9 +9,9 @@
   "stage_pct": 100,
   "current_stage_index": 2,
   "current_stage_name": "Gemini Script & Dossier Synthesis",
-  "current_subtask_label": "trigram dupe-check + domain vocabulary",
+  "current_subtask_label": "\ud83d\udee1\ufe0f INSURANCE \u00b7 57 hits (claim settlement ratio, csr, incurred claim ratio, icr, solvency, room ",
   "started_at": "2026-10-25T18:30:56Z",
-  "updated_at": "2026-10-25T18:32:20Z",
+  "updated_at": "2026-10-25T18:32:22Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -124,6 +124,11 @@
       "ts": "18:32:13",
       "level": "INFO",
       "msg": "[GEMINI]: \u2705 Generated + Compliance-Approved (`health-insurance-claim-settlement-ratio-vs-ic-1792953124`) | \ud83d\udee1\ufe0f INSURANCE"
+    },
+    {
+      "ts": "18:32:22",
+      "level": "INFO",
+      "msg": "[GEMINI]: \ud83d\udd2c Auditing Authenticity Engine... | trigram dupe-check + domain vocabulary"
     }
   ]
 }
