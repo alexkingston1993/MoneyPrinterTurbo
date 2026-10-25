@@ -9,9 +9,9 @@
   "stage_pct": 100,
   "current_stage_index": 2,
   "current_stage_name": "Gemini Script & Dossier Synthesis",
-  "current_subtask_label": "SEBI regex + freshness + LLM auditor",
+  "current_subtask_label": "\ud83d\udcc8 STOCK MARKET",
   "started_at": "2026-10-25T18:21:25Z",
-  "updated_at": "2026-10-25T18:22:54Z",
+  "updated_at": "2026-10-25T18:22:57Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -108,6 +108,11 @@
       "ts": "18:21:51",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83e\udde0 Synthesizing Dual Script + Article... | "
+    },
+    {
+      "ts": "18:22:56",
+      "level": "INFO",
+      "msg": "[GEMINI]: \ud83d\udee1\ufe0f Auditing Compliance Gate... | SEBI regex + freshness + LLM auditor"
     }
   ]
 }
