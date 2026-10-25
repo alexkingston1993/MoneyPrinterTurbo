@@ -5,13 +5,13 @@
   "vertical_label": "Slot #1",
   "shorts_count": 2,
   "status": "WAITING_APPROVAL",
-  "overall_pct": 45,
-  "stage_pct": 70,
-  "current_stage_index": 4,
-  "current_stage_name": "Chart & High-CTR Thumbnail Studio",
-  "current_subtask_label": "Thumbnails rendered & staged",
+  "overall_pct": 75,
+  "stage_pct": 80,
+  "current_stage_index": 5,
+  "current_stage_name": "Kaggle T4 GPU Render Farm",
+  "current_subtask_label": "Whisper alignment & NVENC rendering",
   "started_at": "2026-10-25T21:40:29Z",
-  "updated_at": "2026-10-25T21:43:32Z",
+  "updated_at": "2026-10-25T21:43:37Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -54,10 +54,10 @@
     {
       "id": 4,
       "name": "Chart & High-CTR Thumbnail Studio",
-      "status": "RUNNING",
-      "pct": 70,
+      "status": "COMPLETED",
+      "pct": 100,
       "started_at": "2026-10-25T21:40:37Z",
-      "completed_at": null,
+      "completed_at": "2026-10-25T21:43:37Z",
       "metrics": {
         "approval_status": "AUTO_APPROVED",
         "approval_deadline_ts": 1792964598,
@@ -67,9 +67,9 @@
     {
       "id": 5,
       "name": "Kaggle T4 GPU Render Farm",
-      "status": "PENDING",
-      "pct": 0,
-      "started_at": null,
+      "status": "RUNNING",
+      "pct": 80,
+      "started_at": "2026-10-25T21:43:37Z",
       "completed_at": null,
       "metrics": {}
     },
@@ -147,6 +147,11 @@
       "ts": "21:43:29",
       "level": "INFO",
       "msg": "[THUMBNAIL]: \u26a1 Auto-Approved (`LIQUIDATION CLUSTERS`) | "
+    },
+    {
+      "ts": "21:43:34",
+      "level": "INFO",
+      "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering 2 9:16 Shelf Thumbnails... | "
     }
   ]
 }
