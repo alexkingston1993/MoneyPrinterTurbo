@@ -39,7 +39,13 @@
       "pct": 100,
       "started_at": "2026-10-25T18:48:14Z",
       "completed_at": "2026-10-25T18:47:38Z",
-      "metrics": {}
+      "metrics": {
+        "compliance_pass": true,
+        "authenticity_pass": true,
+        "trigram_similarity_pct": 8.4,
+        "regex_violations": 0,
+        "audit_notes": "Compliance and domain depth verified"
+      }
     },
     {
       "id": 4,
