@@ -1,35 +1,35 @@
 {
   "slot": 5,
-  "run_id": "40201798814",
+  "run_id": "40219365617",
   "vertical": "crypto",
   "vertical_label": "Slot #5",
-  "shorts_count": 1,
-  "status": "FAILED",
-  "overall_pct": 25,
-  "stage_pct": 100,
-  "current_stage_index": 2,
-  "current_stage_name": "Gemini Script & Dossier Synthesis",
-  "current_subtask_label": "Error: name 'datetime' is not defined",
-  "started_at": "2026-10-25T14:22:22Z",
-  "updated_at": "2026-10-25T14:23:37Z",
+  "shorts_count": 2,
+  "status": "RUNNING",
+  "overall_pct": 2,
+  "stage_pct": 10,
+  "current_stage_index": 1,
+  "current_stage_name": "SEO Topic Harvester (open-seo)",
+  "current_subtask_label": "Harvesting search intent & clusters",
+  "started_at": "2026-10-25T18:25:10Z",
+  "updated_at": "2026-10-25T18:25:10Z",
   "eta_seconds": 0,
   "stages": [
     {
       "id": 1,
       "name": "SEO Topic Harvester (open-seo)",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-25T14:22:21Z",
-      "completed_at": "2026-10-25T14:22:27Z",
+      "status": "RUNNING",
+      "pct": 0,
+      "started_at": "2026-10-25T18:25:09Z",
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 2,
       "name": "Gemini Script & Dossier Synthesis",
-      "status": "RUNNING",
-      "pct": 100,
-      "started_at": "2026-10-25T14:22:27Z",
-      "completed_at": "2026-10-25T14:22:38Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
       "metrics": {}
     },
     {
@@ -38,7 +38,7 @@
       "status": "PENDING",
       "pct": 0,
       "started_at": null,
-      "completed_at": "2026-10-25T14:22:38Z",
+      "completed_at": null,
       "metrics": {}
     },
     {
@@ -46,7 +46,7 @@
       "name": "Chart & High-CTR Thumbnail Studio",
       "status": "PENDING",
       "pct": 0,
-      "started_at": "2026-10-25T14:22:38Z",
+      "started_at": null,
       "completed_at": null,
       "metrics": {}
     },
@@ -80,39 +80,9 @@
   ],
   "live_logs": [
     {
-      "ts": "14:22:22",
+      "ts": "18:25:10",
       "level": "INFO",
-      "msg": "Slot #5 (crypto) initialized. Target: 1 Long + 1 Shorts."
-    },
-    {
-      "ts": "14:22:30",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvesting live search intent... | open-seo dark-query loop \u00b7 slot 5"
-    },
-    {
-      "ts": "14:22:35",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvested `Usdt dominance today` | source: autocomplete \u00b7 cluster: usdt dominance today, usdt dominance chart crypto, usdt dominance coinmarketcap"
-    },
-    {
-      "ts": "14:22:40",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \ud83d\udd04 Capturing 3 charts... | "
-    },
-    {
-      "ts": "14:22:59",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \u2705 Captured (3 charts) | "
-    },
-    {
-      "ts": "14:23:04",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83e\udde0 Synthesizing Dual Script + Article... | "
-    },
-    {
-      "ts": "14:23:39",
-      "level": "ERROR",
-      "msg": "Runner failed: name 'datetime' is not defined"
+      "msg": "Slot #5 (crypto) initialized. Target: 1 Long + 2 Shorts."
     }
   ]
 }
