@@ -83,6 +83,11 @@
       "ts": "18:30:56",
       "level": "INFO",
       "msg": "Slot #6 (insurance) initialized. Target: 1 Long + 1 Shorts."
+    },
+    {
+      "ts": "18:31:03",
+      "level": "INFO",
+      "msg": "[GEMINI]: \ud83d\udd0d Harvesting live search intent... | open-seo dark-query loop \u00b7 slot 6"
     }
   ]
 }
