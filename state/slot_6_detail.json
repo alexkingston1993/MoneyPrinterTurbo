@@ -133,6 +133,11 @@
       "ts": "12:51:02",
       "level": "INFO",
       "msg": "[GEMINI]: \u267b\ufe0f Authenticity regen 2/2... | Vertical 'insurance' needs >= 2 domain-term hits but content scored only 0. Script reads like generic fluff \u2014 deep-dive "
+    },
+    {
+      "ts": "12:51:43",
+      "level": "INFO",
+      "msg": "[GEMINI]: \ud83d\udea8 AUTHENTICITY HALT | Vertical 'insurance' needs >= 2 domain-term hits but content scored only 0. Script reads like generic fluff \u2014 deep-dive "
     }
   ]
 }
