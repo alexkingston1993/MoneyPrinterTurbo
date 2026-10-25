@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-25T18:25:06Z",
+  "updated_at": "2026-10-25T18:25:11Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -73,15 +73,15 @@
       "vertical": "crypto",
       "vertical_label": "Crypto #2",
       "shorts_count": 1,
-      "status": "FAILED",
-      "overall_pct": 25,
-      "stage_pct": 100,
-      "current_stage": "Gemini Script & Dossier Synthesis",
-      "current_stage_index": 2,
+      "status": "RUNNING",
+      "overall_pct": 2,
+      "stage_pct": 10,
+      "current_stage": "SEO Topic Harvester (open-seo)",
+      "current_stage_index": 1,
       "archetype": "macro_regime_shift",
       "topic": "Global Stablecoin Velocity & Central Bank Liquidity",
       "voice_persona": "BrianNeural",
-      "run_id": "40201798814"
+      "run_id": "40219365617"
     },
     "6": {
       "slot": 6,
