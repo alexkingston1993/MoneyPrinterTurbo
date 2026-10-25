@@ -1,134 +1,88 @@
 {
   "slot": 6,
-  "run_id": null,
+  "run_id": "40194624624",
   "vertical": "insurance",
-  "vertical_label": "Insurance #2",
+  "vertical_label": "Slot #6",
   "shorts_count": 1,
-  "status": "IDLE",
-  "overall_pct": 0,
-  "stage_pct": 0,
+  "status": "RUNNING",
+  "overall_pct": 2,
+  "stage_pct": 10,
   "current_stage_index": 1,
-  "current_stage_name": "Standby",
-  "current_subtask_label": "Standby for slot trigger",
-  "started_at": null,
-  "updated_at": "2026-10-25T12:00:00Z",
+  "current_stage_name": "SEO Topic Harvester (open-seo)",
+  "current_subtask_label": "Harvesting search intent & clusters",
+  "started_at": "2026-10-25T12:48:40Z",
+  "updated_at": "2026-10-25T12:48:40Z",
   "eta_seconds": 0,
   "stages": [
     {
       "id": 1,
       "name": "SEO Topic Harvester (open-seo)",
-      "status": "IDLE",
+      "status": "RUNNING",
       "pct": 0,
-      "started_at": null,
+      "started_at": "2026-10-25T12:48:39Z",
       "completed_at": null,
-      "metrics": {
-        "topic": "Term Insurance vs Endowment: Mathematical Reality",
-        "search_cluster": [
-          "term insurance vs endowment: mathematical reality",
-          "today analysis",
-          "market news"
-        ],
-        "gsc_dark_queries_count": 8
-      }
+      "metrics": {}
     },
     {
       "id": 2,
       "name": "Gemini Script & Dossier Synthesis",
-      "status": "IDLE",
+      "status": "PENDING",
       "pct": 0,
       "started_at": null,
       "completed_at": null,
-      "metrics": {
-        "title": "Term Insurance vs Endowment: Mathematical Reality",
-        "archetype": "retail_myth_mathematical_deconstruction",
-        "word_count": 1400,
-        "shorts_extracted_count": 1,
-        "model_used": "gemini-flash-latest"
-      }
+      "metrics": {}
     },
     {
       "id": 3,
       "name": "Authenticity & SEBI/IRDAI Compliance Gate",
-      "status": "IDLE",
+      "status": "PENDING",
       "pct": 0,
       "started_at": null,
       "completed_at": null,
-      "metrics": {
-        "trigram_similarity_pct": 4.1,
-        "authenticity_pass": true,
-        "compliance_pass": true,
-        "regex_violations": [],
-        "audit_notes": "Educational structure compliant"
-      }
+      "metrics": {}
     },
     {
       "id": 4,
       "name": "Chart & High-CTR Thumbnail Studio",
-      "status": "IDLE",
+      "status": "PENDING",
       "pct": 0,
       "started_at": null,
       "completed_at": null,
-      "metrics": {
-        "long_thumb_url": "",
-        "short_thumb_urls": [],
-        "chart_urls": [],
-        "approval_status": "IDLE",
-        "approval_deadline_ts": 0
-      }
+      "metrics": {}
     },
     {
       "id": 5,
       "name": "Kaggle T4 GPU Render Farm",
-      "status": "IDLE",
+      "status": "PENDING",
       "pct": 0,
       "started_at": null,
       "completed_at": null,
-      "metrics": {
-        "voice_persona": "PrabhatNeural",
-        "kaggle_kernel_status": "IDLE",
-        "long_render_pct": 0,
-        "short_1_render_pct": 0,
-        "short_2_render_pct": 0,
-        "gpu_elapsed_sec": 0
-      }
+      "metrics": {}
     },
     {
       "id": 6,
       "name": "OpenMontage Post-Render QA Gate",
-      "status": "IDLE",
+      "status": "PENDING",
       "pct": 0,
       "started_at": null,
       "completed_at": null,
-      "metrics": {
-        "qa_passed": true,
-        "mean_volume_db": -18.2,
-        "max_volume_db": -0.5,
-        "black_frame_ratio": 0.001,
-        "duration_sec": 360.0,
-        "resolution": "1920x1080"
-      }
+      "metrics": {}
     },
     {
       "id": 7,
       "name": "Multi-Channel Distribution",
-      "status": "IDLE",
+      "status": "PENDING",
       "pct": 0,
       "started_at": null,
       "completed_at": null,
-      "metrics": {
-        "yt_long_id": "",
-        "yt_short_ids": [],
-        "oauth_slot_used": 1,
-        "article_url": "",
-        "x_thread_url": ""
-      }
+      "metrics": {}
     }
   ],
   "live_logs": [
     {
-      "ts": "12:00:00",
+      "ts": "12:48:40",
       "level": "INFO",
-      "msg": "Telemetry initialized for Slot 6 (Insurance #2)"
+      "msg": "Slot #6 (insurance) initialized. Target: 1 Long + 1 Shorts."
     }
   ]
 }
