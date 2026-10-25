@@ -54,7 +54,11 @@
       "pct": 60,
       "started_at": "2026-10-25T18:04:09Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "approval_status": "APPROVED_DASHBOARD",
+        "approval_deadline_ts": 1792951892,
+        "headline": "OPTION CHAIN TRAP EXPOSED"
+      }
     },
     {
       "id": 5,
