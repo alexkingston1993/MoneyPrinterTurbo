@@ -11,7 +11,7 @@
   "current_stage_name": "Chart & High-CTR Thumbnail Studio",
   "current_subtask_label": "Capturing market charts / infographics",
   "started_at": "2026-10-25T20:35:25Z",
-  "updated_at": "2026-10-25T20:35:33Z",
+  "updated_at": "2026-10-25T20:35:40Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -83,6 +83,11 @@
       "ts": "20:35:25",
       "level": "INFO",
       "msg": "Slot #1 (stock_market) initialized. Target: 1 Long + 2 Shorts."
+    },
+    {
+      "ts": "20:35:35",
+      "level": "INFO",
+      "msg": "[PLAYWRIGHT]: \ud83d\udd04 Capturing 3 charts... | "
     }
   ]
 }
