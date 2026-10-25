@@ -1522,7 +1522,7 @@
               for (const it of list) {
                 outliers.push({
                   ...it,
-                  vertical: it.vertical || vKey,
+                  vertical: vKey || it.vertical || 'stock_market',
                 });
               }
             }
@@ -1549,15 +1549,17 @@
           : `<span class="badge-format badge-format-long">16:9 LONG</span>`;
 
         const rawVert = (item.vertical || '').toLowerCase();
+        const textSignature = ((item.title || item.winning_source_title || '') + ' ' + (item.safe_original_research_angle || '') + ' ' + (item.query_source || '')).toLowerCase();
+
         let vertBadge = 'badge-stock';
         let vertLabel = '📈 STOCK';
         let vertClean = 'stock_market';
 
-        if (rawVert.includes('crypto')) {
+        if (rawVert.includes('crypto') || textSignature.includes('bitcoin') || textSignature.includes('crypto') || textSignature.includes('liquidation') || textSignature.includes('coin') || textSignature.includes('binance') || textSignature.includes('altcoin')) {
           vertBadge = 'badge-crypto';
           vertLabel = '🪙 CRYPTO';
           vertClean = 'crypto';
-        } else if (rawVert.includes('insur')) {
+        } else if (rawVert.includes('insur') || textSignature.includes('insurance') || textSignature.includes('claim') || textSignature.includes('policy') || textSignature.includes('irdai') || textSignature.includes('ditto') || textSignature.includes('room rent')) {
           vertBadge = 'badge-insurance';
           vertLabel = '🛡️ INSURANCE';
           vertClean = 'insurance';

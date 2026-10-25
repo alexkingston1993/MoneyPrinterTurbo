@@ -203,7 +203,7 @@ module.exports = async function handler(req, res) {
                 for (const it of items) {
                   flattened.push({
                     ...it,
-                    vertical: it.vertical || vKey,
+                    vertical: vKey || it.vertical || 'stock_market',
                   });
                 }
               }
