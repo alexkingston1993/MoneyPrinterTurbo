@@ -9,9 +9,9 @@
   "stage_pct": 100,
   "current_stage_index": 7,
   "current_stage_name": "Multi-Channel Distribution",
-  "current_subtask_label": "Published live & indexed",
+  "current_subtask_label": "\ud83d\udc26 X Thread: Skipped (X keys not set)",
   "started_at": "2026-10-25T18:16:12Z",
-  "updated_at": "2026-10-25T18:21:16Z",
+  "updated_at": "2026-10-25T18:21:18Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -175,6 +175,11 @@
       "ts": "18:21:16",
       "level": "INFO",
       "msg": "[KAGGLE_GPU]: \u2705 Rendered & Uploaded (0 Shorts) | "
+    },
+    {
+      "ts": "18:21:18",
+      "level": "INFO",
+      "msg": "[VERCEL]: \ud83d\udcdd Compiling MDX & IndexNow Ping... | "
     }
   ]
 }
