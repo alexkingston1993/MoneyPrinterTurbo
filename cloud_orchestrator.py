@@ -71,13 +71,16 @@ KERNEL_SLUG = "flipzon-gpu-video-renderer"
 class AriaMissionControl:
     """
     Replaces multi-message spam with a single editable Telegram Mission Control card
-    + a 5-minute Human-in-the-Loop Thumbnail Approval & Live Word-Edit Gate.
+    + bidirectional Zero-Database real-time syncing via TelemetryBridge on 'telemetry-live'.
     """
-    def __init__(self, topic: str):
+    def __init__(self, topic: str, slot: int = 1):
         self.token = os.environ.get("TELEGRAM_BOT_TOKEN", "")
         self.chat_id = os.environ.get("TELEGRAM_CHAT_ID", "")
         self.base_url = f"https://api.telegram.org/bot{self.token}" if self.token else ""
         self.topic = topic
+        self.slot = int(slot)
+        from app.services.telemetry_bridge import TelemetryBridge
+        self.bridge = TelemetryBridge(slot=self.slot)
         self.start_ts = time.time()
         self.status_msg_id: Optional[int] = None
         self.stages = {
@@ -128,8 +131,22 @@ class AriaMissionControl:
             logger.warning(f"Failed to initialize Telegram Mission Control card: {e}")
 
     def update_stage(self, stage_key: str, status_text: str, footer_note: str = ""):
-        """Edits the single Mission Control message in place."""
+        """Edits the single Mission Control message in place and updates TelemetryBridge."""
         self.stages[stage_key] = status_text
+
+        # Map orchestrator stages to 7-Stage Mission Control Pipeline
+        stage_map = {
+            "playwright": (30, 90, 4, "Chart & High-CTR Thumbnail Studio", "Capturing market charts / infographics"),
+            "gemini": (25, 100, 2, "Gemini Script & Dossier Synthesis", "Synthesizing script & SEO dossier"),
+            "thumbnail": (45, 70, 4, "Chart & High-CTR Thumbnail Studio", "Thumbnails rendered & staged"),
+            "kaggle_gpu": (75, 80, 5, "Kaggle T4 GPU Render Farm", "Whisper alignment & NVENC rendering"),
+            "vercel": (100, 100, 7, "Multi-Channel Distribution", "Published live & indexed"),
+        }
+        if stage_key in stage_map:
+            ov, st_pct, s_idx, s_name, sub_label = stage_map[stage_key]
+            self.bridge.update_progress(ov, st_pct, s_idx, s_name, footer_note or sub_label)
+        self.bridge.add_log("INFO", f"[{stage_key.upper()}]: {status_text} | {footer_note}")
+
         if not self.token or not self.chat_id or not self.status_msg_id:
             logger.info(f"[{stage_key.upper()}]: {status_text} | {footer_note}")
             return
@@ -157,11 +174,16 @@ class AriaMissionControl:
         timeout_sec: int = 300,  # 5-minute review window before auto-approving
     ) -> Path:
         """
-        Sends thumbnail preview to Telegram with inline buttons:
-        [✅ Approve & Render GPU] [🛑 Abort Run]
-        Or allows Alex to reply with 3 new words (e.g. 'DELTA TRAP EXPOSED') to re-render live!
-        Temporarily pauses/restores any active Telegram webhook to prevent HTTP 409 getUpdates conflicts.
+        Sends thumbnail preview to Telegram with inline buttons + checks Web Dashboard commands
+        on 'telemetry-live' branch every 3 seconds for instant operator approval / regeneration.
         """
+        self.bridge.set_status("WAITING_APPROVAL", "Waiting for operator approval (Telegram or Dashboard)")
+        self.bridge.update_stage_metrics(4, {
+            "approval_status": "WAITING_APPROVAL",
+            "approval_deadline_ts": int(time.time() + timeout_sec),
+            "headline": " ".join(headline_words),
+        })
+
         if not self.token or not self.chat_id:
             self.update_stage("thumbnail", f"✅ Rendered (`{' '.join(headline_words)}`)")
             return yt_thumb
@@ -189,8 +211,8 @@ class AriaMissionControl:
                     f"🎨 *HUMAN-IN-THE-LOOP THUMBNAIL GATE* ⏱️ ({timeout_sec // 60}m Auto-Approve)\n"
                     f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
                     f"🔤 *Current Words:* `{' '.join(words)}`\n\n"
-                    f"• Tap *Approve* to launch Kaggle Dual-T4 GPU immediately.\n"
-                    f"• Or *reply with 3 new words* (e.g. `DELTA TRAP EXPOSED`) to re-generate the thumbnail live!"
+                    f"• Tap *Approve* (or approve on `/mission-control`) to launch GPU.\n"
+                    f"• Or *reply with 3 new words* (e.g. `DELTA TRAP EXPOSED`) to re-generate live!"
                 )
                 kb = {
                     "inline_keyboard": [[
@@ -209,15 +231,46 @@ class AriaMissionControl:
 
             send_preview(yt_thumb, headline_words)
             deadline = time.time() + timeout_sec
-            logger.info(f"⏳ Waiting up to {timeout_sec}s for Alex's Telegram review / approval...")
+            logger.info(f"⏳ Waiting up to {timeout_sec}s for Telegram or Mission Control Dashboard review / approval...")
 
             while time.time() < deadline:
                 rem = int(deadline - time.time())
+
+                # Check Web Dashboard operator commands via TelemetryBridge!
+                try:
+                    cmd = self.bridge.check_command()
+                    cmd_action = cmd.get("action")
+                    if cmd_action == "APPROVE_THUMBS":
+                        logger.success("✅ Thumbnail APPROVED via Mission Control Dashboard!")
+                        self.bridge.clear_command()
+                        self.bridge.update_stage_metrics(4, {"approval_status": "APPROVED_DASHBOARD"})
+                        self.update_stage("thumbnail", f"✅ Approved via Dashboard (`{' '.join(headline_words)}`)")
+                        return yt_thumb
+                    elif cmd_action == "REGENERATE_THUMBS":
+                        new_words_str = (cmd.get("custom_headline") or "").strip()
+                        if new_words_str:
+                            logger.info(f"🎨 Dashboard requested thumbnail regeneration: {new_words_str}")
+                            headline_words = new_words_str.split()[:4]
+                            yt_thumb, _ = create_marketing_images(primary_chart, avatar_path, headline_words, slug)
+                            send_preview(yt_thumb, headline_words)
+                            self.bridge.clear_command()
+                            self.bridge.update_stage_metrics(4, {"approval_status": "REGENERATED_DASHBOARD", "headline": " ".join(headline_words)})
+                            deadline = time.time() + timeout_sec
+                    elif cmd_action == "HALT_RUN":
+                        logger.warning("🛑 Operator requested emergency HALT via Mission Control Dashboard.")
+                        self.bridge.clear_command()
+                        self.bridge.set_status("HALTED", "Operator halted from Mission Control Dashboard")
+                        raise SystemExit("Pipeline cleanly aborted by operator from Mission Control.")
+                except SystemExit:
+                    raise
+                except Exception as b_err:
+                    logger.debug(f"Bridge check notice: {b_err}")
+
                 try:
                     poll = requests.get(
                         f"{self.base_url}/getUpdates",
-                        params={"offset": last_offset, "timeout": min(10, max(1, rem))},
-                        timeout=15,
+                        params={"offset": last_offset, "timeout": min(4, max(1, rem))},
+                        timeout=8,
                     ).json()
                 except Exception:
                     time.sleep(2)
@@ -233,9 +286,11 @@ class AriaMissionControl:
                         requests.post(f"{self.base_url}/answerCallbackQuery", json={"callback_query_id": cb["id"]})
                         if action == "thumb_approve":
                             logger.success("Alex approved thumbnail via Telegram inline button!")
+                            self.bridge.update_stage_metrics(4, {"approval_status": "APPROVED_TELEGRAM"})
                             self.update_stage("thumbnail", f"✅ Approved by Alex (`{' '.join(headline_words)}`)")
                             return yt_thumb
                         elif action == "thumb_abort":
+                            self.bridge.set_status("HALTED", "Aborted by Alex via Telegram")
                             self.update_stage("thumbnail", "🛑 Aborted by Alex via Telegram")
                             raise SystemExit("Pipeline cleanly aborted by user via Telegram callback.")
 
@@ -249,9 +304,11 @@ class AriaMissionControl:
                             yt_thumb, _ = create_marketing_images(primary_chart, avatar_path, new_words, slug)
                             headline_words = new_words
                             send_preview(yt_thumb, headline_words)
+                            self.bridge.update_stage_metrics(4, {"approval_status": "REGENERATED_TELEGRAM", "headline": " ".join(headline_words)})
                             deadline = time.time() + timeout_sec  # Reset countdown after live edit
 
             logger.info("Auto-approval window elapsed. Proceeding to Kaggle GPU...")
+            self.bridge.update_stage_metrics(4, {"approval_status": "AUTO_APPROVED"})
             self.update_stage("thumbnail", f"⚡ Auto-Approved (`{' '.join(headline_words)}`)")
             return yt_thumb
 
@@ -757,9 +814,16 @@ async def main():
     shorts_count = max(1, min(2, args.shorts_count or env_shorts or slot_cfg["shorts_count"]))
     search_cluster: List[str] = []
 
-    # 1. Initialize Single Editable Mission Control Card
-    mission = AriaMissionControl(topic=topic)
+    # 1. Initialize Single Editable Mission Control Card + TelemetryBridge
+    mission = AriaMissionControl(topic=topic, slot=slot_index)
     mission.init_card()
+    mission.bridge.init_slot(
+        vertical=vertical,
+        shorts_count=shorts_count,
+        topic=topic or slot_cfg.get("topic", ""),
+        archetype=slot_cfg.get("archetype", ""),
+        run_id=os.getenv("GITHUB_RUN_ID")
+    )
 
     # 1b. 🔍 open-seo HARVESTER (~zero-cost live search intent feeding):
     # Only engages when no explicit topic was handed to us (i.e., the 6 daily cron slots).
@@ -931,9 +995,15 @@ async def main():
     final_note = f"🐦 X Thread: {x_thread_status}"
     if short_video_ids:
         final_note = f"🎬 Shorts ({len(short_video_ids)}): {shorts_note} · 🐦 X Thread: {x_thread_status}"
-    if oauth_slot_used > 0:
-        final_note = f"🔑 YT Quota Slot #{oauth_slot_used} · " + final_note
     mission.update_stage("vercel", f"✅ Live & Indexed (`{live_url}`)", final_note)
+    mission.bridge.update_stage_metrics(7, {
+        "yt_long_id": yt_video_id,
+        "yt_short_ids": short_video_ids,
+        "oauth_slot_used": oauth_slot_used,
+        "article_url": live_url,
+        "x_thread_url": x_thread_status,
+    })
+    mission.bridge.set_status("COMPLETED", f"Live: {live_url}")
 
     print(f"\n🎉 Cloud pipeline completed successfully! Live URL: {live_url}")
     print(f"🎬 Shorts ({len(short_video_ids)}): {shorts_note} | 🐦 X Thread: {x_thread_status}")

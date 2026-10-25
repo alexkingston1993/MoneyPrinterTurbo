@@ -6,6 +6,26 @@
   "trailingSlash": false,
   "rewrites": [
     {
+      "source": "/mission-control",
+      "destination": "/mission-control.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/mission-control.html"
+    },
+    {
+      "source": "/api/mission-control/auth",
+      "destination": "/api/mission-control/auth.js"
+    },
+    {
+      "source": "/api/mission-control/telemetry",
+      "destination": "/api/mission-control/telemetry.js"
+    },
+    {
+      "source": "/api/mission-control/action",
+      "destination": "/api/mission-control/action.js"
+    },
+    {
       "source": "/go/:broker",
       "destination": "/api/go?broker=:broker"
     },
