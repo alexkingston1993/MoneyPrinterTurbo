@@ -158,6 +158,11 @@
       "ts": "18:20:09",
       "level": "INFO",
       "msg": "[KAGGLE_GPU]: \u26a1 Parallel Dual Render: Short #1 (GHA) + Short #2 (Kaggle GPU)... | "
+    },
+    {
+      "ts": "18:20:12",
+      "level": "INFO",
+      "msg": "[KAGGLE_GPU]: \u2601\ufe0f Pushing Dataset to Kaggle... | "
     }
   ]
 }
