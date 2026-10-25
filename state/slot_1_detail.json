@@ -5,13 +5,13 @@
   "vertical_label": "Slot #1",
   "shorts_count": 2,
   "status": "RUNNING",
-  "overall_pct": 35,
+  "overall_pct": 25,
   "stage_pct": 100,
-  "current_stage_index": 3,
-  "current_stage_name": "Virality & SEBI/IRDAI Compliance Gate",
-  "current_subtask_label": "Virality & SEBI compliance approved",
+  "current_stage_index": 2,
+  "current_stage_name": "Gemini Script & Dossier Synthesis",
+  "current_subtask_label": "trigram dupe-check + domain vocabulary",
   "started_at": "2026-10-25T20:35:25Z",
-  "updated_at": "2026-10-25T20:36:30Z",
+  "updated_at": "2026-10-25T20:36:35Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -26,7 +26,7 @@
     {
       "id": 2,
       "name": "Gemini Script & Dossier Synthesis",
-      "status": "COMPLETED",
+      "status": "RUNNING",
       "pct": 100,
       "started_at": "2026-10-25T20:35:46Z",
       "completed_at": "2026-10-25T20:35:33Z",
@@ -35,8 +35,8 @@
     {
       "id": 3,
       "name": "Authenticity & SEBI/IRDAI Compliance Gate",
-      "status": "RUNNING",
-      "pct": 100,
+      "status": "PENDING",
+      "pct": 0,
       "started_at": "2026-10-25T20:36:30Z",
       "completed_at": "2026-10-25T20:35:33Z",
       "metrics": {
