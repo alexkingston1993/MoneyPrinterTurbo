@@ -5,13 +5,13 @@
   "vertical_label": "Slot #1",
   "shorts_count": 2,
   "status": "RUNNING",
-  "overall_pct": 25,
-  "stage_pct": 100,
-  "current_stage_index": 2,
-  "current_stage_name": "Gemini Script & Dossier Synthesis",
-  "current_subtask_label": "\ud83d\udee1\ufe0f INSURANCE \u00b7 35 hits (claim settlement ratio, csr, incurred claim ratio, icr, solvency, room ",
+  "overall_pct": 45,
+  "stage_pct": 70,
+  "current_stage_index": 4,
+  "current_stage_name": "Chart & High-CTR Thumbnail Studio",
+  "current_subtask_label": "Thumbnails rendered & staged",
   "started_at": "2026-10-25T21:47:26Z",
-  "updated_at": "2026-10-25T21:49:52Z",
+  "updated_at": "2026-10-25T21:49:57Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -26,7 +26,7 @@
     {
       "id": 2,
       "name": "Gemini Script & Dossier Synthesis",
-      "status": "RUNNING",
+      "status": "COMPLETED",
       "pct": 100,
       "started_at": "2026-10-25T21:47:45Z",
       "completed_at": "2026-10-25T21:47:34Z",
@@ -35,8 +35,8 @@
     {
       "id": 3,
       "name": "Authenticity & SEBI/IRDAI Compliance Gate",
-      "status": "PENDING",
-      "pct": 0,
+      "status": "COMPLETED",
+      "pct": 100,
       "started_at": "2026-10-25T21:49:40Z",
       "completed_at": "2026-10-25T21:47:34Z",
       "metrics": {
@@ -54,8 +54,8 @@
     {
       "id": 4,
       "name": "Chart & High-CTR Thumbnail Studio",
-      "status": "PENDING",
-      "pct": 0,
+      "status": "RUNNING",
+      "pct": 70,
       "started_at": "2026-10-25T21:47:34Z",
       "completed_at": null,
       "metrics": {}
