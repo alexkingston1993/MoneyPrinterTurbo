@@ -11,7 +11,7 @@
   "current_stage_name": "Kaggle T4 GPU Render Farm",
   "current_subtask_label": "Whisper alignment & NVENC rendering",
   "started_at": "2026-10-25T20:59:57Z",
-  "updated_at": "2026-10-25T21:03:27Z",
+  "updated_at": "2026-10-25T21:03:29Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -152,6 +152,11 @@
       "ts": "21:03:24",
       "level": "INFO",
       "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering 2 9:16 Shelf Thumbnails... | "
+    },
+    {
+      "ts": "21:03:29",
+      "level": "INFO",
+      "msg": "[KAGGLE_GPU]: \ud83d\ude80 Dispatching to Kaggle Dual-T4 GPU... | "
     }
   ]
 }
