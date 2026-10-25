@@ -41,9 +41,66 @@ if not PAYLOAD_DIR.exists():
     PAYLOAD_DIR = Path(__file__).parent.parent / "kaggle_stage"
 
 
-async def make_tts_and_subtitles(text: str, mp3_path: Path, ass_path: Path) -> float:
-    """Generates audio via Edge-TTS and word-level Hormozi ASS subtitles via Faster-Whisper."""
-    comm = edge_tts.Communicate(text=text, voice="en-US-AndrewNeural", rate="+3%")
+def _ffmpeg_filter_support() -> dict:
+    """One-time capability probe: libass (subtitles) and libfreetype (drawtext) are
+    baked into Kaggle's distro ffmpeg but stripped from some homebrew builds."""
+    caps = {"subtitles": False, "drawtext": False}
+    try:
+        chk = subprocess.run(["ffmpeg", "-hide_banner", "-filters"], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True)
+        caps["subtitles"] = " subtitles " in chk.stdout
+        caps["drawtext"] = " drawtext " in chk.stdout
+    except Exception:
+        pass
+    return caps
+
+FFCAPS = _ffmpeg_filter_support()
+
+
+# ---------------------------------------------------------------------------
+# 🎙️ VOICESTUDIO EXTRACTION — Multi-Voice Persona Engine
+# Every vertical gets its OWN authority anchor so 16 daily uploads never share
+# one stock Edge-TTS voice (YouTube's "inauthentic content" reviewers listen for it).
+# ---------------------------------------------------------------------------
+VOICE_PERSONAS = {
+    "stock_market": {
+        "voice": "en-US-AndrewMultilingualNeural",
+        "rate": "+4%",
+        "pitch": "-2Hz",
+        "desc": "Quantitative Institutional Desk Anchor",
+    },
+    "crypto": {
+        "voice": "en-US-BrianMultilingualNeural",
+        "rate": "+6%",
+        "pitch": "-1Hz",
+        "desc": "Derivatives & On-Chain Strategist",
+    },
+    "insurance": {
+        "voice": "en-IN-PrabhatNeural",
+        "rate": "+3%",
+        "pitch": "-2Hz",
+        "desc": "Forensic Policy & Risk Auditor",
+    },
+    "crypto_ethereum": {  # sibling of crypto
+        "voice": "en-US-BrianMultilingualNeural",
+        "rate": "+5%",
+        "pitch": "-2Hz",
+        "desc": "On-Chain Microstructure Anchor",
+    },
+}
+
+
+def select_voice_persona(vertical: str) -> dict:
+    """Signature voice persona for the vertical (voicestudio multi-persona routing)."""
+    persona = dict(VOICE_PERSONAS.get(vertical or "", VOICE_PERSONAS["stock_market"]))
+    if vertical not in VOICE_PERSONAS:
+        persona["desc"] += " (fallback)"
+    return persona
+
+
+async def make_tts_and_subtitles(text: str, mp3_path: Path, ass_path: Path, persona: dict = None) -> float:
+    """Generates audio via Edge-TTS (vertical persona) + word-level Hormozi ASS subtitles via Faster-Whisper."""
+    persona = persona or {"voice": "en-US-AndrewNeural", "rate": "+3%", "pitch": "+0Hz"}
+    comm = edge_tts.Communicate(text=text, voice=persona["voice"], rate=persona.get("rate", "+3%"), pitch=persona.get("pitch", "+0Hz"))
     await comm.save(str(mp3_path))
 
     res = subprocess.run(
@@ -96,25 +153,197 @@ def pick_video_encoder_args() -> list:
     return ["-c:v", "libx264", "-preset", "ultrafast"]
 
 
-def render_gpu_segment(seg: dict, mp3_path: Path, ass_path: Path, duration: float, out_mp4: Path):
-    """Renders 1080p segment using NVIDIA GPU NVENC hardware acceleration."""
+# ---------------------------------------------------------------------------
+# 🛡️ OPENMONTAGE EXTRACTION — Post-Render Self-Review QA Gate
+# Inspects every MP4 BEFORE it burns 1,600 YouTube API units: container/duration
+# integrity, silence audit (volumedetect), black-frame audit (blackdetect).
+# ---------------------------------------------------------------------------
+def verify_rendered_video_qa(mp4_path: Path, expected_min_dur: float = 0.0) -> dict:
+    """OpenMontage-style pre-upload inspection. Returns {passed, mean_volume_db, black_ratio, reasons}."""
+    audit = {"passed": False, "mean_volume_db": None, "max_volume_db": None,
+             "black_ratio": 0.0, "duration": 0.0, "reasons": []}
+    try:
+        if not Path(mp4_path).exists() or Path(mp4_path).stat().st_size < 500 * 1024:
+            audit["reasons"].append("container missing or < 500KB")
+            return audit
+    except Exception as e:
+        audit["reasons"].append(f"filesystem probe failed: {e}")
+        return audit
+
+    # 1. Stream & duration integrity (ffprobe)
+    try:
+        probe = subprocess.run(
+            ["ffprobe", "-v", "error", "-show_entries",
+             "stream=codec_name,codec_type,width:format=duration", "-of", "json", str(mp4_path)],
+            stdout=subprocess.PIPE, text=True, check=True,
+        )
+        info = json.loads(probe.stdout or "{}")
+        streams = info.get("streams", [])
+        dur = float(float(info.get("format", {}).get("duration", 0) or 0))
+        audit["duration"] = round(dur, 2)
+        codecs = {(s.get("codec_type"), s.get("codec_name")) for s in streams}
+        widths = [int(s.get("width", 0)) for s in streams if s.get("codec_type") == "video"]
+        if ("video", "h264") not in codecs:
+            audit["reasons"].append(f"no h264 video stream (got {sorted(codecs)})")
+        if ("audio", "aac") not in codecs:
+            audit["reasons"].append("no aac audio stream")
+        if widths and min(widths) < 1080:
+            audit["reasons"].append(f"video width {min(widths)} < 1080")
+        if expected_min_dur > 0 and dur < expected_min_dur - 1.0:
+            audit["reasons"].append(f"duration {dur:.1f}s shorter than narration {expected_min_dur:.1f}s")
+    except Exception as e:
+        audit["reasons"].append(f"ffprobe failed: {e}")
+        return audit
+
+    # 2. Silence audit: dead audio track must never reach YouTube (volumedetect)
+    try:
+        vol = subprocess.run(
+            ["ffmpeg", "-i", str(mp4_path), "-vn", "-af", "volumedetect",
+             "-f", "null", "-"],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+        )
+        combined = vol.stderr + vol.stdout
+        m_mean = re.search(r"mean_volume:\s*(-?[\d.]+)\s*dB", combined)
+        m_max = re.search(r"max_volume:\s*(-?[\d.]+)\s*dB", combined)
+        mean_v = float(m_mean.group(1)) if m_mean else -91.0
+        max_v = float(m_max.group(1)) if m_max else -91.0
+        audit["mean_volume_db"] = round(mean_v, 1)
+        audit["max_volume_db"] = round(max_v, 1)
+        if mean_v < -42.0:
+            audit["reasons"].append(f"near-silent audio track (mean {mean_v:.1f} dB < -42)")
+    except Exception as e:
+        audit["reasons"].append(f"volumedetect failed: {e}")
+
+    # 3. Black-frame audit: broken chart PNGs renders as black — cap at 5% of runtime
+    try:
+        blk = subprocess.run(
+            ["ffmpeg", "-i", str(mp4_path), "-vf", "blackdetect=d=1.5:pix_th=0.05",
+             "-an", "-f", "null", "-"],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+        )
+        combined = blk.stderr + blk.stdout
+        black_total = 0.0
+        for m in re.finditer(r"black_start:([\d.]+)\s+black_end:([\d.]+)", combined):
+            black_total += float(m.group(2)) - float(m.group(1))
+        ratio = (black_total / audit["duration"]) if audit["duration"] > 0 else 1.0
+        audit["black_ratio"] = round(min(1.0, ratio), 4)
+        if ratio > 0.05:
+            audit["reasons"].append(f"black frames cover {ratio:.0%} of runtime (> 5% cap)")
+    except Exception as e:
+        audit["reasons"].append(f"blackdetect failed: {e}")
+
+    audit["passed"] = not audit["reasons"]
+    if audit["passed"]:
+        print(f"🛡️ QA Gate PASSED: {audit['duration']:.1f}s · mean {audit['mean_volume_db']} dB · black {audit['black_ratio']:.1%}")
+    else:
+        print(f"🛡️ QA Gate FAILED: {audit['reasons']}")
+    return audit
+
+
+def _find_fontfile() -> str:
+    """HUD drawtext needs a real fontfile; probe common linux/kaggle + macOS font paths."""
+    for p in (
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+        "/usr/share/fonts/dejavu/DejaVuSans-Bold.ttf",
+        "/System/Library/Fonts/Supplemental/Arial Bold.ttf",
+        "/System/Library/Fonts/Helvetica.ttc",
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+    ):
+        if Path(p).exists():
+            return p
+    return ""
+
+
+# ---------------------------------------------------------------------------
+# 🎞️ LEMO-OPUSCAR EXTRACTION — Programmatic Motion (anti "static slideshow")
+# Ken Burns zoom/pan on every still + animated HUD telemetry progress bar +
+# live timestamp ticker. Continuous motion every second, zero diffusion cost.
+# ---------------------------------------------------------------------------
+def _ken_burns(src_label: str, out_label: str, size: str, drift: float = 0.22, sway: float = 40) -> str:
+    """Ken Burns fragment WITH labels: [src:v]<motion>[out_label]; — for chains that
+    reference out_label downstream (e.g. vstack). For in-chains use _ken_burns_body()."""
+    return f"[{src_label}:v]" + _ken_burns_body(size, drift, sway) + f"[{out_label}]"
+
+
+def _ken_burns_body(size: str, drift: float = 0.22, sway: float = 40) -> str:
+    """Label-free Ken Burns fragment — caller keeps the chain alive with ',' until it
+    closes with its own label (e.g. '[bg]'). Zoom drift + sinusoidal pan sway."""
+    h = int(size.split("x")[1])
+    return (
+        f"scale=-2:{h * 2},"
+        f"zoompan=z='min(zoom+0.0008,1.0+{drift})'"
+        f":x='iw/2-(iw/zoom/2)+sin(on/45)*{sway}'"
+        f":y='ih/2-(ih/zoom/2)+cos(on/60)*{sway // 2}'"
+        f":d=1:fps=30:s={size}"
+    )
+
+
+HUD_BADGES = {
+    "stock_market": "LIVE INSTITUTIONAL FLOW",
+    "crypto": "LIVE ON-CHAIN DATA",
+    "crypto_ethereum": "LIVE CHAIN MICROSTRUCTURE",
+    "insurance": "POLICY WORDING AUDIT",
+}
+
+
+def _hud_filters(duration: float, vertical: str, fontfile: str = "", w: int = 1920, h: int = 1080) -> list:
+    """Animated HUD chain: teal track + progress bar sweeping with playback time +
+    live timestamp/vertical-badge ticker. Returns [] if nothing could be built."""
+    dur = max(1.0, float(duration))
+    bar_y = h - 26
+    prog = (
+        f"drawbox=x=0:y={bar_y}:w={w}:h=6:color=0x10B981@0.25:t=fill,"
+        f"drawbox=x=0:y={bar_y}:w='min({w}\\,(t/{dur:.2f})*{w})':h=6:color=0x34D399@0.95:t=fill"
+    )
+    chain = [prog]
+    if fontfile and FFCAPS["drawtext"]:
+        badge = HUD_BADGES.get(vertical or "", "THE BULL PRINT")
+        clock = (
+            f"drawtext=fontfile='{fontfile}'"
+            f":text='THE BULL PRINT · {badge} · %{{pts\\:hms}}'"
+            f":fontcolor=0xEF4444:fontsize=30:box=1:boxcolor=0x0B0E14@0.62:boxborderw=12"
+            f":x={w // 25}:y={h // 42}:enable='gte(t\\,0.8)'"
+        )
+        chain.append(clock)
+    return chain
+
+
+def _subs_tag(ass_path: Path) -> str:
+    """',subtitles=...' fragment when libass exists in the host ffmpeg; '' otherwise."""
+    if FFCAPS["subtitles"]:
+        return f",subtitles='{Path(ass_path).as_posix()}'"
+    if not Path(ass_path).exists():
+        return ""
+    return ""
+
+
+def render_gpu_segment(seg: dict, mp3_path: Path, ass_path: Path, duration: float, out_mp4: Path, vertical: str = ""):
+    """Renders 1080p NVIDIA segment — Ken Burns motion + animated HUD telemetry so
+    no frame of the video is ever a frozen still (anti YPP 'static slideshow' flag)."""
     avatar_id = max(1, min(10, int(seg.get("avatar_studio_id", 1))))
     avatar_img = ASSETS_DIR / f"avatar_{avatar_id}.png"
     if not avatar_img.exists():
         avatar_img = ASSETS_DIR / "avatars" / f"avatar_{avatar_id}.png"
 
     b_roll = PAYLOAD_DIR / seg.get("b_roll_asset_ref", "NONE")
+    fontfile = _find_fontfile()
+    hud = _hud_filters(duration, vertical, fontfile)  # returns list of ready-to-chain filters
 
     if seg.get("visual_mode") == "CHART_B_ROLL_WITH_PIP" and b_roll.exists():
-        filter_complex = (
-            f"[0:v]scale=1920:1080[bg];"
-            f"[1:v]scale=440:248[pip];"
-            f"[bg][pip]overlay=x=1440:y=680,subtitles='{ass_path.as_posix()}'[v]"
+        filter_complex = "[0:v]" + _ken_burns_body("1920x1080")
+        if hud:
+            filter_complex += "," + ",".join(hud)
+        filter_complex += (
+            f"[bg];[1:v]scale=440:248[pip];"
+            f"[bg][pip]overlay=x=1440:y=680" + _subs_tag(ass_path) + "[v]"
         )
         inputs = ["-loop", "1", "-i", str(b_roll), "-loop", "1", "-i", str(avatar_img), "-i", str(mp3_path)]
         audio_map = "2:a"
     else:
-        filter_complex = f"[0:v]scale=1920:1080,subtitles='{ass_path.as_posix()}'[v]"
+        filter_complex = "[0:v]" + _ken_burns_body("1920x1080", drift=0.14, sway=22)  # subtle studio drift
+        if hud:
+            filter_complex += "," + ",".join(hud)
+        filter_complex += _subs_tag(ass_path) + "[v]"
         inputs = ["-loop", "1", "-i", str(avatar_img), "-i", str(mp3_path)]
         audio_map = "1:a"
 
@@ -334,15 +563,17 @@ def upload_youtube_headless(mp4_path: Path, thumb_path: Path, yt_payload: dict) 
     return "QUOTA_EXHAUSTED_ALL_SLOTS"
 
 
-async def render_and_upload_short_gpu(payload: dict, long_video_id: str, short_data: dict = None, short_index: int = 1) -> str:
-    """Renders ONE 9:16 companion #Short (chart top / avatar bottom / emerald divider)
-    with vertical Hormozi subtitles and uploads headless to YouTube with #Shorts branding.
+async def render_and_upload_short_gpu(payload: dict, long_video_id: str, short_data: dict = None, short_index: int = 1, vertical: str = "") -> str:
+    """Renders ONE 9:16 companion #Short (Ken Burns chart top / avatar bottom / emerald
+    divider / HUD ticker) with vertical Hormozi subtitles and uploads headless to YouTube.
 
     short_data: the Short block (short_title / spoken_hook_and_body / cta_to_long_video / chart_image_ref).
                 Defaults to youtube_payload.short_extraction for backward compatibility.
     short_index: 1-based position in today's Shorts batch — drives the per-short thumbnail
-                 file lookup (short_thumb_1.jpg / short_thumb_2.jpg staged by the orchestrator)."""
+                 file lookup (short_thumb_1.jpg / short_thumb_2.jpg staged by the orchestrator).
+    vertical: selects the signature voice persona + HUD badge for this Short."""
     yt_payload_block = payload.get("youtube_payload", {})
+    persona = select_voice_persona(vertical or payload.get("vertical", ""))
     if not short_data:
         short_data = yt_payload_block.get("short_extraction")
     if not short_data:
@@ -360,7 +591,7 @@ async def render_and_upload_short_gpu(payload: dict, long_video_id: str, short_d
     tag = f"{short_index:02d}"
     mp3 = WORK_DIR / f"short_{tag}.mp3"
     ass = WORK_DIR / f"short_{tag}.ass"
-    dur = await make_tts_and_subtitles(narration, mp3, ass)
+    dur = await make_tts_and_subtitles(narration, mp3, ass, persona=persona)
 
     # Retint the Hormozi .ass for vertical 9:16: 1080x1920 resolution header + larger 64pt font
     vertical_ass = (
@@ -392,15 +623,23 @@ async def render_and_upload_short_gpu(payload: dict, long_video_id: str, short_d
     if not avatar_img.exists():
         avatar_img = ASSETS_DIR / "avatars" / "avatar_1.png"
 
-    # 9:16 master: chart cropped to 1080x960 on top, avatar 1080x960 on bottom,
-    # #10B981 emerald divider bridging the seam, Hormozi subtitles burned in.
+    # 9:16 master: Ken Burns chart on top, avatar bottom, emerald divider,
+    # animated HUD progress bar + badge ticker over the full canvas, Hormozi subtitles burned in.
+    fontfile = _find_fontfile()
+    hud_list = _hud_filters(min(dur, 58.5), vertical, fontfile, w=1080, h=1920)
+    tail = list(hud_list)
+    subs = _subs_tag(ass)
+    if subs:
+        tail.append(subs.lstrip(","))
     filter_graph = (
-        "[0:v]scale=1080:960:force_original_aspect_ratio=increase,crop=1080:960[chart];"
+        "[0:v]" + _ken_burns_body("1080x960", drift=0.18, sway=28) + "[chartm];"
         "[1:v]scale=1080:960:force_original_aspect_ratio=increase,crop=1080:960[ava];"
-        "[chart][ava]vstack=inputs=2,"
-        "drawbox=x=0:y=956:w=1080:h=8:color=0x10B981@1.0:t=fill,"
-        f"subtitles='{ass.as_posix()}'[v]"
+        "[chartm][ava]vstack=inputs=2,"
+        "drawbox=x=0:y=956:w=1080:h=8:color=0x10B981@1.0:t=fill"
     )
+    if tail:
+        filter_graph += "," + ",".join(tail)
+    filter_graph += "[v]"
 
     out_mp4 = WORK_DIR / f"final_short_{tag}.mp4"
     cmd = [
@@ -417,6 +656,12 @@ async def render_and_upload_short_gpu(payload: dict, long_video_id: str, short_d
         str(out_mp4),
     ]
     subprocess.run(cmd, check=True)
+
+    # 🛡️ OpenMontage QA gate — never burn 1,600 quota units on a broken Short
+    qa = verify_rendered_video_qa(out_mp4, expected_min_dur=min(dur, 58.5))
+    if not qa["passed"]:
+        print(f"❌ Short #{short_index} failed QA — upload SKIPPED (quota protected): {qa['reasons']}")
+        return ""
 
     meta = yt_payload_block.get("metadata", {})
     angle_tag = str(short_data.get("angle", "") or "").strip()
@@ -476,8 +721,12 @@ async def run_kaggle_job():
     payload_file = PAYLOAD_DIR / "payload.json"
     if not payload_file.exists():
         payload_file = Path(__file__).parent.parent / "payload.json"
-        
+
     payload = json.loads(payload_file.read_text(encoding="utf-8"))
+    vertical = str(payload.get("vertical", "") or "")
+    persona = select_voice_persona(vertical)
+    if persona.get("desc"):
+        print(f"🎙️ Voice persona for this slot: {persona['voice']} ({persona['desc']})")
     seg_files = []
     cumulative = 0.0
     timestamps = []
@@ -491,8 +740,8 @@ async def run_kaggle_job():
         m, s = divmod(int(cumulative), 60)
         timestamps.append(f"{m:02d}:{s:02d} - {seg['chapter_title']}")
 
-        dur = await make_tts_and_subtitles(seg["spoken_narration"], mp3, ass)
-        render_gpu_segment(seg, mp3, ass, dur, mp4)
+        dur = await make_tts_and_subtitles(seg["spoken_narration"], mp3, ass, persona=persona)
+        render_gpu_segment(seg, mp3, ass, dur, mp4, vertical=vertical)
         seg_files.append(mp4)
         cumulative += dur
 
@@ -501,8 +750,15 @@ async def run_kaggle_job():
     final_mp4 = WORK_DIR / "final_longform.mp4"
     subprocess.run(["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", str(concat_txt), "-c", "copy", str(final_mp4)], check=True)
 
+    # 🛡️ OpenMontage QA gate on the long master — silent audio / black frames never reach YouTube
+    qa = verify_rendered_video_qa(final_mp4, expected_min_dur=cumulative)
+
     payload["youtube_payload"]["metadata"]["description_body"] += "\n\n⏱️ CHAPTERS:\n" + "\n".join(timestamps)
-    vid_id = upload_youtube_headless(final_mp4, PAYLOAD_DIR / "yt_thumb.jpg", payload["youtube_payload"])
+    vid_id = ""
+    if qa["passed"]:
+        vid_id = upload_youtube_headless(final_mp4, PAYLOAD_DIR / "yt_thumb.jpg", payload["youtube_payload"])
+    else:
+        print(f"❌ Long-form failed QA — upload SKIPPED (quota protected): {qa['reasons']}")
 
     shorts_batch = gather_shorts_batch(payload)
     print(f"Shorts batch for this slot: {len(shorts_batch)} video(s) -> " +
@@ -510,7 +766,7 @@ async def run_kaggle_job():
     short_video_ids = []
     for i, short_data in enumerate(shorts_batch, start=1):
         try:
-            short_vid_id = await render_and_upload_short_gpu(payload, vid_id, short_data=short_data, short_index=i)
+            short_vid_id = await render_and_upload_short_gpu(payload, vid_id, short_data=short_data, short_index=i, vertical=vertical)
         except Exception as exc:
             print(f"Short #{i} render/upload failed — continuing batch: {exc}")
             short_vid_id = ""
@@ -523,6 +779,9 @@ async def run_kaggle_job():
         "short_video_id": short_video_ids[0] if short_video_ids else "",
         "shorts_count": len(short_video_ids),
         "oauth_slot_used": LAST_OAUTH_SLOT["value"],
+        "qa_audit": {"passed": qa["passed"], "mean_volume_db": qa["mean_volume_db"],
+                     "max_volume_db": qa["max_volume_db"], "black_ratio": qa["black_ratio"],
+                     "duration": qa["duration"], "reasons": qa["reasons"][:3]},
         "timestamps_log": timestamps
     }
     (WORK_DIR / "render_result.json").write_text(json.dumps(result), encoding="utf-8")

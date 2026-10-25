@@ -72,14 +72,14 @@ VERTICAL_CONFIGS: Dict[str, Dict[str, Any]] = {
     },
 }
 
-# 6 rotating narrative structures (YPP originality pacing)
+# 6 rotating narrative structures (YPP originality pacing) — slot 1..6 pinned rotation
 NARRATIVE_ARCHETYPES = [
-    "institutional_trap_expose",        # how institutions corner retail
-    "quantitative_data_breakdown",      # pure numbers/statistics teardown
-    "historical_case_study",            # timeline of one real episode
-    "retail_myth_deconstruction",       # kill a mainstream belief with math
-    "macro_contagion_chain",            # causality chain across assets
-    "contract_clause_forensic_audit",   # line-by-line contract mechanics
+    "institutional_trap_expose",                    # slot 1 — how institutions corner retail
+    "quantitative_data_breakdown",                  # slot 2 — pure numbers/statistics teardown
+    "contract_clause_forensic_audit",               # slot 3 — line-by-line contract mechanics
+    "smart_money_footprint_reversal",               # slot 4 — footprint reversal case anatomy
+    "macro_contagion_chain",                        # slot 5 — causality chain across assets
+    "retail_myth_mathematical_deconstruction",      # slot 6 — kill a mainstream belief with math
 ]
 
 # topic keywords → vertical inference (used when no explicit vertical is set)
@@ -95,11 +95,16 @@ def infer_vertical(topic: str) -> str:
 
 
 def assign_archetype(topic: str, slot_index: int = 0) -> str:
-    """Deterministic per-day, per-slot rotation — same day never repeats a pacing."""
+    """
+    Per-day slot-pinned rotation: all 6 daily slots always land on 6 DIFFERENT
+    archetypes (slot 1→base, 2→base+1, ...), while the whole permutation rotates
+    day-to-day and by topic so no two days repeat the same pairing.
+    """
     today = datetime.now(timezone.utc)
     day_key = today.toordinal()
     topic_letter = (sum(ord(c) for c in str(topic or "").lower()) % 6)
-    idx = (day_key + slot_index + topic_letter) % len(NARRATIVE_ARCHETYPES)
+    slot_offset = max(0, int(slot_index) - 1) if int(slot_index) > 0 else (day_key + topic_letter) % 6
+    idx = (day_key + topic_letter + slot_offset) % len(NARRATIVE_ARCHETYPES)
     return NARRATIVE_ARCHETYPES[idx]
 
 

@@ -587,11 +587,23 @@ def run_kaggle_gpu_renderer(
 
     result_data = json.loads((out_dir / "render_result.json").read_text(encoding="utf-8"))
 
-    # Surface which Google Cloud OAuth slot served the upload → Mission Control 🔑 line
+    # 🛡️ Surface the OpenMontage QA Gate verdict + OAuth slot + Short count on Mission Control
+    qa = result_data.get("qa_audit") or {}
     oauth_slot_used = int(result_data.get("oauth_slot_used") or 0)
-    if oauth_slot_used > 0:
+    shorts_count = result_data.get("shorts_count", len(result_data.get("short_video_ids") or []))
+    if qa:
+        if qa.get("passed"):
+            qa_line = f"🛡️ QA PASSED · {qa.get('mean_volume_db')} dB · black {qa.get('black_ratio')}"
+        else:
+            qa_line = "🛡️ QA BLOCKED · " + " · ".join((qa.get("reasons") or [])[:2])
+            _send_telegram("🛡️ *QA GATE BLOCKED* — YouTube upload skipped.\n" + "\n".join(qa.get("reasons", [])[:5]))
+        mission.update_stage(
+            "kaggle_gpu", "🔥 Encoding NVENC + Whisper (done)",
+            f"🔑 YT Quota Slot #{oauth_slot_used} · 🎬 {shorts_count} Short(s) · {qa_line}",
+        )
+    elif oauth_slot_used > 0:
         mission.update_stage("kaggle_gpu", "🔥 Encoding NVENC + Whisper (done)",
-                             f"🔑 YT Quota Slot #{oauth_slot_used} · 🎬 {result_data.get('shorts_count', len(result_data.get('short_video_ids', [])))} Short(s)")
+                             f"🔑 YT Quota Slot #{oauth_slot_used} · 🎬 {shorts_count} Short(s)")
     return (
         result_data["youtube_video_id"],
         result_data["timestamps_log"],
@@ -682,6 +694,11 @@ def _send_telegram(text: str):
         pass
 
 
+def _vertical_badge(vertical: str) -> str:
+    return {"stock_market": "📈 STOCK MARKET", "crypto": "🪙 CRYPTO",
+            "crypto_ethereum": "🪙 CRYPTO (ETH)", "insurance": "🛡️ INSURANCE"}.get(vertical or "", "📈 STOCK MARKET")
+
+
 async def main():
     # -- Daily slot routing: CLI args > GITHUB Action env > default stock pre-open slot
     reg = _slot_registry()
@@ -701,14 +718,36 @@ async def main():
     env_vertical = os.getenv("INPUT_VERTICAL", "")
     env_shorts = int(os.getenv("INPUT_SHORTS_COUNT", "0") or 0)
 
-    topic = args.topic or env_topic or slot_cfg["topic"]
+    topic = args.topic or env_topic
     notes = env_notes or slot_cfg["notes"]
-    vertical = args.vertical or env_vertical or infer_vertical(topic) or slot_cfg["vertical"]
+    vertical = args.vertical or env_vertical or slot_cfg["vertical"]
     shorts_count = max(1, min(2, args.shorts_count or env_shorts or slot_cfg["shorts_count"]))
+    search_cluster: List[str] = []
 
     # 1. Initialize Single Editable Mission Control Card
     mission = AriaMissionControl(topic=topic)
     mission.init_card()
+
+    # 1b. 🔍 open-seo HARVESTER (~zero-cost live search intent feeding):
+    # Only engages when no explicit topic was handed to us (i.e., the 6 daily cron slots).
+    if not topic:
+        try:
+            from app.services.seo_topic_harvester import harvest_topic_for_slot, enrichNotes
+
+            mission.update_stage("gemini", "🔍 Harvesting live search intent...",
+                                 f"open-seo dark-query loop · slot {slot_index}")
+            harvested = harvest_topic_for_slot(vertical, slot_index)
+            topic = harvested["topic"]
+            search_cluster = harvested.get("search_cluster") or []
+            notes = enrichNotes(notes, search_cluster)
+            mission.update_stage("gemini", f"🔍 Harvested `{topic[:48]}`",
+                                 f"source: {harvested.get('source', 'auto')} · cluster: {', '.join(search_cluster[:3])}")
+            logger.info(f"[Harvester] slot {slot_index} → '{topic}' (cluster: {search_cluster})")
+        except Exception as h_err:
+            logger.warning(f"Harvester failed — falling back to registry topic: {h_err}")
+            topic = slot_cfg["topic"]
+    else:
+        logger.info(f"External override topic in command: executing '{topic}'")
 
     # 2. Domain capture: Insurance → infographic engine, everything else → live Playwright
     insurance_jobs = _vertical_chart_jobs(vertical)
@@ -731,6 +770,8 @@ async def main():
     # 3. Call Google AI Studio / Gemini
     mission.update_stage("gemini", "🧠 Synthesizing Dual Script + Article...")
     payload = generate_master_json_via_ai_studio(topic, notes, chart_files)
+    payload["vertical"] = vertical                # drives kernel voice persona + HUD badge
+    payload["search_cluster"] = search_cluster    # drives description + tag SEO weave
 
     # 🛡️ THE COMPLIANCE GATE (zero-tolerance SEBI + IRDAI + YouTube audit & 30-day freshness)
     mission.update_stage("gemini", "🛡️ Auditing Compliance Gate...", "SEBI regex + freshness + LLM auditor")
@@ -744,7 +785,7 @@ async def main():
         _send_telegram("🚨 *CRITICAL COMPLIANCE HALT*\n" + str(e)[:400])
         raise SystemExit(1)
     slug = payload["campaign_id"]
-    mission.update_stage("gemini", f"✅ Generated + Compliance-Approved (`{slug}`)")
+    mission.update_stage("gemini", f"✅ Generated + Compliance-Approved (`{slug}`)", _vertical_badge(vertical))
 
     # 🔬 THE CONTENT AUTHENTICITY ENGINE (anti-reuse trigram guard + vertical vocabulary + archetype rotation).
     # Verdict failures force a full LLM regeneration (max 2) — rejected angles must NEVER reach YouTube (YPP).
@@ -773,7 +814,9 @@ async def main():
             )
             raise SystemExit(1)
         mission.update_stage(
-            "gemini", f"✅ Original ({report['archetype']})", str(report.get("vertical_terms", ""))[:100]
+            "gemini",
+            f"✅ Original ({report['archetype']})",
+            f"{_vertical_badge(vertical)} · {str(report.get('vertical_terms', ''))[:80]}",
         )
     except SystemExit:
         raise
@@ -829,6 +872,11 @@ async def main():
     )
     for sid in short_video_ids:
         logger.info(f"🎬 9:16 #Shorts published: https://youtube.com/shorts/{sid}")
+
+    # 🛡️ QA-gate halt: kernel skipped YouTube upload → don't publish an article without a video id
+    if not yt_video_id:
+        mission.update_stage("kaggle_gpu", "🛡️ Uploaded SKIPPED (QA gate)", "Fix render, rerun slot")
+        raise SystemExit(1)
 
     # 6. Generate MDX Article + Deploy to Vercel + Ping Search Indexers
     mission.update_stage("vercel", "📝 Compiling MDX & IndexNow Ping...")

@@ -1,27 +1,66 @@
-name: Autonomous Live Market Media & News Engine
+name: Master Autonomous Scheduler (Market Pulse + Bull Print Video Engine)
 
 on:
+  # ── MASTER DAILY SCHEDULE — two interleaved engines, zero overlap ──────────
+  # Article engine (Market Pulse news slots, IST = UTC + 5:30)
+  # Video engine (6 Long-Form + 10 Shorts = 16 videos/day)
+  #   Slot 1 Stock pre-open 08:30 IST · Slot 2 Crypto 11:00 IST · Slot 3 Insurance 13:30 IST
+  #   Slot 4 Stock close 15:45 IST · Slot 5 Crypto evening 18:30 IST · Slot 6 Insurance night 21:00 IST
   schedule:
-    # 5 Daily Slots aligned with Indian Standard Time (IST = UTC + 5:30)
-    # Using :03 and :33 minute offsets to avoid high-load top-of-hour GitHub Actions queue stalls
-    - cron: '33 3 * * 1-5'   # 09:03 AM IST (Pre-Market / Open Brief)
-    - cron: '33 5 * * 1-5'   # 11:03 AM IST (Morning Momentum & Sector Rotation)
-    - cron: '03 8 * * 1-5'   # 13:33 PM IST (Mid-Day / European Cues)
-    - cron: '33 10 * * 1-5'  # 16:03 PM IST (Closing Bell Wrap & Top Movers)
-    - cron: '03 14 * * 1-5'  # 19:33 PM IST (Evening FII/DII Deep Dive)
-    - cron: '33 5 * * 6'     # 11:03 AM IST Saturday (Weekend Masterclass)
+    - cron: '33 3 * * 1-5'   # 09:03 AM IST  — article: Pre-Market / Open Brief
+    - cron: '33 5 * * 1-5'   # 11:03 AM IST  — article: Morning Momentum & Sector Rotation
+    - cron: '0 8 * * *'      # 13:30 PM IST  — video: Slot 3 Insurance lunch (2 Shorts)
+    - cron: '03 8 * * 1-5'   # 13:33 PM IST  — article: Mid-Day / European Cues
+    - cron: '33 10 * * 1-5'  # 16:03 PM IST  — article: Closing Bell Wrap & Top Movers
+    - cron: '15 10 * * *'    # 15:45 PM IST  — video: Slot 4 Stock closing (2 Shorts)
+    - cron: '0 13 * * *'     # 18:30 PM IST  — video: Slot 5 Crypto evening (1 Short)
+    - cron: '03 14 * * 1-5'  # 19:33 PM IST  — article: Evening FII/DII Deep Dive
+    - cron: '30 15 * * *'    # 21:00 PM IST  — video: Slot 6 Insurance night (1 Short)
+    - cron: '33 5 * * 6'     # 11:03 AM IST Saturday — article: Weekend Masterclass
   workflow_dispatch:
     inputs:
       slot:
-        description: 'Market slot name'
+        description: 'Daily video slot 1-6 (empty slot = harvest topic automatically)'
         required: false
-        default: 'manual_trigger'
+        default: ''
+      topic:
+        description: 'Video topic override (optional)'
+        required: false
+        default: ''
+      notes:
+        description: 'Research Notes / Context (optional)'
+        required: false
+        default: ''
+      vertical:
+        description: 'Vertical override: stock_market | crypto | insurance'
+        required: false
+        default: ''
+      shorts_count:
+        description: '9:16 Shorts to render from this session (1 or 2)'
+        required: false
+        default: ''
+      article_slot:
+        description: 'Market slot name — run ARTICLE engine only (leave empty for video engine)'
+        required: false
+        default: ''
 
 permissions:
   contents: write
 
 jobs:
+  # ─────────────────────────── ARTICLE ENGINE (Market Pulse) ───────────────────────────
   run-pipeline:
+    # Legacy news crons only, or explicit manual article dispatch (article_slot filled)
+    if: >-
+      (github.event_name == 'schedule' && (
+        github.event.schedule == '33 3 * * 1-5' ||
+        github.event.schedule == '33 5 * * 1-5' ||
+        github.event.schedule == '03 8 * * 1-5' ||
+        github.event.schedule == '33 10 * * 1-5' ||
+        github.event.schedule == '03 14 * * 1-5' ||
+        github.event.schedule == '33 5 * * 6'
+      )) ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.article_slot != '')
     runs-on: ubuntu-latest
     timeout-minutes: 180
 
@@ -102,7 +141,7 @@ jobs:
           YT_CLIENT_SECRET_4: ${{ secrets.YT_CLIENT_SECRET_4 }}
           YT_REFRESH_TOKEN_4: ${{ secrets.YT_REFRESH_TOKEN_4 }}
         run: |
-          SLOT="${{ github.event.inputs.slot || 'scheduled_cron' }}"
+          SLOT="${{ github.event.inputs.article_slot || 'scheduled_cron' }}"
           echo "🚀 Running autonomous market cycle for slot: $SLOT"
           python -m app.services.autonomous_scheduler --now "$SLOT"
 
@@ -126,3 +165,121 @@ jobs:
             done
           fi
 
+  # ─────────────────── VIDEO ENGINE (The Bull Print — 16 videos/day) ───────────────────
+  build_and_publish:
+    # Master video crons only, or manual dispatch WITHOUT article_slot
+    if: >-
+      (github.event_name == 'schedule' && (
+        github.event.schedule == '0 3 * * *' ||
+        github.event.schedule == '30 5 * * *' ||
+        github.event.schedule == '0 8 * * *' ||
+        github.event.schedule == '15 10 * * *' ||
+        github.event.schedule == '0 13 * * *' ||
+        github.event.schedule == '30 15 * * *'
+      )) ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.article_slot == '')
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - name: 📥 Checkout Website & Engine Repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🐍 Setup Python 3.11 & FFmpeg
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Install Cloud Dependencies & Headless Chromium
+        run: |
+          sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core
+          pip install google-genai playwright Pillow kaggle requests google-api-python-client google-auth edge-tts loguru
+          playwright install chromium
+
+      - name: 🔑 Materialize Cloud Credentials from GitHub Secrets
+        run: |
+          mkdir -p credentials ~/.kaggle
+          if [ -n "${{ secrets.GCP_SA_JSON }}" ]; then
+            echo '${{ secrets.GCP_SA_JSON }}' > credentials/service_account.json
+          fi
+          if [ -n "${{ secrets.KAGGLE_USERNAME }}" ] && [ -n "${{ secrets.KAGGLE_KEY }}" ]; then
+            echo '{"username":"${{ secrets.KAGGLE_USERNAME }}","key":"${{ secrets.KAGGLE_KEY }}"}' > ~/.kaggle/kaggle.json
+            chmod 600 ~/.kaggle/kaggle.json
+          fi
+
+      - name: 🧭 Resolve Daily Slot (vertical cadence + Shorts count)
+        env:
+          MANUAL_SLOT: ${{ github.event.inputs.slot || github.event.client_payload.slot || '' }}
+          MANUAL_VERTICAL: ${{ github.event.inputs.vertical || github.event.client_payload.vertical || '' }}
+          MANUAL_SHORTS: ${{ github.event.inputs.shorts_count || github.event.client_payload.shorts_count || '' }}
+        run: |
+          if [ -n "$MANUAL_SLOT" ]; then
+            RESOLVED_SLOT="$MANUAL_SLOT"
+          else
+            RESOLVED_SLOT=$(python3 - <<'PY'
+          from datetime import datetime, timezone
+          now = datetime.now(timezone.utc)
+          mins = now.hour * 60 + now.minute
+          if mins >= 15 * 60 + 30: print(6)
+          elif mins >= 13 * 60: print(5)
+          elif mins >= 10 * 60 + 15: print(4)
+          elif mins >= 8 * 60: print(3)
+          elif mins >= 5 * 60 + 30: print(2)
+          elif mins >= 3 * 60: print(1)
+          else: print(1)
+          PY
+          )
+          fi
+          {
+            echo "INPUT_SLOT=$RESOLVED_SLOT"
+            echo "INPUT_VERTICAL=$MANUAL_VERTICAL"
+            echo "INPUT_SHORTS_COUNT=$MANUAL_SHORTS"
+          } >> "$GITHUB_ENV"
+          echo "🧭 Resolved slot=$RESOLVED_SLOT vertical=${MANUAL_VERTICAL:-<registry>} shorts=${MANUAL_SHORTS:-<registry>}"
+
+      - name: 🚀 Run Cloud Orchestrator (Harvest -> Playwright -> AI Studio -> Kaggle GPU -> Vercel)
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          KAGGLE_USERNAME: ${{ secrets.KAGGLE_USERNAME }}
+          KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GSC_SERVICE_ACCOUNT_JSON: ${{ secrets.GSC_SERVICE_ACCOUNT_JSON }}
+          INPUT_TOPIC: ${{ github.event.inputs.topic || github.event.client_payload.topic || '' }}
+          INPUT_NOTES: ${{ github.event.inputs.notes || github.event.client_payload.notes || '' }}
+          INPUT_SLOT: ${{ env.INPUT_SLOT }}
+          INPUT_VERTICAL: ${{ env.INPUT_VERTICAL }}
+          INPUT_SHORTS_COUNT: ${{ env.INPUT_SHORTS_COUNT }}
+          YT_OAUTH_POOL_JSON: ${{ secrets.YT_OAUTH_POOL_JSON }}
+          YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
+          YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
+          YT_REFRESH_TOKEN: ${{ secrets.YT_REFRESH_TOKEN }}
+          YT_CLIENT_ID_1: ${{ secrets.YT_CLIENT_ID_1 }}
+          YT_CLIENT_SECRET_1: ${{ secrets.YT_CLIENT_SECRET_1 }}
+          YT_REFRESH_TOKEN_1: ${{ secrets.YT_REFRESH_TOKEN_1 }}
+          YT_CLIENT_ID_2: ${{ secrets.YT_CLIENT_ID_2 }}
+          YT_CLIENT_SECRET_2: ${{ secrets.YT_CLIENT_SECRET_2 }}
+          YT_REFRESH_TOKEN_2: ${{ secrets.YT_REFRESH_TOKEN_2 }}
+          YT_CLIENT_ID_3: ${{ secrets.YT_CLIENT_ID_3 }}
+          YT_CLIENT_SECRET_3: ${{ secrets.YT_CLIENT_SECRET_3 }}
+          YT_REFRESH_TOKEN_3: ${{ secrets.YT_REFRESH_TOKEN_3 }}
+          YT_CLIENT_ID_4: ${{ secrets.YT_CLIENT_ID_4 }}
+          YT_CLIENT_SECRET_4: ${{ secrets.YT_CLIENT_SECRET_4 }}
+          YT_REFRESH_TOKEN_4: ${{ secrets.YT_REFRESH_TOKEN_4 }}
+        run: |
+          python cloud_orchestrator.py
+
+      - name: 💾 Commit & Push Generated Articles, Thumbnails and Posts Manifest
+        run: |
+          git config --global user.name "The Bull Print Autonomous Bot"
+          git config --global user.email "bot@thebullprint.media"
+          git add content/ assets/ output/thumbnails/
+          if git diff --staged --quiet; then
+            echo "No new assets to commit."
+          else
+            git commit -m "Auto-publish new educational dossier & marketing assets [skip ci]"
+            git push origin HEAD:${{ github.ref }}
+            echo "✓ Changes committed and pushed to GitHub. Vercel deployment triggered automatically."
+          fi

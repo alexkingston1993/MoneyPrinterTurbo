@@ -1,18 +1,8 @@
 name: Flipzon & The Bull Print 100% Cloud Media Engine
 
 on:
-  # Automatic Schedule — 6 slots/day → 6 Long-Form + 10 Shorts (16 videos)
-  # Slot 1 Stock pre-open 08:30 IST · Slot 2 Crypto 11:00 IST · Slot 3 Insurance 13:30 IST
-  # Slot 4 Stock close 15:45 IST · Slot 5 Crypto evening 18:30 IST · Slot 6 Insurance night 21:00 IST
-  schedule:
-    - cron: '0 3 * * *'      # Slot 1 — Stock pre-market
-    - cron: '30 5 * * *'     # Slot 2 — Crypto midday
-    - cron: '0 8 * * *'      # Slot 3 — Insurance lunch
-    - cron: '15 10 * * *'    # Slot 4 — Stock closing
-    - cron: '0 13 * * *'     # Slot 5 — Crypto evening (1 Short)
-    - cron: '30 15 * * *'    # Slot 6 — Insurance night (1 Short)
-
-  # Manual Trigger via GitHub Mobile App / Browser UI
+  # ⚠️ Master daily schedule moved to market_publisher.yml (single scheduler: article + video jobs).
+  # This file now ONLY handles manual + external webhook triggers for the video engine.
   workflow_dispatch:
     inputs:
       topic:
