@@ -59,7 +59,7 @@
       "started_at": "2026-10-25T20:35:33Z",
       "completed_at": null,
       "metrics": {
-        "approval_status": "WAITING_APPROVAL",
+        "approval_status": "APPROVED_TELEGRAM",
         "approval_deadline_ts": 1792960658,
         "headline": "ORDER FLOW"
       }
