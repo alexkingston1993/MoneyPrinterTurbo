@@ -1,35 +1,35 @@
 {
   "slot": 5,
-  "run_id": "40194622705",
+  "run_id": "40201798814",
   "vertical": "crypto",
   "vertical_label": "Slot #5",
   "shorts_count": 1,
   "status": "RUNNING",
-  "overall_pct": 25,
-  "stage_pct": 100,
-  "current_stage_index": 2,
-  "current_stage_name": "Gemini Script & Dossier Synthesis",
-  "current_subtask_label": "30-day overlap vs 'institutional-order-flow-absorption-trap-2026' \u2192 title overlap ['banks', 'institutional', 'moving', '",
-  "started_at": "2026-10-25T12:48:04Z",
-  "updated_at": "2026-10-25T12:50:22Z",
+  "overall_pct": 2,
+  "stage_pct": 10,
+  "current_stage_index": 1,
+  "current_stage_name": "SEO Topic Harvester (open-seo)",
+  "current_subtask_label": "Harvesting search intent & clusters",
+  "started_at": "2026-10-25T14:22:22Z",
+  "updated_at": "2026-10-25T14:22:22Z",
   "eta_seconds": 0,
   "stages": [
     {
       "id": 1,
       "name": "SEO Topic Harvester (open-seo)",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-25T12:48:03Z",
-      "completed_at": "2026-10-25T12:48:12Z",
+      "status": "RUNNING",
+      "pct": 0,
+      "started_at": "2026-10-25T14:22:21Z",
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 2,
       "name": "Gemini Script & Dossier Synthesis",
-      "status": "RUNNING",
-      "pct": 100,
-      "started_at": "2026-10-25T12:48:12Z",
-      "completed_at": "2026-10-25T12:48:26Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
       "metrics": {}
     },
     {
@@ -38,7 +38,7 @@
       "status": "PENDING",
       "pct": 0,
       "started_at": null,
-      "completed_at": "2026-10-25T12:48:26Z",
+      "completed_at": null,
       "metrics": {}
     },
     {
@@ -46,7 +46,7 @@
       "name": "Chart & High-CTR Thumbnail Studio",
       "status": "PENDING",
       "pct": 0,
-      "started_at": "2026-10-25T12:48:26Z",
+      "started_at": null,
       "completed_at": null,
       "metrics": {}
     },
@@ -80,64 +80,9 @@
   ],
   "live_logs": [
     {
-      "ts": "12:48:04",
+      "ts": "14:22:22",
       "level": "INFO",
       "msg": "Slot #5 (crypto) initialized. Target: 1 Long + 1 Shorts."
-    },
-    {
-      "ts": "12:48:15",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvesting live search intent... | open-seo dark-query loop \u00b7 slot 5"
-    },
-    {
-      "ts": "12:48:22",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvested `Usdt dominance today` | source: autocomplete \u00b7 cluster: usdt dominance today, usdt dominance chart crypto, usdt dominance coinmarketcap"
-    },
-    {
-      "ts": "12:48:30",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \ud83d\udd04 Capturing 3 charts... | "
-    },
-    {
-      "ts": "12:48:53",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \u2705 Captured (3 charts) | "
-    },
-    {
-      "ts": "12:49:00",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83e\udde0 Synthesizing Dual Script + Article... | "
-    },
-    {
-      "ts": "12:49:33",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udee1\ufe0f Auditing Compliance Gate... | SEBI regex + freshness + LLM auditor"
-    },
-    {
-      "ts": "12:49:38",
-      "level": "INFO",
-      "msg": "[GEMINI]: \u2705 Generated + Compliance-Approved (`institutional-order-flow-absorption-trap-2026`) | \ud83e\ude99 CRYPTO"
-    },
-    {
-      "ts": "12:49:45",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd2c Auditing Authenticity Engine... | trigram dupe-check + domain vocabulary"
-    },
-    {
-      "ts": "12:49:52",
-      "level": "INFO",
-      "msg": "[GEMINI]: \u267b\ufe0f Authenticity regen 1/2... | 30-day overlap vs 'institutional-order-flow-absorption-trap-2026' \u2192 title overlap ['banks', 'institutional', 'moving', '"
-    },
-    {
-      "ts": "12:50:21",
-      "level": "INFO",
-      "msg": "[GEMINI]: \u267b\ufe0f Authenticity regen 2/2... | 30-day overlap vs 'institutional-order-flow-absorption-trap-2026' \u2192 title overlap ['banks', 'institutional', 'moving', '"
-    },
-    {
-      "ts": "12:50:25",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udea8 AUTHENTICITY HALT | 30-day overlap vs 'institutional-order-flow-absorption-trap-2026' \u2192 title overlap ['banks', 'institutional', 'moving', '"
     }
   ]
 }
