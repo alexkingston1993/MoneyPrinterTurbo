@@ -5,13 +5,13 @@
   "vertical_label": "Slot #3",
   "shorts_count": 2,
   "status": "RUNNING",
-  "overall_pct": 45,
-  "stage_pct": 70,
+  "overall_pct": 50,
+  "stage_pct": 60,
   "current_stage_index": 4,
   "current_stage_name": "Chart & High-CTR Thumbnail Studio",
-  "current_subtask_label": "Thumbnails rendered & staged",
+  "current_subtask_label": "Thumbnails & charts staged for approval",
   "started_at": "2026-10-25T18:16:12Z",
-  "updated_at": "2026-10-25T18:19:42Z",
+  "updated_at": "2026-10-25T18:19:45Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -51,7 +51,7 @@
       "id": 4,
       "name": "Chart & High-CTR Thumbnail Studio",
       "status": "RUNNING",
-      "pct": 70,
+      "pct": 60,
       "started_at": "2026-10-25T18:16:19Z",
       "completed_at": null,
       "metrics": {}
@@ -134,6 +134,11 @@
       "ts": "18:19:40",
       "level": "INFO",
       "msg": "[GEMINI]: \u2705 Original (contract_clause_forensic_audit) | \ud83d\udee1\ufe0f INSURANCE \u00b7 30 hits (claim settlement ratio, csr, incurred claim ratio, icr, solvency, room "
+    },
+    {
+      "ts": "18:19:44",
+      "level": "INFO",
+      "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering Pillow Graphics... | "
     }
   ]
 }
