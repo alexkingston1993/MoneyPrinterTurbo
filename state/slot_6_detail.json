@@ -1,35 +1,35 @@
 {
   "slot": 6,
-  "run_id": "40213807962",
+  "run_id": "40221498071",
   "vertical": "insurance",
   "vertical_label": "Slot #6",
   "shorts_count": 1,
   "status": "RUNNING",
-  "overall_pct": 25,
-  "stage_pct": 100,
-  "current_stage_index": 2,
-  "current_stage_name": "Gemini Script & Dossier Synthesis",
-  "current_subtask_label": "Synthesizing script & SEO dossier",
-  "started_at": "2026-10-25T17:29:26Z",
-  "updated_at": "2026-10-25T17:29:47Z",
+  "overall_pct": 2,
+  "stage_pct": 10,
+  "current_stage_index": 1,
+  "current_stage_name": "SEO Topic Harvester (open-seo)",
+  "current_subtask_label": "Harvesting search intent & clusters",
+  "started_at": "2026-10-25T18:30:56Z",
+  "updated_at": "2026-10-25T18:30:56Z",
   "eta_seconds": 0,
   "stages": [
     {
       "id": 1,
       "name": "SEO Topic Harvester (open-seo)",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-25T17:29:26Z",
-      "completed_at": "2026-10-25T17:29:31Z",
+      "status": "RUNNING",
+      "pct": 0,
+      "started_at": "2026-10-25T18:30:55Z",
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 2,
       "name": "Gemini Script & Dossier Synthesis",
-      "status": "RUNNING",
-      "pct": 100,
-      "started_at": "2026-10-25T17:29:31Z",
-      "completed_at": "2026-10-25T17:29:39Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
       "metrics": {}
     },
     {
@@ -38,7 +38,7 @@
       "status": "PENDING",
       "pct": 0,
       "started_at": null,
-      "completed_at": "2026-10-25T17:29:39Z",
+      "completed_at": null,
       "metrics": {}
     },
     {
@@ -46,7 +46,7 @@
       "name": "Chart & High-CTR Thumbnail Studio",
       "status": "PENDING",
       "pct": 0,
-      "started_at": "2026-10-25T17:29:39Z",
+      "started_at": null,
       "completed_at": null,
       "metrics": {}
     },
@@ -80,29 +80,9 @@
   ],
   "live_logs": [
     {
-      "ts": "17:29:26",
+      "ts": "18:30:56",
       "level": "INFO",
       "msg": "Slot #6 (insurance) initialized. Target: 1 Long + 1 Shorts."
-    },
-    {
-      "ts": "17:29:33",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvesting live search intent... | open-seo dark-query loop \u00b7 slot 6"
-    },
-    {
-      "ts": "17:29:38",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvested `How Room-Rent Sub-Limits Devour Health Insurance` | source: registry_fallback \u00b7 cluster: term insurance claim rejection, health insurance room rent limit, irdai new rules"
-    },
-    {
-      "ts": "17:29:40",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \ud83d\udcca Rendering insurance infographics... | "
-    },
-    {
-      "ts": "17:29:44",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \u2705 Rendered (2 infographics) | "
     }
   ]
 }
