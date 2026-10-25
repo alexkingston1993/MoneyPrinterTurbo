@@ -54,7 +54,11 @@
       "pct": 60,
       "started_at": "2026-10-25T18:16:19Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "approval_status": "APPROVED_TELEGRAM",
+        "approval_deadline_ts": 1792952409,
+        "headline": "IRDAI CLAIM RULES: NEW"
+      }
     },
     {
       "id": 5,
