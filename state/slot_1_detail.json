@@ -128,6 +128,11 @@
       "ts": "21:49:49",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udd2c Auditing Authenticity Engine... | trigram dupe-check + domain vocabulary"
+    },
+    {
+      "ts": "21:49:54",
+      "level": "INFO",
+      "msg": "[GEMINI]: \u2705 Original (retail_myth_mathematical_deconstruction) | \ud83d\udee1\ufe0f INSURANCE \u00b7 35 hits (claim settlement ratio, csr, incurred claim ratio, icr, solvency, room "
     }
   ]
 }
