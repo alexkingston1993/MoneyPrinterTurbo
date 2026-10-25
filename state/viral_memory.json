@@ -1,29 +1,17 @@
 {
-  "updated_at": "2026-10-25T21:00:02Z",
-  "channel_median_vph": 0.15,
+  "updated_at": "2026-10-25T21:40:36Z",
+  "channel_median_vph": 0.1,
   "top_outperformers": [
-    {
-      "video_id": "FogU8YmM9m0",
-      "title": "Bitcoin Liquidation Heatmap & Funding Rate Delta (25 Oc #Shorts",
-      "format": "SHORT",
-      "published_at": "2026-10-25T18:16:17Z",
-      "hours_live": 2.7,
-      "view_count": 9,
-      "like_count": 1,
-      "comment_count": 0,
-      "views_per_hour": 3.3,
-      "engagement_rate": 0.1111
-    },
     {
       "video_id": "FfxHCzx7QhM",
       "title": "Bharti Airtel: The Telecom Monopoly Player",
       "format": "LONG",
       "published_at": "2026-10-21T17:15:16Z",
-      "hours_live": 99.7,
+      "hours_live": 100.4,
       "view_count": 207,
       "like_count": 2,
       "comment_count": 0,
-      "views_per_hour": 2.08,
+      "views_per_hour": 2.06,
       "engagement_rate": 0.0097
     },
     {
@@ -31,33 +19,33 @@
       "title": "Reliance Industries: Stock Analysis & Future Outlook 2026",
       "format": "LONG",
       "published_at": "2026-10-19T13:35:00Z",
-      "hours_live": 151.4,
+      "hours_live": 152.1,
       "view_count": 156,
       "like_count": 2,
       "comment_count": 0,
       "views_per_hour": 1.03,
       "engagement_rate": 0.0128
+    },
+    {
+      "video_id": "dCjty24rhDU",
+      "title": "Why Insurers Legally Slash Your Hospital Claim? #Shorts",
+      "format": "SHORT",
+      "published_at": "2026-10-25T18:21:33Z",
+      "hours_live": 3.3,
+      "view_count": 2,
+      "like_count": 1,
+      "comment_count": 0,
+      "views_per_hour": 0.6,
+      "engagement_rate": 0.5
     }
   ],
   "bottom_underperformers": [
-    {
-      "video_id": "dxhUWlm3DUQ",
-      "title": "The Institutional Compounding Secret: How Smart Money Traps Retail in F&O",
-      "format": "LONG",
-      "published_at": "2026-10-23T08:54:42Z",
-      "hours_live": 60.1,
-      "view_count": 3,
-      "like_count": 1,
-      "comment_count": 0,
-      "views_per_hour": 0.05,
-      "engagement_rate": 0.3333
-    },
     {
       "video_id": "4GS8pOV0oBU",
       "title": "TCS: The Tech Titan's 10-Year Outlook",
       "format": "LONG",
       "published_at": "2026-10-19T22:32:24Z",
-      "hours_live": 142.5,
+      "hours_live": 143.1,
       "view_count": 7,
       "like_count": 1,
       "comment_count": 0,
@@ -69,12 +57,24 @@
       "title": "Infosys: The Consistent Wealth Creator",
       "format": "LONG",
       "published_at": "2026-10-19T23:11:16Z",
-      "hours_live": 141.8,
+      "hours_live": 142.5,
       "view_count": 6,
       "like_count": 1,
       "comment_count": 0,
       "views_per_hour": 0.04,
       "engagement_rate": 0.1667
+    },
+    {
+      "video_id": "FogU8YmM9m0",
+      "title": "Bitcoin Liquidation Heatmap & Funding Rate Delta (25 Oc #Shorts",
+      "format": "SHORT",
+      "published_at": "2026-10-25T18:16:17Z",
+      "hours_live": 3.4,
+      "view_count": 0,
+      "like_count": 1,
+      "comment_count": 0,
+      "views_per_hour": 0.0,
+      "engagement_rate": 1.0
     }
   ],
   "winning_hook_patterns": [
