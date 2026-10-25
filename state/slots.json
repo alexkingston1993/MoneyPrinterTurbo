@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-25T12:48:24Z",
+  "updated_at": "2026-10-25T12:48:25Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -26,10 +26,10 @@
       "vertical_label": "Crypto #1",
       "shorts_count": 2,
       "status": "RUNNING",
-      "overall_pct": 25,
-      "stage_pct": 100,
-      "current_stage": "Gemini Script & Dossier Synthesis",
-      "current_stage_index": 2,
+      "overall_pct": 30,
+      "stage_pct": 90,
+      "current_stage": "Chart & High-CTR Thumbnail Studio",
+      "current_stage_index": 4,
       "archetype": "liquidity_hunt_autopsy",
       "topic": "Bitcoin Derivatives & Funding Rate Cascade",
       "voice_persona": "BrianNeural",
