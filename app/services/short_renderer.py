@@ -217,6 +217,7 @@ async def render_and_upload_short_local(
         "-i", str(mp3),
         "-filter_complex", filter_graph,
         "-map", "[v]", "-map", "2:a",
+        "-af", "silenceremove=stop_periods=-1:stop_duration=0.35:stop_threshold=-42dB,loudnorm=I=-14:TP=-1.5:LRA=11",
         "-c:v", "libx264", "-preset", "ultrafast",
         "-c:a", "aac", "-b:a", "192k",
         "-pix_fmt", "yuv420p",

@@ -123,12 +123,14 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const [slotsSummary, liveRuns, repoPosts, activeVideosData, publishedVideosData] = await Promise.all([
+    const [slotsSummary, liveRuns, repoPosts, activeVideosData, publishedVideosData, viralMemoryData, competitorRadarData] = await Promise.all([
       fetchGitHubContents('state/slots.json'),
       fetchLiveRuns(),
       fetchRepoPostsArchive(),
       fetchGitHubContents('state/active_videos.json'),
       fetchGitHubContents('state/published_videos.json'),
+      fetchGitHubContents('state/viral_memory.json'),
+      fetchGitHubContents('state/competitor_radar.json'),
     ]);
 
     // Format active_videos list (filter completed older than 30 mins)
@@ -191,6 +193,13 @@ module.exports = async function handler(req, res) {
       quota_vault: quotaVault,
       active_videos: activeVideos,
       posts_archive: combinedPosts.slice(0, 30),
+      viral_memory: viralMemoryData || null,
+      competitor_radar: competitorRadarData
+        ? {
+            ...competitorRadarData,
+            viral_outliers: competitorRadarData.viral_outliers || Object.values(competitorRadarData.verticals || {}).flat(),
+          }
+        : null,
       gpu_telemetry: {
         kernel_slug: 'flipzon-gpu-video-renderer',
         status: activeRun ? 'ONLINE_ACTIVE' : 'STANDBY',
@@ -202,7 +211,7 @@ module.exports = async function handler(req, res) {
         trigram_uniqueness_avg: 95.8,
         sebi_pass_rate: 100.0,
         qa_audio_pass_rate: 100.0,
-        total_dossiers_indexed: postsArchive.length,
+        total_dossiers_indexed: combinedPosts.length,
       },
       affiliate_stats: {
         total_clicks_today: 47,

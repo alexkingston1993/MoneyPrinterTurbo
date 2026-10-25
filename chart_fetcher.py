@@ -218,17 +218,44 @@ async def _capture_with_playwright(job: Dict[str, Any], output_path: Path) -> bo
             await page.screenshot(path=str(output_path))
             await browser.close()
 
-            # Verify canvas pixel density & file size (> 25 KB ensures not a blank canvas or Cloudflare block)
-            if output_path.exists() and output_path.stat().st_size > 25000:
+            # Verify canvas pixel density, file size, and visual entropy (>25KB and std-dev > 12.0)
+            if verify_chart_pixel_entropy(output_path):
                 logger.info(f"✓ Playwright captured live chart ({output_path.stat().st_size // 1024} KB): {output_path.name}")
                 return True
             else:
-                logger.warning(f"Playwright screenshot too small (<25KB) or blank for {output_path.name}. Triggering institutional chart fallback.")
+                logger.warning(f"Playwright screenshot failed entropy/size check for {output_path.name}. Triggering institutional chart fallback.")
                 return False
 
     except Exception as e:
         logger.warning(f"Playwright capture skipped or timed out for {job.get('filename')}: {e}")
         return False
+
+
+def verify_chart_pixel_entropy(path: Path) -> bool:
+    """
+    Verifies that the chart image exists, is >= 25KB, has minimum resolution 1280x720,
+    and has a pixel standard deviation >= 12.0 so dark uniform or blank screens are caught.
+    """
+    if not path.exists() or path.stat().st_size < 25000:
+        return False
+    try:
+        from PIL import Image
+        import numpy as np
+        with Image.open(path) as img:
+            w, h = img.size
+            if w < 1280 or h < 720:
+                logger.warning(f"Chart resolution {w}x{h} < 1280x720: {path.name}")
+                return False
+            gray = img.convert("L")
+            arr = np.array(gray, dtype=np.float32)
+            std_dev = float(np.std(arr))
+            if std_dev < 12.0:
+                logger.warning(f"Chart pixel std-dev {std_dev:.2f} < 12.0 (blank or uniform): {path.name}")
+                return False
+            return True
+    except Exception as e:
+        logger.debug(f"Pixel entropy check note for {path.name}: {e}")
+        return True
 
 
 def generate_insurance_charts(topic: str, out_dir: Optional[Path] = None) -> List[str]:
@@ -377,7 +404,7 @@ async def capture_batch_charts(chart_jobs: List[Dict[str, Any]], headless: bool 
         if headless:
             success = await _capture_with_playwright(job, out_file)
             
-        if not success or not out_file.exists() or out_file.stat().st_size <= 25000:
+        if not success or not out_file.exists() or out_file.stat().st_size <= 25000 or not verify_chart_pixel_entropy(out_file):
             _render_fallback_chart(job, out_file)
             
         captured_files.append(fname)

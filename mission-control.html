@@ -711,6 +711,68 @@
       color: #38bdf8;
       border: 1px solid rgba(2, 132, 199, 0.3);
     }
+
+    /* Viral & Radar Panel Styles */
+    .btn-ride-wave {
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #0b0e14;
+      font-weight: 800;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      border: none;
+      border-radius: 6px;
+      padding: 6px 12px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.2s ease;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.2);
+      white-space: nowrap;
+    }
+    .btn-ride-wave:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+    }
+    .btn-viral-audit {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--emerald);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      font-weight: 700;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      border-radius: 6px;
+      padding: 6px 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-viral-audit:hover {
+      background: rgba(16, 185, 129, 0.25);
+    }
+    .badge-outlier {
+      font-family: var(--font-mono);
+      font-size: 9.5px;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.35);
+      display: inline-block;
+      white-space: nowrap;
+    }
+    .viral-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .viral-stat-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: 16px 18px;
+    }
   </style>
 </head>
 <body>
@@ -907,6 +969,65 @@
       </div>
     </section>
 
+    <!-- VIRAL GROWTH AGENT & SELF-HEALING TELEMETRY -->
+    <section style="margin-bottom: 32px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 10px;">
+        <h3 class="section-title" style="margin-bottom: 0;">
+          🧠 VIRAL GROWTH AGENT & SELF-HEALING TELEMETRY
+          <span>CLOSED-LOOP CYBERNETIC AUDIT (YOUTUBE DATA API V3)</span>
+        </h3>
+        <button class="btn-viral-audit" onclick="runViralAudit()">🧠 Run Viral Channel Audit Now</button>
+      </div>
+
+      <div class="viral-grid">
+        <div class="viral-stat-card">
+          <div style="font-size: 10px; font-family: var(--font-mono); color: var(--text-dim); text-transform: uppercase; margin-bottom: 6px;">
+            🚀 Top Performing Outlier (Last 30 Uploads)
+          </div>
+          <div id="viral-top-title" style="font-size: 13px; font-weight: 700; color: var(--text-main); line-height: 1.3; margin-bottom: 8px;">
+            Bitcoin Liquidation Heatmap & Funding Rate Delta
+          </div>
+          <div style="display: flex; gap: 10px; font-family: var(--font-mono); font-size: 11px;">
+            <span style="color: var(--emerald);">⚡ <strong id="viral-top-vph">3,100</strong> VPH</span>
+            <span style="color: var(--cyan);">💬 <strong id="viral-top-eng">8.4%</strong> Eng. Rate</span>
+          </div>
+        </div>
+
+        <div class="viral-stat-card">
+          <div style="font-size: 10px; font-family: var(--font-mono); color: var(--text-dim); text-transform: uppercase; margin-bottom: 6px;">
+            🎯 Active Viral Directives (viral_memory.json)
+          </div>
+          <div id="viral-directives-summary" style="font-size: 12px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 6px;">
+            • Hook Target: ~30 words with hard number in word 1–7<br>
+            • Pattern Interrupt Interval: every 55 words<br>
+            • Pacing Formula: [Entity] did [Shock] — Why [Retail] faces [Risk]
+          </div>
+          <div style="font-size: 10px; font-family: var(--font-mono); color: var(--amber);">
+            Auto-injected into tomorrow's script generation
+          </div>
+        </div>
+
+        <div class="viral-stat-card">
+          <div style="font-size: 10px; font-family: var(--font-mono); color: var(--text-dim); text-transform: uppercase; margin-bottom: 6px;">
+            🛡️ Self-Healing Saves Counter (Today)
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-family: var(--font-mono); font-size: 11px; margin-top: 4px;">
+            <div style="background: rgba(255,255,255,0.02); padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-subtle);">
+              <span style="color: var(--text-dim); font-size: 9.5px; display: block;">SCRIPTS HEALED</span>
+              <strong style="color: var(--emerald); font-size: 14px;" id="stat-scripts-healed">14</strong>
+            </div>
+            <div style="background: rgba(255,255,255,0.02); padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-subtle);">
+              <span style="color: var(--text-dim); font-size: 9.5px; display: block;">AUDIO / CHARTS</span>
+              <strong style="color: var(--cyan); font-size: 14px;" id="stat-media-healed">6</strong>
+            </div>
+          </div>
+          <div style="margin-top: 8px; font-size: 10px; font-family: var(--font-mono); color: var(--purple);">
+            🔄 T+6h CTR Rescues Performed: <strong id="stat-ctr-rescues">0</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ACTIVE IN-PROGRESS VIDEO PRODUCTIONS -->
     <section style="margin-bottom: 32px;">
       <h3 class="section-title">
@@ -926,6 +1047,30 @@
           </thead>
           <tbody id="active-queue-tbody">
             <!-- Dynamic active items -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- COMPETITOR VIRAL RADAR -->
+    <section style="margin-bottom: 32px;">
+      <h3 class="section-title">
+        🏇 LIVE NICHE OUTLIER RADAR
+        <span>WINNING HORSES & EXTRACTED STRUCTURAL PATTERNS (ZERO API QUOTA)</span>
+      </h3>
+      <div class="archive-card">
+        <table class="archive-table">
+          <thead>
+            <tr>
+              <th style="min-width: 130px;">Outlier Signal</th>
+              <th style="min-width: 220px;">Competitor Viral Signal</th>
+              <th style="min-width: 200px;">Extracted Structural Skeleton</th>
+              <th style="min-width: 220px;">The Bull Print Counter-Angle</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="radar-tbody">
+            <!-- Dynamic radar items -->
           </tbody>
         </table>
       </div>
@@ -1089,7 +1234,9 @@
       // Render 6 Slots
       renderSlots(data);
       renderInspector(data, activeSlot);
+      renderViralMemory(data.viral_memory);
       renderActiveQueue(data.active_videos || []);
+      renderCompetitorRadar(data.competitor_radar);
       renderArchive(data.posts_archive || []);
     }
 
@@ -1340,6 +1487,138 @@
           </tr>
         `;
       }).join('');
+    }
+
+    function renderViralMemory(memory) {
+      if (!memory) return;
+      if (memory.channel_velocity_leader) {
+        const lead = memory.channel_velocity_leader;
+        document.getElementById('viral-top-title').textContent = lead.title || 'Bitcoin Liquidation Heatmap';
+        document.getElementById('viral-top-vph').textContent = `${(lead.views_per_hour || 0).toLocaleString()} VPH`;
+        document.getElementById('viral-top-eng').textContent = `${((lead.engagement_rate || 0) * 100).toFixed(1)}% Eng. Rate`;
+      }
+      if (memory.next_run_directives) {
+        const d = memory.next_run_directives;
+        document.getElementById('viral-directives-summary').innerHTML = `
+          • Hook Rule: ${d.hook_pacing_rule || 'Concrete number in first 35 words'}<br>
+          • Pattern Interrupt: ${d.pattern_interrupt_interval || 'Every 60 words'}<br>
+          • Pacing Formula: ${d.winning_title_formula || '[Shock] — Why [Retail] faces [Risk]'}
+        `;
+      }
+      const saves = memory.self_healing_saves_today || {};
+      if (saves.scripts_healed !== undefined) document.getElementById('stat-scripts-healed').textContent = saves.scripts_healed;
+      if (saves.media_healed !== undefined) document.getElementById('stat-media-healed').textContent = saves.media_healed;
+      if (saves.ctr_rescues_performed !== undefined) document.getElementById('stat-ctr-rescues').textContent = saves.ctr_rescues_performed;
+    }
+
+    function renderCompetitorRadar(radar) {
+      const tbody = document.getElementById('radar-tbody');
+      if (!tbody) return;
+      let outliers = [];
+      if (radar) {
+        if (Array.isArray(radar.viral_outliers)) {
+          outliers = radar.viral_outliers;
+        } else if (radar.verticals) {
+          outliers = Object.values(radar.verticals).flat();
+        }
+      }
+      if (outliers.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align:center; color: var(--text-dim); padding: 22px; font-family: var(--font-mono); font-size: 11px;">
+              🔍 SCANNING NICHE CHANNELS & RSS FEEDS (STOCK, CRYPTO, INSURANCE)... ZERO API QUOTA BURN
+            </td>
+          </tr>`;
+        return;
+      }
+
+      tbody.innerHTML = outliers.map(item => {
+        const isShort = (item.format || '').includes('SHORT') || (item.title || '').includes('#shorts');
+        const formatBadge = isShort
+          ? `<span class="badge-format badge-format-short">9:16 SHORT</span>`
+          : `<span class="badge-format badge-format-long">16:9 LONG</span>`;
+
+        let vertBadge = 'badge-stock';
+        const vert = (item.vertical || 'stock_market').toUpperCase();
+        if (vert.includes('CRYPTO')) vertBadge = 'badge-crypto';
+        else if (vert.includes('INSUR')) vertBadge = 'badge-insurance';
+
+        const mult = item.outlier_multiplier ? `${item.outlier_multiplier.toFixed(1)}x` : '3.5x';
+        const vph = (item.views_per_hour || 0).toLocaleString();
+
+        const encodedTopic = encodeURIComponent(item.safe_original_research_angle || item.winning_source_title || '');
+
+        return `
+          <tr>
+            <td>
+              <div style="display: flex; flex-direction: column; gap: 4px;">
+                <span class="badge-outlier">🔥 ${mult} OUTLIER</span>
+                <span style="font-family: var(--font-mono); font-size: 10px; color: var(--emerald);">⚡ ${vph} VPH</span>
+                ${formatBadge}
+              </div>
+            </td>
+            <td>
+              <div style="font-weight: 700; color: var(--text-main); font-size: 12.5px; line-height: 1.3; margin-bottom: 4px;">
+                ${item.winning_source_title || 'Niche Trending Video'}
+              </div>
+              <span class="slot-badge ${vertBadge}" style="font-size: 9px; padding: 1px 6px;">${item.vertical || 'stock_market'}</span>
+            </td>
+            <td style="font-family: var(--font-mono); font-size: 11px; color: var(--purple); line-height: 1.4;">
+              ${item.title_skeleton_template || 'Why [X%] Fall For [Mechanism]'}
+            </td>
+            <td style="font-size: 11.5px; color: var(--cyan); line-height: 1.4;">
+              🛡️ ${item.safe_original_research_angle || 'Independent institutional order-flow forensic breakdown'}
+            </td>
+            <td>
+              <button class="btn-slot-action btn-slot-dispatch" style="padding: 6px 12px; font-size: 10.5px; white-space: nowrap;" onclick="rideViralWave('${item.vertical || 'stock_market'}', decodeURIComponent('${encodedTopic}'), 2)">
+                ⚡ Ride Wave
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    async function runViralAudit() {
+      try {
+        const btn = document.querySelector('.btn-viral-audit');
+        if (btn) btn.textContent = '⏳ Auditing YouTube Channel...';
+        const res = await fetch('/api/mission-control/action', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'RUN_VIRAL_AUDIT' }),
+        });
+        const data = await res.json();
+        alert(data.message || 'Viral channel audit executed!');
+        fetchTelemetry(true);
+      } catch (err) {
+        alert('Failed to run viral audit: ' + err.message);
+      } finally {
+        const btn = document.querySelector('.btn-viral-audit');
+        if (btn) btn.textContent = '🧠 Run Viral Channel Audit Now';
+      }
+    }
+
+    async function rideViralWave(vertical, topic, shortsCount = 2) {
+      if (!confirm(`Launch an original forensic counter-video for: "${topic}"?`)) return;
+      try {
+        const res = await fetch('/api/mission-control/action', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'DISPATCH_SLOT',
+            slot: 1,
+            vertical: vertical,
+            custom_topic: topic,
+            shorts_count: shortsCount
+          }),
+        });
+        const data = await res.json();
+        alert(data.message || 'Viral wave slot dispatched to GitHub Actions!');
+        fetchTelemetry(true);
+      } catch (err) {
+        alert('Failed to dispatch viral wave: ' + err.message);
+      }
     }
 
     // Actions

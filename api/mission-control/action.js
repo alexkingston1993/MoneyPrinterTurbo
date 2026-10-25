@@ -110,13 +110,19 @@ module.exports = async function handler(req, res) {
     }
   }
 
-  const { action, slot, vertical, shorts_count, custom_headline, run_id, updated_payload } = body || {};
+  const { action, slot, vertical, shorts_count, custom_headline, run_id, updated_payload, topic, custom_topic } = body || {};
 
   try {
     switch (action) {
       case 'DISPATCH_SLOT': {
-        const ok = await dispatchWorkflow({ slot, vertical, shorts_count });
-        return res.status(200).json({ ok, message: `Dispatched Slot #${slot} (${vertical})` });
+        const targetTopic = custom_topic || topic || '';
+        const ok = await dispatchWorkflow({ slot, vertical, shorts_count, topic: targetTopic });
+        return res.status(200).json({ ok, message: `Dispatched Slot #${slot} (${vertical})${targetTopic ? ` with topic: "${targetTopic.substring(0, 40)}..."` : ''}` });
+      }
+
+      case 'RUN_VIRAL_AUDIT': {
+        const ok = await dispatchWorkflow({ slot: 1, vertical: 'stock_market', shorts_count: 1, topic: 'RUN_VIRAL_AUDIT' });
+        return res.status(200).json({ ok, message: 'Viral Channel Audit & Outlier Radar refresh triggered!' });
       }
 
       case 'DISPATCH_ALL_6': {

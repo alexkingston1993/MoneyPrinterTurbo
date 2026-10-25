@@ -280,6 +280,25 @@ def harvest_topic_for_slot(vertical: str, slot_number: int) -> Dict[str, Any]:
 
     titles = _recent_post_titles()
 
+    # 0. Check Competitor Viral Radar (Trending Outlier Pattern)
+    try:
+        from app.services.competitor_viral_radar import CompetitorViralRadar
+        winning_horse = CompetitorViralRadar.get_winning_horse(vertical, slot_number)
+        if winning_horse and winning_horse.get("safe_original_research_angle"):
+            safe_angle = winning_horse["safe_original_research_angle"]
+            if not _is_duplicate(safe_angle, titles):
+                horse_cluster = fetch_autocomplete_cluster(winning_horse.get("title", "")[:35])
+                cluster_clean = [q for q in horse_cluster if not _is_duplicate(q, titles)][:4]
+                return {
+                    "topic": safe_angle,
+                    "search_cluster": [safe_angle] + cluster_clean,
+                    "vertical": vertical,
+                    "source": f"viral_horse_{winning_horse.get('outlier_multiplier', 1)}x",
+                    "structural_dna": winning_horse,
+                }
+    except Exception as h_err:
+        logger.debug(f"[Harvester] Viral horse check note: {h_err}")
+
     # 1. GSC dark queries are pure gold (our own domain, positions 5-20)
     if slot_number % 2 == 0:
         for row in fetch_gsc_dark_queries():
