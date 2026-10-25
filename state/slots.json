@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-25T13:09:07Z",
+  "updated_at": "2026-10-25T13:14:43Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -9,15 +9,15 @@
       "vertical": "stock_market",
       "vertical_label": "Stock Market #1",
       "shorts_count": 2,
-      "status": "RUNNING",
-      "overall_pct": 25,
-      "stage_pct": 100,
-      "current_stage": "Gemini Script & Dossier Synthesis",
-      "current_stage_index": 2,
+      "status": "IDLE",
+      "overall_pct": 0,
+      "stage_pct": 0,
+      "current_stage": "Standby",
+      "current_stage_index": 1,
       "archetype": "institutional_trap_expose",
       "topic": "Nifty 50 Liquidity Traps & Institutional Accumulation",
       "voice_persona": "AndrewNeural",
-      "run_id": "40195828638"
+      "run_id": null
     },
     "2": {
       "slot": 2,
@@ -25,15 +25,15 @@
       "vertical": "crypto",
       "vertical_label": "Crypto #1",
       "shorts_count": 2,
-      "status": "RUNNING",
-      "overall_pct": 25,
-      "stage_pct": 100,
-      "current_stage": "Gemini Script & Dossier Synthesis",
-      "current_stage_index": 2,
+      "status": "IDLE",
+      "overall_pct": 0,
+      "stage_pct": 0,
+      "current_stage": "Standby",
+      "current_stage_index": 1,
       "archetype": "liquidity_hunt_autopsy",
       "topic": "Bitcoin Derivatives & Funding Rate Cascade",
       "voice_persona": "BrianNeural",
-      "run_id": "40194616419"
+      "run_id": null
     },
     "3": {
       "slot": 3,
@@ -41,15 +41,15 @@
       "vertical": "insurance",
       "vertical_label": "Insurance #1",
       "shorts_count": 2,
-      "status": "RUNNING",
-      "overall_pct": 25,
-      "stage_pct": 100,
-      "current_stage": "Gemini Script & Dossier Synthesis",
-      "current_stage_index": 2,
+      "status": "IDLE",
+      "overall_pct": 0,
+      "stage_pct": 0,
+      "current_stage": "Standby",
+      "current_stage_index": 1,
       "archetype": "regulatory_arbitrage_breakdown",
       "topic": "IRDAI Claim Settlement Ratio & Policy Traps",
       "voice_persona": "PrabhatNeural",
-      "run_id": "40194618541"
+      "run_id": null
     },
     "4": {
       "slot": 4,
@@ -57,15 +57,15 @@
       "vertical": "stock_market",
       "vertical_label": "Stock Market #2",
       "shorts_count": 2,
-      "status": "RUNNING",
-      "overall_pct": 25,
-      "stage_pct": 100,
-      "current_stage": "Gemini Script & Dossier Synthesis",
-      "current_stage_index": 2,
+      "status": "IDLE",
+      "overall_pct": 0,
+      "stage_pct": 0,
+      "current_stage": "Standby",
+      "current_stage_index": 1,
       "archetype": "smart_money_divergence",
       "topic": "Closing Bell FII vs DII Order Flow Discrepancy",
       "voice_persona": "AndrewNeural",
-      "run_id": "40194620551"
+      "run_id": null
     },
     "5": {
       "slot": 5,
@@ -73,15 +73,15 @@
       "vertical": "crypto",
       "vertical_label": "Crypto #2",
       "shorts_count": 1,
-      "status": "RUNNING",
-      "overall_pct": 25,
-      "stage_pct": 100,
-      "current_stage": "Gemini Script & Dossier Synthesis",
-      "current_stage_index": 2,
+      "status": "IDLE",
+      "overall_pct": 0,
+      "stage_pct": 0,
+      "current_stage": "Standby",
+      "current_stage_index": 1,
       "archetype": "macro_regime_shift",
       "topic": "Global Stablecoin Velocity & Central Bank Liquidity",
       "voice_persona": "BrianNeural",
-      "run_id": "40194622705"
+      "run_id": null
     },
     "6": {
       "slot": 6,
@@ -89,15 +89,15 @@
       "vertical": "insurance",
       "vertical_label": "Insurance #2",
       "shorts_count": 1,
-      "status": "RUNNING",
-      "overall_pct": 25,
-      "stage_pct": 100,
-      "current_stage": "Gemini Script & Dossier Synthesis",
-      "current_stage_index": 2,
+      "status": "IDLE",
+      "overall_pct": 0,
+      "stage_pct": 0,
+      "current_stage": "Standby",
+      "current_stage_index": 1,
       "archetype": "retail_myth_mathematical_deconstruction",
       "topic": "Term Insurance vs Endowment: Mathematical Reality",
       "voice_persona": "PrabhatNeural",
-      "run_id": "40194624624"
+      "run_id": null
     }
   }
 }
