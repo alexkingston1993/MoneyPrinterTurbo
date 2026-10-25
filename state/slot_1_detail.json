@@ -9,9 +9,9 @@
   "stage_pct": 100,
   "current_stage_index": 2,
   "current_stage_name": "Gemini Script & Dossier Synthesis",
-  "current_subtask_label": "Synthesizing script & SEO dossier",
+  "current_subtask_label": "SEBI regex + freshness + LLM auditor",
   "started_at": "2026-10-25T12:47:41Z",
-  "updated_at": "2026-10-25T12:48:14Z",
+  "updated_at": "2026-10-25T12:48:22Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -103,6 +103,16 @@
       "ts": "12:48:10",
       "level": "INFO",
       "msg": "[PLAYWRIGHT]: \u2705 Captured (3 charts) | "
+    },
+    {
+      "ts": "12:48:17",
+      "level": "INFO",
+      "msg": "[GEMINI]: \ud83e\udde0 Synthesizing Dual Script + Article... | "
+    },
+    {
+      "ts": "12:48:25",
+      "level": "INFO",
+      "msg": "[GEMINI]: \ud83d\udee1\ufe0f Auditing Compliance Gate... | SEBI regex + freshness + LLM auditor"
     }
   ]
 }
