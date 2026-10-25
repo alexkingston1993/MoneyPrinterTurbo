@@ -9,9 +9,9 @@
   "stage_pct": 100,
   "current_stage_index": 2,
   "current_stage_name": "Gemini Script & Dossier Synthesis",
-  "current_subtask_label": "source: autocomplete \u00b7 cluster: crypto funding rates explained, crypto funding rates delta exchange, crypto funding rate arbitrage bot",
+  "current_subtask_label": "Synthesizing script & SEO dossier",
   "started_at": "2026-10-25T12:48:02Z",
-  "updated_at": "2026-10-25T12:48:16Z",
+  "updated_at": "2026-10-25T12:48:54Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -29,7 +29,7 @@
       "status": "RUNNING",
       "pct": 100,
       "started_at": "2026-10-25T12:48:08Z",
-      "completed_at": null,
+      "completed_at": "2026-10-25T12:48:23Z",
       "metrics": {}
     },
     {
@@ -38,7 +38,7 @@
       "status": "PENDING",
       "pct": 0,
       "started_at": null,
-      "completed_at": null,
+      "completed_at": "2026-10-25T12:48:23Z",
       "metrics": {}
     },
     {
@@ -46,7 +46,7 @@
       "name": "Chart & High-CTR Thumbnail Studio",
       "status": "PENDING",
       "pct": 0,
-      "started_at": null,
+      "started_at": "2026-10-25T12:48:23Z",
       "completed_at": null,
       "metrics": {}
     },
@@ -88,6 +88,21 @@
       "ts": "12:48:11",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udd0d Harvesting live search intent... | open-seo dark-query loop \u00b7 slot 2"
+    },
+    {
+      "ts": "12:48:19",
+      "level": "INFO",
+      "msg": "[GEMINI]: \ud83d\udd0d Harvested `Crypto funding rates explained` | source: autocomplete \u00b7 cluster: crypto funding rates explained, crypto funding rates delta exchange, crypto funding rate arbitrage bot"
+    },
+    {
+      "ts": "12:48:27",
+      "level": "INFO",
+      "msg": "[PLAYWRIGHT]: \ud83d\udd04 Capturing 3 charts... | "
+    },
+    {
+      "ts": "12:48:50",
+      "level": "INFO",
+      "msg": "[PLAYWRIGHT]: \u2705 Captured (3 charts) | "
     }
   ]
 }
