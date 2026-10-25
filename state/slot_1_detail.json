@@ -85,7 +85,13 @@
       "pct": 100,
       "started_at": "2026-10-25T18:13:05Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "yt_long_id": "SHORTS_ONLY",
+        "yt_short_ids": [],
+        "oauth_slot_used": 1,
+        "article_url": "https://the-bull-print.vercel.app/article.html?slug=market-insight-1792951498",
+        "x_thread_url": "Skipped (X keys not set)"
+      }
     }
   ],
   "live_logs": [
@@ -173,6 +179,11 @@
       "ts": "18:13:06",
       "level": "INFO",
       "msg": "[VERCEL]: \ud83d\udcdd Compiling MDX & IndexNow Ping... | "
+    },
+    {
+      "ts": "18:13:09",
+      "level": "INFO",
+      "msg": "[VERCEL]: \u2705 Live & Indexed (`https://the-bull-print.vercel.app/article.html?slug=market-insight-1792951498`) | \ud83d\udc26 X Thread: Skipped (X keys not set)"
     }
   ]
 }
