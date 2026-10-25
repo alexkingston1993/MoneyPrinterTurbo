@@ -9,9 +9,9 @@
   "stage_pct": 100,
   "current_stage_index": 2,
   "current_stage_name": "Gemini Script & Dossier Synthesis",
-  "current_subtask_label": "trigram dupe-check + domain vocabulary",
+  "current_subtask_label": "Vertical 'stock_market' needs >= 2 domain-term hits but content scored only 0. Script reads like generic fluff \u2014 deep-di",
   "started_at": "2026-10-25T13:04:13Z",
-  "updated_at": "2026-10-25T13:08:57Z",
+  "updated_at": "2026-10-25T13:09:03Z",
   "eta_seconds": 0,
   "stages": [
     {
