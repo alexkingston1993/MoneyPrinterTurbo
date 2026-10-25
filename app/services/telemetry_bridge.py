@@ -270,3 +270,91 @@ class TelemetryBridge:
             })
             slots_json["updated_at"] = self._now_iso()
             self._push_file("state/slots.json", slots_json, f"telemetry summary slot {self.slot}")
+
+    def update_active_video(
+        self,
+        video_id: str,
+        title: str,
+        format_type: str,
+        vertical: str,
+        current_stage: str,
+        stage_pct: int,
+        overall_pct: int,
+        eta_sec: int,
+        compliance_status: str,
+        status: str = "IN_PROGRESS",
+    ) -> None:
+        """
+        Maintains granular per-video production progress in state/active_videos.json on telemetry-live branch.
+        """
+        active_data, _ = self._fetch_file("state/active_videos.json")
+        if not active_data or not isinstance(active_data, dict):
+            active_data = {"videos": {}, "updated_at": self._now_iso()}
+
+        videos = active_data.setdefault("videos", {})
+        now_iso = self._now_iso()
+
+        entry = videos.get(video_id, {})
+        entry.update({
+            "video_id": video_id,
+            "slot": self.slot,
+            "title": title,
+            "format": format_type,
+            "vertical": vertical.upper() if vertical else "STOCK",
+            "current_stage": current_stage,
+            "stage_pct": max(0, min(100, int(stage_pct))),
+            "completion_pct": max(0, min(100, int(overall_pct))),
+            "eta_seconds": int(eta_sec),
+            "compliance_status": compliance_status,
+            "status": status,
+            "updated_at": now_iso,
+            "started_at": entry.get("started_at", now_iso),
+        })
+        videos[video_id] = entry
+        active_data["updated_at"] = now_iso
+        self._push_file("state/active_videos.json", active_data, f"active video: {video_id} {overall_pct}%")
+
+    def complete_active_video(self, video_id: str, youtube_id: str = "") -> None:
+        """Marks video complete in active_videos.json."""
+        active_data, _ = self._fetch_file("state/active_videos.json")
+        if active_data and "videos" in active_data and video_id in active_data["videos"]:
+            entry = active_data["videos"][video_id]
+            entry["status"] = "COMPLETED"
+            entry["completion_pct"] = 100
+            entry["stage_pct"] = 100
+            entry["eta_seconds"] = 0
+            entry["current_stage"] = "Stage 7/7: Uploaded & Distributed"
+            if youtube_id:
+                entry["youtube_id"] = youtube_id
+                entry["youtube_url"] = f"https://www.youtube.com/shorts/{youtube_id}" if "SHORT" in entry.get("format", "") else f"https://www.youtube.com/watch?v={youtube_id}"
+            entry["updated_at"] = self._now_iso()
+            active_data["updated_at"] = self._now_iso()
+            self._push_file("state/active_videos.json", active_data, f"complete video: {video_id}")
+
+    def record_published_video(self, entry: Dict[str, Any]) -> None:
+        """
+        Appends video metadata to state/published_videos.json on telemetry-live
+        and locally into content/posts.json.
+        """
+        # 1. Update state/published_videos.json on telemetry-live
+        published_data, _ = self._fetch_file("state/published_videos.json")
+        if not published_data or not isinstance(published_data, list):
+            published_data = []
+
+        vid_id = entry.get("youtube_video_id") or entry.get("youtube_id")
+        filtered = [p for p in published_data if (p.get("youtube_video_id") or p.get("youtube_id")) != vid_id]
+        filtered.insert(0, entry)
+        self._push_file("state/published_videos.json", filtered[:50], f"published: {entry.get('title', '')[:30]}")
+
+        # 2. Update local content/posts.json
+        posts_json_path = BASE_DIR / "content" / "posts.json"
+        try:
+            posts = []
+            if posts_json_path.exists():
+                posts = json.loads(posts_json_path.read_text(encoding="utf-8"))
+            posts = [p for p in posts if (p.get("youtube_video_id") or p.get("youtube_id")) != vid_id]
+            posts.insert(0, entry)
+            posts_json_path.write_text(json.dumps(posts, indent=2), encoding="utf-8")
+        except Exception as e:
+            logger.warning(f"[TelemetryBridge] Failed to update local content/posts.json: {e}")
+

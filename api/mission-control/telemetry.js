@@ -123,11 +123,45 @@ module.exports = async function handler(req, res) {
   }
 
   try {
-    const [slotsSummary, liveRuns, postsArchive] = await Promise.all([
+    const [slotsSummary, liveRuns, repoPosts, activeVideosData, publishedVideosData] = await Promise.all([
       fetchGitHubContents('state/slots.json'),
       fetchLiveRuns(),
       fetchRepoPostsArchive(),
+      fetchGitHubContents('state/active_videos.json'),
+      fetchGitHubContents('state/published_videos.json'),
     ]);
+
+    // Format active_videos list (filter completed older than 30 mins)
+    let activeVideos = [];
+    if (activeVideosData && activeVideosData.videos) {
+      activeVideos = Object.values(activeVideosData.videos).filter(
+        (v) => v.status !== 'COMPLETED' || (Date.now() - new Date(v.updated_at || 0).getTime() < 30 * 60 * 1000)
+      );
+    }
+
+    // Merge published_videos with repoPosts (live published shorts appear immediately at top)
+    const combinedPosts = [];
+    const seenVids = new Set();
+
+    if (Array.isArray(publishedVideosData)) {
+      for (const p of publishedVideosData) {
+        const vid = p.youtube_video_id || p.youtube_id || p.slug;
+        if (vid && !seenVids.has(vid)) {
+          seenVids.add(vid);
+          combinedPosts.push(p);
+        }
+      }
+    }
+
+    if (Array.isArray(repoPosts)) {
+      for (const p of repoPosts) {
+        const vid = p.youtube_video_id || p.youtube_id || p.slug;
+        if (vid && !seenVids.has(vid)) {
+          seenVids.add(vid);
+          combinedPosts.push(p);
+        }
+      }
+    }
 
     // Fetch details for each slot 1..6
     const detailPromises = [1, 2, 3, 4, 5, 6].map((s) =>
@@ -155,7 +189,8 @@ module.exports = async function handler(req, res) {
       live_runs: liveRuns,
       active_run: activeRun || null,
       quota_vault: quotaVault,
-      posts_archive: postsArchive,
+      active_videos: activeVideos,
+      posts_archive: combinedPosts.slice(0, 30),
       gpu_telemetry: {
         kernel_slug: 'flipzon-gpu-video-renderer',
         status: activeRun ? 'ONLINE_ACTIVE' : 'STANDBY',

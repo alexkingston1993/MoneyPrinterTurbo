@@ -689,6 +689,28 @@
       gap: 4px;
     }
     .link-pill:hover { text-decoration: underline; }
+
+    /* Format Badges */
+    .badge-format {
+      font-family: var(--font-mono);
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      display: inline-block;
+    }
+    .badge-format-short {
+      background: rgba(168, 85, 247, 0.15);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+    .badge-format-long {
+      background: rgba(2, 132, 199, 0.15);
+      color: #38bdf8;
+      border: 1px solid rgba(2, 132, 199, 0.3);
+    }
   </style>
 </head>
 <body>
@@ -885,6 +907,30 @@
       </div>
     </section>
 
+    <!-- ACTIVE IN-PROGRESS VIDEO PRODUCTIONS -->
+    <section style="margin-bottom: 32px;">
+      <h3 class="section-title">
+        🎬 ACTIVE IN-PROGRESS VIDEO PRODUCTIONS
+        <span>LIVE RENDER & PIPELINE QUEUE</span>
+      </h3>
+      <div class="archive-card">
+        <table class="archive-table">
+          <thead>
+            <tr>
+              <th style="min-width: 240px;">Video Title & Format</th>
+              <th>Current Production Stage</th>
+              <th style="min-width: 150px;">Completion %</th>
+              <th>Live ETA</th>
+              <th>Compliance & QA Status</th>
+            </tr>
+          </thead>
+          <tbody id="active-queue-tbody">
+            <!-- Dynamic active items -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+
     <!-- 30-DAY CONTENT ARCHIVE -->
     <section>
       <h3 class="section-title">
@@ -1043,6 +1089,7 @@
       // Render 6 Slots
       renderSlots(data);
       renderInspector(data, activeSlot);
+      renderActiveQueue(data.active_videos || []);
       renderArchive(data.posts_archive || []);
     }
 
@@ -1171,21 +1218,128 @@
       }
     }
 
+    function renderActiveQueue(videos) {
+      const tbody = document.getElementById('active-queue-tbody');
+      if (!tbody) return;
+      if (!videos || videos.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align:center; color: var(--text-dim); padding: 28px; font-family: var(--font-mono); font-size: 11px;">
+              <span style="display: inline-block; padding: 4px 10px; background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); border-radius: 6px; color: var(--emerald);">
+                🟢 ALL VIDEO PIPELINES NOMINAL & STANDBY • READY FOR NEXT PRODUCTION RUN
+              </span>
+            </td>
+          </tr>`;
+        return;
+      }
+
+      tbody.innerHTML = videos.map(v => {
+        const isShort = (v.format || '').includes('SHORT');
+        const formatBadge = isShort 
+          ? `<span class="badge-format badge-format-short">9:16 SHORT</span>`
+          : `<span class="badge-format badge-format-long">16:9 LONG</span>`;
+        
+        let vertBadge = 'badge-stock';
+        const vert = (v.vertical || '').toUpperCase();
+        if (vert.includes('CRYPTO')) vertBadge = 'badge-crypto';
+        else if (vert.includes('INSUR')) vertBadge = 'badge-insurance';
+
+        const overallPct = v.completion_pct || 0;
+        const stagePct = v.stage_pct || 0;
+        const etaM = Math.floor((v.eta_seconds || 0) / 60);
+        const etaS = (v.eta_seconds || 0) % 60;
+        const etaStr = v.eta_seconds > 0 ? `~${String(etaM).padStart(2, '0')}m ${String(etaS).padStart(2, '0')}s remaining` : 'Completing...';
+
+        const complianceStatus = v.compliance_status || '🛡️ Feedback Healed & Verified';
+        const isHealed = complianceStatus.includes('Healed') || complianceStatus.includes('Verified') || complianceStatus.includes('PASS');
+
+        return `
+          <tr>
+            <td>
+              <div style="font-weight: 700; color: var(--text-main); font-size: 13px; margin-bottom: 4px;">
+                ${v.title || 'Untitled Asset'}
+              </div>
+              <div style="display: flex; gap: 6px; align-items: center;">
+                ${formatBadge}
+                <span class="slot-badge ${vertBadge}" style="font-size: 9px; padding: 2px 6px;">${vert}</span>
+              </div>
+            </td>
+            <td>
+              <div style="font-family: var(--font-mono); font-size: 11px; color: var(--amber); font-weight: 600;">
+                ${v.current_stage || 'Stage 1/7: Initializing'}
+              </div>
+              <div style="font-size: 10px; color: var(--text-dim); margin-top: 2px;">
+                Sub-step progress: ${stagePct}%
+              </div>
+            </td>
+            <td>
+              <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10px; margin-bottom: 3px;">
+                <span style="color: var(--text-dim);">PROGRESS</span>
+                <strong style="color: var(--emerald);">${overallPct}%</strong>
+              </div>
+              <div style="height: 6px; background: rgba(255,255,255,0.06); border-radius: 3px; overflow: hidden;">
+                <div style="width: ${overallPct}%; height: 100%; background: linear-gradient(90deg, #10b981, #0284c7); border-radius: 3px; transition: width 0.4s ease;"></div>
+              </div>
+            </td>
+            <td style="font-family: var(--font-mono); font-size: 11px; color: var(--cyan);">
+              ⏱️ ${etaStr}
+            </td>
+            <td>
+              <span style="display: inline-flex; align-items: center; gap: 4px; font-family: var(--font-mono); font-size: 10.5px; padding: 4px 8px; border-radius: 6px; background: ${isHealed ? 'rgba(16, 185, 129, 0.1)' : 'rgba(245, 158, 11, 0.1)'}; color: ${isHealed ? 'var(--emerald)' : 'var(--amber)'}; border: 1px solid ${isHealed ? 'rgba(16, 185, 129, 0.25)' : 'rgba(245, 158, 11, 0.25)'};">
+                ${complianceStatus}
+              </span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
     function renderArchive(posts) {
       const tbody = document.getElementById('archive-tbody');
       if (!posts || posts.length === 0) {
         tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: var(--text-dim); padding: 20px;">No archive records available.</td></tr>';
         return;
       }
-      tbody.innerHTML = posts.slice(0, 10).map(p => `
-        <tr>
-          <td style="font-family: var(--font-mono); color: var(--text-dim);">${p.date ? p.date.substring(0, 10) : '2026-10-25'}</td>
-          <td style="font-weight: 600;">${p.title || p.topic || 'Market Analysis'}</td>
-          <td><span class="slot-badge badge-stock">${p.category || 'Stock'}</span></td>
-          <td><a class="link-pill" href="${p.youtubeUrl || '#'}" target="_blank">📺 Watch Video ↗</a></td>
-          <td><a class="link-pill" href="/article.html?slug=${p.slug || ''}" target="_blank">📄 Read Dossier ↗</a></td>
-        </tr>
-      `).join('');
+      tbody.innerHTML = posts.slice(0, 25).map(p => {
+        const isShort = (p.format === 'SHORT' || (p.title || '').includes('#Shorts') || (p.youtubeUrl || '').includes('/shorts/'));
+        const formatBadge = isShort
+          ? `<span class="badge-format badge-format-short">9:16 SHORT</span>`
+          : `<span class="badge-format badge-format-long">16:9 LONG</span>`;
+
+        let vertBadge = 'badge-stock';
+        const vert = (p.vertical || p.category || 'Stock').toUpperCase();
+        if (vert.includes('CRYPTO')) vertBadge = 'badge-crypto';
+        else if (vert.includes('INSUR')) vertBadge = 'badge-insurance';
+
+        const vidId = p.youtube_video_id || p.youtube_id || '';
+        let ytLink = p.youtubeUrl || (vidId ? (isShort ? `https://www.youtube.com/shorts/${vidId}` : `https://www.youtube.com/watch?v=${vidId}`) : '#');
+        const dossierLink = p.dossier_url || (p.slug ? `/article.html?slug=${p.slug}` : '#');
+
+        return `
+          <tr>
+            <td style="font-family: var(--font-mono); color: var(--text-dim); white-space: nowrap;">
+              ${p.date ? p.date.substring(0, 10) : '2026-10-25'}
+            </td>
+            <td>
+              <div style="font-weight: 600; color: var(--text-main); margin-bottom: 2px;">
+                ${p.title || p.topic || 'Market Analysis'}
+              </div>
+              <div>${formatBadge}</div>
+            </td>
+            <td><span class="slot-badge ${vertBadge}">${p.category || p.vertical || 'Stock'}</span></td>
+            <td>
+              <a class="link-pill" href="${ytLink}" target="_blank" rel="noopener noreferrer">
+                📺 Watch Video ↗
+              </a>
+            </td>
+            <td>
+              <a class="link-pill" href="${dossierLink}" target="_blank" rel="noopener noreferrer">
+                📄 Read Dossier ↗
+              </a>
+            </td>
+          </tr>
+        `;
+      }).join('');
     }
 
     // Actions
