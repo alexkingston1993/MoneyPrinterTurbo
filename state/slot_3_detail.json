@@ -113,6 +113,11 @@
       "ts": "18:19:28",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udee1\ufe0f Auditing Compliance Gate... | SEBI regex + freshness + LLM auditor"
+    },
+    {
+      "ts": "18:19:31",
+      "level": "INFO",
+      "msg": "[GEMINI]: \u2705 Generated + Compliance-Approved (`irdai_claim_rules_2025_001`) | \ud83d\udee1\ufe0f INSURANCE"
     }
   ]
 }
