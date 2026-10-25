@@ -183,36 +183,42 @@ class ComplianceGate:
             return {"pass": True, "violation_reason": f"auditor offline ({e.__class__.__name__})"}
 
     @classmethod
-    def _regenerate_fresh_payload(cls, client, reason: str) -> Dict:
-        """Forces Gemini to produce a completely fresh, compliant master payload."""
-        from google.genai import types
+    def _regenerate_fresh_payload(cls, client, reason: str, fallback_payload: Optional[Dict] = None) -> Dict:
+        """Forces Gemini to produce a completely fresh, compliant master payload with failover protection."""
+        if not client:
+            return fallback_payload or {}
+        try:
+            from google.genai import types
 
-        system_prompt = SYSTEM_PROMPT_PATH.read_text(encoding="utf-8")
-        schema_dict = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
+            system_prompt = SYSTEM_PROMPT_PATH.read_text(encoding="utf-8") if SYSTEM_PROMPT_PATH.exists() else "Financial Educator"
+            schema_dict = json.loads(SCHEMA_PATH.read_text(encoding="utf-8")) if SCHEMA_PATH.exists() else {}
 
-        correction_prompt = f"""
-        PREVIOUS GENERATION REJECTED BY COMPLIANCE GATE.
+            correction_prompt = f"""
+            PREVIOUS GENERATION REJECTED BY COMPLIANCE GATE.
 
-        Rejection Reason: {reason}
+            Rejection Reason: {reason}
 
-        INSTRUCTIONS FOR REGENERATION:
-        - Shift to a completely fresh macro topic or order-flow angle unrelated to the rejected terms.
-        - Strictly enforce educational-only market structure analysis.
-        - Zero buy/sell calls, zero strike prices, zero target numbers, zero advisory language.
-        - Keep the SEBI educational disclaimer structure intact.
-        """
-        res = client.models.generate_content(
-            model=LIVE_GEMINI_MODEL,
-            contents=correction_prompt,
-            config=types.GenerateContentConfig(
-                system_instruction=system_prompt,
-                response_mime_type="application/json",
-                response_schema=schema_dict,
-                temperature=0.9,  # frontier temperature for genuinely fresh ideas
-                max_output_tokens=8192,
-            ),
-        )
-        return json.loads(res.text)
+            INSTRUCTIONS FOR REGENERATION:
+            - Shift to a completely fresh macro topic or order-flow angle unrelated to the rejected terms.
+            - Strictly enforce educational-only market structure analysis.
+            - Zero buy/sell calls, zero strike prices, zero target numbers, zero advisory language.
+            - Keep the SEBI educational disclaimer structure intact.
+            """
+            res = client.models.generate_content(
+                model=LIVE_GEMINI_MODEL,
+                contents=correction_prompt,
+                config=types.GenerateContentConfig(
+                    system_instruction=system_prompt,
+                    response_mime_type="application/json",
+                    response_schema=schema_dict,
+                    temperature=0.9,  # frontier temperature for genuinely fresh ideas
+                    max_output_tokens=8192,
+                ),
+            )
+            return json.loads(res.text)
+        except Exception as e:
+            logger.warning(f"[Compliance Gate] Fresh payload regeneration failed ({e}) — falling back to current payload")
+            return fallback_payload or {}
 
     @classmethod
     def audit_and_enforce(cls, payload: Dict, max_retries: int = 3) -> Dict:
@@ -237,10 +243,13 @@ class ComplianceGate:
             if regex_violations:
                 reason = f"Deterministic rejection: {regex_violations}"
                 logger.error(f"❌ [Compliance Gate] {reason}")
-                current_payload = cls._regenerate_fresh_payload(
+                fresh = cls._regenerate_fresh_payload(
                     client,
                     reason + " — Eliminate ALL specific trade calls, strike prices, or action verbs.",
+                    fallback_payload=current_payload
                 )
+                if fresh:
+                    current_payload = fresh
                 continue
 
             # 2. 30-day freshness (topic + title)
@@ -251,10 +260,13 @@ class ComplianceGate:
             if not cls._check_30_day_freshness(topic, title=title):
                 reason = f"Topic '{topic[:60]}' overlaps content published in the last 30 days."
                 logger.warning(f"⚠️ [Compliance Gate] {reason} Forcing a fresh angle.")
-                current_payload = cls._regenerate_fresh_payload(
+                fresh = cls._regenerate_fresh_payload(
                     client,
                     reason + " Generate a completely fresh market-structure angle or asset class.",
+                    fallback_payload=current_payload
                 )
+                if fresh:
+                    current_payload = fresh
                 continue
 
             # 3. LLM auditor (SEBI + YouTube)

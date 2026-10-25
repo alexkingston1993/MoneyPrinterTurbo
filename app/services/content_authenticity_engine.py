@@ -264,7 +264,7 @@ class ContentAuthenticityEngine:
         elif vertical == "insurance":
             new_title = f"Health Insurance Claim Settlement Ratio vs ICR Forensics ({date_stamp} Slot #{slot_index})"
         else:
-            new_title = f"{curr_title.split('-')[0].strip()} [Session #{slot_index} Live Audit]"
+            new_title = f"NSE Nifty Derivative Structure & Volume Cluster Analysis ({date_stamp} Slot #{slot_index})"
 
         meta["title"] = new_title
         web["seo_title"] = new_title
