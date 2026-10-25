@@ -11,6 +11,7 @@ import base64
 import json
 import os
 import time
+import random
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
@@ -103,35 +104,48 @@ class TelemetryBridge:
             return False
 
         url = f"{self.base_url}/{rel_path}"
-        sha = self.sha_cache.get(rel_path)
-        if not sha:
-            _, sha = self._fetch_file(rel_path)
 
-        raw_bytes = json.dumps(content_dict, indent=2).encode("utf-8")
-        payload = {
-            "message": message,
-            "content": base64.b64encode(raw_bytes).decode("ascii"),
-            "branch": BRANCH,
-        }
-        if sha:
-            payload["sha"] = sha
+        for attempt in range(1, 4):
+            sha = self.sha_cache.get(rel_path) if attempt == 1 else None
+            if not sha:
+                if rel_path == "state/slots.json" and attempt > 1:
+                    latest_slots, fresh_sha = self._fetch_file(rel_path)
+                    if latest_slots and "slots" in latest_slots:
+                        if "slots" in content_dict and str(self.slot) in content_dict["slots"]:
+                            latest_slots["slots"][str(self.slot)] = content_dict["slots"][str(self.slot)]
+                            latest_slots["updated_at"] = self._now_iso()
+                            content_dict = latest_slots
+                    sha = fresh_sha
+                else:
+                    _, sha = self._fetch_file(rel_path)
 
-        try:
-            r = requests.put(url, headers=self.headers, json=payload, timeout=10)
-            if r.status_code in (200, 201):
-                res_data = r.json()
-                self.sha_cache[rel_path] = res_data.get("content", {}).get("sha", "")
-                return True
-            elif r.status_code == 409:
-                _, fresh_sha = self._fetch_file(rel_path)
-                if fresh_sha:
-                    payload["sha"] = fresh_sha
-                    r2 = requests.put(url, headers=self.headers, json=payload, timeout=10)
-                    if r2.status_code in (200, 201):
-                        self.sha_cache[rel_path] = r2.json().get("content", {}).get("sha", "")
-                        return True
-        except Exception as e:
-            logger.debug(f"[TelemetryBridge] Push error for {rel_path}: {e}")
+            raw_bytes = json.dumps(content_dict, indent=2).encode("utf-8")
+            payload = {
+                "message": message,
+                "content": base64.b64encode(raw_bytes).decode("ascii"),
+                "branch": BRANCH,
+            }
+            if sha:
+                payload["sha"] = sha
+
+            try:
+                r = requests.put(url, headers=self.headers, json=payload, timeout=10)
+                if r.status_code in (200, 201):
+                    res_data = r.json()
+                    self.sha_cache[rel_path] = res_data.get("content", {}).get("sha", "")
+                    return True
+                elif r.status_code == 409:
+                    self.sha_cache.pop(rel_path, None)
+                    sleep_time = (0.4 * (2 ** (attempt - 1))) + (random.uniform(0.1, 0.3))
+                    logger.debug(f"[TelemetryBridge] 409 conflict for {rel_path}, retrying in {sleep_time:.2f}s (attempt {attempt}/3)")
+                    time.sleep(sleep_time)
+                    continue
+                else:
+                    logger.debug(f"[TelemetryBridge] Push {rel_path} error {r.status_code}: {r.text[:100]}")
+            except Exception as e:
+                logger.debug(f"[TelemetryBridge] Push exception for {rel_path}: {e}")
+                time.sleep(0.5)
+
         return False
 
     def init_slot(

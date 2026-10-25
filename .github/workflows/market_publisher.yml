@@ -47,6 +47,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: bull-print-gpu-conveyor
+  cancel-in-progress: false
+
 jobs:
   # ─────────────────────────── ARTICLE ENGINE (Market Pulse) ───────────────────────────
   run-pipeline:
