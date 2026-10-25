@@ -169,6 +169,11 @@
       "ts": "20:38:06",
       "level": "INFO",
       "msg": "[KAGGLE_GPU]: \u2601\ufe0f Pushing Dataset to Kaggle... | "
+    },
+    {
+      "ts": "20:39:13",
+      "level": "ERROR",
+      "msg": "Runner failed: Command '['kaggle', 'datasets', 'version', '-p', '/home/runner/work/MoneyPrinterTurbo/MoneyPrinterTurbo/kaggle_stage', '"
     }
   ]
 }
