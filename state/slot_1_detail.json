@@ -4,14 +4,14 @@
   "vertical": "stock_market",
   "vertical_label": "Slot #1",
   "shorts_count": 2,
-  "status": "WAITING_APPROVAL",
+  "status": "COMPLETED",
   "overall_pct": 100,
   "stage_pct": 100,
   "current_stage_index": 7,
   "current_stage_name": "Multi-Channel Distribution",
-  "current_subtask_label": "\ud83c\udfac Shorts (1): WADaY2XCdEs \u00b7 \ud83d\udc26 X Thread: Skipped (X keys not set)",
+  "current_subtask_label": "Live: https://the-bull-print.vercel.app/article.html?slug=market-insight-1793028519",
   "started_at": "2026-10-26T15:27:54Z",
-  "updated_at": "2026-10-26T15:30:50Z",
+  "updated_at": "2026-10-26T15:30:58Z",
   "eta_seconds": 0,
   "stages": [
     {
