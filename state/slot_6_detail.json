@@ -71,7 +71,14 @@
       "pct": 15,
       "started_at": "2026-10-26T17:28:01Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "voice_persona": "Prabhat (IRDAI Policy Forensics)",
+        "kaggle_kernel_status": "PUSHING_DATASET",
+        "long_render_pct": 0,
+        "short_1_render_pct": 0,
+        "short_2_render_pct": 0,
+        "gpu_elapsed_sec": 0
+      }
     },
     {
       "id": 6,
