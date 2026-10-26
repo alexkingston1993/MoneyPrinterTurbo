@@ -143,6 +143,11 @@
       "ts": "15:40:29",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udd2c Auditing Authenticity Engine... | trigram dupe-check + domain vocabulary"
+    },
+    {
+      "ts": "15:40:32",
+      "level": "INFO",
+      "msg": "[GEMINI]: \u267b\ufe0f Authenticity regen 1/2... | 30-day overlap vs 'nifty-50-order-flow-absorption-institutional--1793029034' \u2192 title overlap ['2026', 'oct', 'slot']"
     }
   ]
 }
