@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T13:57:48Z",
+  "updated_at": "2026-10-26T13:57:52Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -25,15 +25,15 @@
       "vertical": "crypto",
       "vertical_label": "Crypto #1",
       "shorts_count": 2,
-      "status": "COMPLETED",
-      "overall_pct": 100,
-      "stage_pct": 100,
-      "current_stage": "Multi-Channel Distribution",
-      "current_stage_index": 7,
+      "status": "RUNNING",
+      "overall_pct": 2,
+      "stage_pct": 10,
+      "current_stage": "SEO Topic Harvester (open-seo)",
+      "current_stage_index": 1,
       "archetype": "liquidity_hunt_autopsy",
       "topic": "Bitcoin Derivatives & Funding Rate Cascade",
       "voice_persona": "BrianNeural",
-      "run_id": "40219365617"
+      "run_id": "40333471648"
     },
     "3": {
       "slot": 3,
