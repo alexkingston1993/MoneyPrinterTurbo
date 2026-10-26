@@ -1,29 +1,29 @@
 {
-  "updated_at": "2026-10-25T21:47:33Z",
-  "channel_median_vph": 0.14,
+  "updated_at": "2026-10-26T09:39:52Z",
+  "channel_median_vph": 0.13,
   "top_outperformers": [
     {
       "video_id": "FogU8YmM9m0",
       "title": "Bitcoin Liquidation Heatmap & Funding Rate Delta (25 Oc #Shorts",
       "format": "SHORT",
       "published_at": "2026-10-25T18:16:17Z",
-      "hours_live": 3.5,
-      "view_count": 9,
+      "hours_live": 15.4,
+      "view_count": 31,
       "like_count": 1,
       "comment_count": 0,
-      "views_per_hour": 2.56,
-      "engagement_rate": 0.1111
+      "views_per_hour": 2.01,
+      "engagement_rate": 0.0323
     },
     {
       "video_id": "FfxHCzx7QhM",
       "title": "Bharti Airtel: The Telecom Monopoly Player",
       "format": "LONG",
       "published_at": "2026-10-21T17:15:16Z",
-      "hours_live": 100.5,
+      "hours_live": 112.4,
       "view_count": 207,
       "like_count": 2,
       "comment_count": 0,
-      "views_per_hour": 2.06,
+      "views_per_hour": 1.84,
       "engagement_rate": 0.0097
     },
     {
@@ -31,45 +31,45 @@
       "title": "Reliance Industries: Stock Analysis & Future Outlook 2026",
       "format": "LONG",
       "published_at": "2026-10-19T13:35:00Z",
-      "hours_live": 152.2,
+      "hours_live": 164.1,
       "view_count": 156,
       "like_count": 2,
       "comment_count": 0,
-      "views_per_hour": 1.02,
+      "views_per_hour": 0.95,
       "engagement_rate": 0.0128
     }
   ],
   "bottom_underperformers": [
     {
+      "video_id": "b02BMahomyE",
+      "title": "Don't Fall for the 24500 Trap: Why 90% of Everyday Buyers Lose Money",
+      "format": "SHORT",
+      "published_at": "2026-10-24T10:03:39Z",
+      "hours_live": 47.6,
+      "view_count": 2,
+      "like_count": 1,
+      "comment_count": 0,
+      "views_per_hour": 0.04,
+      "engagement_rate": 0.5
+    },
+    {
       "video_id": "dxhUWlm3DUQ",
       "title": "The Institutional Compounding Secret: How Smart Money Traps Retail in F&O",
       "format": "LONG",
       "published_at": "2026-10-23T08:54:42Z",
-      "hours_live": 60.9,
+      "hours_live": 72.8,
       "view_count": 3,
       "like_count": 1,
       "comment_count": 0,
-      "views_per_hour": 0.05,
+      "views_per_hour": 0.04,
       "engagement_rate": 0.3333
-    },
-    {
-      "video_id": "4GS8pOV0oBU",
-      "title": "TCS: The Tech Titan's 10-Year Outlook",
-      "format": "LONG",
-      "published_at": "2026-10-19T22:32:24Z",
-      "hours_live": 143.3,
-      "view_count": 7,
-      "like_count": 1,
-      "comment_count": 0,
-      "views_per_hour": 0.05,
-      "engagement_rate": 0.1429
     },
     {
       "video_id": "b2ryVj4JRb8",
       "title": "Infosys: The Consistent Wealth Creator",
       "format": "LONG",
       "published_at": "2026-10-19T23:11:16Z",
-      "hours_live": 142.6,
+      "hours_live": 154.5,
       "view_count": 6,
       "like_count": 1,
       "comment_count": 0,
