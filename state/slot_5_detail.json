@@ -78,5 +78,11 @@
       "metrics": {}
     }
   ],
-  "live_logs": []
+  "live_logs": [
+    {
+      "ts": "15:36:28",
+      "level": "ERROR",
+      "msg": "Runner failed: 'thumbnail_top_text'"
+    }
+  ]
 }
