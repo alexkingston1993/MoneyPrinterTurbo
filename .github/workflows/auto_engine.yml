@@ -55,7 +55,7 @@ jobs:
       - name: 📦 Install Cloud Dependencies & Headless Chromium
         run: |
           sudo apt-get update && sudo apt-get install -y ffmpeg fonts-dejavu-core
-          pip install google-genai playwright Pillow kaggle requests google-api-python-client google-auth edge-tts loguru
+          pip install --no-cache-dir google-genai playwright Pillow kaggle requests google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2 edge-tts loguru numpy matplotlib toml openai
           playwright install chromium
 
       - name: 🔑 Materialize Cloud Credentials from GitHub Secrets
