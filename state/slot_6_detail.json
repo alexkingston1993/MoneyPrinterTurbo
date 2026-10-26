@@ -1,84 +1,63 @@
 {
   "slot": 6,
-  "run_id": "40381999799",
+  "run_id": "40397506593",
   "vertical": "insurance",
   "vertical_label": "Slot #6",
   "shorts_count": 1,
-  "status": "FAILED",
-  "overall_pct": 75,
-  "stage_pct": 80,
-  "current_stage_index": 5,
-  "current_stage_name": "Kaggle T4 GPU Render Farm",
-  "current_subtask_label": "Error: Kaggle GPU Kernel failed: alexytcreative/flipzon-gpu-video-renderer ha",
-  "started_at": "2026-10-26T18:56:19Z",
-  "updated_at": "2026-10-26T19:00:55Z",
+  "status": "RUNNING",
+  "overall_pct": 2,
+  "stage_pct": 10,
+  "current_stage_index": 1,
+  "current_stage_name": "SEO Topic Harvester (open-seo)",
+  "current_subtask_label": "Harvesting search intent & clusters",
+  "started_at": "2026-10-26T20:40:17Z",
+  "updated_at": "2026-10-26T20:40:17Z",
   "eta_seconds": 0,
   "stages": [
     {
       "id": 1,
       "name": "SEO Topic Harvester (open-seo)",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-26T18:56:19Z",
-      "completed_at": "2026-10-26T18:56:25Z",
+      "status": "RUNNING",
+      "pct": 0,
+      "started_at": "2026-10-26T20:40:16Z",
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 2,
       "name": "Gemini Script & Dossier Synthesis",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-26T18:56:25Z",
-      "completed_at": "2026-10-26T18:56:32Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 3,
       "name": "Authenticity & SEBI/IRDAI Compliance Gate",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-26T18:57:34Z",
-      "completed_at": "2026-10-26T18:56:32Z",
-      "metrics": {
-        "audit_attempts": 1,
-        "compliance_status": "PASS_1",
-        "audit_notes": "Virality dopamine pacing and SEBI/IRDAI compliance healed & verified",
-        "compliance_pass": true,
-        "compliance_verdict": "PASSED_AFTER_FEEDBACK",
-        "virality_score": 92,
-        "authenticity_pass": true,
-        "trigram_similarity_pct": 8.4,
-        "regex_violations": 0
-      }
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
+      "metrics": {}
     },
     {
       "id": 4,
       "name": "Chart & High-CTR Thumbnail Studio",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-26T18:56:32Z",
-      "completed_at": "2026-10-26T18:58:39Z",
-      "metrics": {
-        "approval_status": "AUTO_APPROVED",
-        "approval_deadline_ts": 1793041101,
-        "headline": "CLAIM SETTLEMENT RATIO"
-      }
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
+      "metrics": {}
     },
     {
       "id": 5,
       "name": "Kaggle T4 GPU Render Farm",
-      "status": "RUNNING",
-      "pct": 80,
-      "started_at": "2026-10-26T18:58:39Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
       "completed_at": null,
-      "metrics": {
-        "voice_persona": "Prabhat (IRDAI Policy Forensics)",
-        "kaggle_kernel_status": "ERROR",
-        "long_render_pct": 0,
-        "short_1_render_pct": 0,
-        "short_2_render_pct": 0,
-        "gpu_elapsed_sec": 36
-      }
+      "metrics": {}
     },
     {
       "id": 6,
@@ -101,104 +80,9 @@
   ],
   "live_logs": [
     {
-      "ts": "18:56:19",
+      "ts": "20:40:17",
       "level": "INFO",
       "msg": "Slot #6 (insurance) initialized. Target: 1 Long + 1 Shorts."
-    },
-    {
-      "ts": "18:56:27",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvesting live search intent... | open-seo dark-query loop \u00b7 slot 6"
-    },
-    {
-      "ts": "18:56:31",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvested `Section 45 Insurance Act 1938 Case Studies: 3-Ye` | source: viral_horse_4.9x \u00b7 cluster: Section 45 Insurance Act 1938 Case Studies: 3-Year Non-Repudiation Threshold & Pre-Existing Disclosure Protocol"
-    },
-    {
-      "ts": "18:56:33",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \ud83d\udcca Rendering insurance infographics... | "
-    },
-    {
-      "ts": "18:56:36",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \u2705 Rendered (2 infographics) | "
-    },
-    {
-      "ts": "18:56:39",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83e\udde0 Synthesizing Dual Script + Article... | "
-    },
-    {
-      "ts": "18:57:19",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udee1\ufe0f Auditing Virality & Compliance... | Retention pacing + SEBI/IRDAI auditor"
-    },
-    {
-      "ts": "18:57:24",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udee1\ufe0f Virality & Compliance (Pass 1/3) | 100% Pass: Virality 95/100 + SEBI/IRDAI Approved"
-    },
-    {
-      "ts": "18:57:31",
-      "level": "INFO",
-      "msg": "[GEMINI]: \u2705 Generated + Healed (`health-insurance-claim-settlement-ratio-vs-ic-1793041037`) | \ud83d\udee1\ufe0f INSURANCE"
-    },
-    {
-      "ts": "18:57:41",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd2c Auditing Authenticity Engine... | trigram dupe-check + domain vocabulary"
-    },
-    {
-      "ts": "18:57:46",
-      "level": "INFO",
-      "msg": "[GEMINI]: \u267b\ufe0f Authenticity regen 1/2... | 30-day overlap vs 'bitcoin-liquidation-heatmap-funding-rate-delt-1793038317' \u2192 title overlap ['2026', 'oct', 'slot']"
-    },
-    {
-      "ts": "18:57:54",
-      "level": "INFO",
-      "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering Pillow Graphics... | "
-    },
-    {
-      "ts": "18:58:29",
-      "level": "INFO",
-      "msg": "[THUMBNAIL]: \u26a1 Auto-Approved (`CLAIM SETTLEMENT RATIO`) | "
-    },
-    {
-      "ts": "18:58:35",
-      "level": "INFO",
-      "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering 1 9:16 Shelf Thumbnails... | "
-    },
-    {
-      "ts": "18:58:41",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\ude80 Dispatching to Kaggle Dual-T4 GPU... | "
-    },
-    {
-      "ts": "18:58:46",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \u2601\ufe0f Pushing Dataset to Kaggle... | "
-    },
-    {
-      "ts": "19:00:03",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Waking Dual-T4 GPU Kernel... | "
-    },
-    {
-      "ts": "19:00:14",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \u23f3 Queued on Kaggle (0m 0s) | Waiting for free T4 node..."
-    },
-    {
-      "ts": "19:00:50",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \u274c Kaggle Error \u2014 Fallback Engaged | "
-    },
-    {
-      "ts": "19:00:57",
-      "level": "ERROR",
-      "msg": "Runner failed: Kaggle GPU Kernel failed: alexytcreative/flipzon-gpu-video-renderer has status \"kernelworkerstatus.error\""
     }
   ]
 }
