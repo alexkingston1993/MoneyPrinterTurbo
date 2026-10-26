@@ -1,35 +1,35 @@
 {
   "slot": 5,
-  "run_id": "40219365617",
+  "run_id": "40333471648",
   "vertical": "crypto",
   "vertical_label": "Slot #5",
   "shorts_count": 2,
-  "status": "IDLE",
-  "overall_pct": 0,
-  "stage_pct": 0,
-  "current_stage_index": 2,
-  "current_stage_name": "Gemini Script & Dossier Synthesis",
-  "current_subtask_label": "Standby \u00b7 Deterministic Compliance Armed",
-  "started_at": "2026-10-25T18:25:10Z",
-  "updated_at": "2026-10-25T18:26:20Z",
+  "status": "RUNNING",
+  "overall_pct": 2,
+  "stage_pct": 10,
+  "current_stage_index": 1,
+  "current_stage_name": "SEO Topic Harvester (open-seo)",
+  "current_subtask_label": "Harvesting search intent & clusters",
+  "started_at": "2026-10-26T14:11:23Z",
+  "updated_at": "2026-10-26T14:11:23Z",
   "eta_seconds": 0,
   "stages": [
     {
       "id": 1,
       "name": "SEO Topic Harvester (open-seo)",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-25T18:25:09Z",
-      "completed_at": "2026-10-25T18:25:14Z",
+      "status": "RUNNING",
+      "pct": 0,
+      "started_at": "2026-10-26T14:11:23Z",
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 2,
       "name": "Gemini Script & Dossier Synthesis",
-      "status": "RUNNING",
-      "pct": 100,
-      "started_at": "2026-10-25T18:25:14Z",
-      "completed_at": "2026-10-25T18:25:17Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
       "metrics": {}
     },
     {
@@ -38,7 +38,7 @@
       "status": "PENDING",
       "pct": 0,
       "started_at": null,
-      "completed_at": "2026-10-25T18:25:17Z",
+      "completed_at": null,
       "metrics": {}
     },
     {
@@ -46,7 +46,7 @@
       "name": "Chart & High-CTR Thumbnail Studio",
       "status": "PENDING",
       "pct": 0,
-      "started_at": "2026-10-25T18:25:17Z",
+      "started_at": null,
       "completed_at": null,
       "metrics": {}
     },
@@ -80,39 +80,9 @@
   ],
   "live_logs": [
     {
-      "ts": "18:25:10",
+      "ts": "14:11:23",
       "level": "INFO",
       "msg": "Slot #5 (crypto) initialized. Target: 1 Long + 2 Shorts."
-    },
-    {
-      "ts": "18:25:14",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvesting live search intent... | open-seo dark-query loop \u00b7 slot 5"
-    },
-    {
-      "ts": "18:25:17",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvested `Usdt dominance today` | source: autocomplete \u00b7 cluster: usdt dominance today, usdt dominance chart crypto, usdt dominance coinmarketcap"
-    },
-    {
-      "ts": "18:25:19",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \ud83d\udd04 Capturing 3 charts... | "
-    },
-    {
-      "ts": "18:25:35",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \u2705 Captured (3 charts) | "
-    },
-    {
-      "ts": "18:25:39",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83e\udde0 Synthesizing Dual Script + Article... | "
-    },
-    {
-      "ts": "18:26:19",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udee1\ufe0f Auditing Compliance Gate... | SEBI regex + freshness + LLM auditor"
     }
   ]
 }
