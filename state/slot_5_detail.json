@@ -93,6 +93,11 @@
       "ts": "14:11:39",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udd0d Harvested `Usdt dominance today` | source: autocomplete \u00b7 cluster: usdt dominance today, usdt dominance chart crypto, usdt dominance coinmarketcap"
+    },
+    {
+      "ts": "14:11:46",
+      "level": "INFO",
+      "msg": "[PLAYWRIGHT]: \ud83d\udd04 Capturing 3 charts... | "
     }
   ]
 }
