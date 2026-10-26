@@ -1,17 +1,17 @@
 {
   "slot": 5,
   "run_id": "40346945550",
-  "vertical": "stock_market",
+  "vertical": "crypto",
   "vertical_label": "Slot #5",
   "shorts_count": 2,
-  "status": "FAILED",
-  "overall_pct": 0,
-  "stage_pct": 0,
+  "status": "RUNNING",
+  "overall_pct": 2,
+  "stage_pct": 10,
   "current_stage_index": 1,
-  "current_stage_name": "SEO Topic Harvester",
-  "current_subtask_label": "Error: 'thumbnail_top_text'",
-  "started_at": "2026-10-26T15:36:26Z",
-  "updated_at": "2026-10-26T15:36:26Z",
+  "current_stage_name": "SEO Topic Harvester (open-seo)",
+  "current_subtask_label": "Harvesting search intent & clusters",
+  "started_at": "2026-10-26T15:39:19Z",
+  "updated_at": "2026-10-26T15:39:19Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -83,6 +83,11 @@
       "ts": "15:36:28",
       "level": "ERROR",
       "msg": "Runner failed: 'thumbnail_top_text'"
+    },
+    {
+      "ts": "15:39:19",
+      "level": "INFO",
+      "msg": "Slot #5 (crypto) initialized. Target: 1 Long + 2 Shorts."
     }
   ]
 }
