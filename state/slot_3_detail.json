@@ -58,7 +58,11 @@
       "pct": 60,
       "started_at": "2026-10-26T14:03:29Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "approval_status": "WAITING_APPROVAL",
+        "approval_deadline_ts": 1793023506,
+        "headline": "CLAIM SETTLEMENT RATIO"
+      }
     },
     {
       "id": 5,
