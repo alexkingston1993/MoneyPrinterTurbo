@@ -1,196 +1,88 @@
 {
   "slot": 3,
-  "run_id": "40333471648",
+  "run_id": "40346945550",
   "vertical": "insurance",
   "vertical_label": "Slot #3",
   "shorts_count": 2,
-  "status": "COMPLETED",
-  "overall_pct": 100,
-  "stage_pct": 100,
-  "current_stage_index": 7,
-  "current_stage_name": "Multi-Channel Distribution",
-  "current_subtask_label": "Live: https://the-bull-print.vercel.app/article.html?slug=health-insurance-claim-settlement-ratio-vs-ic-1793023432",
-  "started_at": "2026-10-26T14:03:08Z",
-  "updated_at": "2026-10-26T14:06:40Z",
+  "status": "RUNNING",
+  "overall_pct": 2,
+  "stage_pct": 10,
+  "current_stage_index": 1,
+  "current_stage_name": "SEO Topic Harvester (open-seo)",
+  "current_subtask_label": "Harvesting search intent & clusters",
+  "started_at": "2026-10-26T15:34:17Z",
+  "updated_at": "2026-10-26T15:34:17Z",
   "eta_seconds": 0,
   "stages": [
     {
       "id": 1,
       "name": "SEO Topic Harvester (open-seo)",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-26T14:03:07Z",
-      "completed_at": "2026-10-26T14:03:16Z",
+      "status": "RUNNING",
+      "pct": 0,
+      "started_at": "2026-10-26T15:34:17Z",
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 2,
       "name": "Gemini Script & Dossier Synthesis",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-26T14:03:16Z",
-      "completed_at": "2026-10-26T14:03:29Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 3,
       "name": "Authenticity & SEBI/IRDAI Compliance Gate",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-26T14:04:14Z",
-      "completed_at": "2026-10-26T14:03:29Z",
-      "metrics": {
-        "audit_attempts": 1,
-        "compliance_status": "PASS_1",
-        "audit_notes": "Virality dopamine pacing and SEBI/IRDAI compliance healed & verified",
-        "compliance_pass": true,
-        "compliance_verdict": "PASSED_AFTER_FEEDBACK",
-        "virality_score": 92,
-        "authenticity_pass": true,
-        "trigram_similarity_pct": 8.4,
-        "regex_violations": 0
-      }
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
+      "metrics": {}
     },
     {
       "id": 4,
       "name": "Chart & High-CTR Thumbnail Studio",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-26T14:03:29Z",
-      "completed_at": "2026-10-26T14:05:36Z",
-      "metrics": {
-        "approval_status": "AUTO_APPROVED",
-        "approval_deadline_ts": 1793023506,
-        "headline": "CLAIM SETTLEMENT RATIO"
-      }
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
+      "metrics": {}
     },
     {
       "id": 5,
       "name": "Kaggle T4 GPU Render Farm",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-26T14:05:36Z",
-      "completed_at": "2026-10-26T14:06:26Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 6,
       "name": "OpenMontage Post-Render QA Gate",
-      "status": "COMPLETED",
-      "pct": 100,
+      "status": "PENDING",
+      "pct": 0,
       "started_at": null,
-      "completed_at": "2026-10-26T14:06:26Z",
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 7,
       "name": "Multi-Channel Distribution",
-      "status": "RUNNING",
-      "pct": 100,
-      "started_at": "2026-10-26T14:06:26Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
       "completed_at": null,
-      "metrics": {
-        "yt_long_id": "QUOTA_EXHAUSTED_ALL_SLOTS",
-        "yt_short_ids": [
-          "QUOTA_EXHAUSTED_ALL_SLOTS",
-          "QUOTA_EXHAUSTED_ALL_SLOTS"
-        ],
-        "oauth_slot_used": 1,
-        "article_url": "https://the-bull-print.vercel.app/article.html?slug=health-insurance-claim-settlement-ratio-vs-ic-1793023432",
-        "x_thread_url": "Skipped (X keys not set)"
-      }
+      "metrics": {}
     }
   ],
   "live_logs": [
     {
-      "ts": "14:03:08",
+      "ts": "15:34:17",
       "level": "INFO",
       "msg": "Slot #3 (insurance) initialized. Target: 1 Long + 2 Shorts."
-    },
-    {
-      "ts": "14:03:19",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvesting live search intent... | open-seo dark-query loop \u00b7 slot 3"
-    },
-    {
-      "ts": "14:03:26",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvested `IRDAI Proportionate Deduction Math: How Daily Ro` | source: viral_horse_7.5x \u00b7 cluster: IRDAI Proportionate Deduction Math: How Daily Room Caps Slash Surgery & Doctor ICU Claims"
-    },
-    {
-      "ts": "14:03:33",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \ud83d\udcca Rendering insurance infographics... | "
-    },
-    {
-      "ts": "14:03:40",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \u2705 Rendered (2 infographics) | "
-    },
-    {
-      "ts": "14:03:47",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83e\udde0 Synthesizing Dual Script + Article... | "
-    },
-    {
-      "ts": "14:03:55",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udee1\ufe0f Auditing Virality & Compliance... | Retention pacing + SEBI/IRDAI auditor"
-    },
-    {
-      "ts": "14:04:01",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udee1\ufe0f Virality & Compliance (Pass 1/3) | 100% Pass: Virality 95/100 + SEBI/IRDAI Approved"
-    },
-    {
-      "ts": "14:04:11",
-      "level": "INFO",
-      "msg": "[GEMINI]: \u2705 Generated + Healed (`health-insurance-claim-settlement-ratio-vs-ic-1793023432`) | \ud83d\udee1\ufe0f INSURANCE"
-    },
-    {
-      "ts": "14:04:23",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd2c Auditing Authenticity Engine... | trigram dupe-check + domain vocabulary"
-    },
-    {
-      "ts": "14:04:30",
-      "level": "INFO",
-      "msg": "[GEMINI]: \u267b\ufe0f Authenticity regen 1/2... | 30-day overlap vs 'bitcoin-liquidation-heatmap-funding-rate-delt-1793023192' \u2192 title overlap ['2026', 'oct', 'slot']"
-    },
-    {
-      "ts": "14:04:37",
-      "level": "INFO",
-      "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering Pillow Graphics... | "
-    },
-    {
-      "ts": "14:05:21",
-      "level": "INFO",
-      "msg": "[THUMBNAIL]: \u26a1 Auto-Approved (`CLAIM SETTLEMENT RATIO`) | "
-    },
-    {
-      "ts": "14:05:29",
-      "level": "INFO",
-      "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering 2 9:16 Shelf Thumbnails... | "
-    },
-    {
-      "ts": "14:05:39",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \u26a1 GHA Local Engine: Rendering 2 Shorts in sequence... | "
-    },
-    {
-      "ts": "14:06:18",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \u2705 Rendered & Uploaded (2 Shorts via GHA) | "
-    },
-    {
-      "ts": "14:06:29",
-      "level": "INFO",
-      "msg": "[VERCEL]: \ud83d\udcdd Compiling MDX & IndexNow Ping... | "
-    },
-    {
-      "ts": "14:06:34",
-      "level": "INFO",
-      "msg": "[VERCEL]: \u2705 Live & Indexed (`https://the-bull-print.vercel.app/article.html?slug=health-insurance-claim-settlement-ratio-vs-ic-1793023432`) | \ud83c\udfac Shorts (2): QUOTA_EXHAUSTED_ALL_SLOTS \u00b7 QUOTA_EXHAUSTED_ALL_SLOTS \u00b7 \ud83d\udc26 X Thread: Skipped (X keys not set)"
     }
   ]
 }
