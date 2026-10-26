@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T15:40:43Z",
+  "updated_at": "2026-10-26T15:40:45Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -73,7 +73,7 @@
       "vertical": "crypto",
       "vertical_label": "Crypto #2",
       "shorts_count": 1,
-      "status": "RUNNING",
+      "status": "WAITING_APPROVAL",
       "overall_pct": 50,
       "stage_pct": 60,
       "current_stage": "Chart & High-CTR Thumbnail Studio",
