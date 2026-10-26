@@ -73,7 +73,7 @@
       "completed_at": null,
       "metrics": {
         "voice_persona": "Andrew (Institutional Desk)",
-        "kaggle_kernel_status": "STARTING",
+        "kaggle_kernel_status": "ERROR",
         "long_render_pct": 0,
         "short_1_render_pct": 0,
         "short_2_render_pct": 0,
