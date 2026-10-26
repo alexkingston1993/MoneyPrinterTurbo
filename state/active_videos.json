@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T17:21:07Z",
+  "updated_at": "2026-10-26T17:28:00Z",
   "videos": {
     "slot_1_long": {
       "slot": 1,
@@ -37,13 +37,13 @@
       "title": "[LONG-FORM] Section 45 Insurance Act 1938 Case Studies: 3-Year Non-Repudiation Threshold & Pre-Existing Disclosure Protocol",
       "format": "16:9 LONG",
       "vertical": "INSURANCE",
-      "current_stage": "Stage 4/7: Chart & High-CTR Thumbnail Studio",
-      "stage_pct": 20,
-      "completion_pct": 40,
-      "eta_seconds": 360,
+      "current_stage": "Stage 5/7: Kaggle T4 GPU \u2014 NVENC Encoding",
+      "stage_pct": 50,
+      "completion_pct": 65,
+      "eta_seconds": 220,
       "compliance_status": "\ud83d\udee1\ufe0f Feedback Healed & Verified",
       "status": "IN_PROGRESS",
-      "updated_at": "2026-10-26T17:21:07Z",
+      "updated_at": "2026-10-26T17:28:00Z",
       "started_at": "2026-10-26T17:21:07Z"
     }
   }
