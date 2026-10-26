@@ -1,196 +1,88 @@
 {
   "slot": 3,
-  "run_id": "40219365617",
+  "run_id": "40333471648",
   "vertical": "insurance",
   "vertical_label": "Slot #3",
   "shorts_count": 2,
-  "status": "COMPLETED",
-  "overall_pct": 100,
-  "stage_pct": 100,
-  "current_stage_index": 7,
-  "current_stage_name": "Multi-Channel Distribution",
-  "current_subtask_label": "Live: https://the-bull-print.vercel.app/article.html?slug=irdai_claim_rules_2025_001",
-  "started_at": "2026-10-25T18:16:12Z",
-  "updated_at": "2026-10-25T18:21:22Z",
+  "status": "RUNNING",
+  "overall_pct": 2,
+  "stage_pct": 10,
+  "current_stage_index": 1,
+  "current_stage_name": "SEO Topic Harvester (open-seo)",
+  "current_subtask_label": "Harvesting search intent & clusters",
+  "started_at": "2026-10-26T14:03:08Z",
+  "updated_at": "2026-10-26T14:03:08Z",
   "eta_seconds": 0,
   "stages": [
     {
       "id": 1,
       "name": "SEO Topic Harvester (open-seo)",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-25T18:16:11Z",
-      "completed_at": "2026-10-25T18:16:16Z",
+      "status": "RUNNING",
+      "pct": 0,
+      "started_at": "2026-10-26T14:03:07Z",
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 2,
       "name": "Gemini Script & Dossier Synthesis",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-25T18:16:16Z",
-      "completed_at": "2026-10-25T18:16:19Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 3,
       "name": "Authenticity & SEBI/IRDAI Compliance Gate",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-25T18:19:33Z",
-      "completed_at": "2026-10-25T18:16:19Z",
-      "metrics": {
-        "compliance_pass": true,
-        "authenticity_pass": true,
-        "trigram_similarity_pct": 8.4,
-        "regex_violations": 0,
-        "audit_notes": "Compliance and domain depth verified"
-      }
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
+      "metrics": {}
     },
     {
       "id": 4,
       "name": "Chart & High-CTR Thumbnail Studio",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-25T18:16:19Z",
-      "completed_at": "2026-10-25T18:20:07Z",
-      "metrics": {
-        "approval_status": "APPROVED_TELEGRAM",
-        "approval_deadline_ts": 1792952409,
-        "headline": "IRDAI CLAIM RULES: NEW"
-      }
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
+      "metrics": {}
     },
     {
       "id": 5,
       "name": "Kaggle T4 GPU Render Farm",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-25T18:20:07Z",
-      "completed_at": "2026-10-25T18:21:16Z",
-      "metrics": {
-        "voice_persona": "Prabhat (IRDAI Policy Forensics)",
-        "kaggle_kernel_status": "PUSHING_DATASET",
-        "long_render_pct": 0,
-        "short_1_render_pct": 0,
-        "short_2_render_pct": 0,
-        "gpu_elapsed_sec": 0
-      }
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
+      "metrics": {}
     },
     {
       "id": 6,
       "name": "OpenMontage Post-Render QA Gate",
-      "status": "COMPLETED",
-      "pct": 100,
+      "status": "PENDING",
+      "pct": 0,
       "started_at": null,
-      "completed_at": "2026-10-25T18:21:16Z",
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 7,
       "name": "Multi-Channel Distribution",
-      "status": "RUNNING",
-      "pct": 100,
-      "started_at": "2026-10-25T18:21:16Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
       "completed_at": null,
-      "metrics": {
-        "yt_long_id": "SHORTS_ONLY",
-        "yt_short_ids": [],
-        "oauth_slot_used": 1,
-        "article_url": "https://the-bull-print.vercel.app/article.html?slug=irdai_claim_rules_2025_001",
-        "x_thread_url": "Skipped (X keys not set)"
-      }
+      "metrics": {}
     }
   ],
   "live_logs": [
     {
-      "ts": "18:16:12",
+      "ts": "14:03:08",
       "level": "INFO",
       "msg": "Slot #3 (insurance) initialized. Target: 1 Long + 2 Shorts."
-    },
-    {
-      "ts": "18:16:16",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvesting live search intent... | open-seo dark-query loop \u00b7 slot 3"
-    },
-    {
-      "ts": "18:16:18",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvested `Irdai new rules for claim settlement` | source: autocomplete \u00b7 cluster: irdai new rules for claim settlement, irdai new rules for life insurance, irdai new rules for policy surrender"
-    },
-    {
-      "ts": "18:16:21",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \ud83d\udcca Rendering insurance infographics... | "
-    },
-    {
-      "ts": "18:16:26",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \u2705 Rendered (2 infographics) | "
-    },
-    {
-      "ts": "18:16:28",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83e\udde0 Synthesizing Dual Script + Article... | "
-    },
-    {
-      "ts": "18:19:28",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udee1\ufe0f Auditing Compliance Gate... | SEBI regex + freshness + LLM auditor"
-    },
-    {
-      "ts": "18:19:31",
-      "level": "INFO",
-      "msg": "[GEMINI]: \u2705 Generated + Compliance-Approved (`irdai_claim_rules_2025_001`) | \ud83d\udee1\ufe0f INSURANCE"
-    },
-    {
-      "ts": "18:19:38",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd2c Auditing Authenticity Engine... | trigram dupe-check + domain vocabulary"
-    },
-    {
-      "ts": "18:19:40",
-      "level": "INFO",
-      "msg": "[GEMINI]: \u2705 Original (contract_clause_forensic_audit) | \ud83d\udee1\ufe0f INSURANCE \u00b7 30 hits (claim settlement ratio, csr, incurred claim ratio, icr, solvency, room "
-    },
-    {
-      "ts": "18:19:44",
-      "level": "INFO",
-      "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering Pillow Graphics... | "
-    },
-    {
-      "ts": "18:20:03",
-      "level": "INFO",
-      "msg": "[THUMBNAIL]: \u2705 Approved by Alex (`IRDAI CLAIM RULES: NEW`) | "
-    },
-    {
-      "ts": "18:20:06",
-      "level": "INFO",
-      "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering 2 9:16 Shelf Thumbnails... | "
-    },
-    {
-      "ts": "18:20:09",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \u26a1 Parallel Dual Render: Short #1 (GHA) + Short #2 (Kaggle GPU)... | "
-    },
-    {
-      "ts": "18:20:12",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \u2601\ufe0f Pushing Dataset to Kaggle... | "
-    },
-    {
-      "ts": "18:21:16",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \u2705 Rendered & Uploaded (0 Shorts) | "
-    },
-    {
-      "ts": "18:21:18",
-      "level": "INFO",
-      "msg": "[VERCEL]: \ud83d\udcdd Compiling MDX & IndexNow Ping... | "
-    },
-    {
-      "ts": "18:21:20",
-      "level": "INFO",
-      "msg": "[VERCEL]: \u2705 Live & Indexed (`https://the-bull-print.vercel.app/article.html?slug=irdai_claim_rules_2025_001`) | \ud83d\udc26 X Thread: Skipped (X keys not set)"
     }
   ]
 }
