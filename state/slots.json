@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T15:42:01Z",
+  "updated_at": "2026-10-26T15:42:07Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -74,10 +74,10 @@
       "vertical_label": "Crypto #2",
       "shorts_count": 1,
       "status": "WAITING_APPROVAL",
-      "overall_pct": 75,
-      "stage_pct": 80,
-      "current_stage": "Kaggle T4 GPU Render Farm",
-      "current_stage_index": 5,
+      "overall_pct": 100,
+      "stage_pct": 100,
+      "current_stage": "Multi-Channel Distribution",
+      "current_stage_index": 7,
       "archetype": "macro_regime_shift",
       "topic": "Global Stablecoin Velocity & Central Bank Liquidity",
       "voice_persona": "BrianNeural",
