@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T15:36:38Z",
+  "updated_at": "2026-10-26T15:39:24Z",
   "channel_median_vph": 0.09,
   "top_outperformers": [
     {
@@ -10,16 +10,16 @@
       "hours_live": 0.5,
       "view_count": 2,
       "like_count": 1,
-      "comment_count": 6,
+      "comment_count": 8,
       "views_per_hour": 4.0,
-      "engagement_rate": 9.5
+      "engagement_rate": 12.5
     },
     {
       "video_id": "FogU8YmM9m0",
       "title": "Bitcoin Liquidation Heatmap & Funding Rate Delta (25 Oc #Shorts",
       "format": "SHORT",
       "published_at": "2026-10-25T18:16:17Z",
-      "hours_live": 21.3,
+      "hours_live": 21.4,
       "view_count": 38,
       "like_count": 1,
       "comment_count": 0,
