@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T09:52:19Z",
+  "updated_at": "2026-10-26T15:30:41Z",
   "videos": {
     "slot_1_long": {
       "slot": 1,
@@ -21,12 +21,15 @@
       "format": "9:16 SHORT",
       "vertical": "STOCK_MARKET",
       "title": "The 3:18 PM Expiry Day Trap Exposed #shorts",
-      "current_stage": "Stage 5/7: Fast-Paced Audio & GPU Render",
-      "stage_pct": 70,
-      "completion_pct": 65,
-      "eta_seconds": 120,
+      "current_stage": "Stage 7/7: Uploaded & Distributed",
+      "stage_pct": 100,
+      "completion_pct": 100,
+      "eta_seconds": 0,
       "compliance_status": "\ud83d\udee1\ufe0f Feedback Healed & Verified",
-      "updated_at": "2026-10-26T01:55:00Z"
+      "updated_at": "2026-10-26T15:30:41Z",
+      "status": "COMPLETED",
+      "youtube_id": "WADaY2XCdEs",
+      "youtube_url": "https://www.youtube.com/shorts/WADaY2XCdEs"
     }
   }
 }
