@@ -194,6 +194,11 @@
       "ts": "19:00:50",
       "level": "INFO",
       "msg": "[KAGGLE_GPU]: \u274c Kaggle Error \u2014 Fallback Engaged | "
+    },
+    {
+      "ts": "19:00:57",
+      "level": "ERROR",
+      "msg": "Runner failed: Kaggle GPU Kernel failed: alexytcreative/flipzon-gpu-video-renderer has status \"kernelworkerstatus.error\""
     }
   ]
 }
