@@ -177,6 +177,11 @@
       "ts": "14:11:07",
       "level": "INFO",
       "msg": "[VERCEL]: \ud83d\udcdd Compiling MDX & IndexNow Ping... | "
+    },
+    {
+      "ts": "14:11:14",
+      "level": "INFO",
+      "msg": "[VERCEL]: \u2705 Live & Indexed (`https://the-bull-print.vercel.app/article.html?slug=nifty-50-order-flow-absorption-institutional--1793023688`) | \ud83d\udc26 X Thread: Skipped (X keys not set)"
     }
   ]
 }
