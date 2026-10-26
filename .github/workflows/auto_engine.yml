@@ -25,6 +25,10 @@ on:
         description: 'Daily slot 1-6 (sets vertical + shorts + topic when left to registry)'
         required: false
         default: ''
+      batch_longform:
+        description: 'Sequentially produce all 6 Long-Format Masterclass videos on Kaggle Dual-T4 GPU'
+        required: false
+        default: 'false'
 
   # 3. External Webhook Trigger (From Telegram / Vercel / n8n / RSS)
   repository_dispatch:
@@ -35,7 +39,7 @@ permissions:
 jobs:
   build_and_publish:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 240
 
     steps:
       - name: 📥 Checkout Website & Engine Repo
@@ -124,7 +128,12 @@ jobs:
           YT_CLIENT_SECRET_4: ${{ secrets.YT_CLIENT_SECRET_4 }}
           YT_REFRESH_TOKEN_4: ${{ secrets.YT_REFRESH_TOKEN_4 }}
         run: |
-          python cloud_orchestrator.py
+          if [ "${{ github.event.inputs.batch_longform }}" = "true" ]; then
+            echo "🚀 Launching Master 6-Slot Long-Format Sequential Run on Kaggle Dual-T4 GPU..."
+            python run_batch_longform.py
+          else
+            python cloud_orchestrator.py
+          fi
 
       - name: 💾 Commit & Push Generated Articles, Thumbnails and Posts Manifest
         run: |
