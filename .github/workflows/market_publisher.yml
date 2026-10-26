@@ -305,11 +305,19 @@ jobs:
         run: |
           git config --global user.name "The Bull Print Autonomous Bot"
           git config --global user.email "bot@thebullprint.media"
+          mkdir -p output/thumbnails content assets
           git add -f content/ assets/ output/thumbnails/ 2>/dev/null || git add content/ assets/
           if git diff --staged --quiet; then
             echo "No new assets to commit."
           else
-            git commit -m "Auto-publish new educational dossier & marketing assets [skip ci]"
-            git push origin HEAD:${{ github.ref }}
-            echo "✓ Changes committed and pushed to GitHub. Vercel deployment triggered automatically."
+            git commit -m "Auto-publish new educational dossier & marketing assets [skip ci]" || true
+            for retry in 1 2 3; do
+              git fetch origin main
+              git rebase -X ours origin/main || { git rebase --abort; git merge -X ours origin/main -m "merge: resolve content sync" || true; }
+              if git push origin HEAD:main; then
+                echo "✓ Changes committed and pushed to GitHub. Vercel deployment triggered automatically."
+                break
+              fi
+              sleep 5
+            done
           fi
