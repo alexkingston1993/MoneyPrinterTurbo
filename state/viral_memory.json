@@ -1,10 +1,10 @@
 {
-  "updated_at": "2026-10-26T14:03:15Z",
+  "updated_at": "2026-10-26T14:06:50Z",
   "channel_median_vph": 62.0,
   "top_outperformers": [
     {
       "video_id": "QUOTA_EXHAUSTED_ALL_SLOTS",
-      "title": "Bitcoin Liquidation Heatmap & Funding Rate Delta (26 Oct 2026 Slot #2)",
+      "title": "Health Insurance Claim Settlement Ratio vs ICR Forensics (26 Oct 2026 Slot #3)",
       "format": "LONG",
       "published_at": "2026-10-24",
       "hours_live": 24.0,
@@ -16,9 +16,9 @@
     },
     {
       "video_id": "QUOTA_EXHAUSTED_ALL_SLOTS",
-      "title": "Section 115BBH & 194S Forensic Audit: Reconciling AIS / TIS Data with On-Chain Ledger Swaps (Short #2) #Shorts",
+      "title": "IRDAI Proportionate Deduction Math: How Daily Room Caps Slash Surgery & Doctor ICU Claims (Short #2) #Shorts",
       "format": "SHORT",
-      "published_at": "2026-10-26 14:02:43",
+      "published_at": "2026-10-26 14:06:22",
       "hours_live": 30.0,
       "view_count": 2155,
       "like_count": 152,
