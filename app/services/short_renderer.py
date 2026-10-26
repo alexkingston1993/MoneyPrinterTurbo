@@ -22,7 +22,7 @@ WORK_DIR.mkdir(parents=True, exist_ok=True)
 
 VOICE_PERSONAS = {
     "stock_market": {
-        "voice": "en-US-AndrewMultilingualNeural",
+        "voice": "en-US-AndrewNeural",
         "rate": "+4%",
         "pitch": "-2Hz",
         "desc": "Quantitative Institutional Desk Anchor",
@@ -82,13 +82,34 @@ def _hud_filters(duration: float, vertical: str, fontfile: str = "", w: int = 10
 
 async def make_short_tts_and_subtitles(text: str, mp3_path: Path, ass_path: Path, persona: dict) -> float:
     import edge_tts
-    comm = edge_tts.Communicate(
-        text=text,
-        voice=persona.get("voice", "en-US-AndrewNeural"),
-        rate=persona.get("rate", "+3%"),
-        pitch=persona.get("pitch", "+0Hz")
-    )
-    await comm.save(str(mp3_path))
+    candidate_voices = [
+        persona.get("voice", "en-US-AndrewNeural"),
+        "en-US-AndrewNeural",
+        "en-US-ChristopherNeural",
+        "en-US-GuyNeural",
+        "en-US-BrianMultilingualNeural",
+    ]
+    seen = set()
+    candidate_voices = [v for v in candidate_voices if not (v in seen or seen.add(v))]
+
+    last_exc = None
+    for voice in candidate_voices:
+        try:
+            comm = edge_tts.Communicate(
+                text=text,
+                voice=voice,
+                rate=persona.get("rate", "+3%"),
+                pitch=persona.get("pitch", "+0Hz")
+            )
+            await comm.save(str(mp3_path))
+            if mp3_path.exists() and mp3_path.stat().st_size > 1024:
+                break
+        except Exception as e:
+            last_exc = e
+            continue
+    else:
+        if last_exc:
+            raise last_exc
 
     res = subprocess.run(
         ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(mp3_path)],
