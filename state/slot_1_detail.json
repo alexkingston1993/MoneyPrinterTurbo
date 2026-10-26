@@ -88,6 +88,11 @@
       "ts": "09:39:56",
       "level": "INFO",
       "msg": "[PLAYWRIGHT]: \ud83d\udd04 Capturing 3 charts... | "
+    },
+    {
+      "ts": "09:40:09",
+      "level": "INFO",
+      "msg": "[PLAYWRIGHT]: \u2705 Captured (3 charts) | "
     }
   ]
 }
