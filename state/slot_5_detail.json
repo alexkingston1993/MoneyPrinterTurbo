@@ -182,6 +182,11 @@
       "ts": "15:42:08",
       "level": "INFO",
       "msg": "[VERCEL]: \ud83d\udcdd Compiling MDX & IndexNow Ping... | "
+    },
+    {
+      "ts": "15:42:13",
+      "level": "INFO",
+      "msg": "[VERCEL]: \u2705 Live & Indexed (`https://the-bull-print.vercel.app/article.html?slug=bitcoin-liquidation-heatmap-funding-rate-delt-1793029206`) | \ud83c\udfac Shorts (2): 6gumQ4SEhXE \u00b7 OtQ5ttfyt3U \u00b7 \ud83d\udc26 X Thread: Skipped (X keys not set)"
     }
   ]
 }
