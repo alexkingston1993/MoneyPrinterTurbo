@@ -162,6 +162,11 @@
       "ts": "15:30:03",
       "level": "INFO",
       "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering 2 9:16 Shelf Thumbnails... | "
+    },
+    {
+      "ts": "15:30:06",
+      "level": "INFO",
+      "msg": "[KAGGLE_GPU]: \u26a1 GHA Local Engine: Rendering 2 Shorts in sequence... | "
     }
   ]
 }
