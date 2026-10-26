@@ -233,16 +233,26 @@ def sync_vercel(pool_json: str, numbered: dict, profile: str) -> bool:
 
 
 # ---------------------------------------------------------------- bootstrap
-def bootstrap_slot(lang: str) -> dict | None:
+def bootstrap_slot(lang_or_slot: str | int) -> dict | None:
     """Interactive consent (required by Google for NEW refresh tokens)."""
-    secret_path = TOKEN_DIR / f"client_secrets_{lang}.json"
-    if not secret_path.exists():
-        # fall back to any root client_secret file
-        fallbacks = sorted(ROOT.glob("client_secret*.json"))
+    target_str = str(lang_or_slot)
+    candidates = [
+        TOKEN_DIR / f"client_secrets_slot_{target_str}.json",
+        TOKEN_DIR / f"client_secrets_{target_str}.json",
+        TOKEN_DIR / f"client_secret_{target_str}.json",
+    ]
+    secret_path = None
+    for c in candidates:
+        if c.exists():
+            secret_path = c
+            break
+
+    if not secret_path or not secret_path.exists():
+        fallbacks = sorted(TOKEN_DIR.glob("client_secrets*.json")) + sorted(ROOT.glob("client_secret*.json"))
         if fallbacks:
             secret_path = fallbacks[0]
         else:
-            print(f"✗ no client_secret config for '{lang}'")
+            print(f"✗ no client_secret config for '{lang_or_slot}'")
             return None
 
     from google_auth_oauthlib.flow import InstalledAppFlow
@@ -250,65 +260,61 @@ def bootstrap_slot(lang: str) -> dict | None:
     flow = InstalledAppFlow.from_client_config(
         json.loads(secret_path.read_text(encoding="utf-8")), scopes=SCOPES
     )
-    print(f"Opening browser consent for slot '{lang}' (config {secret_path.name})…")
+    print(f"Opening browser consent for slot '{lang_or_slot}' (config {secret_path.name})…")
     creds = flow.run_local_server(port=0, prompt="consent")
     return {
         "client_id": creds.client_id,
         "client_secret": creds.client_secret,
         "refresh_token": creds.refresh_token,
-        "_src": f"bootstrap:{lang}",
+        "_src": f"bootstrap:slot_{target_str}",
     }
 
 
 # ---------------------------------------------------------------- main
 def main() -> int:
+    import shutil
     ap = argparse.ArgumentParser(description="Provision the YT OAuth quota-rotation pool.")
     ap.add_argument("--audit", action="store_true", help="Scan disk/env and print table")
     ap.add_argument("--verify", action="store_true", help="Live-test refresh tokens")
     ap.add_argument("--bundle", action="store_true", help="Build YT_OAUTH_POOL_JSON + numbered map")
     ap.add_argument("--sync", action="store_true", help="gh secret set + vercel env add")
-    ap.add_argument("--bootstrap", metavar="LANG", help="en|ta|hi — interactive consent for a NEW slot")
+    ap.add_argument("--add-client-secret", metavar="PATH", help="Register a downloaded client_secret.json as a slot")
+    ap.add_argument("--slot", type=int, default=0, help="Slot number (e.g. 2 or 3)")
+    ap.add_argument("--authorize", action="store_true", help="Authorize a slot via interactive browser consent")
+    ap.add_argument("--bootstrap", metavar="LANG", help="en|ta|hi|slot number — interactive consent for a NEW slot")
     ap.add_argument("--repo", default="alexkingston1993/MoneyPrinterTurbo")
     ap.add_argument("--profile", default="the-bull-print")
     args = ap.parse_args()
 
-    if args.bootstrap:
+    if args.add_client_secret:
+        src = Path(args.add_client_secret).expanduser().resolve()
+        if not src.exists():
+            print(f"✗ File not found: {src}")
+            return 1
+        slot_num = args.slot or 2
+        dest = TOKEN_DIR / f"client_secrets_slot_{slot_num}.json"
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src, dest)
+        info = load_client_secret_json(dest)
+        print(f"✓ Registered Slot {slot_num} client secret at: {dest}")
+        print(f"  Client ID: …{str(info.get('client_id'))[-25:]}")
+        if not args.authorize:
+            print(f"\nNext step: run browser authorization to mint refresh token:")
+            print(f"  python3 scripts/provision_yt_pool_cli.py --authorize --slot {slot_num}")
+            return 0
+
+    if args.authorize or args.bootstrap:
+        target_slot = args.slot or args.bootstrap or 2
         cache = json.loads(POOL_CACHE.read_text()) if POOL_CACHE.exists() else []
-        existing_ids = {s.get("client_id") for s in cache}
-
-        secret_path = TOKEN_DIR / f"client_secrets_{args.bootstrap}.json"
-        if not secret_path.exists():
-            fallbacks = sorted(ROOT.glob("client_secret*.json"))
-            secret_path = fallbacks[0] if fallbacks else None
-
-        if secret_path and secret_path.exists():
-            cid = load_client_secret_json(secret_path).get("client_id")
-            if cid and cid in existing_ids:
-                print(
-                    f"✗ REFUSED: '{secret_path.name}' uses an OAuth client ID that already exists in the pool:\n"
-                    f"  (Client ID: …{cid[-25:]})\n"
-                    "  Google Cloud enforces the 10,000 units/day quota per GCP Project (OAuth Client).\n"
-                    "  Minting a new token under the same client does NOT increase your daily quota.\n\n"
-                    "  To add Slot #2 / Slot #3 with an additional 10k units/day quota each:\n"
-                    "  1. Go to console.cloud.google.com and create a NEW project (e.g. 'the-bull-print-ta')\n"
-                    "  2. Enable 'YouTube Data API v3' in that project\n"
-                    "  3. Configure OAuth consent screen (External, add your Google account as test user)\n"
-                    "  4. Credentials → Create Credentials → OAuth client ID → Desktop application\n"
-                    "  5. Download JSON and save as: data/youtube_tokens/client_secrets_{args.bootstrap}.json\n"
-                    "  6. Then rerun: python3 scripts/provision_yt_pool_cli.py --bootstrap {args.bootstrap}\n"
-                )
-                return 2
-
-        slot = bootstrap_slot(args.bootstrap)
-        if slot:
-            if slot.get("client_id") in existing_ids:
-                print("✗ REFUSED: this OAuth client already exists in the pool.")
-                return 2
-            cache.append(slot)
+        slot_data = bootstrap_slot(target_slot)
+        if slot_data:
+            cache = [s for s in cache if s.get("client_id") != slot_data.get("client_id")]
+            cache.append(slot_data)
             POOL_CACHE.parent.mkdir(parents=True, exist_ok=True)
             POOL_CACHE.write_text(json.dumps(cache, indent=1))
-            print(f"✓ slot '{args.bootstrap}' appended to {POOL_CACHE} ({len(cache)} slots)")
+            print(f"✓ Slot '{target_slot}' authorized & saved to {POOL_CACHE} ({len(cache)} slot(s) total)")
         return 0
+
 
     if not any([args.audit, args.verify, args.bundle, args.sync]):
         args.audit = True
