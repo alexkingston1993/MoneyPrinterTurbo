@@ -1,10 +1,8 @@
 """
 Master 10-Shorts Batch Generator (run_batch_shorts.py).
 Sequentially executes 5 market slots with --shorts-only.
-In each slot, generates 2 shorts in parallel:
-- 1 Short in GitHub Actions runner (CPU FFmpeg)
-- 1 Short in Kaggle GPU (Dual-T4 NVENC)
-Resulting in 10 Short videos uploaded to YouTube today.
+In each slot, generates 2 shorts sequentially directly on the GitHub Actions runner (CPU FFmpeg + YouTube Upload):
+Resulting in 10 Short videos uploaded to YouTube today without touching Kaggle GPU.
 """
 
 import sys
@@ -23,7 +21,7 @@ def main():
     target_shorts = 10
     total_slots = len(SLOTS)
     logger.info(f"🚀 [The Bull Print] Launching Master 10-Shorts Sequential Production Run!")
-    logger.info(f"Target: {target_shorts} Shorts across {total_slots} slots (1 GHA + 1 Kaggle GPU simultaneously per slot).")
+    logger.info(f"Target: {target_shorts} Shorts across {total_slots} slots (100% GHA Sequential CPU FFmpeg + Headless Upload).")
 
     successful_slots = 0
     for idx, s in enumerate(SLOTS, 1):

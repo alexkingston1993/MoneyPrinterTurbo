@@ -44,7 +44,11 @@ on:
         required: false
         default: 'false'
       batch_shorts:
-        description: 'Sequentially produce 10 Shorts across 5 slots (1 GHA + 1 Kaggle GPU per slot)'
+        description: 'Sequentially produce 10 Shorts across 5 slots (100% GHA local CPU)'
+        required: false
+        default: 'false'
+      batch_longform:
+        description: 'Sequentially produce all 6 Long-Format Masterclass videos on Kaggle Dual-T4 GPU'
         required: false
         default: 'false'
       article_slot:
@@ -191,7 +195,7 @@ jobs:
       )) ||
       (github.event_name == 'workflow_dispatch' && github.event.inputs.article_slot == '')
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 240
 
     steps:
       - name: 📥 Checkout Website & Engine Repo
@@ -269,6 +273,7 @@ jobs:
           INPUT_SHORTS_COUNT: ${{ env.INPUT_SHORTS_COUNT }}
           INPUT_SHORTS_ONLY: ${{ github.event.inputs.shorts_only || 'false' }}
           INPUT_BATCH_SHORTS: ${{ github.event.inputs.batch_shorts || 'false' }}
+          INPUT_BATCH_LONGFORM: ${{ github.event.inputs.batch_longform || 'false' }}
           YT_OAUTH_POOL_JSON: ${{ secrets.YT_OAUTH_POOL_JSON }}
           YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}
           YT_CLIENT_SECRET: ${{ secrets.YT_CLIENT_SECRET }}
@@ -287,8 +292,11 @@ jobs:
           YT_REFRESH_TOKEN_4: ${{ secrets.YT_REFRESH_TOKEN_4 }}
         run: |
           if [ "${{ github.event.inputs.batch_shorts }}" = "true" ] || [ "${{ env.INPUT_BATCH_SHORTS }}" = "true" ]; then
-            echo "🚀 Launching Master 10-Shorts Sequential Production Run..."
+            echo "🚀 Launching Master 10-Shorts Sequential Production Run on GHA (CPU FFmpeg)..."
             python run_batch_shorts.py
+          elif [ "${{ github.event.inputs.batch_longform }}" = "true" ] || [ "${{ env.INPUT_BATCH_LONGFORM }}" = "true" ]; then
+            echo "🚀 Launching Master 6-Slot Long-Format Sequential Run on Kaggle Dual-T4 GPU..."
+            python run_batch_longform.py
           else
             python cloud_orchestrator.py
           fi

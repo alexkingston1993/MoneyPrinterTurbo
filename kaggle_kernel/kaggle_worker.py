@@ -30,15 +30,39 @@ try:
 except Exception as e:
     print(f"Warning on import: {e}")
 
-ASSETS_DIR = Path("/kaggle/input/flipzon-studio-assets")
-PAYLOAD_DIR = Path("/kaggle/input/flipzon-daily-payload")
+def get_payload_dir() -> Path:
+    p = Path("/kaggle/input/flipzon-daily-payload")
+    if (p / "payload.json").exists():
+        return p
+    if Path("/kaggle/input").exists():
+        matches = list(Path("/kaggle/input").rglob("payload.json"))
+        if matches:
+            return matches[0].parent
+    stage = Path(__file__).parent.parent / "kaggle_stage"
+    if (stage / "payload.json").exists():
+        return stage
+    for cand in [Path("/kaggle/working"), Path(".")]:
+        if (cand / "payload.json").exists():
+            return cand
+    return p
+
+def get_assets_dir() -> Path:
+    a = Path("/kaggle/input/flipzon-studio-assets")
+    if (a / "avatar_1.png").exists() or (a / "avatars" / "avatar_1.png").exists():
+        return a
+    if Path("/kaggle/input").exists():
+        matches = list(Path("/kaggle/input").rglob("avatar_1.png"))
+        if matches:
+            return matches[0].parent
+    assets = Path(__file__).parent.parent / "assets"
+    if assets.exists():
+        return assets
+    return a
+
+ASSETS_DIR = get_assets_dir()
+PAYLOAD_DIR = get_payload_dir()
 WORK_DIR = Path("/kaggle/working")
 
-# Fallback to local paths if testing locally
-if not ASSETS_DIR.exists():
-    ASSETS_DIR = Path(__file__).parent.parent / "assets"
-if not PAYLOAD_DIR.exists():
-    PAYLOAD_DIR = Path(__file__).parent.parent / "kaggle_stage"
 
 
 def _ffmpeg_filter_support() -> dict:
@@ -453,40 +477,55 @@ def _is_quota_error(exc: Exception) -> bool:
 
 
 def load_oauth_pool() -> list:
-    """Every OAuth slot: yt_oauth_pool.json > yt_oauth.json > numbered/raw env vars."""
+    """Every OAuth slot: YT_OAUTH_POOL_JSON env > yt_oauth_pool.json > numbered/raw env vars."""
     slots = []
-    for bases in ((ASSETS_DIR, PAYLOAD_DIR),):
-        for name in ("yt_oauth_pool.json", "yt_oauth.json"):
-            for base in bases:
-                p = base / name
-                if p.exists():
-                    try:
-                        data = json.loads(p.read_text(encoding="utf-8"))
-                        if isinstance(data, dict):
-                            data = [data]
-                        for s in data:
-                            if s.get("client_id") and s.get("client_secret") and s.get("refresh_token"):
-                                slots.append(s)
-                    except Exception as e:
-                        print(f"{name} unparsable: {e}")
-                    if slots:
-                        break
-            if slots:
-                break
-        if slots:
-            break
-    if not slots:
-        for suffix in ("", "1", "2", "3", "4", "5", "6"):
-            cid = os.getenv(f"YT_CLIENT_ID{suffix}")
-            cse = os.getenv(f"YT_CLIENT_SECRET{suffix}")
-            rt = os.getenv(f"YT_REFRESH_TOKEN{suffix}")
-            if suffix:
-                cid = cid or os.getenv(f"YT_CLIENT_ID_{suffix}")
-                cse = cse or os.getenv(f"YT_CLIENT_SECRET_{suffix}")
-                rt = rt or os.getenv(f"YT_REFRESH_TOKEN_{suffix}")
-            if cid and cse and rt:
-                slots.append({"client_id": cid, "client_secret": cse, "refresh_token": rt})
-                break
+    pool_env = os.getenv("YT_OAUTH_POOL_JSON", "").strip()
+    if pool_env:
+        try:
+            d = json.loads(pool_env)
+            if isinstance(d, dict):
+                d = [d]
+            for s in d:
+                if s.get("client_id") and s.get("client_secret") and s.get("refresh_token"):
+                    slots.append(s)
+        except Exception as e:
+            print(f"YT_OAUTH_POOL_JSON unparsable: {e}")
+
+    for p in [
+        PAYLOAD_DIR / "yt_oauth_pool.json",
+        ASSETS_DIR / "yt_oauth_pool.json",
+        Path(__file__).parent.parent / "data" / "youtube_tokens" / "oauth_pool.json",
+        Path("data/youtube_tokens/oauth_pool.json"),
+    ]:
+        if p.exists():
+            try:
+                data = json.loads(p.read_text(encoding="utf-8"))
+                if isinstance(data, dict):
+                    data = [data]
+                for s in data:
+                    if s.get("client_id") and s.get("client_secret") and s.get("refresh_token"):
+                        slots.append(s)
+            except Exception as e:
+                print(f"{p} unparsable: {e}")
+
+    if Path("/kaggle/input").exists():
+        for match in Path("/kaggle/input").rglob("yt_oauth_pool.json"):
+            try:
+                data = json.loads(match.read_text(encoding="utf-8"))
+                if isinstance(data, dict):
+                    data = [data]
+                for s in data:
+                    if s.get("client_id") and s.get("client_secret") and s.get("refresh_token"):
+                        slots.append(s)
+            except Exception:
+                pass
+
+    for suffix in ("", "1", "2", "3", "4", "5", "6"):
+        cid = os.getenv(f"YT_CLIENT_ID{suffix}") or os.getenv(f"YT_CLIENT_ID_{suffix}")
+        cse = os.getenv(f"YT_CLIENT_SECRET{suffix}") or os.getenv(f"YT_CLIENT_SECRET_{suffix}")
+        rt = os.getenv(f"YT_REFRESH_TOKEN{suffix}") or os.getenv(f"YT_REFRESH_TOKEN_{suffix}")
+        if cid and cse and rt:
+            slots.append({"client_id": cid, "client_secret": cse, "refresh_token": rt})
 
     seen, unique = set(), []
     for s in slots:
@@ -739,10 +778,23 @@ def gather_shorts_batch(payload: dict) -> list:
 
 
 async def run_kaggle_job():
+    global PAYLOAD_DIR, ASSETS_DIR
+    PAYLOAD_DIR = get_payload_dir()
+    ASSETS_DIR = get_assets_dir()
+
     payload_file = PAYLOAD_DIR / "payload.json"
     if not payload_file.exists():
-        payload_file = Path(__file__).parent.parent / "payload.json"
+        found = list(Path("/kaggle/input").rglob("payload.json")) if Path("/kaggle/input").exists() else []
+        if found:
+            payload_file = found[0]
+            PAYLOAD_DIR = payload_file.parent
+        else:
+            payload_file = Path(__file__).parent.parent / "payload.json"
+            if not payload_file.exists() and Path("payload.json").exists():
+                payload_file = Path("payload.json")
+                PAYLOAD_DIR = Path(".")
 
+    print(f"📦 Loaded payload from: {payload_file} (PAYLOAD_DIR={PAYLOAD_DIR}, ASSETS_DIR={ASSETS_DIR})")
     payload = json.loads(payload_file.read_text(encoding="utf-8"))
     vertical = str(payload.get("vertical", "") or "")
     persona = select_voice_persona(vertical)
