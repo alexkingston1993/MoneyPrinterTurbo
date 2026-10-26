@@ -4,14 +4,14 @@
   "vertical": "stock_market",
   "vertical_label": "Slot #1",
   "shorts_count": 2,
-  "status": "RUNNING",
+  "status": "WAITING_APPROVAL",
   "overall_pct": 50,
   "stage_pct": 60,
   "current_stage_index": 4,
   "current_stage_name": "Chart & High-CTR Thumbnail Studio",
-  "current_subtask_label": "Thumbnails & charts staged for approval",
+  "current_subtask_label": "Waiting for operator approval (Telegram or Dashboard)",
   "started_at": "2026-10-26T15:27:54Z",
-  "updated_at": "2026-10-26T15:29:24Z",
+  "updated_at": "2026-10-26T15:29:26Z",
   "eta_seconds": 0,
   "stages": [
     {
