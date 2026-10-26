@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T14:03:02Z",
+  "updated_at": "2026-10-26T14:03:05Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -25,7 +25,7 @@
       "vertical": "crypto",
       "vertical_label": "Crypto #1",
       "shorts_count": 2,
-      "status": "WAITING_APPROVAL",
+      "status": "COMPLETED",
       "overall_pct": 100,
       "stage_pct": 100,
       "current_stage": "Multi-Channel Distribution",
