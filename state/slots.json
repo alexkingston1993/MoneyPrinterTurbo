@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T14:10:32Z",
+  "updated_at": "2026-10-26T14:10:35Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -58,8 +58,8 @@
       "vertical_label": "Stock Market #2",
       "shorts_count": 2,
       "status": "WAITING_APPROVAL",
-      "overall_pct": 50,
-      "stage_pct": 60,
+      "overall_pct": 45,
+      "stage_pct": 70,
       "current_stage": "Chart & High-CTR Thumbnail Studio",
       "current_stage_index": 4,
       "archetype": "smart_money_divergence",
