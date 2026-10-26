@@ -89,7 +89,16 @@
       "pct": 100,
       "started_at": "2026-10-26T14:06:26Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "yt_long_id": "QUOTA_EXHAUSTED_ALL_SLOTS",
+        "yt_short_ids": [
+          "QUOTA_EXHAUSTED_ALL_SLOTS",
+          "QUOTA_EXHAUSTED_ALL_SLOTS"
+        ],
+        "oauth_slot_used": 1,
+        "article_url": "https://the-bull-print.vercel.app/article.html?slug=health-insurance-claim-settlement-ratio-vs-ic-1793023432",
+        "x_thread_url": "Skipped (X keys not set)"
+      }
     }
   ],
   "live_logs": [
