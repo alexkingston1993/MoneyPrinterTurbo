@@ -58,7 +58,11 @@
       "pct": 60,
       "started_at": "2026-10-26T14:11:43Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "approval_status": "WAITING_APPROVAL",
+        "approval_deadline_ts": 1793024036,
+        "headline": "LIQUIDATION CLUSTERS"
+      }
     },
     {
       "id": 5,
