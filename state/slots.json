@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T20:45:39Z",
+  "updated_at": "2026-10-26T20:45:42Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -91,10 +91,10 @@
       "vertical_label": "Insurance #2",
       "shorts_count": 1,
       "status": "RUNNING",
-      "overall_pct": 25,
+      "overall_pct": 35,
       "stage_pct": 100,
-      "current_stage": "Gemini Script & Dossier Synthesis",
-      "current_stage_index": 2,
+      "current_stage": "Virality & SEBI/IRDAI Compliance Gate",
+      "current_stage_index": 3,
       "archetype": "retail_myth_mathematical_deconstruction",
       "topic": "Term Insurance vs Endowment: Mathematical Reality",
       "voice_persona": "PrabhatNeural",
