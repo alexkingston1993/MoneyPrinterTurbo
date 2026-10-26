@@ -191,16 +191,17 @@ def verify_refresh_token(slot: dict, timeout: int = 20) -> tuple[bool, str]:
 # ---------------------------------------------------------------- sync targets
 def sync_gh(pool_json: str, numbered: dict, repo: str) -> bool:
     print(f"\n→ GitHub Actions secrets ({repo})")
+    gh_bin = "/usr/local/bin/gh" if os.path.exists("/usr/local/bin/gh") else "gh"
     rc = True
     try:
-        subprocess.run(["gh", "secret", "set", "YT_OAUTH_POOL_JSON", f"-R={repo}", "-b", pool_json], check=True)
+        subprocess.run([gh_bin, "secret", "set", "YT_OAUTH_POOL_JSON", f"-R={repo}", "-b", pool_json], check=True)
         print("  ✓ gh secret set YT_OAUTH_POOL_JSON")
     except Exception as e:
         print(f"  ✗ YT_OAUTH_POOL_JSON: {e}")
         rc = False
     for name, value in numbered.items():
         try:
-            subprocess.run(["gh", "secret", "set", name, f"-R={repo}", "-b", value], check=True)
+            subprocess.run([gh_bin, "secret", "set", name, f"-R={repo}", "-b", value], check=True)
             print(f"  ✓ gh secret set {name}")
         except Exception as e:
             print(f"  ✗ {name}: {e}")
