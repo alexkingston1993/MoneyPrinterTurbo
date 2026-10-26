@@ -500,6 +500,7 @@ def start(task_id, params: VideoParams, stop_at: str = "video"):
         if final_video_paths and yt.is_authenticated(primary_lang):
             privacy = config.ui.get("youtube_privacy", "public")
             thumbnail_path = getattr(params, "thumbnail_path", None)
+            publish_at = getattr(params, "publish_at", None)
             result = yt.upload_video(
                 language=primary_lang,
                 video_path=final_video_paths[0],
