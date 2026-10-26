@@ -59,13 +59,12 @@ on:
 permissions:
   contents: write
 
-concurrency:
-  group: bull-print-gpu-conveyor
-  cancel-in-progress: false
-
 jobs:
   # ─────────────────────────── ARTICLE ENGINE (Market Pulse) ───────────────────────────
   run-pipeline:
+    concurrency:
+      group: bull-print-article-conveyor
+      cancel-in-progress: false
     # Legacy news crons only, or explicit manual article dispatch (article_slot filled)
     if: >-
       (github.event_name == 'schedule' && (
@@ -183,6 +182,9 @@ jobs:
 
   # ─────────────────── VIDEO ENGINE (The Bull Print — 16 videos/day) ───────────────────
   build_and_publish:
+    concurrency:
+      group: bull-print-video-conveyor
+      cancel-in-progress: false
     # Master video crons only, or manual dispatch WITHOUT article_slot
     if: >-
       (github.event_name == 'schedule' && (
