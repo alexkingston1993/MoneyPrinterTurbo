@@ -88,6 +88,11 @@
       "ts": "14:06:55",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udd0d Harvesting live search intent... | open-seo dark-query loop \u00b7 slot 4"
+    },
+    {
+      "ts": "14:07:01",
+      "level": "INFO",
+      "msg": "[GEMINI]: \ud83d\udd0d Harvested `Sebi new f&o rules today` | source: autocomplete \u00b7 cluster: sebi new f&o rules today, sebi rules for f&o trading, sebi f&o new rules in hindi"
     }
   ]
 }
