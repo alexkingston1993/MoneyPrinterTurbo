@@ -89,7 +89,16 @@
       "pct": 100,
       "started_at": "2026-10-26T14:02:48Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "yt_long_id": "QUOTA_EXHAUSTED_ALL_SLOTS",
+        "yt_short_ids": [
+          "QUOTA_EXHAUSTED_ALL_SLOTS",
+          "QUOTA_EXHAUSTED_ALL_SLOTS"
+        ],
+        "oauth_slot_used": 1,
+        "article_url": "https://the-bull-print.vercel.app/article.html?slug=bitcoin-liquidation-heatmap-funding-rate-delt-1793023192",
+        "x_thread_url": "Skipped (X keys not set)"
+      }
     }
   ],
   "live_logs": [
