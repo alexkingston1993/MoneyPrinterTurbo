@@ -83,6 +83,11 @@
       "ts": "09:39:44",
       "level": "INFO",
       "msg": "Slot #1 (stock_market) initialized. Target: 1 Long + 1 Shorts."
+    },
+    {
+      "ts": "09:39:56",
+      "level": "INFO",
+      "msg": "[PLAYWRIGHT]: \ud83d\udd04 Capturing 3 charts... | "
     }
   ]
 }
