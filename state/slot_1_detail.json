@@ -5,13 +5,13 @@
   "vertical_label": "Slot #1",
   "shorts_count": 1,
   "status": "WAITING_APPROVAL",
-  "overall_pct": 55,
-  "stage_pct": 25,
+  "overall_pct": 75,
+  "stage_pct": 80,
   "current_stage_index": 5,
   "current_stage_name": "Kaggle T4 GPU Render Farm",
-  "current_subtask_label": "Waking Dual-T4 GPU Kernel...",
+  "current_subtask_label": "Whisper alignment & NVENC rendering",
   "started_at": "2026-10-26T09:39:44Z",
-  "updated_at": "2026-10-26T09:53:51Z",
+  "updated_at": "2026-10-26T09:54:16Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -68,7 +68,7 @@
       "id": 5,
       "name": "Kaggle T4 GPU Render Farm",
       "status": "RUNNING",
-      "pct": 25,
+      "pct": 80,
       "started_at": "2026-10-26T09:52:20Z",
       "completed_at": null,
       "metrics": {
