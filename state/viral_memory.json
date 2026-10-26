@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T15:28:00Z",
+  "updated_at": "2026-10-26T15:31:11Z",
   "channel_median_vph": 0.09,
   "top_outperformers": [
     {
@@ -10,21 +10,9 @@
       "hours_live": 0.5,
       "view_count": 2,
       "like_count": 1,
-      "comment_count": 2,
+      "comment_count": 4,
       "views_per_hour": 4.0,
-      "engagement_rate": 3.5
-    },
-    {
-      "video_id": "FfxHCzx7QhM",
-      "title": "Bharti Airtel: The Telecom Monopoly Player",
-      "format": "LONG",
-      "published_at": "2026-10-21T17:15:16Z",
-      "hours_live": 118.2,
-      "view_count": 207,
-      "like_count": 2,
-      "comment_count": 0,
-      "views_per_hour": 1.75,
-      "engagement_rate": 0.0097
+      "engagement_rate": 6.5
     },
     {
       "video_id": "FogU8YmM9m0",
@@ -32,25 +20,37 @@
       "format": "SHORT",
       "published_at": "2026-10-25T18:16:17Z",
       "hours_live": 21.2,
-      "view_count": 31,
+      "view_count": 38,
       "like_count": 1,
       "comment_count": 0,
-      "views_per_hour": 1.46,
-      "engagement_rate": 0.0323
+      "views_per_hour": 1.79,
+      "engagement_rate": 0.0263
+    },
+    {
+      "video_id": "FfxHCzx7QhM",
+      "title": "Bharti Airtel: The Telecom Monopoly Player",
+      "format": "LONG",
+      "published_at": "2026-10-21T17:15:16Z",
+      "hours_live": 118.3,
+      "view_count": 207,
+      "like_count": 2,
+      "comment_count": 0,
+      "views_per_hour": 1.75,
+      "engagement_rate": 0.0097
     }
   ],
   "bottom_underperformers": [
     {
-      "video_id": "4GS8pOV0oBU",
-      "title": "TCS: The Tech Titan's 10-Year Outlook",
-      "format": "LONG",
-      "published_at": "2026-10-19T22:32:24Z",
-      "hours_live": 160.9,
-      "view_count": 7,
-      "like_count": 1,
-      "comment_count": 0,
-      "views_per_hour": 0.04,
-      "engagement_rate": 0.1429
+      "video_id": "QnCbF5ksKWo",
+      "title": "Health Insurance Claim Settlement Ratio vs ICR Forensic #Shorts",
+      "format": "SHORT",
+      "published_at": "2026-10-26T15:29:42Z",
+      "hours_live": 0.5,
+      "view_count": 0,
+      "like_count": 0,
+      "comment_count": 2,
+      "views_per_hour": 0.0,
+      "engagement_rate": 6.0
     },
     {
       "video_id": "OtQ5ttfyt3U",
