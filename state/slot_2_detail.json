@@ -59,7 +59,7 @@
       "started_at": "2026-10-26T15:31:23Z",
       "completed_at": null,
       "metrics": {
-        "approval_status": "WAITING_APPROVAL",
+        "approval_status": "AUTO_APPROVED",
         "approval_deadline_ts": 1793028781,
         "headline": "LIQUIDATION CLUSTERS"
       }
