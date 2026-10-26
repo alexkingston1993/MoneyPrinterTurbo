@@ -1,17 +1,17 @@
 {
-  "updated_at": "2026-10-26T09:46:01Z",
+  "updated_at": "2026-10-26T09:52:19Z",
   "videos": {
     "slot_1_long": {
       "slot": 1,
       "format": "16:9 LONG",
       "vertical": "STOCK_MARKET",
       "title": "[LONG-FORM] RUN_VIRAL_AUDIT",
-      "current_stage": "Stage 4/7: Chart & High-CTR Thumbnail Studio",
-      "stage_pct": 20,
-      "completion_pct": 40,
-      "eta_seconds": 360,
+      "current_stage": "Stage 5/7: Kaggle T4 GPU \u2014 NVENC Encoding",
+      "stage_pct": 50,
+      "completion_pct": 65,
+      "eta_seconds": 220,
       "compliance_status": "\ud83d\udee1\ufe0f Feedback Healed & Verified",
-      "updated_at": "2026-10-26T09:46:01Z",
+      "updated_at": "2026-10-26T09:52:19Z",
       "video_id": "slot_1_long",
       "status": "IN_PROGRESS",
       "started_at": "2026-10-25T20:36:34Z"
