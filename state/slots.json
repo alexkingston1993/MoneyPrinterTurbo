@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-26T14:06:41Z",
+  "updated_at": "2026-10-26T14:06:46Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -58,14 +58,14 @@
       "vertical_label": "Stock Market #2",
       "shorts_count": 2,
       "status": "RUNNING",
-      "overall_pct": 25,
-      "stage_pct": 100,
-      "current_stage": "Gemini Script & Dossier Synthesis",
-      "current_stage_index": 2,
+      "overall_pct": 2,
+      "stage_pct": 10,
+      "current_stage": "SEO Topic Harvester (open-seo)",
+      "current_stage_index": 1,
       "archetype": "smart_money_divergence",
       "topic": "Closing Bell FII vs DII Order Flow Discrepancy",
       "voice_persona": "AndrewNeural",
-      "run_id": "40219365617"
+      "run_id": "40333471648"
     },
     "5": {
       "slot": 5,
