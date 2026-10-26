@@ -682,32 +682,62 @@ async def render_and_upload_short_gpu(payload: dict, long_video_id: str, short_d
     if not avatar_img.exists():
         avatar_img = ASSETS_DIR / "avatars" / "avatar_1.png"
 
+    # Per-short 9:16 shelf thumbnail staged by the orchestrator
+    short_thumb = PAYLOAD_DIR / f"short_thumb_{short_index}.jpg"
+    if not short_thumb.exists():
+        short_thumb = PAYLOAD_DIR / "yt_short_thumb.jpg"
+    if not short_thumb.exists():
+        short_thumb = PAYLOAD_DIR / "yt_thumb.jpg"
+
     # 9:16 master: Ken Burns chart on top, avatar bottom, emerald divider,
-    # animated HUD progress bar + badge ticker over the full canvas, Hormozi subtitles burned in.
+    # cover flash on first 0.85s for mobile thumbnail capture, Hormozi subtitles burned in.
     fontfile = _find_fontfile()
     hud_list = _hud_filters(min(dur, 58.5), vertical, fontfile, w=1080, h=1920)
     tail = list(hud_list)
     subs = _subs_tag(ass)
     if subs:
         tail.append(subs.lstrip(","))
-    filter_graph = (
-        "[0:v]" + _ken_burns_body("1080x960", drift=0.18, sway=28) + "[chartm];"
-        "[1:v]scale=1080:960:force_original_aspect_ratio=increase,crop=1080:960[ava];"
-        "[chartm][ava]vstack=inputs=2,"
-        "drawbox=x=0:y=956:w=1080:h=8:color=0x10B981@1.0:t=fill"
-    )
-    if tail:
-        filter_graph += "," + ",".join(tail)
-    filter_graph += "[v]"
+
+    has_cover = short_thumb.exists()
+    if has_cover:
+        filter_graph = (
+            "[0:v]" + _ken_burns_body("1080x960", drift=0.18, sway=28) + "[chartm];"
+            "[1:v]scale=1080:960:force_original_aspect_ratio=increase,crop=1080:960[ava];"
+            "[chartm][ava]vstack=inputs=2,"
+            "drawbox=x=0:y=956:w=1080:h=8:color=0x10B981@1.0:t=fill[vsplit];"
+            "[2:v]scale=1080:1920[cover];"
+            "[vsplit][cover]overlay=0:0:enable='between(t,0,0.85)'[vbase]"
+        )
+        if tail:
+            filter_graph += ";" + "[vbase]" + ",".join(tail) + "[v]"
+        else:
+            filter_graph += ";[vbase]null[v]"
+    else:
+        filter_graph = (
+            "[0:v]" + _ken_burns_body("1080x960", drift=0.18, sway=28) + "[chartm];"
+            "[1:v]scale=1080:960:force_original_aspect_ratio=increase,crop=1080:960[ava];"
+            "[chartm][ava]vstack=inputs=2,"
+            "drawbox=x=0:y=956:w=1080:h=8:color=0x10B981@1.0:t=fill"
+        )
+        if tail:
+            filter_graph += "," + ",".join(tail)
+        filter_graph += "[v]"
 
     out_mp4 = WORK_DIR / f"final_short_{tag}.mp4"
-    cmd = [
-        "ffmpeg", "-y",
+    inputs = [
         "-loop", "1", "-i", str(chart_png),
         "-loop", "1", "-i", str(avatar_img),
-        "-i", str(mp3),
+    ]
+    if has_cover:
+        inputs += ["-loop", "1", "-i", str(short_thumb)]
+    audio_idx = 3 if has_cover else 2
+    inputs += ["-i", str(mp3)]
+
+    cmd = [
+        "ffmpeg", "-y",
+        *inputs,
         "-filter_complex", filter_graph,
-        "-map", "[v]", "-map", "2:a",
+        "-map", "[v]", "-map", f"{audio_idx}:a",
         "-af", "silenceremove=stop_periods=-1:stop_duration=0.35:stop_threshold=-42dB,loudnorm=I=-14:TP=-1.5:LRA=11",
         *pick_video_encoder_args(),
         "-c:a", "aac", "-b:a", "192k",

@@ -343,6 +343,83 @@ def create_marketing_images(
     return yt_thumb_path, discover_img_path
 
 
+def generate_high_ctr_short_cover(headline: str, vertical: str, output_path: str) -> str:
+    """Generates high-contrast 9:16 vertical cover for YouTube Shorts with massive readable typography,
+    technical order flow grid lines, and glowing focal box."""
+    from PIL import Image, ImageDraw, ImageFont
+    import re
+
+    width, height = 1080, 1920
+    img = Image.new("RGB", (width, height), color="#090d16")
+    draw = ImageDraw.Draw(img)
+
+    vert = (vertical or "").lower()
+    accent_color = "#10b981" if "stock" in vert else ("#06b6d4" if "crypto" in vert else "#f59e0b")
+    glow_color = (16, 185, 129) if "stock" in vert else ((6, 182, 212) if "crypto" in vert else (245, 158, 11))
+
+    # Radial gradient background
+    center_y = 650
+    for r in range(500, 0, -20):
+        glow_box = [width // 2 - r, center_y - r, width // 2 + r, center_y + r]
+        draw.ellipse(glow_box, fill=(glow_color[0] // 6, glow_color[1] // 6, glow_color[2] // 6))
+
+    # Abstract order flow grid lines for technical depth
+    for x in range(0, width, 120):
+        draw.line([(x, 0), (x, height)], fill="#161f30", width=1)
+    for y in range(0, height, 120):
+        draw.line([(0, y), (width, y)], fill="#161f30", width=1)
+
+    # Glowing focal box in upper-middle (safe from YouTube bottom overlay)
+    box_rect = [70, 380, width - 70, 960]
+    draw.rectangle(box_rect, fill="#0f172a", outline=accent_color, width=5)
+
+    # Top indicator pill
+    pill_label = "INSTITUTIONAL ALERT" if "stock" in vert else ("ON-CHAIN ALPHA" if "crypto" in vert else "POLICY AUDIT")
+    font_pill = _get_font(34)
+    draw.rectangle([100, 345, 460, 400], fill=accent_color)
+    draw.text((115, 355), pill_label, fill="#000000", font=font_pill)
+
+    # Render bold uppercase text (headline split into 3-4 words per line)
+    font = _get_font(84)
+
+    clean_headline = re.sub(r"#\S+", "", headline or "").strip().upper()
+    clean_headline = re.sub(r"[^\w\s\$\₹\%\-\:\?]", "", clean_headline).strip()
+    words = clean_headline.split()[:8] or ["THE", "BULL", "PRINT"]
+
+    lines = []
+    current_line = ""
+    for w in words:
+        if len(current_line + " " + w) < 16:
+            current_line += (" " + w) if current_line else w
+        else:
+            lines.append(current_line)
+            current_line = w
+    if current_line:
+        lines.append(current_line)
+
+    lines = lines[:3]  # Max 3 massive lines
+    line_h = 105
+    total_text_h = len(lines) * line_h
+    y_text = 430 + (500 - total_text_h) // 2
+
+    for idx, line in enumerate(lines):
+        # Drop shadow for max readability
+        draw.text((120 + 4, y_text + 4), line, fill="#000000", font=font)
+        # Highlight last line with accent/yellow
+        text_fill = "#facc15" if idx == len(lines) - 1 else "#ffffff"
+        draw.text((120, y_text), line, fill=text_fill, font=font)
+        y_text += line_h
+
+    # Add bottom brand badge
+    font_brand = _get_font(36)
+    draw.text((120, 1750), "THE BULL PRINT • INSTITUTIONAL ALPHA", fill=accent_color, font=font_brand)
+
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    img.save(output_path, quality=95)
+    logger.info(f"🎨 [High-CTR Shorts Cover] generated at {output_path}")
+    return output_path
+
+
 def create_short_thumbnail(
     chart_bg_path: Path,
     avatar_path: Path,
@@ -351,68 +428,14 @@ def create_short_thumbnail(
     punch_color: Optional[str] = None,
 ) -> Path:
     """
-    Vertical 9:16 (1080x1920) YouTube Shorts shelf thumbnail:
-      - Top half (1080x960): zoomed macro/footprint chart with a sentiment-coded
-        indicator box (bright red/green border + translucent fill).
-      - Bottom half (1080x960): rich dark studio backdrop with the avatar centered.
-      - Massive centered 3-word text on a solid black badge with yellow/green border.
-    Returns: short thumbnail path (output/images/{slug}_short.jpg)
+    Vertical 9:16 (1080x1920) YouTube Shorts high-CTR shelf cover.
     """
     logger.info(f"🎨 [High-CTR Shorts] generating 9:16 shelf thumb for: {output_slug}")
-    punch = _sentiment_color(headline_words, punch_color)
     out_path = IMAGES_DIR / f"{output_slug}_short.jpg"
+    headline = " ".join(headline_words)
+    generate_high_ctr_short_cover(headline, punch_color or "stock", str(out_path))
 
-    W, H = 1080, 1920
-    HALF = H // 2
-
-    img = Image.new("RGB", (W, H), VIGNETTE_RGB).convert("RGBA")
-
-    # ---- Top half: zoomed chart + sentiment-coded indicator box ----
-    top = _chart_background((W, HALF), chart_bg_path, blur_radius=0.8, zoom=1.45, brightness=0.9)
-    img.paste(top, (0, 0))
-    overlay = Image.new("RGBA", (W, HALF), (0, 0, 0, 0))
-    odraw = ImageDraw.Draw(overlay)
-    odraw.rounded_rectangle([(70, 210), (W - 70, 800)], radius=24,
-                            outline=punch + (255,), width=8,
-                            fill=punch + (56,))  # translucent sentiment fill
-    odraw.rounded_rectangle([(84, 224), (W - 84, 786)], radius=18,
-                            outline=(255, 255, 255, 90), width=3,
-                            fill=(0, 0, 0, 0))
-    img.alpha_composite(overlay)
-    tdraw = ImageDraw.Draw(img)
-    label = "LIVE MARKET STRUCTURE"
-    f_lbl = _get_font(38)
-    lw = tdraw.textlength(label, font=f_lbl)
-    tdraw.text(((W - lw) // 2, 240), label, font=f_lbl, fill=WHITE, stroke_width=3, stroke_fill=BLACK)
-
-    # ---- Bottom half: rich dark studio backdrop + centered avatar ----
-    studio = Image.new("RGB", (W, HALF), VIGNETTE_RGB)
-    s_draw = ImageDraw.Draw(studio)
-    for y in range(HALF):
-        t = y / HALF
-        s_draw.line([(0, y), (W, y)], fill=(int(14 + 16 * (1 - t)), int(18 + 22 * (1 - t)), int(28 + 30 * (1 - t))))
-    img.paste(studio, (0, HALF))
-    img = _avatar_layer(img, avatar_path, target_h=880, right_x=W // 2 + 440, bottom_y=H - 40)
-
-    # ---- Emerald seam divider ----
-    ddraw = ImageDraw.Draw(img)
-    ddraw.rectangle([(0, HALF - 4), (W, HALF + 4)], fill=NEON_GREEN)
-
-    # ---- Massive banner text badge (solid black, yellow/green border) ----
-    words = [w.strip().upper() for w in headline_words if w.strip()][:4] or ["MARKET", "STRUCTURE", "TRUTH"]
-    badge_h = 430
-    badge_y = HALF - badge_h // 2
-    ddraw.rounded_rectangle([(48, badge_y), (W - 48, badge_y + badge_h)],
-                            radius=28, fill=(5, 6, 10), outline=GOLD, width=8)
-    inner = ImageDraw.Draw(img)
-    f_big, lines = _fit_headline(inner, words, W - 190, badge_h - 110, start=150, floor=96)
-    # vertically center the wrapped block inside the badge (mirrors renderer spacing)
-    heights = [inner.textbbox((0, 0), ln, font=f_big)[3] - inner.textbbox((0, 0), ln, font=f_big)[1] for ln in lines]
-    gap = 10 + f_big.size // 6
-    total_h = sum(heights) + (len(lines) - 1) * gap
-    start_y = badge_y + max(30, (badge_h - total_h) // 2)
-    _punchy_shadow_text(img, inner, lines, f_big, 110 + 30, start_y, punch, punch_index=len(lines) - 1, line_gap=10)
-
-    img.convert("RGB").save(out_path, "JPEG", quality=95)
-    logger.success(f"✓ [High-CTR Shorts] saved: {out_path.name}")
+    # Also mirror to legacy THUMBS_DIR so existing consumers keep working
+    legacy_path = THUMBS_DIR / f"{output_slug}_short.jpg"
+    shutil.copy2(out_path, legacy_path)
     return out_path

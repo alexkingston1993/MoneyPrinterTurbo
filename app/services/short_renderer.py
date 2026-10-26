@@ -55,11 +55,99 @@ def _find_fontfile() -> str:
         "/System/Library/Fonts/Helvetica.ttc",
         "/System/Library/Fonts/Supplemental/Arial.ttf",
         "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+        str(BASE_DIR / "assets" / "fonts" / "Inter-Bold.ttf"),
+        "/Library/Fonts/Arial.ttf",
     ]
     for c in candidates:
         if Path(c).exists():
             return c
     return ""
+
+
+def generate_high_ctr_short_cover(headline: str, vertical: str, output_path: str) -> str:
+    """Generates high-contrast 9:16 vertical cover for YouTube Shorts with massive readable typography,
+    technical order flow grid lines, and glowing focal box."""
+    from PIL import Image, ImageDraw, ImageFont
+
+    width, height = 1080, 1920
+    img = Image.new("RGB", (width, height), color="#090d16")
+    draw = ImageDraw.Draw(img)
+
+    vert = (vertical or "").lower()
+    accent_color = "#10b981" if "stock" in vert else ("#06b6d4" if "crypto" in vert else "#f59e0b")
+    glow_color = (16, 185, 129) if "stock" in vert else ((6, 182, 212) if "crypto" in vert else (245, 158, 11))
+
+    # Radial gradient background
+    center_y = 650
+    for r in range(500, 0, -20):
+        glow_box = [width // 2 - r, center_y - r, width // 2 + r, center_y + r]
+        draw.ellipse(glow_box, fill=(glow_color[0] // 6, glow_color[1] // 6, glow_color[2] // 6))
+
+    # Abstract order flow grid lines for technical depth
+    for x in range(0, width, 120):
+        draw.line([(x, 0), (x, height)], fill="#161f30", width=1)
+    for y in range(0, height, 120):
+        draw.line([(0, y), (width, y)], fill="#161f30", width=1)
+
+    # Glowing focal box in upper-middle (safe from YouTube bottom overlay)
+    box_rect = [70, 380, width - 70, 960]
+    draw.rectangle(box_rect, fill="#0f172a", outline=accent_color, width=5)
+
+    # Top indicator pill
+    pill_label = "INSTITUTIONAL ALERT" if "stock" in vert else ("ON-CHAIN ALPHA" if "crypto" in vert else "POLICY AUDIT")
+    fontfile = _find_fontfile()
+    try:
+        font_pill = ImageFont.truetype(fontfile, 34) if fontfile else ImageFont.load_default()
+    except Exception:
+        font_pill = ImageFont.load_default()
+    draw.rectangle([100, 345, 460, 400], fill=accent_color)
+    draw.text((115, 355), pill_label, fill="#000000", font=font_pill)
+
+    # Render bold uppercase text (headline split into 3-4 words per line)
+    try:
+        font = ImageFont.truetype(fontfile, 82) if fontfile else ImageFont.load_default()
+    except Exception:
+        font = ImageFont.load_default()
+
+    clean_headline = re.sub(r"#\S+", "", headline or "").strip().upper()
+    clean_headline = re.sub(r"[^\w\s\$\₹\%\-\:\?]", "", clean_headline).strip()
+    words = clean_headline.split()[:8] or ["THE", "BULL", "PRINT"]
+
+    lines = []
+    current_line = ""
+    for w in words:
+        if len(current_line + " " + w) < 16:
+            current_line += (" " + w) if current_line else w
+        else:
+            lines.append(current_line)
+            current_line = w
+    if current_line:
+        lines.append(current_line)
+
+    lines = lines[:3]  # Max 3 massive lines
+    line_h = 105
+    total_text_h = len(lines) * line_h
+    y_text = 430 + (500 - total_text_h) // 2
+
+    for idx, line in enumerate(lines):
+        # Drop shadow for max readability
+        draw.text((120 + 4, y_text + 4), line, fill="#000000", font=font)
+        # Highlight last line with accent/yellow
+        text_fill = "#facc15" if idx == len(lines) - 1 else "#ffffff"
+        draw.text((120, y_text), line, fill=text_fill, font=font)
+        y_text += line_h
+
+    # Add bottom brand badge
+    try:
+        font_brand = ImageFont.truetype(fontfile, 36) if fontfile else ImageFont.load_default()
+    except Exception:
+        font_brand = ImageFont.load_default()
+    draw.text((120, 1750), "THE BULL PRINT • INSTITUTIONAL ALPHA", fill=accent_color, font=font_brand)
+
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    img.save(output_path, quality=95)
+    logger.info(f"🎨 [High-CTR Shorts Cover] generated at {output_path}")
+    return output_path
 
 
 def _hud_filters(duration: float, vertical: str, fontfile: str = "", w: int = 1080, h: int = 1920) -> list:
@@ -200,6 +288,21 @@ async def render_and_upload_short_local(
     mp3 = WORK_DIR / f"short_{tag}.mp3"
     ass = WORK_DIR / f"short_{tag}.ass"
     out_mp4 = WORK_DIR / f"final_short_{tag}.mp4"
+    cover_jpg = WORK_DIR / f"cover_{tag}.jpg"
+
+    meta = yt.get("metadata", {})
+    short_title = str(short_data.get("short_title", "") or meta.get("title", "The Bull Print Daily Brief"))
+    if not short_title.endswith("#Shorts"):
+        short_title = f"{short_title} #Shorts"
+
+    # 🎨 Generate dynamic high-CTR 9:16 shelf cover
+    raw_hook = (
+        str(short_data.get("hook") or "")
+        or str(short_data.get("short_title") or "")
+        or str(short_data.get("spoken_hook_and_body", "")).split(".")[0]
+        or short_title
+    )
+    generate_high_ctr_short_cover(raw_hook, vertical, str(cover_jpg))
 
     dur = await make_short_tts_and_subtitles(narration, mp3, ass, persona)
 
@@ -225,19 +328,23 @@ async def render_and_upload_short_local(
         "[0:v]scale=1080:960:force_original_aspect_ratio=increase,crop=1080:960[chartm];"
         "[1:v]scale=1080:960:force_original_aspect_ratio=increase,crop=1080:960[ava];"
         "[chartm][ava]vstack=inputs=2,"
-        "drawbox=x=0:y=956:w=1080:h=8:color=0x10B981@1.0:t=fill"
+        "drawbox=x=0:y=956:w=1080:h=8:color=0x10B981@1.0:t=fill[vsplit];"
+        "[2:v]scale=1080:1920[cover];"
+        "[vsplit][cover]overlay=0:0:enable='between(t,0,0.85)'[vbase]"
     )
     if tail:
-        filter_graph += "," + ",".join(tail)
-    filter_graph += "[v]"
+        filter_graph += ";" + "[vbase]" + ",".join(tail) + "[v]"
+    else:
+        filter_graph += ";[vbase]null[v]"
 
     cmd = [
         "ffmpeg", "-y",
         "-loop", "1", "-i", str(chart_png or avatar_img),
         "-loop", "1", "-i", str(avatar_img),
+        "-loop", "1", "-i", str(cover_jpg),
         "-i", str(mp3),
         "-filter_complex", filter_graph,
-        "-map", "[v]", "-map", "2:a",
+        "-map", "[v]", "-map", "3:a",
         "-af", "silenceremove=stop_periods=-1:stop_duration=0.35:stop_threshold=-42dB,loudnorm=I=-14:TP=-1.5:LRA=11",
         "-c:v", "libx264", "-preset", "ultrafast",
         "-c:a", "aac", "-b:a", "192k",
@@ -252,11 +359,6 @@ async def render_and_upload_short_local(
         logger.error(f"❌ Local Short #{short_index} failed QA: {qa['reasons']}")
         return ""
 
-    meta = yt.get("metadata", {})
-    short_title = str(short_data.get("short_title", "") or meta.get("title", "The Bull Print Daily Brief"))
-    if not short_title.endswith("#Shorts"):
-        short_title = f"{short_title} #Shorts"
-
     description_body = (
         f"{str(short_data.get('spoken_hook_and_body', ''))[:180]}\n\n"
         f"🛠️ Get every free trading tool: https://the-bull-print.vercel.app/tools\n\n"
@@ -270,7 +372,7 @@ async def render_and_upload_short_local(
         }
     }
 
-    st_thumb = thumb_path if (thumb_path and thumb_path.exists()) else (BASE_DIR / "assets" / "thumbnails" / "default_thumb.jpg")
+    st_thumb = cover_jpg if cover_jpg.exists() else (thumb_path if (thumb_path and thumb_path.exists()) else (BASE_DIR / "assets" / "thumbnails" / "default_thumb.jpg"))
     vid_id = upload_youtube_headless(out_mp4, st_thumb, short_yt_payload)
     logger.info(f"✅ [GHA Local Engine] Short #{short_index} rendered & uploaded to YouTube! ID: {vid_id}")
     return vid_id
