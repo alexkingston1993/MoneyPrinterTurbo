@@ -5,13 +5,13 @@
   "vertical_label": "Slot #1",
   "shorts_count": 2,
   "status": "WAITING_APPROVAL",
-  "overall_pct": 75,
-  "stage_pct": 80,
+  "overall_pct": 60,
+  "stage_pct": 20,
   "current_stage_index": 5,
-  "current_stage_name": "Kaggle T4 GPU Render Farm",
-  "current_subtask_label": "Whisper alignment & NVENC rendering",
+  "current_stage_name": "Local CPU Media Engine",
+  "current_subtask_label": "Rendering 1080p Masterclass via CPU FFmpeg...",
   "started_at": "2026-10-27T19:54:16Z",
-  "updated_at": "2026-10-27T20:04:26Z",
+  "updated_at": "2026-10-27T20:04:32Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -68,7 +68,7 @@
       "id": 5,
       "name": "Kaggle T4 GPU Render Farm",
       "status": "RUNNING",
-      "pct": 80,
+      "pct": 20,
       "started_at": "2026-10-27T20:01:56Z",
       "completed_at": null,
       "metrics": {
