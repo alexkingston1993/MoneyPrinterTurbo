@@ -1,62 +1,52 @@
 {
   "slot": 3,
-  "run_id": "40346945550",
+  "run_id": "40573048070",
   "vertical": "insurance",
   "vertical_label": "Slot #3",
   "shorts_count": 2,
   "status": "RUNNING",
-  "overall_pct": 45,
-  "stage_pct": 70,
-  "current_stage_index": 4,
-  "current_stage_name": "Chart & High-CTR Thumbnail Studio",
-  "current_subtask_label": "Thumbnails rendered & staged",
-  "started_at": "2026-10-26T15:34:17Z",
-  "updated_at": "2026-10-26T15:36:21Z",
+  "overall_pct": 2,
+  "stage_pct": 10,
+  "current_stage_index": 1,
+  "current_stage_name": "SEO Topic Harvester (open-seo)",
+  "current_subtask_label": "Harvesting search intent & clusters",
+  "started_at": "2026-10-27T20:21:55Z",
+  "updated_at": "2026-10-27T20:21:55Z",
   "eta_seconds": 0,
   "stages": [
     {
       "id": 1,
       "name": "SEO Topic Harvester (open-seo)",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-26T15:34:17Z",
-      "completed_at": "2026-10-26T15:34:24Z",
+      "status": "RUNNING",
+      "pct": 0,
+      "started_at": "2026-10-27T20:21:55Z",
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 2,
       "name": "Gemini Script & Dossier Synthesis",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-26T15:34:24Z",
-      "completed_at": "2026-10-26T15:34:31Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 3,
       "name": "Authenticity & SEBI/IRDAI Compliance Gate",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-26T15:35:37Z",
-      "completed_at": "2026-10-26T15:34:31Z",
-      "metrics": {
-        "audit_attempts": 1,
-        "compliance_status": "PASS_1",
-        "audit_notes": "Virality dopamine pacing and SEBI/IRDAI compliance healed & verified",
-        "compliance_pass": true,
-        "compliance_verdict": "PASSED_AFTER_FEEDBACK",
-        "virality_score": 92,
-        "authenticity_pass": true,
-        "trigram_similarity_pct": 8.4,
-        "regex_violations": 0
-      }
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
+      "metrics": {}
     },
     {
       "id": 4,
       "name": "Chart & High-CTR Thumbnail Studio",
-      "status": "RUNNING",
-      "pct": 70,
-      "started_at": "2026-10-26T15:34:31Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
       "completed_at": null,
       "metrics": {}
     },
@@ -90,64 +80,9 @@
   ],
   "live_logs": [
     {
-      "ts": "15:34:17",
+      "ts": "20:21:55",
       "level": "INFO",
       "msg": "Slot #3 (insurance) initialized. Target: 1 Long + 2 Shorts."
-    },
-    {
-      "ts": "15:34:26",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvesting live search intent... | open-seo dark-query loop \u00b7 slot 3"
-    },
-    {
-      "ts": "15:34:31",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvested `IRDAI Proportionate Deduction Math: How Daily Ro` | source: viral_horse_7.5x \u00b7 cluster: IRDAI Proportionate Deduction Math: How Daily Room Caps Slash Surgery & Doctor ICU Claims"
-    },
-    {
-      "ts": "15:34:33",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \ud83d\udcca Rendering insurance infographics... | "
-    },
-    {
-      "ts": "15:34:39",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \u2705 Rendered (2 infographics) | "
-    },
-    {
-      "ts": "15:34:44",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83e\udde0 Synthesizing Dual Script + Article... | "
-    },
-    {
-      "ts": "15:35:27",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udee1\ufe0f Auditing Virality & Compliance... | Retention pacing + SEBI/IRDAI auditor"
-    },
-    {
-      "ts": "15:35:32",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udee1\ufe0f Virality & Compliance (Pass 1/3) | 100% Pass: Virality 95/100 + SEBI/IRDAI Approved"
-    },
-    {
-      "ts": "15:35:37",
-      "level": "INFO",
-      "msg": "[GEMINI]: \u2705 Generated + Healed (`health-insurance-claim-settlement-ratio-vs-ic-1793028924`) | \ud83d\udee1\ufe0f INSURANCE"
-    },
-    {
-      "ts": "15:35:43",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd2c Auditing Authenticity Engine... | trigram dupe-check + domain vocabulary"
-    },
-    {
-      "ts": "15:35:47",
-      "level": "INFO",
-      "msg": "[GEMINI]: \u267b\ufe0f Authenticity regen 1/2... | 30-day overlap vs 'bitcoin-liquidation-heatmap-funding-rate-delt-1793028714' \u2192 title overlap ['2026', 'oct', 'slot']"
-    },
-    {
-      "ts": "15:36:23",
-      "level": "INFO",
-      "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering Pillow Graphics... | "
     }
   ]
 }
