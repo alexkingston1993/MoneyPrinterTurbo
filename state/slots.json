@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T20:35:29Z",
+  "updated_at": "2026-10-27T20:35:48Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -58,9 +58,9 @@
       "vertical_label": "Stock Market #2",
       "shorts_count": 2,
       "status": "WAITING_APPROVAL",
-      "overall_pct": 60,
-      "stage_pct": 20,
-      "current_stage": "Local CPU Media Engine",
+      "overall_pct": 75,
+      "stage_pct": 80,
+      "current_stage": "Kaggle T4 GPU Render Farm",
       "current_stage_index": 5,
       "archetype": "smart_money_divergence",
       "topic": "Closing Bell FII vs DII Order Flow Discrepancy",
