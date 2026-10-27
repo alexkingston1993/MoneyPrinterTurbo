@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T18:30:24Z",
+  "updated_at": "2026-10-27T19:54:21Z",
   "channel_median_vph": 0.1,
   "top_outperformers": [
     {
@@ -7,36 +7,36 @@
       "title": "Bharti Airtel: The Telecom Monopoly Player",
       "format": "LONG",
       "published_at": "2026-10-21T17:15:16Z",
-      "hours_live": 145.3,
-      "view_count": 208,
+      "hours_live": 146.7,
+      "view_count": 210,
       "like_count": 2,
       "comment_count": 0,
       "views_per_hour": 1.43,
-      "engagement_rate": 0.0096
+      "engagement_rate": 0.0095
     },
     {
       "video_id": "OtQ5ttfyt3U",
       "title": "The Math Retail Misses: Bitcoin Liquidation Heatmap & Fundi #Shorts",
       "format": "SHORT",
       "published_at": "2026-10-26T15:26:39Z",
-      "hours_live": 27.1,
-      "view_count": 29,
+      "hours_live": 28.5,
+      "view_count": 32,
       "like_count": 2,
       "comment_count": 6,
-      "views_per_hour": 1.07,
-      "engagement_rate": 0.6897
+      "views_per_hour": 1.12,
+      "engagement_rate": 0.625
     },
     {
       "video_id": "FogU8YmM9m0",
       "title": "Bitcoin Liquidation Heatmap & Funding Rate Delta (25 Oc #Shorts",
       "format": "SHORT",
       "published_at": "2026-10-25T18:16:17Z",
-      "hours_live": 48.2,
-      "view_count": 51,
+      "hours_live": 49.6,
+      "view_count": 53,
       "like_count": 1,
       "comment_count": 0,
-      "views_per_hour": 1.06,
-      "engagement_rate": 0.0196
+      "views_per_hour": 1.07,
+      "engagement_rate": 0.0189
     }
   ],
   "bottom_underperformers": [
@@ -45,7 +45,7 @@
       "title": "The Institutional Compounding Secret: How Smart Money Traps Retail in F&O (Institutional Breakd",
       "format": "LONG",
       "published_at": "2026-10-23T08:54:42Z",
-      "hours_live": 105.6,
+      "hours_live": 107.0,
       "view_count": 3,
       "like_count": 1,
       "comment_count": 0,
@@ -57,7 +57,7 @@
       "title": "Infosys: The Consistent Wealth Creator (Institutional Breakdown)",
       "format": "LONG",
       "published_at": "2026-10-19T23:11:16Z",
-      "hours_live": 187.3,
+      "hours_live": 188.7,
       "view_count": 6,
       "like_count": 1,
       "comment_count": 0,
@@ -69,7 +69,7 @@
       "title": "Don't Fall for the 24500 Trap: Why 90% of Everyday Buyers Lose Money (Institutional Breakdown)",
       "format": "SHORT",
       "published_at": "2026-10-24T10:03:39Z",
-      "hours_live": 80.4,
+      "hours_live": 81.8,
       "view_count": 2,
       "like_count": 1,
       "comment_count": 0,
