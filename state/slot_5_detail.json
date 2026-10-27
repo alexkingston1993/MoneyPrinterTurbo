@@ -194,6 +194,11 @@
       "ts": "14:20:54",
       "level": "INFO",
       "msg": "[KAGGLE_GPU]: \u23f3 Queued on Kaggle (0m 41s) | Waiting for free T4 node..."
+    },
+    {
+      "ts": "14:21:35",
+      "level": "INFO",
+      "msg": "[KAGGLE_GPU]: \u23f3 Queued on Kaggle (1m 21s) | Waiting for free T4 node..."
     }
   ]
 }
