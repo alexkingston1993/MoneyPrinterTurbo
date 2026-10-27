@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T20:39:38Z",
+  "updated_at": "2026-10-27T20:39:41Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -91,10 +91,10 @@
       "vertical_label": "Insurance #2",
       "shorts_count": 1,
       "status": "RUNNING",
-      "overall_pct": 25,
-      "stage_pct": 100,
-      "current_stage": "Gemini Script & Dossier Synthesis",
-      "current_stage_index": 2,
+      "overall_pct": 45,
+      "stage_pct": 70,
+      "current_stage": "Chart & High-CTR Thumbnail Studio",
+      "current_stage_index": 4,
       "archetype": "retail_myth_mathematical_deconstruction",
       "topic": "Term Insurance vs Endowment: Mathematical Reality",
       "voice_persona": "PrabhatNeural",
