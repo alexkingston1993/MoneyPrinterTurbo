@@ -5,13 +5,13 @@
   "vertical_label": "Slot #6",
   "shorts_count": 1,
   "status": "RUNNING",
-  "overall_pct": 25,
+  "overall_pct": 35,
   "stage_pct": 100,
-  "current_stage_index": 2,
-  "current_stage_name": "Gemini Script & Dossier Synthesis",
-  "current_subtask_label": "\ud83d\udee1\ufe0f INSURANCE",
+  "current_stage_index": 3,
+  "current_stage_name": "Virality & SEBI/IRDAI Compliance Gate",
+  "current_subtask_label": "Virality & SEBI compliance approved",
   "started_at": "2026-10-27T20:38:33Z",
-  "updated_at": "2026-10-27T20:39:24Z",
+  "updated_at": "2026-10-27T20:39:26Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -26,7 +26,7 @@
     {
       "id": 2,
       "name": "Gemini Script & Dossier Synthesis",
-      "status": "RUNNING",
+      "status": "COMPLETED",
       "pct": 100,
       "started_at": "2026-10-27T20:38:40Z",
       "completed_at": "2026-10-27T20:38:48Z",
@@ -35,9 +35,9 @@
     {
       "id": 3,
       "name": "Authenticity & SEBI/IRDAI Compliance Gate",
-      "status": "PENDING",
-      "pct": 0,
-      "started_at": null,
+      "status": "RUNNING",
+      "pct": 100,
+      "started_at": "2026-10-27T20:39:26Z",
       "completed_at": "2026-10-27T20:38:48Z",
       "metrics": {
         "audit_attempts": 1,
@@ -122,6 +122,11 @@
       "ts": "20:39:19",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udee1\ufe0f Virality & Compliance (Pass 1/3) | 100% Pass: Virality 95/100 + SEBI/IRDAI Approved"
+    },
+    {
+      "ts": "20:39:26",
+      "level": "INFO",
+      "msg": "[GEMINI]: \u2705 Generated + Healed (`health-insurance-claim-settlement-ratio-vs-ic-1793133552`) | \ud83d\udee1\ufe0f INSURANCE"
     }
   ]
 }
