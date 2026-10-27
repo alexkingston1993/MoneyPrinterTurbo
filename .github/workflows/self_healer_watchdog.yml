@@ -1,0 +1,48 @@
+name: Autonomous Doctor & AI Self-Healer Watchdog
+
+on:
+  schedule:
+    - cron: '0 */4 * * *'  # Health audit every 4 hours
+  workflow_run:
+    workflows:
+      - "Master Autonomous Scheduler (Market Pulse + Bull Print Video Engine)"
+      - "Flipzon & The Bull Print 100% Cloud Media Engine"
+    types:
+      - completed
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  diagnose-and-heal:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🐍 Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Install Watchdog Dependencies
+        run: |
+          pip install requests loguru
+
+      - name: 🩺 Execute Autonomous AI Self-Healer
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_PAT_TOKEN: ${{ secrets.GITHUB_PAT_TOKEN || secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python scripts/autonomous_watchdog.py

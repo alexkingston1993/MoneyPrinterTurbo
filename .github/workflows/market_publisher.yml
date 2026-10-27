@@ -53,6 +53,10 @@ on:
         description: 'Sequentially produce all 6 Long-Format Masterclass videos on Kaggle Dual-T4 GPU'
         required: false
         default: 'false'
+      force_cpu_fallback:
+        description: 'Bypass Kaggle GPU and render directly on local GHA CPU runner'
+        required: false
+        default: 'false'
       article_slot:
         description: 'Market slot name — run ARTICLE engine only (leave empty for video engine)'
         required: false
@@ -284,6 +288,7 @@ jobs:
           INPUT_SHORTS_ONLY: ${{ github.event.inputs.shorts_only || 'false' }}
           INPUT_BATCH_SHORTS: ${{ github.event.inputs.batch_shorts || 'false' }}
           INPUT_BATCH_LONGFORM: ${{ github.event.inputs.batch_longform || 'false' }}
+          FORCE_CPU_FALLBACK: ${{ github.event.inputs.force_cpu_fallback || github.event.client_payload.force_cpu_fallback || 'false' }}
           YOUTUBE_TOKEN_EN: ${{ secrets.YOUTUBE_TOKEN_EN }}
           YT_OAUTH_POOL_JSON: ${{ secrets.YT_OAUTH_POOL_JSON }}
           YT_CLIENT_ID: ${{ secrets.YT_CLIENT_ID }}

@@ -1107,6 +1107,7 @@ async def _async_main():
     parser.add_argument("--shorts-count", type=int, default=0, help="How many 9:16 Shorts to render from this session (1-2)")
     parser.add_argument("--topic", type=str, default="", help="Explicit topic override")
     parser.add_argument("--shorts-only", action="store_true", default=False, help="Render ONLY 9:16 Shorts (skip longform video)")
+    parser.add_argument("--force-cpu-fallback", action="store_true", default=False, help="Bypass Kaggle GPU and render directly on local CPU runner")
     parser.add_argument("--total-shorts", type=int, default=0, help="Total shorts to generate sequentially across slots (e.g. 10)")
     args, _unknown = parser.parse_known_args()
 
@@ -1429,13 +1430,31 @@ async def _async_main():
                 "compliance_notes": "SEBI/IRDAI Zero-violation feedback verified",
             })
     else:
-        mission.update_stage("kaggle_gpu", "🚀 Dispatching to Kaggle Dual-T4 GPU...")
-        yt_video_id, timestamps_log, short_video_ids, oauth_slot_used = run_kaggle_gpu_renderer(
-            payload, chart_files, yt_thumb, mission,
-            short_thumb_path=(short_thumb_paths[0] if short_thumb_paths else None),
-            short_thumb_paths=short_thumb_paths,
-        )
-        # 🛡️ QA-gate halt: kernel skipped YouTube upload → don't publish an article without a video id
+        force_cpu = getattr(args, "force_cpu_fallback", False) or (os.getenv("FORCE_CPU_FALLBACK", "").lower() in ("true", "1", "yes"))
+        yt_video_id, timestamps_log, short_video_ids, oauth_slot_used = None, "", [], 1
+
+        if not force_cpu:
+            try:
+                mission.update_stage("kaggle_gpu", "🚀 Dispatching to Kaggle Dual-T4 GPU...")
+                yt_video_id, timestamps_log, short_video_ids, oauth_slot_used = run_kaggle_gpu_renderer(
+                    payload, chart_files, yt_thumb, mission,
+                    short_thumb_path=(short_thumb_paths[0] if short_thumb_paths else None),
+                    short_thumb_paths=short_thumb_paths,
+                )
+            except Exception as kaggle_err:
+                logger.warning(f"⚠️ Kaggle GPU run failed or timed out ({kaggle_err}). Triggering uncrashable CPU Fallback Engine...")
+                yt_video_id = None
+
+        # 🛡️ UNCRASHABLE CPU FALLBACK: If Kaggle failed, timed out, or produced no video, render locally on GHA CPU
+        if not yt_video_id:
+            mission.update_stage("kaggle_gpu", "⚡ Kaggle Glitch — CPU Fallback Engaged")
+            logger.info("🛡️ [Uncrashable Fallback] Rendering Long-Form & Shorts on GitHub Actions local CPU runner...")
+            from app.services.local_cpu_renderer import run_local_cpu_fallback_renderer
+            yt_video_id, timestamps_log, short_video_ids, oauth_slot_used = await run_local_cpu_fallback_renderer(
+                payload, chart_files, yt_thumb, mission,
+                short_thumb_paths=short_thumb_paths,
+            )
+
         if not yt_video_id:
             mission.update_stage("kaggle_gpu", "🛡️ Uploaded SKIPPED (QA gate)", "Fix render, rerun slot")
             raise SystemExit(1)
