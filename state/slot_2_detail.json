@@ -96,7 +96,16 @@
       "pct": 100,
       "started_at": "2026-10-27T20:21:35Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "yt_long_id": "WSTQuqSd_p4",
+        "yt_short_ids": [
+          "IkFb0m29vP8",
+          "kIpLhOljtuM"
+        ],
+        "oauth_slot_used": 1,
+        "article_url": "https://the-bull-print.vercel.app/article.html?slug=crypto_tax_audit_115bbh_194s",
+        "x_thread_url": "Skipped (X keys not set)"
+      }
     }
   ],
   "live_logs": [
