@@ -138,6 +138,11 @@
       "ts": "18:31:24",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udd2c Auditing Authenticity Engine... | trigram dupe-check + domain vocabulary"
+    },
+    {
+      "ts": "18:31:29",
+      "level": "INFO",
+      "msg": "[GEMINI]: \u267b\ufe0f Authenticity regen 1/2... | 30-day overlap vs 'bitcoin-liquidation-heatmap-funding-rate-delt-1793038317' \u2192 title overlap ['2026', 'oct', 'slot']"
     }
   ]
 }
