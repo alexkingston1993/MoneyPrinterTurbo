@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T20:29:54Z",
+  "updated_at": "2026-10-27T20:29:56Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -41,7 +41,7 @@
       "vertical": "insurance",
       "vertical_label": "Insurance #1",
       "shorts_count": 2,
-      "status": "WAITING_APPROVAL",
+      "status": "COMPLETED",
       "overall_pct": 100,
       "stage_pct": 100,
       "current_stage": "Multi-Channel Distribution",
