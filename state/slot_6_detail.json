@@ -98,6 +98,11 @@
       "ts": "15:53:35",
       "level": "INFO",
       "msg": "[PLAYWRIGHT]: \ud83d\udcca Rendering insurance infographics... | "
+    },
+    {
+      "ts": "15:53:40",
+      "level": "INFO",
+      "msg": "[PLAYWRIGHT]: \u2705 Rendered (2 infographics) | "
     }
   ]
 }
