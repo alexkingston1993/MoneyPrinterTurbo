@@ -93,6 +93,11 @@
       "ts": "20:30:16",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udd0d Harvested `Sebi f&o rules` | source: autocomplete \u00b7 cluster: sebi f&o rules"
+    },
+    {
+      "ts": "20:30:21",
+      "level": "INFO",
+      "msg": "[PLAYWRIGHT]: \ud83d\udd04 Capturing 3 charts... | "
     }
   ]
 }
