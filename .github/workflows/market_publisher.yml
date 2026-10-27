@@ -53,6 +53,10 @@ on:
         description: 'Sequentially produce all 6 Long-Format Masterclass videos on Kaggle Dual-T4 GPU'
         required: false
         default: 'false'
+      batch_all_12:
+        description: 'Sequentially produce all 12 videos (4 Long-Form + 8 Shorts across 4 slots) with guaranteed CPU fallback'
+        required: false
+        default: 'false'
       force_cpu_fallback:
         description: 'Bypass Kaggle GPU and render directly on local GHA CPU runner'
         required: false
@@ -288,6 +292,7 @@ jobs:
           INPUT_SHORTS_ONLY: ${{ github.event.inputs.shorts_only || 'false' }}
           INPUT_BATCH_SHORTS: ${{ github.event.inputs.batch_shorts || 'false' }}
           INPUT_BATCH_LONGFORM: ${{ github.event.inputs.batch_longform || 'false' }}
+          INPUT_BATCH_ALL_12: ${{ github.event.inputs.batch_all_12 || 'false' }}
           FORCE_CPU_FALLBACK: ${{ github.event.inputs.force_cpu_fallback || github.event.client_payload.force_cpu_fallback || 'false' }}
           YOUTUBE_TOKEN_EN: ${{ secrets.YOUTUBE_TOKEN_EN }}
           YT_OAUTH_POOL_JSON: ${{ secrets.YT_OAUTH_POOL_JSON }}
@@ -307,7 +312,10 @@ jobs:
           YT_CLIENT_SECRET_4: ${{ secrets.YT_CLIENT_SECRET_4 }}
           YT_REFRESH_TOKEN_4: ${{ secrets.YT_REFRESH_TOKEN_4 }}
         run: |
-          if [ "${{ github.event.inputs.batch_shorts }}" = "true" ] || [ "${{ env.INPUT_BATCH_SHORTS }}" = "true" ]; then
+          if [ "${{ github.event.inputs.batch_all_12 }}" = "true" ] || [ "${{ env.INPUT_BATCH_ALL_12 }}" = "true" ]; then
+            echo "🚀 Launching Master 12-Video Sequential Production Run (4 Slots x 3 Videos = 12 Videos)..."
+            python scripts/publish_all_12_videos.py
+          elif [ "${{ github.event.inputs.batch_shorts }}" = "true" ] || [ "${{ env.INPUT_BATCH_SHORTS }}" = "true" ]; then
             echo "🚀 Launching Master 10-Shorts Sequential Production Run on GHA (CPU FFmpeg)..."
             python run_batch_shorts.py
           elif [ "${{ github.event.inputs.batch_longform }}" = "true" ] || [ "${{ env.INPUT_BATCH_LONGFORM }}" = "true" ]; then

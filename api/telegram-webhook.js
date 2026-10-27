@@ -396,6 +396,21 @@ export default async function handler(req, res) {
       return res.status(200).json({ ok: true, action: 'heal' });
     }
 
+    // Master 12-Video Production Command: /publish12 or "publish all 12 videos"
+    if (lower.includes('all 12') || lower.includes('publish 12') || lower.includes('12 videos') || lower === '/publish12' || lower === '/all12') {
+      const gh = await dispatchGitHubWorkflow('market_publisher.yml', {
+        batch_all_12: 'true',
+        force_cpu_fallback: 'false',
+      });
+      await sendTelegram(
+        chatId,
+        gh.ok
+          ? '🚀 *Agent Aria:* Dispatched Master 12-Video Production Run! 🎬✨\n\nProducing 4 Slots (4 Long-Form 1080p Masterclasses + 8 Shorts = 12 Videos total) with automatic CPU failover.'
+          : `⚠️ Failed to dispatch workflow (HTTP ${gh.status}). Check GITHUB_PAT_TOKEN.`
+      );
+      return res.status(200).json({ ok: true, action: 'batch_all_12' });
+    }
+
     // Explicit command: /run [vertical] or natural intent "make a video"
     if (lower.startsWith('/run') || lower === 'make a video now' || lower === 'run' || lower.startsWith('make a video') || lower.startsWith('create a video')) {
       let vert = 'stock_market';

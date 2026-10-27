@@ -295,45 +295,27 @@ async def run_local_cpu_fallback_renderer(
         long_video_id = "LOCAL_CPU_UPLOAD_DONE"
 
     # 4. Render and Upload Companion Shorts
-    from app.services.short_renderer import render_short_locally, generate_high_ctr_short_cover, upload_short_to_youtube
+    from app.services.short_renderer import render_and_upload_short_local
     short_extractions = payload.get("youtube_payload", {}).get("short_extractions") or []
     if not short_extractions and payload.get("youtube_payload", {}).get("short_extraction"):
         short_extractions = [payload["youtube_payload"]["short_extraction"]]
+    shorts_count = int(payload.get("shorts_count") or len(short_extractions) or 1)
 
     short_video_ids = []
-    logger.info(f"🎬 [CPU Shorts] Rendering {len(short_extractions)} companion Shorts...")
-    for s_idx, s_data in enumerate(short_extractions, 1):
+    logger.info(f"🎬 [CPU Shorts] Rendering {min(len(short_extractions), shorts_count)} companion Shorts...")
+    for s_idx in range(1, min(len(short_extractions), shorts_count) + 1):
         if mission:
-            mission.update_stage("kaggle_gpu", f"🎬 Rendering CPU Short #{s_idx}/{len(short_extractions)}...")
+            mission.update_stage("kaggle_gpu", f"🎬 Rendering CPU Short #{s_idx}/{shorts_count}...")
 
-        chart_ref = s_data.get("chart_image_ref", "") or (chart_files[0] if chart_files else "")
-        short_out_mp4 = WORK_DIR / f"cpu_short_{s_idx:02d}.mp4"
         short_thumb = (short_thumb_paths[s_idx - 1] if short_thumb_paths and len(short_thumb_paths) >= s_idx else None)
-
         try:
-            rendered_short = await render_short_locally(
-                short_data=s_data,
-                chart_ref=chart_ref,
-                vertical=vertical,
-                output_path=short_out_mp4,
+            sv_id = await render_and_upload_short_local(
+                payload=payload,
                 short_index=s_idx,
-                short_thumb_path=short_thumb,
-            )
-            s_title = s_data.get("short_title") or s_data.get("title") or f"{long_title} (Short #{s_idx})"
-            s_desc = (
-                f"{s_data.get('spoken_hook_and_body', '')[:160]}\n\n"
-                f"▶️ Watch the FULL MASTERCLASS: https://youtu.be/{long_video_id}\n"
-                f"🛠️ Get every free trading tool: https://the-bull-print.vercel.app/tools\n\n"
-                f"🎓 SEBI: Educational content only — not investment advice."
-            )
-            s_res = upload_short_to_youtube(
-                mp4_path=rendered_short,
                 thumb_path=short_thumb,
-                title=f"{s_title} #Shorts",
-                description=s_desc,
-                tags=meta.get("tags", []),
+                vertical=vertical,
+                existing_long_id=long_video_id,
             )
-            sv_id = s_res.get("video_id", "")
             if sv_id:
                 short_video_ids.append(sv_id)
                 logger.success(f"✓ CPU Short #{s_idx} uploaded to YouTube: {sv_id}")
