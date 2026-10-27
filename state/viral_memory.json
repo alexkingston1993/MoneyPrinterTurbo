@@ -1,13 +1,25 @@
 {
-  "updated_at": "2026-10-27T19:54:21Z",
-  "channel_median_vph": 0.1,
+  "updated_at": "2026-10-27T20:06:38Z",
+  "channel_median_vph": 0.14,
   "top_outperformers": [
+    {
+      "video_id": "ujBlVUq9WSo",
+      "title": "The Truth About Mutual Funds India 3:15 PM Trap",
+      "format": "LONG",
+      "published_at": "2026-10-27T20:01:55Z",
+      "hours_live": 0.5,
+      "view_count": 1,
+      "like_count": 1,
+      "comment_count": 1,
+      "views_per_hour": 2.0,
+      "engagement_rate": 4.0
+    },
     {
       "video_id": "FfxHCzx7QhM",
       "title": "Bharti Airtel: The Telecom Monopoly Player",
       "format": "LONG",
       "published_at": "2026-10-21T17:15:16Z",
-      "hours_live": 146.7,
+      "hours_live": 146.9,
       "view_count": 210,
       "like_count": 2,
       "comment_count": 0,
@@ -19,62 +31,50 @@
       "title": "The Math Retail Misses: Bitcoin Liquidation Heatmap & Fundi #Shorts",
       "format": "SHORT",
       "published_at": "2026-10-26T15:26:39Z",
-      "hours_live": 28.5,
+      "hours_live": 28.7,
       "view_count": 32,
       "like_count": 2,
       "comment_count": 6,
       "views_per_hour": 1.12,
       "engagement_rate": 0.625
-    },
-    {
-      "video_id": "FogU8YmM9m0",
-      "title": "Bitcoin Liquidation Heatmap & Funding Rate Delta (25 Oc #Shorts",
-      "format": "SHORT",
-      "published_at": "2026-10-25T18:16:17Z",
-      "hours_live": 49.6,
-      "view_count": 53,
-      "like_count": 1,
-      "comment_count": 0,
-      "views_per_hour": 1.07,
-      "engagement_rate": 0.0189
     }
   ],
   "bottom_underperformers": [
-    {
-      "video_id": "dxhUWlm3DUQ",
-      "title": "The Institutional Compounding Secret: How Smart Money Traps Retail in F&O (Institutional Breakd",
-      "format": "LONG",
-      "published_at": "2026-10-23T08:54:42Z",
-      "hours_live": 107.0,
-      "view_count": 3,
-      "like_count": 1,
-      "comment_count": 0,
-      "views_per_hour": 0.03,
-      "engagement_rate": 0.3333
-    },
-    {
-      "video_id": "b2ryVj4JRb8",
-      "title": "Infosys: The Consistent Wealth Creator (Institutional Breakdown)",
-      "format": "LONG",
-      "published_at": "2026-10-19T23:11:16Z",
-      "hours_live": 188.7,
-      "view_count": 6,
-      "like_count": 1,
-      "comment_count": 0,
-      "views_per_hour": 0.03,
-      "engagement_rate": 0.1667
-    },
     {
       "video_id": "b02BMahomyE",
       "title": "Don't Fall for the 24500 Trap: Why 90% of Everyday Buyers Lose Money (Institutional Breakdown)",
       "format": "SHORT",
       "published_at": "2026-10-24T10:03:39Z",
-      "hours_live": 81.8,
+      "hours_live": 82.0,
       "view_count": 2,
       "like_count": 1,
       "comment_count": 0,
       "views_per_hour": 0.02,
       "engagement_rate": 0.5
+    },
+    {
+      "video_id": "w5MovxTb2tk",
+      "title": "Nifty 50 Order Flow Absorption & Institutional Footprin #Shorts",
+      "format": "SHORT",
+      "published_at": "2026-10-27T20:06:05Z",
+      "hours_live": 0.5,
+      "view_count": 0,
+      "like_count": 0,
+      "comment_count": 1,
+      "views_per_hour": 0.0,
+      "engagement_rate": 3.0
+    },
+    {
+      "video_id": "KzcVr6exVoY",
+      "title": "Nifty 50 Order Flow Absorption & Institutional Footprint (27 Oct 2026 Slot #1)",
+      "format": "LONG",
+      "published_at": "2026-10-27T20:05:58Z",
+      "hours_live": 0.5,
+      "view_count": 0,
+      "like_count": 0,
+      "comment_count": 1,
+      "views_per_hour": 0.0,
+      "engagement_rate": 3.0
     }
   ],
   "winning_hook_patterns": [
