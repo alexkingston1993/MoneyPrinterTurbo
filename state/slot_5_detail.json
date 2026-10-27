@@ -1,201 +1,88 @@
 {
   "slot": 5,
-  "run_id": "40346945550",
+  "run_id": "40519219602",
   "vertical": "crypto",
   "vertical_label": "Slot #5",
-  "shorts_count": 2,
-  "status": "COMPLETED",
-  "overall_pct": 100,
-  "stage_pct": 100,
-  "current_stage_index": 7,
-  "current_stage_name": "Multi-Channel Distribution",
-  "current_subtask_label": "Live: https://the-bull-print.vercel.app/article.html?slug=bitcoin-liquidation-heatmap-funding-rate-delt-1793029206",
-  "started_at": "2026-10-26T15:39:19Z",
-  "updated_at": "2026-10-26T15:42:18Z",
+  "shorts_count": 1,
+  "status": "RUNNING",
+  "overall_pct": 2,
+  "stage_pct": 10,
+  "current_stage_index": 1,
+  "current_stage_name": "SEO Topic Harvester (open-seo)",
+  "current_subtask_label": "Harvesting search intent & clusters",
+  "started_at": "2026-10-27T14:15:37Z",
+  "updated_at": "2026-10-27T14:15:37Z",
   "eta_seconds": 0,
   "stages": [
     {
       "id": 1,
       "name": "SEO Topic Harvester (open-seo)",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-26T15:36:26Z",
-      "completed_at": "2026-10-26T15:39:25Z",
+      "status": "RUNNING",
+      "pct": 0,
+      "started_at": "2026-10-27T14:15:35Z",
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 2,
       "name": "Gemini Script & Dossier Synthesis",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-26T15:39:25Z",
-      "completed_at": "2026-10-26T15:39:35Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 3,
       "name": "Authenticity & SEBI/IRDAI Compliance Gate",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-26T15:40:24Z",
-      "completed_at": "2026-10-26T15:39:35Z",
-      "metrics": {
-        "audit_attempts": 1,
-        "compliance_status": "PASS_1",
-        "audit_notes": "Virality dopamine pacing and SEBI/IRDAI compliance healed & verified",
-        "compliance_pass": true,
-        "compliance_verdict": "PASSED_AFTER_FEEDBACK",
-        "virality_score": 92,
-        "authenticity_pass": true,
-        "trigram_similarity_pct": 8.4,
-        "regex_violations": 0
-      }
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
+      "metrics": {}
     },
     {
       "id": 4,
       "name": "Chart & High-CTR Thumbnail Studio",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-26T15:39:35Z",
-      "completed_at": "2026-10-26T15:41:26Z",
-      "metrics": {
-        "approval_status": "AUTO_APPROVED",
-        "approval_deadline_ts": 1793029266,
-        "headline": "LIQUIDATION CLUSTERS"
-      }
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
+      "metrics": {}
     },
     {
       "id": 5,
       "name": "Kaggle T4 GPU Render Farm",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-26T15:41:26Z",
-      "completed_at": "2026-10-26T15:42:06Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 6,
       "name": "OpenMontage Post-Render QA Gate",
-      "status": "COMPLETED",
-      "pct": 100,
+      "status": "PENDING",
+      "pct": 0,
       "started_at": null,
-      "completed_at": "2026-10-26T15:42:06Z",
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 7,
       "name": "Multi-Channel Distribution",
-      "status": "RUNNING",
-      "pct": 100,
-      "started_at": "2026-10-26T15:42:06Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
       "completed_at": null,
-      "metrics": {
-        "yt_long_id": "6gumQ4SEhXE",
-        "yt_short_ids": [
-          "6gumQ4SEhXE",
-          "OtQ5ttfyt3U"
-        ],
-        "oauth_slot_used": 1,
-        "article_url": "https://the-bull-print.vercel.app/article.html?slug=bitcoin-liquidation-heatmap-funding-rate-delt-1793029206",
-        "x_thread_url": "Skipped (X keys not set)"
-      }
+      "metrics": {}
     }
   ],
   "live_logs": [
     {
-      "ts": "15:36:28",
-      "level": "ERROR",
-      "msg": "Runner failed: 'thumbnail_top_text'"
-    },
-    {
-      "ts": "15:39:19",
+      "ts": "14:15:37",
       "level": "INFO",
-      "msg": "Slot #5 (crypto) initialized. Target: 1 Long + 2 Shorts."
-    },
-    {
-      "ts": "15:39:27",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvesting live search intent... | open-seo dark-query loop \u00b7 slot 5"
-    },
-    {
-      "ts": "15:39:32",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvested `Usdt dominance today` | source: autocomplete \u00b7 cluster: usdt dominance today, usdt dominance chart crypto, usdt dominance coinmarketcap"
-    },
-    {
-      "ts": "15:39:37",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \ud83d\udd04 Capturing 3 charts... | "
-    },
-    {
-      "ts": "15:39:56",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \u2705 Captured (3 charts) | "
-    },
-    {
-      "ts": "15:40:01",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83e\udde0 Synthesizing Dual Script + Article... | "
-    },
-    {
-      "ts": "15:40:08",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udee1\ufe0f Auditing Virality & Compliance... | Retention pacing + SEBI/IRDAI auditor"
-    },
-    {
-      "ts": "15:40:13",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udee1\ufe0f Virality & Compliance (Pass 1/3) | 100% Pass: Virality 90/100 + SEBI/IRDAI Approved"
-    },
-    {
-      "ts": "15:40:21",
-      "level": "INFO",
-      "msg": "[GEMINI]: \u2705 Generated + Healed (`bitcoin-liquidation-heatmap-funding-rate-delt-1793029206`) | \ud83e\ude99 CRYPTO"
-    },
-    {
-      "ts": "15:40:29",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd2c Auditing Authenticity Engine... | trigram dupe-check + domain vocabulary"
-    },
-    {
-      "ts": "15:40:32",
-      "level": "INFO",
-      "msg": "[GEMINI]: \u267b\ufe0f Authenticity regen 1/2... | 30-day overlap vs 'nifty-50-order-flow-absorption-institutional--1793029034' \u2192 title overlap ['2026', 'oct', 'slot']"
-    },
-    {
-      "ts": "15:40:38",
-      "level": "INFO",
-      "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering Pillow Graphics... | "
-    },
-    {
-      "ts": "15:41:17",
-      "level": "INFO",
-      "msg": "[THUMBNAIL]: \u26a1 Auto-Approved (`LIQUIDATION CLUSTERS`) | "
-    },
-    {
-      "ts": "15:41:22",
-      "level": "INFO",
-      "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering 2 9:16 Shelf Thumbnails... | "
-    },
-    {
-      "ts": "15:41:29",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \u26a1 GHA Local Engine: Rendering 2 Shorts in sequence... | "
-    },
-    {
-      "ts": "15:41:59",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \u2705 Rendered & Uploaded (2 Shorts via GHA) | "
-    },
-    {
-      "ts": "15:42:08",
-      "level": "INFO",
-      "msg": "[VERCEL]: \ud83d\udcdd Compiling MDX & IndexNow Ping... | "
-    },
-    {
-      "ts": "15:42:13",
-      "level": "INFO",
-      "msg": "[VERCEL]: \u2705 Live & Indexed (`https://the-bull-print.vercel.app/article.html?slug=bitcoin-liquidation-heatmap-funding-rate-delt-1793029206`) | \ud83c\udfac Shorts (2): 6gumQ4SEhXE \u00b7 OtQ5ttfyt3U \u00b7 \ud83d\udc26 X Thread: Skipped (X keys not set)"
+      "msg": "Slot #5 (crypto) initialized. Target: 1 Long + 1 Shorts."
     }
   ]
 }
