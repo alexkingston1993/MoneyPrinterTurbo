@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T20:43:46Z",
+  "updated_at": "2026-10-27T20:43:49Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -92,8 +92,8 @@
       "shorts_count": 1,
       "status": "WAITING_APPROVAL",
       "overall_pct": 75,
-      "stage_pct": 80,
-      "current_stage": "Kaggle T4 GPU Render Farm",
+      "stage_pct": 50,
+      "current_stage": "Local CPU Media Engine",
       "current_stage_index": 5,
       "archetype": "retail_myth_mathematical_deconstruction",
       "topic": "Term Insurance vs Endowment: Mathematical Reality",
