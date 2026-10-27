@@ -189,6 +189,11 @@
       "ts": "20:03:34",
       "level": "INFO",
       "msg": "[KAGGLE_GPU]: \u23f3 Queued on Kaggle (0m 0s) | Waiting for free T4 node..."
+    },
+    {
+      "ts": "20:04:14",
+      "level": "INFO",
+      "msg": "[KAGGLE_GPU]: \u274c Kaggle Error \u2014 Fallback Engaged | "
     }
   ]
 }
