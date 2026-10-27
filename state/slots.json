@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T16:04:07Z",
+  "updated_at": "2026-10-27T16:04:11Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -90,7 +90,7 @@
       "vertical": "insurance",
       "vertical_label": "Insurance #2",
       "shorts_count": 1,
-      "status": "WAITING_APPROVAL",
+      "status": "FAILED",
       "overall_pct": 75,
       "stage_pct": 80,
       "current_stage": "Kaggle T4 GPU Render Farm",
