@@ -162,6 +162,11 @@
       "ts": "20:14:02",
       "level": "INFO",
       "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering 2 9:16 Shelf Thumbnails... | "
+    },
+    {
+      "ts": "20:14:08",
+      "level": "INFO",
+      "msg": "[KAGGLE_GPU]: \ud83d\ude80 Dispatching to Kaggle Dual-T4 GPU... | "
     }
   ]
 }
