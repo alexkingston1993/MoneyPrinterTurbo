@@ -214,6 +214,11 @@
       "ts": "20:19:33",
       "level": "INFO",
       "msg": "[KAGGLE_GPU]: \ud83c\udfac Rendering CPU Short #1/2... | "
+    },
+    {
+      "ts": "20:20:34",
+      "level": "INFO",
+      "msg": "[KAGGLE_GPU]: \ud83c\udfac Rendering CPU Short #2/2... | "
     }
   ]
 }
