@@ -73,11 +73,11 @@
       "completed_at": null,
       "metrics": {
         "voice_persona": "Prabhat (IRDAI Policy Forensics)",
-        "kaggle_kernel_status": "QUEUED",
+        "kaggle_kernel_status": "ERROR",
         "long_render_pct": 0,
         "short_1_render_pct": 0,
         "short_2_render_pct": 0,
-        "gpu_elapsed_sec": 0
+        "gpu_elapsed_sec": 39
       }
     },
     {
