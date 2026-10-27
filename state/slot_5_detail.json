@@ -73,11 +73,11 @@
       "completed_at": null,
       "metrics": {
         "voice_persona": "Brian (High-Beta Macro)",
-        "kaggle_kernel_status": "QUEUED",
-        "long_render_pct": 0,
-        "short_1_render_pct": 0,
+        "kaggle_kernel_status": "RUNNING",
+        "long_render_pct": 80,
+        "short_1_render_pct": 25,
         "short_2_render_pct": 0,
-        "gpu_elapsed_sec": 122
+        "gpu_elapsed_sec": 164
       }
     },
     {
