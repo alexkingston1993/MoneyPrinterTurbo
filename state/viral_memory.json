@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-10-27T20:22:01Z",
-  "channel_median_vph": 0.17,
+  "updated_at": "2026-10-27T20:30:07Z",
+  "channel_median_vph": 0.09,
   "top_outperformers": [
     {
       "video_id": "ujBlVUq9WSo",
@@ -27,16 +27,16 @@
       "engagement_rate": 2.0
     },
     {
-      "video_id": "FfxHCzx7QhM",
-      "title": "Bharti Airtel: The Telecom Monopoly Player",
-      "format": "LONG",
-      "published_at": "2026-10-21T17:15:16Z",
-      "hours_live": 147.1,
-      "view_count": 210,
+      "video_id": "OtQ5ttfyt3U",
+      "title": "The Math Retail Misses: Bitcoin Liquidation Heatmap & Fundi #Shorts",
+      "format": "SHORT",
+      "published_at": "2026-10-26T15:26:39Z",
+      "hours_live": 29.1,
+      "view_count": 32,
       "like_count": 2,
-      "comment_count": 0,
-      "views_per_hour": 1.43,
-      "engagement_rate": 0.0095
+      "comment_count": 6,
+      "views_per_hour": 1.1,
+      "engagement_rate": 0.625
     }
   ],
   "bottom_underperformers": [
