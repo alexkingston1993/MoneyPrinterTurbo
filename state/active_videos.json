@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-27T20:21:30Z",
+  "updated_at": "2026-10-27T20:23:01Z",
   "videos": {
     "slot_1_long": {
       "slot": 1,
@@ -79,6 +79,21 @@
       "started_at": "2026-10-27T20:13:00Z",
       "youtube_id": "WSTQuqSd_p4",
       "youtube_url": "https://www.youtube.com/watch?v=WSTQuqSd_p4"
+    },
+    "slot_3_long": {
+      "video_id": "slot_3_long",
+      "slot": 3,
+      "title": "[LONG-FORM] IRDAI Proportionate Deduction Math: How Daily Room Caps Slash Surgery & Doctor ICU Claims",
+      "format": "16:9 LONG",
+      "vertical": "INSURANCE",
+      "current_stage": "Stage 4/7: Chart & High-CTR Thumbnail Studio",
+      "stage_pct": 20,
+      "completion_pct": 40,
+      "eta_seconds": 360,
+      "compliance_status": "\ud83d\udee1\ufe0f Feedback Healed & Verified",
+      "status": "IN_PROGRESS",
+      "updated_at": "2026-10-27T20:23:01Z",
+      "started_at": "2026-10-27T20:23:01Z"
     }
   }
 }
