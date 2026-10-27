@@ -31,22 +31,32 @@ except Exception as e:
     print(f"Warning on import: {e}")
 
 def get_payload_dir() -> Path:
-    p = Path("/kaggle/input/flipzon-daily-payload")
-    if (p / "payload.json").exists():
-        return p
+    # 1. Check directory of current script (__file__.parent) when bundled directly in kernel push
+    script_dir = Path(__file__).resolve().parent
+    if (script_dir / "payload.json").exists():
+        return script_dir
+    # 2. Check /kaggle/src and /kaggle/working where Kaggle unpacks scripts
+    for p in [Path("/kaggle/src"), Path("/kaggle/working"), Path(".")]:
+        if (p / "payload.json").exists():
+            return p
+    # 3. Check mounted input datasets
+    p_ds = Path("/kaggle/input/flipzon-daily-payload")
+    if (p_ds / "payload.json").exists():
+        return p_ds
     if Path("/kaggle/input").exists():
         matches = list(Path("/kaggle/input").rglob("payload.json"))
         if matches:
             return matches[0].parent
+    # 4. Check local staging directory
     stage = Path(__file__).parent.parent / "kaggle_stage"
     if (stage / "payload.json").exists():
         return stage
-    for cand in [Path("/kaggle/working"), Path(".")]:
-        if (cand / "payload.json").exists():
-            return cand
-    return p
+    return script_dir
 
 def get_assets_dir() -> Path:
+    script_dir = Path(__file__).resolve().parent
+    if (script_dir / "avatar_1.png").exists():
+        return script_dir
     a = Path("/kaggle/input/flipzon-studio-assets")
     if (a / "avatar_1.png").exists() or (a / "avatars" / "avatar_1.png").exists():
         return a
@@ -812,17 +822,34 @@ async def run_kaggle_job():
     PAYLOAD_DIR = get_payload_dir()
     ASSETS_DIR = get_assets_dir()
 
-    payload_file = PAYLOAD_DIR / "payload.json"
-    if not payload_file.exists():
-        found = list(Path("/kaggle/input").rglob("payload.json")) if Path("/kaggle/input").exists() else []
-        if found:
-            payload_file = found[0]
-            PAYLOAD_DIR = payload_file.parent
-        else:
-            payload_file = Path(__file__).parent.parent / "payload.json"
-            if not payload_file.exists() and Path("payload.json").exists():
-                payload_file = Path("payload.json")
-                PAYLOAD_DIR = Path(".")
+    payload_file = None
+    for cand in [
+        PAYLOAD_DIR / "payload.json",
+        Path(__file__).resolve().parent / "payload.json",
+        Path("/kaggle/src/payload.json"),
+        Path("/kaggle/working/payload.json"),
+        Path("payload.json"),
+    ]:
+        if cand.exists():
+            payload_file = cand
+            PAYLOAD_DIR = cand.parent
+            break
+
+    if not payload_file or not payload_file.exists():
+        if Path("/kaggle/input").exists():
+            found = list(Path("/kaggle/input").rglob("payload.json"))
+            if found:
+                payload_file = found[0]
+                PAYLOAD_DIR = payload_file.parent
+
+    if not payload_file or not payload_file.exists():
+        fallback_parent = Path(__file__).parent.parent / "payload.json"
+        if fallback_parent.exists():
+            payload_file = fallback_parent
+            PAYLOAD_DIR = fallback_parent.parent
+
+    if not payload_file or not payload_file.exists():
+        raise FileNotFoundError(f"Could not locate payload.json in {PAYLOAD_DIR}, /kaggle/src, /kaggle/working, or /kaggle/input")
 
     print(f"📦 Loaded payload from: {payload_file} (PAYLOAD_DIR={PAYLOAD_DIR}, ASSETS_DIR={ASSETS_DIR})")
     payload = json.loads(payload_file.read_text(encoding="utf-8"))

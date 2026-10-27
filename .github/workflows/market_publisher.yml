@@ -7,7 +7,9 @@ on:
   #   Slot 1 Stock pre-open 08:30 IST · Slot 2 Crypto 11:00 IST · Slot 3 Insurance 13:30 IST
   #   Slot 4 Stock close 15:45 IST · Slot 5 Crypto evening 18:30 IST · Slot 6 Insurance night 21:00 IST
   schedule:
+    - cron: '0 3 * * *'      # 08:30 AM IST  — video: Slot 1 Stock pre-open (2 Shorts)
     - cron: '33 3 * * 1-5'   # 09:03 AM IST  — article: Pre-Market / Open Brief
+    - cron: '30 5 * * *'     # 11:00 AM IST  — video: Slot 2 Crypto morning (2 Shorts)
     - cron: '33 5 * * 1-5'   # 11:03 AM IST  — article: Morning Momentum & Sector Rotation
     - cron: '0 8 * * *'      # 13:30 PM IST  — video: Slot 3 Insurance lunch (2 Shorts)
     - cron: '03 8 * * 1-5'   # 13:33 PM IST  — article: Mid-Day / European Cues

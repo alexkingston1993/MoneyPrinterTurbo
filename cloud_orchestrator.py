@@ -842,6 +842,25 @@ def run_kaggle_gpu_renderer(
         except Exception as e:
             logger.debug(f"Could not update kernel-metadata.json: {e}")
 
+    # Directly stage payload & assets into kernel_dir so the GPU kernel is 100% self-contained
+    try:
+        (kernel_dir / "payload.json").write_text(json.dumps(payload, indent=2), encoding="utf-8")
+        if pool_json:
+            (kernel_dir / "yt_oauth_pool.json").write_text(pool_json, encoding="utf-8")
+        if yt_thumb.exists():
+            shutil.copy2(yt_thumb, kernel_dir / "yt_thumb.jpg")
+        for cf in chart_files:
+            src = BASE_DIR / "assets" / "charts" / cf
+            if src.exists():
+                shutil.copy2(src, kernel_dir / cf)
+        for ava_path in [BASE_DIR / "assets" / "avatars" / "avatar_1.png", BASE_DIR / "assets" / "avatar_1.png"]:
+            if ava_path.exists():
+                shutil.copy2(ava_path, kernel_dir / "avatar_1.png")
+                break
+        logger.info(f"📦 Staged self-contained payload.json & assets into {kernel_dir}")
+    except Exception as e:
+        logger.warning(f"Could not copy direct payload to kernel_dir: {e}")
+
     logger.info("🔥 Triggering Kaggle Dual-T4 GPU Kernel for Whisper + NVENC Video Render...")
     mission.update_stage("kaggle_gpu", "🔥 Waking Dual-T4 GPU Kernel...")
     mission.bridge.update_progress(55, 25, 5, "Kaggle T4 GPU Render Farm", "Waking Dual-T4 GPU Kernel...")
