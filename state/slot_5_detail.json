@@ -5,13 +5,13 @@
   "vertical_label": "Slot #5",
   "shorts_count": 1,
   "status": "WAITING_APPROVAL",
-  "overall_pct": 75,
-  "stage_pct": 80,
+  "overall_pct": 55,
+  "stage_pct": 30,
   "current_stage_index": 5,
   "current_stage_name": "Kaggle T4 GPU Render Farm",
-  "current_subtask_label": "Waiting for free T4 node...",
+  "current_subtask_label": "Queued on Kaggle Dual-T4 node (0m 41s)",
   "started_at": "2026-10-27T14:15:37Z",
-  "updated_at": "2026-10-27T14:20:52Z",
+  "updated_at": "2026-10-27T14:20:57Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -68,7 +68,7 @@
       "id": 5,
       "name": "Kaggle T4 GPU Render Farm",
       "status": "RUNNING",
-      "pct": 80,
+      "pct": 30,
       "started_at": "2026-10-27T14:18:35Z",
       "completed_at": null,
       "metrics": {
