@@ -5,13 +5,13 @@
   "vertical_label": "Slot #4",
   "shorts_count": 2,
   "status": "WAITING_APPROVAL",
-  "overall_pct": 50,
-  "stage_pct": 60,
+  "overall_pct": 45,
+  "stage_pct": 70,
   "current_stage_index": 4,
   "current_stage_name": "Chart & High-CTR Thumbnail Studio",
-  "current_subtask_label": "Waiting for operator approval (Telegram or Dashboard)",
+  "current_subtask_label": "Thumbnails rendered & staged",
   "started_at": "2026-10-27T20:30:01Z",
-  "updated_at": "2026-10-27T20:32:12Z",
+  "updated_at": "2026-10-27T20:32:43Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -55,7 +55,7 @@
       "id": 4,
       "name": "Chart & High-CTR Thumbnail Studio",
       "status": "RUNNING",
-      "pct": 60,
+      "pct": 70,
       "started_at": "2026-10-27T20:30:19Z",
       "completed_at": null,
       "metrics": {
