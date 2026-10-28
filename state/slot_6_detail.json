@@ -1,17 +1,17 @@
 {
   "slot": 6,
-  "run_id": "40758664423",
-  "vertical": "stock_market",
+  "run_id": "40763003043",
+  "vertical": "insurance",
   "vertical_label": "Slot #6",
-  "shorts_count": 2,
-  "status": "FAILED",
-  "overall_pct": 0,
-  "stage_pct": 0,
+  "shorts_count": 1,
+  "status": "RUNNING",
+  "overall_pct": 2,
+  "stage_pct": 10,
   "current_stage_index": 1,
-  "current_stage_name": "SEO Topic Harvester",
-  "current_subtask_label": "Error: 'thumbnail_top_text'",
-  "started_at": "2026-10-28T20:03:49Z",
-  "updated_at": "2026-10-28T20:17:40Z",
+  "current_stage_name": "SEO Topic Harvester (open-seo)",
+  "current_subtask_label": "Harvesting search intent & clusters",
+  "started_at": "2026-10-28T20:27:42Z",
+  "updated_at": "2026-10-28T20:27:42Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -19,7 +19,7 @@
       "name": "SEO Topic Harvester (open-seo)",
       "status": "RUNNING",
       "pct": 0,
-      "started_at": "2026-10-28T20:03:49Z",
+      "started_at": "2026-10-28T20:27:41Z",
       "completed_at": null,
       "metrics": {}
     },
@@ -80,24 +80,9 @@
   ],
   "live_logs": [
     {
-      "ts": "20:03:53",
-      "level": "ERROR",
-      "msg": "Runner failed: 'thumbnail_top_text'"
-    },
-    {
-      "ts": "20:05:32",
-      "level": "ERROR",
-      "msg": "Runner failed: 'thumbnail_top_text'"
-    },
-    {
-      "ts": "20:15:33",
-      "level": "ERROR",
-      "msg": "Runner failed: 'thumbnail_top_text'"
-    },
-    {
-      "ts": "20:17:43",
-      "level": "ERROR",
-      "msg": "Runner failed: 'thumbnail_top_text'"
+      "ts": "20:27:42",
+      "level": "INFO",
+      "msg": "Slot #6 (insurance) initialized. Target: 1 Long + 1 Shorts."
     }
   ]
 }
