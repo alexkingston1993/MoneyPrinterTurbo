@@ -88,6 +88,11 @@
       "ts": "20:05:32",
       "level": "ERROR",
       "msg": "Runner failed: 'thumbnail_top_text'"
+    },
+    {
+      "ts": "20:15:33",
+      "level": "ERROR",
+      "msg": "Runner failed: 'thumbnail_top_text'"
     }
   ]
 }
