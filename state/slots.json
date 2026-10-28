@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-28T15:08:49Z",
+  "updated_at": "2026-10-28T15:08:53Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -11,8 +11,8 @@
       "shorts_count": 2,
       "status": "WAITING_APPROVAL",
       "overall_pct": 75,
-      "stage_pct": 50,
-      "current_stage": "Local CPU Media Engine",
+      "stage_pct": 80,
+      "current_stage": "Kaggle T4 GPU Render Farm",
       "current_stage_index": 5,
       "archetype": "institutional_trap_expose",
       "topic": "Nifty 50 Liquidity Traps & Institutional Accumulation",
