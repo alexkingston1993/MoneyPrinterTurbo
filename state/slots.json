@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-28T13:56:06Z",
+  "updated_at": "2026-10-28T13:56:09Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -26,8 +26,8 @@
       "vertical_label": "Crypto #1",
       "shorts_count": 2,
       "status": "RUNNING",
-      "overall_pct": 45,
-      "stage_pct": 70,
+      "overall_pct": 50,
+      "stage_pct": 60,
       "current_stage": "Chart & High-CTR Thumbnail Studio",
       "current_stage_index": 4,
       "archetype": "liquidity_hunt_autopsy",
