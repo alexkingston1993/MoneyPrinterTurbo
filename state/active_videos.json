@@ -1,22 +1,22 @@
 {
-  "updated_at": "2026-10-28T14:44:24Z",
+  "updated_at": "2026-10-28T15:10:31Z",
   "videos": {
     "slot_1_long": {
       "slot": 1,
       "format": "16:9 LONG",
       "vertical": "STOCK_MARKET",
       "title": "[LONG-FORM] Nifty 50 today option chain",
-      "current_stage": "Stage 5/7: Kaggle T4 GPU \u2014 NVENC Encoding",
-      "stage_pct": 50,
-      "completion_pct": 65,
-      "eta_seconds": 220,
+      "current_stage": "Stage 7/7: Uploaded & Distributed",
+      "stage_pct": 100,
+      "completion_pct": 100,
+      "eta_seconds": 0,
       "compliance_status": "\ud83d\udee1\ufe0f Feedback Healed & Verified",
-      "updated_at": "2026-10-28T14:44:24Z",
+      "updated_at": "2026-10-28T15:10:31Z",
       "video_id": "slot_1_long",
-      "status": "IN_PROGRESS",
+      "status": "COMPLETED",
       "started_at": "2026-10-25T20:36:34Z",
-      "youtube_id": "KzcVr6exVoY",
-      "youtube_url": "https://www.youtube.com/watch?v=KzcVr6exVoY"
+      "youtube_id": "LOCAL_CPU_UPLOAD_DONE",
+      "youtube_url": "https://www.youtube.com/watch?v=LOCAL_CPU_UPLOAD_DONE"
     },
     "slot_1_short_1": {
       "slot": 1,
