@@ -96,7 +96,16 @@
       "pct": 100,
       "started_at": "2026-10-28T16:22:54Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "yt_long_id": "LOCAL_CPU_UPLOAD_DONE",
+        "yt_short_ids": [
+          "QUOTA_EXHAUSTED_ALL_SLOTS",
+          "QUOTA_EXHAUSTED_ALL_SLOTS"
+        ],
+        "oauth_slot_used": 1,
+        "article_url": "https://the-bull-print.vercel.app/article.html?slug=nifty-50-order-flow-absorption-institutional--1793203139",
+        "x_thread_url": "Skipped (X keys not set)"
+      }
     }
   ],
   "live_logs": [
