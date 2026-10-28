@@ -1,17 +1,17 @@
 {
-  "updated_at": "2026-10-28T06:43:12Z",
-  "channel_median_vph": 0.22,
+  "updated_at": "2026-10-28T13:52:35Z",
+  "channel_median_vph": 0.21,
   "top_outperformers": [
     {
       "video_id": "ujBlVUq9WSo",
       "title": "The Truth About Mutual Funds India 3:15 PM Trap",
       "format": "LONG",
       "published_at": "2026-10-27T20:01:55Z",
-      "hours_live": 10.7,
+      "hours_live": 17.8,
       "view_count": 129,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 12.07,
+      "views_per_hour": 7.23,
       "engagement_rate": 0.031
     },
     {
@@ -19,11 +19,11 @@
       "title": "Bharti Airtel: The Telecom Monopoly Player",
       "format": "LONG",
       "published_at": "2026-10-21T17:15:16Z",
-      "hours_live": 157.5,
+      "hours_live": 164.6,
       "view_count": 210,
       "like_count": 2,
       "comment_count": 1,
-      "views_per_hour": 1.33,
+      "views_per_hour": 1.28,
       "engagement_rate": 0.0238
     },
     {
@@ -31,12 +31,12 @@
       "title": "The Math Retail Misses: Bitcoin Liquidation Heatmap & Fundi #Shorts",
       "format": "SHORT",
       "published_at": "2026-10-26T15:26:39Z",
-      "hours_live": 39.3,
-      "view_count": 35,
+      "hours_live": 46.4,
+      "view_count": 44,
       "like_count": 2,
       "comment_count": 1,
-      "views_per_hour": 0.89,
-      "engagement_rate": 0.1429
+      "views_per_hour": 0.95,
+      "engagement_rate": 0.1136
     }
   ],
   "bottom_underperformers": [
@@ -45,36 +45,36 @@
       "title": "The Math Retail Misses: Health Insurance Claim Settlement R #Shorts (Institutional Breakdown) (",
       "format": "SHORT",
       "published_at": "2026-10-26T15:30:01Z",
-      "hours_live": 39.2,
+      "hours_live": 46.4,
       "view_count": 2,
       "like_count": 0,
       "comment_count": 1,
-      "views_per_hour": 0.05,
+      "views_per_hour": 0.04,
       "engagement_rate": 1.5
-    },
-    {
-      "video_id": "dxhUWlm3DUQ",
-      "title": "The Institutional Compounding Secret: How Smart Money Traps Retail in F&O (Institutional Breakd",
-      "format": "LONG",
-      "published_at": "2026-10-23T08:54:42Z",
-      "hours_live": 117.8,
-      "view_count": 3,
-      "like_count": 1,
-      "comment_count": 1,
-      "views_per_hour": 0.03,
-      "engagement_rate": 1.3333
     },
     {
       "video_id": "b02BMahomyE",
       "title": "Don't Fall for the 24500 Trap: Why 90% of Everyday Buyers Lose Money (Institutional Breakdown)",
       "format": "SHORT",
       "published_at": "2026-10-24T10:03:39Z",
-      "hours_live": 92.7,
+      "hours_live": 99.8,
       "view_count": 2,
       "like_count": 1,
       "comment_count": 1,
       "views_per_hour": 0.02,
       "engagement_rate": 2.0
+    },
+    {
+      "video_id": "dxhUWlm3DUQ",
+      "title": "The Institutional Compounding Secret: How Smart Money Traps Retail in F&O (Institutional Breakd",
+      "format": "LONG",
+      "published_at": "2026-10-23T08:54:42Z",
+      "hours_live": 125.0,
+      "view_count": 3,
+      "like_count": 1,
+      "comment_count": 1,
+      "views_per_hour": 0.02,
+      "engagement_rate": 1.3333
     }
   ],
   "winning_hook_patterns": [
