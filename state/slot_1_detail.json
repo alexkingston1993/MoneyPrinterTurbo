@@ -204,6 +204,11 @@
       "ts": "14:47:19",
       "level": "INFO",
       "msg": "[KAGGLE_GPU]: \u274c Kaggle Error \u2014 Fallback Engaged | "
+    },
+    {
+      "ts": "14:47:27",
+      "level": "INFO",
+      "msg": "[KAGGLE_GPU]: \u26a1 Kaggle Glitch \u2014 CPU Fallback Engaged | "
     }
   ]
 }
