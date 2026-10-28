@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-28T14:00:28Z",
+  "updated_at": "2026-10-28T14:00:32Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -26,9 +26,9 @@
       "vertical_label": "Crypto #1",
       "shorts_count": 2,
       "status": "WAITING_APPROVAL",
-      "overall_pct": 75,
-      "stage_pct": 80,
-      "current_stage": "Kaggle T4 GPU Render Farm",
+      "overall_pct": 60,
+      "stage_pct": 20,
+      "current_stage": "Local CPU Media Engine",
       "current_stage_index": 5,
       "archetype": "liquidity_hunt_autopsy",
       "topic": "Bitcoin Derivatives & Funding Rate Cascade",
