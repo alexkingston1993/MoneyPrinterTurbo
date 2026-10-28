@@ -88,6 +88,11 @@
       "ts": "13:52:38",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udd0d Harvesting live search intent... | open-seo dark-query loop \u00b7 slot 2"
+    },
+    {
+      "ts": "13:52:45",
+      "level": "INFO",
+      "msg": "[GEMINI]: \ud83d\udd0d Harvested `Section 115BBH & 194S Forensic Audit: Reconcilin` | source: viral_horse_3.8x \u00b7 cluster: Section 115BBH & 194S Forensic Audit: Reconciling AIS / TIS Data with On-Chain Ledger Swaps, income tax department notice 142 1, how to download income tax notice"
     }
   ]
 }
