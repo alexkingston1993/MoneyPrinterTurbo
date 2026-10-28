@@ -96,7 +96,16 @@
       "pct": 100,
       "started_at": "2026-10-28T15:32:21Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "yt_long_id": "LOCAL_CPU_UPLOAD_DONE",
+        "yt_short_ids": [
+          "QUOTA_EXHAUSTED_ALL_SLOTS",
+          "QUOTA_EXHAUSTED_ALL_SLOTS"
+        ],
+        "oauth_slot_used": 1,
+        "article_url": "https://the-bull-print.vercel.app/article.html?slug=bitcoin-liquidation-heatmap-institutional-fun-1793200353",
+        "x_thread_url": "Skipped (X keys not set)"
+      }
     }
   ],
   "live_logs": [
