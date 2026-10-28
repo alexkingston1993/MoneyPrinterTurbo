@@ -73,7 +73,7 @@
       "completed_at": null,
       "metrics": {
         "voice_persona": "Brian (High-Beta Macro)",
-        "kaggle_kernel_status": "PUSHING_DATASET",
+        "kaggle_kernel_status": "STARTING",
         "long_render_pct": 0,
         "short_1_render_pct": 0,
         "short_2_render_pct": 0,
