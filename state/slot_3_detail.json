@@ -58,7 +58,11 @@
       "pct": 60,
       "started_at": "2026-10-28T15:33:02Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "approval_status": "WAITING_APPROVAL",
+        "approval_deadline_ts": 1793201739,
+        "headline": "INSURANCE FORENSICS"
+      }
     },
     {
       "id": 5,
