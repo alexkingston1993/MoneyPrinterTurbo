@@ -9,9 +9,9 @@
   "stage_pct": 100,
   "current_stage_index": 2,
   "current_stage_name": "Gemini Script & Dossier Synthesis",
-  "current_subtask_label": "trigram dupe-check + domain vocabulary",
+  "current_subtask_label": "30-day overlap vs 'bitcoin-liquidation-heatmap-funding-rate-delt-1793038317' \u2192 title overlap ['2026', 'oct', 'slot']",
   "started_at": "2026-10-28T14:38:49Z",
-  "updated_at": "2026-10-28T14:42:46Z",
+  "updated_at": "2026-10-28T14:42:51Z",
   "eta_seconds": 0,
   "stages": [
     {
