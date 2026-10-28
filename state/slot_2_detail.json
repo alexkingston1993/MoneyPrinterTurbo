@@ -58,7 +58,11 @@
       "pct": 60,
       "started_at": "2026-10-28T13:52:48Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "approval_status": "WAITING_APPROVAL",
+        "approval_deadline_ts": 1793195793,
+        "headline": "ON-CHAIN ALPHA"
+      }
     },
     {
       "id": 5,
