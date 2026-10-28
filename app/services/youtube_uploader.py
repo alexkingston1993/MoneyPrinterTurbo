@@ -41,11 +41,60 @@ CHANNEL_LANGUAGES = {
 DEFAULT_CATEGORY = "22"  # "People & Blogs"
 DEFAULT_PRIVACY = "public"  # public, unlisted, private
 
+SHORTS_TAGS_MAP = {
+    "insurance": ["#HealthInsurance", "#TermInsurance", "#IRDAI", "#PersonalFinanceIndia", "#TheBullPrint", "#shorts"],
+    "crypto": ["#Bitcoin", "#CryptoIndia", "#OnChainAnalysis", "#CryptoTaxIndia", "#TheBullPrint", "#shorts"],
+    "stock_market": ["#Nifty50", "#BankNifty", "#InstitutionalOrderFlow", "#StockMarketIndia", "#TheBullPrint", "#shorts"],
+}
+LONGFORM_TAGS_MAP = {
+    "insurance": ["#HealthInsurance", "#TermInsurance", "#IRDAI", "#PersonalFinanceIndia", "#TheBullPrint", "#InsuranceClaims", "#ConsumerProtection"],
+    "crypto": ["#Bitcoin", "#CryptoIndia", "#OnChainAnalysis", "#CryptoTaxIndia", "#Section115BBH", "#PerpetualFutures", "#TheBullPrint"],
+    "stock_market": ["#Nifty50", "#BankNifty", "#InstitutionalOrderFlow", "#StockMarketIndia", "#OptionsTrading", "#FIIFlows", "#TheBullPrint"],
+}
 SHORTS_TAGS = ["#shorts", "#investing", "#stockmarketindia", "#nifty", "#sensex"]
 LONGFORM_TAGS = [
     "#investing", "#stockmarketindia", "#nifty", "#sensex",
     "#longterminvesting", "#financialeducation", "#personalfinance",
 ]
+
+
+def sanitize_clean_title(title: str) -> str:
+    """Strips debug slot tags, dates, and part numbers to enforce clean, human-written viral titles."""
+    if not title:
+        return ""
+    cleaned = re.sub(r"\s*\(\s*\d{1,2}\s+[A-Za-z]+\s+\d{4}\s+Slot\s*#\d+\s*\)", "", title, flags=re.IGNORECASE)
+    cleaned = re.sub(r"\s*\(?\s*Slot\s*#\d+\s*\)?", "", cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r"\s*\(\s*\d{1,2}\s+[A-Za-z]+\s+\d{4}\s*\)", "", cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r"\s*-\s*Slot\s*#\d+", "", cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r"\s*#\s*Slot\s*#\d+", "", cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r"\s{2,}", " ", cleaned).strip()
+    return cleaned
+
+
+def detect_vertical_from_content(title: str, description: str = "") -> str:
+    """Classifies the true vertical based on title and description keywords."""
+    combined = f"{title} {description}".lower()
+    if any(k in combined for k in ["insurance", "claim", "icr", "csr", "policy", "irdai", "hospital", "term plan", "sub-limit", "proportional deduction"]):
+        return "insurance"
+    if any(k in combined for k in ["crypto", "bitcoin", "btc", "on-chain", "115bbh", "194s", "swap", "liquidation", "token", "usdt", "eth", "funding rate"]):
+        return "crypto"
+    return "stock_market"
+
+
+def get_video_duration_seconds(video_path: str) -> float:
+    """Inspects video container duration via ffprobe with robust fallback."""
+    import subprocess
+    try:
+        cmd = [
+            "ffprobe", "-v", "error", "-show_entries", "format=duration",
+            "-of", "default=noprint_wrappers=1:nokey=1", video_path
+        ]
+        res = subprocess.run(cmd, capture_output=True, text=True, check=True)
+        return float(res.stdout.strip())
+    except Exception as e:
+        logger.warning(f"ffprobe duration check failed for {video_path}: {e}")
+        return 0.0
+
 
 
 def _token_path(language: str) -> str:
@@ -411,25 +460,52 @@ class YouTubeUploader:
         if not os.path.exists(video_path):
             return {"success": False, "error": f"Video not found: {video_path}"}
 
+        # 1. Clean title: strip debug slot/date tags
+        title = sanitize_clean_title(title)
+
+        # 2. Hard Pre-Upload Quarantine Gate:
+        # Long-form videos MUST be >= 480 seconds (8 minutes)
+        if not is_short:
+            dur = get_video_duration_seconds(video_path)
+            if dur > 0 and dur < 480.0:
+                logger.error(
+                    f"🚨 [HARD QUARANTINE GATE TRIGGERED] Long-form video '{title}' duration is {dur:.1f}s (< 480s / 8 min)! "
+                    f"ABORTING UPLOAD to protect channel from YouTube repetitive/low-effort penalties."
+                )
+                return {
+                    "success": False,
+                    "error": f"QUARANTINE_GATE_TRIGGERED: duration {dur:.1f}s < 480s (8 min)",
+                    "quarantined": True,
+                    "duration": dur,
+                }
+
+        # 3. Detect vertical & tailor tags / description
+        vertical = detect_vertical_from_content(title, description)
         video_tags = list(tags or [])
-        if is_short:
-            for t in SHORTS_TAGS:
-                if t not in video_tags:
-                    video_tags.append(t)
-        else:
-            for t in LONGFORM_TAGS:
-                if t not in video_tags:
-                    video_tags.append(t)
+        target_tags_map = SHORTS_TAGS_MAP if is_short else LONGFORM_TAGS_MAP
+        default_vert_tags = target_tags_map.get(vertical, target_tags_map["stock_market"])
+        for t in default_vert_tags:
+            if t not in video_tags:
+                video_tags.append(t)
 
         channel_name = CHANNEL_LANGUAGES.get(language, {}).get("name", "The Bull Print")
+
+        # Vertical-accurate hashtag footer
+        if vertical == "insurance":
+            footer_hashtags = "#TheBullPrint #HealthInsurance #TermInsurance #IRDAI #PersonalFinanceIndia #InsuranceClaims #ConsumerProtection"
+        elif vertical == "crypto":
+            footer_hashtags = "#TheBullPrint #Bitcoin #CryptoIndia #CryptoTaxIndia #Section115BBH #OnChainData #PerpetualFutures"
+        else:
+            footer_hashtags = "#TheBullPrint #Nifty50 #BankNifty #StockMarketIndia #OptionsTrading #FIIFlows #InstitutionalTrading"
+
         full_description = (
             f"{description}\n\n"
             f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-            f"🌐 Official Portal & The Trader's Arsenal:\n"
-            f"https://the-bull-print.vercel.app\n"
-            f"(Compare low-slippage brokers, Footprint/Order-flow settings, TradingView templates & Fee Calculators)\n\n"
+            f"🌐 Official Portal & Research Dossiers:\n"
+            f"https://thebullprint.in\n"
+            f"(Data models, Actuarial/On-Chain/Order-flow matrices & Calculators)\n\n"
             f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
-            f"⚖️ MANDATORY SEBI REGULATORY DISCLAIMER & RISK WARNING\n"
+            f"⚖️ MANDATORY SEBI / IRDAI REGULATORY DISCLAIMER & RISK WARNING\n"
             f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n"
             f"1. NOT A SEBI REGISTERED FINANCIAL ADVISER / RESEARCH ANALYST:\n"
             f"The creator of The Bull Print is NOT registered with the Securities and Exchange Board of India (SEBI) "
@@ -446,11 +522,9 @@ class YouTubeUploader:
             f"According to SEBI's official research study, 9 out of 10 individual retail traders in equity derivatives incur net financial losses. "
             f"Past performance does not guarantee future results. Consult a qualified, SEBI-registered financial professional.\n\n"
             f"5. AFFILIATE & COMMERCIAL DISCLOSURE:\n"
-            f"Links to brokers and charting platforms (e.g., Dhan, Zerodha, Delta Exchange India, Bybit, TradingView, GoCharting) "
-            f"may be partner/affiliate links that provide commissions at zero extra cost to you. All referral bonuses, reward points, "
-            f"and trading fee discounts are funded and credited directly by the respective platforms into your account. "
+            f"Links to platforms may be partner/affiliate links that provide commissions at zero extra cost to you. "
             f"These affiliations do not influence our independent educational analysis.\n\n"
-            f"#TheBullPrint #Nifty50 #BankNifty #StockMarketIndia #OptionsTrading #FIIFlows #InstitutionalTrading"
+            f"{footer_hashtags}"
         )
 
         effective_privacy = "private" if publish_at else privacy_status
@@ -468,6 +542,7 @@ class YouTubeUploader:
         }
         if publish_at:
             body["status"]["publishAt"] = publish_at
+
 
         # Prevent duplicate uploads: same normalized title on the channel within 24h
         try:
@@ -669,15 +744,69 @@ class YouTubeUploader:
             return False
 
     def post_pinned_comment(self, language: str, video_id: str, comment_text: str) -> bool:
-        """Post a top comment on the video with the article link."""
+        """Post a single top comment on the video with strict idempotency and deduplication."""
         # Ironclad privacy failsafe: never expose GitHub URLs in public comments
         if "github.com" in comment_text:
-            comment_text = re.sub(r"https?://github\.com/\S+", "https://the-bull-print.vercel.app", comment_text)
+            comment_text = re.sub(r"https?://github\.com/\S+", "https://thebullprint.in", comment_text)
 
         service = self._get_service(language)
         if not service:
             return False
         try:
+            # 1. Fetch our own channel ID
+            channel_id = None
+            try:
+                ch_resp = service.channels().list(mine=True, part="id").execute()
+                channel_id = ch_resp.get("items", [{}])[0].get("id")
+            except Exception:
+                pass
+
+            # 2. Check existing top-level comments
+            existing_threads = []
+            try:
+                threads_resp = service.commentThreads().list(
+                    part="snippet", videoId=video_id, maxResults=50
+                ).execute()
+                existing_threads = threads_resp.get("items", [])
+            except Exception as list_err:
+                logger.debug(f"[{language}] commentThreads.list notice for {video_id}: {list_err}")
+
+            # Filter for comments authored by our channel
+            own_comments = []
+            for t in existing_threads:
+                top = t.get("snippet", {}).get("topLevelComment", {})
+                author_ch = top.get("snippet", {}).get("authorChannelId", {}).get("value")
+                if author_ch and author_ch == channel_id:
+                    own_comments.append(top)
+
+            # If our channel already has comments:
+            if own_comments:
+                first_comment = own_comments[0]
+                first_id = first_comment.get("id")
+                # Delete any extra duplicate comments
+                for dup in own_comments[1:]:
+                    dup_id = dup.get("id")
+                    if dup_id:
+                        try:
+                            service.comments().delete(id=dup_id).execute()
+                            logger.info(f"[{language}] Deleted duplicate creator comment {dup_id} on {video_id}")
+                        except Exception as del_err:
+                            logger.warning(f"Failed to delete duplicate comment {dup_id}: {del_err}")
+
+                # Update the first comment in-place if text changed
+                existing_text = first_comment.get("snippet", {}).get("textOriginal", "")
+                if existing_text != comment_text and first_id:
+                    try:
+                        service.comments().update(
+                            part="snippet",
+                            body={"id": first_id, "snippet": {"textOriginal": comment_text}}
+                        ).execute()
+                        logger.info(f"[{language}] Updated existing creator comment in-place on {video_id}")
+                    except Exception as upd_err:
+                        logger.warning(f"Failed to update comment in-place: {upd_err}")
+                return True
+
+            # If 0 comments by our channel, insert new one
             service.commentThreads().insert(
                 part="snippet",
                 body={
@@ -691,10 +820,10 @@ class YouTubeUploader:
                     }
                 }
             ).execute()
-            logger.info(f"[{language}] Pinned comment posted on video {video_id}")
+            logger.info(f"[{language}] Pinned creator comment posted on video {video_id}")
             return True
         except Exception as e:
-            logger.warning(f"[{language}] Failed to post comment on video: {e}")
+            logger.warning(f"[{language}] Failed to post comment on video {video_id}: {e}")
             return False
 
 

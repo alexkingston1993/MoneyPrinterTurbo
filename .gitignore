@@ -48,6 +48,8 @@ scratch/
 build/
 kaggle_stage/
 agent_chat_export/
+assets/broll_cache/
+
 *.pdf
 session-s*.md
 data/youtube_tokens/oauth_pool.json

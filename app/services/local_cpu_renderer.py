@@ -169,43 +169,87 @@ Format: Layer, Start, End, Style, Text
     ass_path.write_text(ass_header + "\n".join(events), encoding="utf-8")
 
 
-def render_cpu_segment(seg: dict, mp3_path: Path, ass_path: Path, duration: float, out_mp4: Path, vertical: str = "") -> None:
-    avatar_id = max(1, min(10, int(seg.get("avatar_studio_id", 1))))
-    avatar_img = ASSETS_DIR / f"avatar_{avatar_id}.png"
-    if not avatar_img.exists():
-        avatar_img = AVATARS_DIR / f"avatar_{avatar_id}.png"
-    if not avatar_img.exists():
-        avatar_img = ASSETS_DIR / "avatar_1.png"
+def _get_broll_clip(vertical: str, query: str = "") -> Optional[Path]:
+    """Finds or downloads a 1080p moving stock B-roll clip for the scene."""
+    cache_dir = ASSETS_DIR / "broll_cache"
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    
+    # 1. Check existing cached video clips
+    cached_clips = list(cache_dir.glob("*.mp4"))
+    if cached_clips:
+        import random
+        return random.choice(cached_clips)
+        
+    # 2. Try fetching from Pexels API
+    try:
+        from app.services.material import search_videos_pexels, save_video
+        from app.models.schema import VideoAspect
+        search_term = query or ("stock trading desk terminal" if "stock" in vertical else ("cryptocurrency blockchain" if "crypto" in vertical else "medical doctor hospital"))
+        items = search_videos_pexels(search_term, minimum_duration=6, video_aspect=VideoAspect.landscape)
+        if items:
+            saved = save_video(items[0].url, save_dir=str(cache_dir))
+            if saved and Path(saved).exists():
+                return Path(saved)
+    except Exception as e:
+        logger.debug(f"Pexels B-roll fetch notice: {e}")
+        
+    return None
 
-    b_roll_name = seg.get("b_roll_asset_ref", "NONE")
-    b_roll = CHARTS_DIR / b_roll_name
+
+def render_cpu_segment(seg: dict, mp3_path: Path, ass_path: Path, duration: float, out_mp4: Path, vertical: str = "") -> None:
     fontfile = _find_fontfile()
     hud = _hud_filters(duration, vertical, fontfile)
-
     has_subs = ass_path.exists() and ass_path.stat().st_size > 100
     subs_tag = f",subtitles='{ass_path.as_posix()}'" if has_subs else ""
 
-    if seg.get("visual_mode") == "CHART_B_ROLL_WITH_PIP" and b_roll.exists():
-        filter_complex = "[0:v]" + _ken_burns_body("1920x1080")
-        if hud:
-            filter_complex += "," + ",".join(hud)
-        filter_complex += (
-            f"[bg];[1:v]scale=440:248[pip];"
-            f"[bg][pip]overlay=x=1440:y=680{subs_tag}[v]"
+    # 1. Try real moving 1080p B-roll video clip
+    broll_query = seg.get("b_roll_query", "") or seg.get("chapter_title", "")
+    broll_clip = _get_broll_clip(vertical, broll_query)
+
+    # 2. Check for chart image reference
+    chart_ref = seg.get("chart_image_ref", "chart_1.png")
+    chart_path = CHARTS_DIR / chart_ref
+    if not chart_path.exists():
+        pngs = sorted(CHARTS_DIR.glob("*.png"))
+        chart_path = pngs[0] if pngs else None
+
+    if broll_clip and broll_clip.exists():
+        # Fullscreen moving 1080p B-roll with dark cinematic overlay
+        filter_complex = (
+            f"[0:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,"
+            f"drawbox=x=0:y=0:w=1920:h=1080:color=black@0.35:t=fill"
         )
-        inputs = ["-loop", "1", "-i", str(b_roll), "-loop", "1", "-i", str(avatar_img), "-i", str(mp3_path)]
-        audio_map = "2:a"
-    else:
-        filter_complex = "[0:v]" + _ken_burns_body("1920x1080", drift=0.14, sway=20)
         if hud:
             filter_complex += "," + ",".join(hud)
         filter_complex += f"{subs_tag}[v]"
-        inputs = ["-loop", "1", "-i", str(avatar_img), "-i", str(mp3_path)]
+        inputs = ["-stream_loop", "-1", "-i", str(broll_clip), "-i", str(mp3_path)]
+        audio_map = "1:a"
+    elif chart_path and chart_path.exists():
+        # High-contrast Ken Burns animated chart with dark vignette
+        filter_complex = (
+            "[0:v]" + _ken_burns_body("1920x1080", drift=0.16, sway=24) +
+            ",drawbox=x=0:y=0:w=1920:h=1080:color=black@0.25:t=fill"
+        )
+        if hud:
+            filter_complex += "," + ",".join(hud)
+        filter_complex += f"{subs_tag}[v]"
+        inputs = ["-loop", "1", "-i", str(chart_path), "-i", str(mp3_path)]
+        audio_map = "1:a"
+    else:
+        # Fallback dark slate terminal background (NEVER raw bull logo)
+        filter_complex = (
+            "color=c=0x0a0f1d:s=1920x1080:d=10,"
+            "drawgrid=width=120:height=120:thickness=1:color=0x1e293b@0.5"
+        )
+        if hud:
+            filter_complex += "," + ",".join(hud)
+        filter_complex += f"{subs_tag}[v]"
+        inputs = ["-f", "lavfi", "-i", filter_complex, "-i", str(mp3_path)]
         audio_map = "1:a"
 
     cmd = [
         "ffmpeg", "-y", *inputs,
-        "-filter_complex", filter_complex,
+        "-filter_complex", filter_complex if not inputs[0].startswith("-f") else f"[0:v]{subs_tag}[v]",
         "-map", "[v]", "-map", audio_map,
         "-af", "silenceremove=stop_periods=-1:stop_duration=0.35:stop_threshold=-42dB,loudnorm=I=-14:TP=-1.5:LRA=11",
         "-c:v", "libx264", "-preset", "ultrafast", "-crf", "24",
@@ -240,6 +284,22 @@ async def run_local_cpu_fallback_renderer(
     seg_files = []
     timestamps = []
     cumulative = 0.0
+
+    # Prepend 0.5s High-CTR Custom Thumbnail cover poster frame so YouTube autodetects it
+    cover_poster_mp4 = WORK_DIR / "cover_poster_05s.mp4"
+    if yt_thumb and yt_thumb.exists():
+        try:
+            subprocess.run([
+                "ffmpeg", "-y", "-loop", "1", "-i", str(yt_thumb),
+                "-f", "lavfi", "-i", "anullsrc=channel_layout=stereo:sample_rate=44100",
+                "-c:v", "libx264", "-t", "0.5", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k",
+                str(cover_poster_mp4)
+            ], check=True)
+            if cover_poster_mp4.exists():
+                seg_files.append(cover_poster_mp4)
+                logger.info("✓ [Poster Frame] Encoded 0.5s High-CTR custom thumbnail into opening stream.")
+        except Exception as th_err:
+            logger.warning(f"Failed to encode cover poster frame: {th_err}")
 
     logger.info(f"🎬 [CPU Masterclass] Rendering {len(segments)} narrative segments...")
     for idx, seg in enumerate(segments, 1):

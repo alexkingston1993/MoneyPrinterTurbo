@@ -281,7 +281,8 @@ class ViralGrowthAgent:
     @classmethod
     def post_debate_comment(cls, video_id: str, debate_comment: str, slot_index: int = 1) -> bool:
         """
-        Auto-posts an algorithmic debate-bait question as the top comment on upload.
+        Auto-posts an algorithmic debate-bait question as the top comment on upload
+        with strict idempotency and duplicate elimination.
         """
         if not video_id or not debate_comment:
             return False
@@ -290,6 +291,56 @@ class ViralGrowthAgent:
             logger.info(f"💬 [ViralGrowthAgent] Simulated pinned comment on {video_id}: {debate_comment[:60]}...")
             return True
         try:
+            # 1. Fetch our own channel ID
+            channel_id = None
+            try:
+                ch_resp = yt.channels().list(mine=True, part="id").execute()
+                channel_id = ch_resp.get("items", [{}])[0].get("id")
+            except Exception:
+                pass
+
+            # 2. Check existing top-level comments
+            existing_threads = []
+            try:
+                threads_resp = yt.commentThreads().list(
+                    part="snippet", videoId=video_id, maxResults=50
+                ).execute()
+                existing_threads = threads_resp.get("items", [])
+            except Exception as list_err:
+                logger.debug(f"[ViralGrowthAgent] commentThreads.list notice for {video_id}: {list_err}")
+
+            own_comments = []
+            for t in existing_threads:
+                top = t.get("snippet", {}).get("topLevelComment", {})
+                author_ch = top.get("snippet", {}).get("authorChannelId", {}).get("value")
+                if author_ch and author_ch == channel_id:
+                    own_comments.append(top)
+
+            if own_comments:
+                first_comment = own_comments[0]
+                first_id = first_comment.get("id")
+                # Delete duplicate creator comments
+                for dup in own_comments[1:]:
+                    dup_id = dup.get("id")
+                    if dup_id:
+                        try:
+                            yt.comments().delete(id=dup_id).execute()
+                            logger.info(f"💬 [ViralGrowthAgent] Deleted duplicate creator comment {dup_id} on {video_id}")
+                        except Exception as del_err:
+                            logger.warning(f"Failed to delete duplicate comment: {del_err}")
+
+                existing_text = first_comment.get("snippet", {}).get("textOriginal", "")
+                if existing_text != debate_comment and first_id:
+                    try:
+                        yt.comments().update(
+                            part="snippet",
+                            body={"id": first_id, "snippet": {"textOriginal": debate_comment}}
+                        ).execute()
+                        logger.info(f"💬 [ViralGrowthAgent] Updated existing creator comment in-place on {video_id}")
+                    except Exception as upd_err:
+                        logger.warning(f"Failed to update comment in-place: {upd_err}")
+                return True
+
             body = {
                 "snippet": {
                     "videoId": video_id,

@@ -491,127 +491,45 @@ def _free_llm_json_fallback(system_prompt: str, user_input: str) -> Optional[Dic
     return None
 
 
+from app.services.benchmark_payloads import get_benchmark_payload
+from app.services.youtube_uploader import sanitize_clean_title, detect_vertical_from_content
+
+
 def _create_vertical_benchmark_payload(vertical: str, topic: str, slot_index: int = 1) -> Dict:
     """Produces a rich, schema-compliant, vertical-accurate emergency benchmark payload
-    with mandatory domain terminology (≥ 4 hits) so fallback runs never fail the Authenticity Engine."""
-    date_stamp = datetime.now(timezone.utc).strftime("%d %b %Y")
-    now_ts = int(time.time())
-    if vertical == "insurance":
-        title = f"Health Insurance Claim Settlement Ratio vs ICR Forensics ({date_stamp} Slot #{slot_index})"
-        spoken_hook = (
-            f"Every Indian family buying health cover looks at Claim Settlement Ratio, but IRDAI annual reports "
-            f"reveal Incurred Claim Ratio is what matters. Examining solvency margin, room rent sub-limit, "
-            f"proportional deduction clauses, and policy wordings."
-        )
-        seg1 = (
-            "The room rent sub-limit trap: how a 1 percent room rent cap triggers proportional deduction "
-            "across doctor fees and surgeries, leaving patients with massive out-of-pocket bills."
-        )
-        seg2 = (
-            "CSR vs ICR math: why a 98% claim settlement ratio hides a 62% incurred claim ratio reality. "
-            "Scrutinizing waiting period clauses, co-pay mandates, and network hospital approvals under IRDAI rules."
-        )
-        terms = ["claim settlement ratio", "incurred claim ratio", "solvency margin", "room rent sub-limit", "proportional deduction", "irdai rules", "policy wordings"]
-    elif vertical == "crypto":
-        title = f"Bitcoin Liquidation Heatmap & Funding Rate Delta ({date_stamp} Slot #{slot_index})"
-        spoken_hook = (
-            f"Bitcoin perpetual futures show heavy liquidation clusters building above key resistance. "
-            f"Forensic breakdown of funding rates, open interest delta, order block absorption, and exchange netflows."
-        )
-        seg1 = (
-            "Liquidation cascade mechanics: how funding rate extremes trigger perpetual futures squeeze events "
-            "and forced liquidations into thin order book liquidity."
-        )
-        seg2 = (
-            "Open interest delta divergence vs cumulative spot order block absorption. "
-            "Tracking smart money delta neutral positioning before high-volatility structural expansions."
-        )
-        terms = ["liquidation clusters", "funding rates", "open interest delta", "perpetual futures", "order block", "exchange netflows", "absorption"]
-    else:
-        title = f"Nifty 50 Order Flow Absorption & Institutional Footprint ({date_stamp} Slot #{slot_index})"
-        spoken_hook = (
-            f"Institutional accumulation footprint shows Nifty absorption at opening range. "
-            f"Analyzing cumulative volume delta, FII DII cash flows, and option gamma balance."
-        )
-        seg1 = "Opening range absorption and FII cash market footprint: reading level II delta prints."
-        seg2 = "Cumulative volume delta divergence at intraday VWAP: identifying passive absorption traps."
-        terms = ["order flow", "footprint", "cumulative volume delta", "absorption", "fii dii data", "vwap"]
+    with strictly >= 1,600 spoken words across 8 chapters."""
+    return get_benchmark_payload(vertical, topic, slot_index)
 
-    clean_slug = re.sub(r"[^a-zA-Z0-9]+", "-", title.lower()).strip("-")[:45]
-    campaign_id = f"{clean_slug}-{now_ts}"
 
-    return {
-        "campaign_id": campaign_id,
-        "topic": topic,
-        "vertical": vertical,
-        "youtube_payload": {
-            "metadata": {
-                "title": title,
-                "description_body": f"{title}.\n\nForensic analysis covering {', '.join(terms[:5])}.\n\nEducational research only under SEBI/IRDAI guidelines.",
-                "tags": [vertical, "finance", "investing", "the bull print"],
-                "category_id": "27",
-                "thumbnail_top_text": " ".join(terms[0].upper().split()[:3])
-            },
-            "segments": [
-                {
-                    "chapter_title": "The Institutional Setup",
-                    "spoken_narration": spoken_hook,
-                    "visual_title": "FORENSIC BREAKDOWN",
-                    "chart_image_ref": "chart_1.png"
-                },
-                {
-                    "chapter_title": "The Structural Trap",
-                    "spoken_narration": seg1 + f" Cross-verifying {terms[0]} and {terms[1]}.",
-                    "visual_title": "DATA DEEP-DIVE",
-                    "chart_image_ref": "chart_2.png"
-                },
-                {
-                    "chapter_title": "The Quantitative Proof",
-                    "spoken_narration": seg2 + f" Verified across {terms[2]} and {terms[3]} benchmarks.",
-                    "visual_title": "EXECUTION MATRIX",
-                    "chart_image_ref": "chart_3.png"
-                }
-            ],
-            "short_extraction": {
-                "short_title": title[:55],
-                "spoken_hook_and_body": spoken_hook[:380],
-                "cta_to_long_video": "Watch the full institutional breakdown on The Bull Print.",
-                "chart_image_ref": "chart_1.png",
-                "angle": "core_trap_hook"
-            },
-            "short_extractions": [
-                {
-                    "short_title": title[:55],
-                    "spoken_hook_and_body": spoken_hook[:380],
-                    "cta_to_long_video": "Full quantitative breakdown on The Bull Print.",
-                    "chart_image_ref": "chart_1.png",
-                    "angle": "core_trap_hook"
-                },
-                {
-                    "short_title": f"The Math Retail Misses: {title[:35]}",
-                    "spoken_hook_and_body": seg2[:380],
-                    "cta_to_long_video": "Watch the full masterclass on The Bull Print.",
-                    "chart_image_ref": "chart_2.png",
-                    "angle": "quantitative_proof_rule"
-                }
-            ]
-        },
-        "website_article_payload": {
-            "seo_title": title,
-            "meta_description": f"{title}. Detailed forensic data breakdown with full charts and analysis.",
-            "direct_answer_passage": f"{title} explained: key institutional metrics, data evidence, and mathematical proof.",
-            "tldr_summary": [
-                f"Core finding: {terms[0]} and {terms[1]} diverge from retail assumptions.",
-                f"Evidence: Data reveals critical structural traps in standard readings.",
-                f"Actionable insight: Quantitative verification across all metrics."
-            ],
-            "article_sections": [
-                {"heading": "Institutional Market Structure", "body": spoken_hook},
-                {"heading": "Forensic Data Evidence", "body": seg1},
-                {"heading": "The Quantitative Proof", "body": seg2}
-            ]
-        }
-    }
+def _ensure_minimum_longform_script(payload: Dict, vertical: str = "stock_market") -> Dict:
+    """
+    Guarantees that every long-form masterclass payload strictly satisfies:
+    1. >= 1,450 spoken words across segments (10+ minutes of audio)
+    2. >= 8 distinct analytical chapters
+    If an LLM produces a short or truncated script, expands it using the benchmark segments.
+    """
+    yt = payload.get("youtube_payload", {})
+    segments = yt.get("segments", [])
+    total_words = sum(len(str(s.get("spoken_narration", "")).split()) for s in segments)
+
+    if total_words < 1450 or len(segments) < 8:
+        logger.warning(
+            f"⚠️ [Script Enforcer] Script word count {total_words} (< 1,450 words) or chapters {len(segments)} (< 8)! "
+            f"Engaging automatic 8-chapter expansion for vertical: {vertical}..."
+        )
+        bench = get_benchmark_payload(vertical, payload.get("topic", ""))
+        payload["youtube_payload"]["segments"] = bench["youtube_payload"]["segments"]
+        curr_title = yt.get("metadata", {}).get("title") or bench["youtube_payload"]["metadata"]["title"]
+        clean_title = sanitize_clean_title(curr_title)
+        payload["youtube_payload"]["metadata"]["title"] = clean_title
+        if "article_sections" in payload.get("website_article_payload", {}):
+            payload["website_article_payload"]["article_sections"] = bench["website_article_payload"]["article_sections"]
+        logger.success(f"✓ Expanded script to {sum(len(s['spoken_narration'].split()) for s in payload['youtube_payload']['segments'])} words across 8 chapters.")
+
+    # Always sanitize titles in payload
+    if "metadata" in yt and "title" in yt["metadata"]:
+        yt["metadata"]["title"] = sanitize_clean_title(yt["metadata"]["title"])
+    return payload
 
 
 def generate_master_json_via_ai_studio(
@@ -636,7 +554,7 @@ def generate_master_json_via_ai_studio(
         "slot_index": slot_index,
         "market_data_notes": market_notes,
         "chart_screenshots": chart_files,
-        "website_domain": "flipzon.work.gd",
+        "website_domain": "thebullprint.in",
         "narrative_archetype_hint": archetype_hint,
     })
 
@@ -664,18 +582,22 @@ def generate_master_json_via_ai_studio(
                     max_output_tokens=8192,
                 ),
             )
-            return _enforce_master_keys(json.loads(response.text))
+            data = _enforce_master_keys(json.loads(response.text))
+            return _ensure_minimum_longform_script(data, vertical)
         except Exception as e:
             logger.warning(f"GEMINI_API_KEY depleted or Google AI Studio call failed: {e}")
             logger.info("🔁 Engaging free LLM quota failover (OpenRouter / OpenAI / Pollinations)...")
             fallback_data = _free_llm_json_fallback(system_prompt, user_input)
             if fallback_data:
-                return _enforce_master_keys(fallback_data)
+                data = _enforce_master_keys(fallback_data)
+                return _ensure_minimum_longform_script(data, vertical)
             logger.warning(f"All free LLM providers exhausted — using vertical-aware ({vertical}) benchmark.")
 
     # Fallback to vertical-aware benchmark
-    logger.info(f"ℹ️ Generating vertical-aware ({vertical}) emergency benchmark payload.")
-    return _create_vertical_benchmark_payload(vertical, topic, slot_index)
+    logger.info(f"ℹ️ Generating vertical-aware ({vertical}) emergency benchmark payload with 8 chapters (>= 1,600 words).")
+    benchmark_payload = _create_vertical_benchmark_payload(vertical, topic, slot_index)
+    return _ensure_minimum_longform_script(benchmark_payload, vertical)
+
 
 
 # =====================================================================
@@ -1527,7 +1449,12 @@ async def _async_main():
     # 8. Post-upload Algorithmic Debate Bait Comment & T+6h CTR Rescue check
     try:
         from app.services.viral_growth_agent import ViralGrowthAgent
-        comment_text = payload.get("debate_pinned_comment") or f"Be honest: Did you spot this pattern in the market today? Share your thoughts below 👇"
+        from scripts.heal_all_channel_comments import generate_custom_topic_comment
+        meta = payload.get("youtube_payload", {}).get("metadata", {})
+        vid_title = meta.get("title") or payload.get("topic", "")
+        vid_desc = meta.get("description_body", "")
+        vid_vert = payload.get("vertical", "stock_market")
+        comment_text = payload.get("debate_pinned_comment") or generate_custom_topic_comment(vid_title, vid_desc, vid_vert)
         if yt_video_id and yt_video_id != "SHORTS_ONLY":
             ViralGrowthAgent.post_debate_comment(yt_video_id, comment_text, slot_index=oauth_slot_used)
         for sv_id in short_video_ids:

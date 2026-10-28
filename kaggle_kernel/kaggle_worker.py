@@ -709,39 +709,41 @@ async def render_and_upload_short_gpu(payload: dict, long_video_id: str, short_d
         tail.append(subs.lstrip(","))
 
     has_cover = short_thumb.exists()
+    # 100% Fullscreen 9:16 Canvas with Ken Burns motion & subtle dark vignette
     if has_cover:
         filter_graph = (
-            "[0:v]" + _ken_burns_body("1080x960", drift=0.18, sway=28) + "[chartm];"
-            "[1:v]scale=1080:960:force_original_aspect_ratio=increase,crop=1080:960[ava];"
-            "[chartm][ava]vstack=inputs=2,"
-            "drawbox=x=0:y=956:w=1080:h=8:color=0x10B981@1.0:t=fill[vsplit];"
-            "[2:v]scale=1080:1920[cover];"
-            "[vsplit][cover]overlay=0:0:enable='between(t,0,0.85)'[vbase]"
+            "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,"
+            "zoompan=z='min(zoom+0.0008,1.15)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:fps=30:s=1080x1920,"
+            "drawbox=x=0:y=0:w=1080:h=1920:color=black@0.30:t=fill[bg];"
+            "[1:v]scale=1080:1920[cover];"
+            "[bg][cover]overlay=0:0:enable='between(t,0,0.75)'[vbase]"
         )
         if tail:
             filter_graph += ";" + "[vbase]" + ",".join(tail) + "[v]"
         else:
             filter_graph += ";[vbase]null[v]"
+        inputs = [
+            "-loop", "1", "-i", str(chart_png),
+            "-loop", "1", "-i", str(short_thumb),
+            "-i", str(mp3),
+        ]
+        audio_idx = 2
     else:
         filter_graph = (
-            "[0:v]" + _ken_burns_body("1080x960", drift=0.18, sway=28) + "[chartm];"
-            "[1:v]scale=1080:960:force_original_aspect_ratio=increase,crop=1080:960[ava];"
-            "[chartm][ava]vstack=inputs=2,"
-            "drawbox=x=0:y=956:w=1080:h=8:color=0x10B981@1.0:t=fill"
+            "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,"
+            "zoompan=z='min(zoom+0.0008,1.15)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:fps=30:s=1080x1920,"
+            "drawbox=x=0:y=0:w=1080:h=1920:color=black@0.30:t=fill"
         )
         if tail:
             filter_graph += "," + ",".join(tail)
         filter_graph += "[v]"
+        inputs = [
+            "-loop", "1", "-i", str(chart_png),
+            "-i", str(mp3),
+        ]
+        audio_idx = 1
 
     out_mp4 = WORK_DIR / f"final_short_{tag}.mp4"
-    inputs = [
-        "-loop", "1", "-i", str(chart_png),
-        "-loop", "1", "-i", str(avatar_img),
-    ]
-    if has_cover:
-        inputs += ["-loop", "1", "-i", str(short_thumb)]
-    audio_idx = 3 if has_cover else 2
-    inputs += ["-i", str(mp3)]
 
     cmd = [
         "ffmpeg", "-y",

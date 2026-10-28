@@ -317,20 +317,18 @@ async def render_and_upload_short_local(
 
     avatar_img = AVATARS_DIR / "avatar_1.png"
     if not avatar_img.exists():
-        avatar_img = BASE_DIR / "avatar_1.png"
-
     fontfile = _find_fontfile()
     hud_list = _hud_filters(min(dur, 58.5), vertical, fontfile, w=1080, h=1920)
     tail = list(hud_list)
     tail.append(f"subtitles='{ass.as_posix()}'")
 
+    # 100% Fullscreen 9:16 Canvas with Ken Burns motion & subtle dark vignette (Zero bottom-half logo)
     filter_graph = (
-        "[0:v]scale=1080:960:force_original_aspect_ratio=increase,crop=1080:960[chartm];"
-        "[1:v]scale=1080:960:force_original_aspect_ratio=increase,crop=1080:960[ava];"
-        "[chartm][ava]vstack=inputs=2,"
-        "drawbox=x=0:y=956:w=1080:h=8:color=0x10B981@1.0:t=fill[vsplit];"
-        "[2:v]scale=1080:1920[cover];"
-        "[vsplit][cover]overlay=0:0:enable='between(t,0,0.85)'[vbase]"
+        "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,"
+        "zoompan=z='min(zoom+0.0008,1.15)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:fps=30:s=1080x1920,"
+        "drawbox=x=0:y=0:w=1080:h=1920:color=black@0.30:t=fill[bg];"
+        "[1:v]scale=1080:1920[cover];"
+        "[bg][cover]overlay=0:0:enable='between(t,0,0.75)'[vbase]"
     )
     if tail:
         filter_graph += ";" + "[vbase]" + ",".join(tail) + "[v]"
@@ -339,12 +337,11 @@ async def render_and_upload_short_local(
 
     cmd = [
         "ffmpeg", "-y",
-        "-loop", "1", "-i", str(chart_png or avatar_img),
-        "-loop", "1", "-i", str(avatar_img),
+        "-loop", "1", "-i", str(chart_png or ASSETS_DIR / "charts" / "chart_1.png"),
         "-loop", "1", "-i", str(cover_jpg),
         "-i", str(mp3),
         "-filter_complex", filter_graph,
-        "-map", "[v]", "-map", "3:a",
+        "-map", "[v]", "-map", "2:a",
         "-af", "silenceremove=stop_periods=-1:stop_duration=0.35:stop_threshold=-42dB,loudnorm=I=-14:TP=-1.5:LRA=11",
         "-c:v", "libx264", "-preset", "ultrafast",
         "-c:a", "aac", "-b:a", "192k",
