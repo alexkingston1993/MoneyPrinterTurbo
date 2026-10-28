@@ -231,6 +231,11 @@
       "ts": "20:13:43",
       "level": "INFO",
       "msg": "[VERCEL]: \ud83d\udcdd Compiling MDX & IndexNow Ping... | "
+    },
+    {
+      "ts": "20:13:49",
+      "level": "INFO",
+      "msg": "[VERCEL]: \u2705 Live & Indexed (`https://the-bull-print.vercel.app/article.html?slug=bitcoin-liquidation-heatmap-institutional-fun-1793217989`) | \ud83d\udc26 X Thread: Skipped (X keys not set)"
     }
   ]
 }
