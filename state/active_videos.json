@@ -1,19 +1,19 @@
 {
-  "updated_at": "2026-10-28T13:56:53Z",
+  "updated_at": "2026-10-28T14:42:44Z",
   "videos": {
     "slot_1_long": {
       "slot": 1,
       "format": "16:9 LONG",
       "vertical": "STOCK_MARKET",
       "title": "[LONG-FORM] Nifty 50 today option chain",
-      "current_stage": "Stage 7/7: Uploaded & Distributed",
-      "stage_pct": 100,
-      "completion_pct": 100,
-      "eta_seconds": 0,
+      "current_stage": "Stage 4/7: Chart & High-CTR Thumbnail Studio",
+      "stage_pct": 20,
+      "completion_pct": 40,
+      "eta_seconds": 360,
       "compliance_status": "\ud83d\udee1\ufe0f Feedback Healed & Verified",
-      "updated_at": "2026-10-27T20:06:03Z",
+      "updated_at": "2026-10-28T14:42:44Z",
       "video_id": "slot_1_long",
-      "status": "COMPLETED",
+      "status": "IN_PROGRESS",
       "started_at": "2026-10-25T20:36:34Z",
       "youtube_id": "KzcVr6exVoY",
       "youtube_url": "https://www.youtube.com/watch?v=KzcVr6exVoY"
