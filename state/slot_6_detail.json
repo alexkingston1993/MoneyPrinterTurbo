@@ -214,6 +214,11 @@
       "ts": "17:05:24",
       "level": "INFO",
       "msg": "[KAGGLE_GPU]: \ud83d\ude80 Uploading Long Masterclass to YouTube... | "
+    },
+    {
+      "ts": "17:05:35",
+      "level": "INFO",
+      "msg": "[KAGGLE_GPU]: \ud83c\udfac Rendering CPU Short #1/1... | "
     }
   ]
 }
