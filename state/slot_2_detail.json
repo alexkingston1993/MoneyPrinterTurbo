@@ -59,7 +59,7 @@
       "started_at": "2026-10-28T15:11:22Z",
       "completed_at": null,
       "metrics": {
-        "approval_status": "WAITING_APPROVAL",
+        "approval_status": "APPROVED_TELEGRAM",
         "approval_deadline_ts": 1793200496,
         "headline": "ON-CHAIN ALPHA"
       }
