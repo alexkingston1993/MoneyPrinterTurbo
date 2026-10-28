@@ -9,9 +9,9 @@
   "stage_pct": 100,
   "current_stage_index": 2,
   "current_stage_name": "Gemini Script & Dossier Synthesis",
-  "current_subtask_label": "Pass #1/3: 1 suggestion(s) applied (Virality: 90/100, Compliance: FLAGGED)",
+  "current_subtask_label": "100% Pass: Virality 90/100 + SEBI/IRDAI Approved",
   "started_at": "2026-10-28T14:38:49Z",
-  "updated_at": "2026-10-28T14:42:16Z",
+  "updated_at": "2026-10-28T14:42:24Z",
   "eta_seconds": 0,
   "stages": [
     {
