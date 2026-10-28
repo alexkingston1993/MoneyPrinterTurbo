@@ -756,10 +756,7 @@ def run_kaggle_gpu_renderer(
         try:
             km = json.loads(km_path.read_text(encoding="utf-8"))
             km["id"] = f"{KAGGLE_USERNAME}/{KERNEL_SLUG}"
-            km["dataset_sources"] = [
-                f"{KAGGLE_USERNAME}/flipzon-studio-assets",
-                f"{KAGGLE_USERNAME}/{DATASET_SLUG}"
-            ]
+            km["dataset_sources"] = []
             km_path.write_text(json.dumps(km, indent=2), encoding="utf-8")
         except Exception as e:
             logger.debug(f"Could not update kernel-metadata.json: {e}")

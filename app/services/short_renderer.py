@@ -315,8 +315,6 @@ async def render_and_upload_short_local(
         if pngs:
             chart_png = pngs[0]
 
-    avatar_img = AVATARS_DIR / "avatar_1.png"
-    if not avatar_img.exists():
     fontfile = _find_fontfile()
     hud_list = _hud_filters(min(dur, 58.5), vertical, fontfile, w=1080, h=1920)
     tail = list(hud_list)
