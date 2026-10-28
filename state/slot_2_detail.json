@@ -71,7 +71,14 @@
       "pct": 15,
       "started_at": "2026-10-28T13:56:54Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "voice_persona": "Brian (High-Beta Macro)",
+        "kaggle_kernel_status": "PUSHING_DATASET",
+        "long_render_pct": 0,
+        "short_1_render_pct": 0,
+        "short_2_render_pct": 0,
+        "gpu_elapsed_sec": 0
+      }
     },
     {
       "id": 6,
