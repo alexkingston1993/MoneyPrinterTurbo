@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-28T20:04:04Z",
+  "updated_at": "2026-10-28T20:05:43Z",
   "channel_median_vph": 0.23,
   "top_outperformers": [
     {
@@ -7,11 +7,11 @@
       "title": "The Truth About Mutual Funds India 3:15 PM Trap",
       "format": "LONG",
       "published_at": "2026-10-27T20:01:55Z",
-      "hours_live": 24.0,
+      "hours_live": 24.1,
       "view_count": 129,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 5.37,
+      "views_per_hour": 5.36,
       "engagement_rate": 0.031
     },
     {
@@ -35,7 +35,7 @@
       "view_count": 2,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 1.96,
+      "views_per_hour": 1.91,
       "engagement_rate": 2.0
     }
   ],
