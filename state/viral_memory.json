@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-28T19:57:01Z",
+  "updated_at": "2026-10-28T20:04:04Z",
   "channel_median_vph": 0.23,
   "top_outperformers": [
     {
@@ -7,11 +7,11 @@
       "title": "The Truth About Mutual Funds India 3:15 PM Trap",
       "format": "LONG",
       "published_at": "2026-10-27T20:01:55Z",
-      "hours_live": 23.9,
+      "hours_live": 24.0,
       "view_count": 129,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 5.39,
+      "views_per_hour": 5.37,
       "engagement_rate": 0.031
     },
     {
@@ -20,23 +20,23 @@
       "format": "LONG",
       "published_at": "2026-10-28T19:38:28Z",
       "hours_live": 0.5,
-      "view_count": 1,
+      "view_count": 2,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 2.0,
-      "engagement_rate": 4.0
+      "views_per_hour": 4.0,
+      "engagement_rate": 2.0
     },
     {
       "video_id": "1zOAaq6LrEA",
       "title": "The 1% Room Rent Trap in Health Insurance #Shorts",
       "format": "SHORT",
       "published_at": "2026-10-28T19:02:49Z",
-      "hours_live": 0.9,
-      "view_count": 1,
+      "hours_live": 1.0,
+      "view_count": 2,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 1.11,
-      "engagement_rate": 4.0
+      "views_per_hour": 1.96,
+      "engagement_rate": 2.0
     }
   ],
   "bottom_underperformers": [
@@ -45,7 +45,7 @@
       "title": "The Math Retail Misses: Health Insurance Claim Settlement R #Shorts (Institutional Breakdown) (",
       "format": "SHORT",
       "published_at": "2026-10-26T15:30:01Z",
-      "hours_live": 52.5,
+      "hours_live": 52.6,
       "view_count": 2,
       "like_count": 0,
       "comment_count": 1,
@@ -57,7 +57,7 @@
       "title": "Don't Fall for the 24500 Trap: Why 90% of Everyday Buyers Lose Money (Institutional Breakdown)",
       "format": "SHORT",
       "published_at": "2026-10-24T10:03:39Z",
-      "hours_live": 105.9,
+      "hours_live": 106.0,
       "view_count": 2,
       "like_count": 1,
       "comment_count": 1,
@@ -69,7 +69,7 @@
       "title": "The Institutional Compounding Secret: How Smart Money Traps Retail in F&O (Institutional Breakd",
       "format": "LONG",
       "published_at": "2026-10-23T08:54:42Z",
-      "hours_live": 131.0,
+      "hours_live": 131.2,
       "view_count": 3,
       "like_count": 1,
       "comment_count": 1,
