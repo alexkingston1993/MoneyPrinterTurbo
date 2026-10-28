@@ -447,9 +447,33 @@ def render_gpu_segment(seg: dict, mp3_path: Path, ass_path: Path, duration: floa
     """Renders 1080p NVIDIA segment — Ken Burns motion + animated HUD telemetry so
     no frame of the video is ever a frozen still (anti YPP 'static slideshow' flag)."""
     avatar_id = max(1, min(10, int(seg.get("avatar_studio_id", 1))))
-    avatar_img = ASSETS_DIR / f"avatar_{avatar_id}.png"
-    if not avatar_img.exists():
-        avatar_img = ASSETS_DIR / "avatars" / f"avatar_{avatar_id}.png"
+    avatar_img = None
+    for cand in [
+        ASSETS_DIR / f"avatar_{avatar_id}.png",
+        ASSETS_DIR / "avatars" / f"avatar_{avatar_id}.png",
+        ASSETS_DIR / "avatar_1.png",
+        ASSETS_DIR / "avatars" / "avatar_1.png",
+        PAYLOAD_DIR / "avatar_1.png",
+    ]:
+        if cand.exists():
+            avatar_img = cand
+            break
+
+    if not avatar_img or not avatar_img.exists():
+        if Path("/kaggle/input").exists():
+            imgs = list(Path("/kaggle/input").rglob("*.png")) + list(Path("/kaggle/input").rglob("*.jpg"))
+            if imgs:
+                avatar_img = imgs[0]
+
+    # Generate elegant fallback canvas if absolutely no image file exists
+    if not avatar_img or not avatar_img.exists():
+        fallback_canvas = WORK_DIR / "fallback_avatar.png"
+        if not fallback_canvas.exists():
+            subprocess.run([
+                "ffmpeg", "-y", "-f", "lavfi", "-i", "color=c=0x0B0E14:s=1920x1080:d=1",
+                "-frames:v", "1", str(fallback_canvas)
+            ], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        avatar_img = fallback_canvas
 
     b_roll = PAYLOAD_DIR / seg.get("b_roll_asset_ref", "NONE")
     fontfile = _find_fontfile()
