@@ -92,58 +92,114 @@ FFCAPS = _ffmpeg_filter_support()
 
 # ---------------------------------------------------------------------------
 # 🎙️ VOICESTUDIO EXTRACTION — Multi-Voice Persona Engine
-# Every vertical gets its OWN authority anchor so 16 daily uploads never share
-# one stock Edge-TTS voice (YouTube's "inauthentic content" reviewers listen for it).
+# ---------------------------------------------------------------------------
+# 🎙️ ARJUN SIGNATURE AUDIO ENGINE — 100% Cloned Indian English Voice
+# Uses the locally cloned Arjun profile across all verticals.
 # ---------------------------------------------------------------------------
 VOICE_PERSONAS = {
     "stock_market": {
-        "voice": "en-US-AndrewMultilingualNeural",
-        "rate": "+4%",
+        "voice": "en-IN-PrabhatNeural",
+        "rate": "+3%",
         "pitch": "-2Hz",
-        "desc": "Quantitative Institutional Desk Anchor",
+        "desc": "Arjun — Institutional Market Anchor",
     },
     "crypto": {
-        "voice": "en-US-BrianMultilingualNeural",
-        "rate": "+6%",
+        "voice": "en-IN-PrabhatNeural",
+        "rate": "+3%",
         "pitch": "-1Hz",
-        "desc": "Derivatives & On-Chain Strategist",
+        "desc": "Arjun — Macro & On-Chain Strategist",
     },
     "insurance": {
         "voice": "en-IN-PrabhatNeural",
         "rate": "+3%",
         "pitch": "-2Hz",
-        "desc": "Forensic Policy & Risk Auditor",
+        "desc": "Arjun — Forensic Risk & Claims Auditor",
     },
-    "crypto_ethereum": {  # sibling of crypto
-        "voice": "en-US-BrianMultilingualNeural",
-        "rate": "+5%",
+    "crypto_ethereum": {
+        "voice": "en-IN-PrabhatNeural",
+        "rate": "+3%",
         "pitch": "-2Hz",
-        "desc": "On-Chain Microstructure Anchor",
+        "desc": "Arjun — Derivatives & Microstructure Anchor",
     },
 }
 
 
 def select_voice_persona(vertical: str) -> dict:
-    """Signature voice persona for the vertical (voicestudio multi-persona routing)."""
-    persona = dict(VOICE_PERSONAS.get(vertical or "", VOICE_PERSONAS["stock_market"]))
-    if vertical not in VOICE_PERSONAS:
-        persona["desc"] += " (fallback)"
-    return persona
+    """Always routes to the Arjun signature voice persona."""
+    return dict(VOICE_PERSONAS.get(vertical or "", VOICE_PERSONAS["stock_market"]))
+
+
+def _try_cloned_arjun_tts(text: str, mp3_path: Path) -> bool:
+    """Synthesizes speech using the staged Arjun/Prabhat latents on Kaggle CUDA GPU."""
+    try:
+        import torch, soundfile as sf, numpy as np, re
+        from TTS.api import TTS
+        
+        latents_path = None
+        for p in [Path("/kaggle/input/flipzon-daily-payload/prabhat_latents.pt"), Path("prabhat_latents.pt")]:
+            if p.exists():
+                latents_path = p
+                break
+        if not latents_path:
+            return False
+            
+        global _KAGGLE_XTTS_MODEL, _KAGGLE_LATENTS
+        if "_KAGGLE_XTTS_MODEL" not in globals() or _KAGGLE_XTTS_MODEL is None:
+            print("[Kaggle-Arjun] Loading local XTTS-v2 model on GPU...")
+            tts_inst = TTS("tts_models/multilingual/multi-dataset/xtts_v2")
+            tts_inst.to("cuda" if torch.cuda.is_available() else "cpu")
+            _KAGGLE_XTTS_MODEL = tts_inst.synthesizer.tts_model
+            _KAGGLE_LATENTS = torch.load(latents_path, map_location=_KAGGLE_XTTS_MODEL.device, weights_only=False)
+            print("[Kaggle-Arjun] Model and latents loaded successfully!")
+            
+        clean_text = text.strip()
+        sentences = [s.strip() for s in re.split(r'(?<=[.?!;।])\s+', clean_text) if s.strip()] or [clean_text]
+        audio_pieces = []
+        for s in sentences:
+            if not s: continue
+            out = _KAGGLE_XTTS_MODEL.inference(
+                text=s,
+                language="en",
+                gpt_cond_latent=_KAGGLE_LATENTS["gpt_cond_latent"],
+                speaker_embedding=_KAGGLE_LATENTS["speaker_embedding"],
+                temperature=0.7,
+                speed=1.0,
+            )
+            wav_chunk = out["wav"]
+            if isinstance(wav_chunk, torch.Tensor):
+                wav_chunk = wav_chunk.cpu().numpy()
+            audio_pieces.append(wav_chunk)
+            audio_pieces.append(np.zeros(int(24000 * 0.15)))
+            
+        full_audio = np.concatenate(audio_pieces)
+        wav_temp = mp3_path.with_suffix(".wav")
+        sf.write(str(wav_temp), full_audio, 24000)
+        subprocess.run(["ffmpeg", "-y", "-i", str(wav_temp), "-codec:a", "libmp3lame", "-qscale:a", "2", str(mp3_path)], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        if wav_temp.exists(): wav_temp.unlink()
+        return mp3_path.exists() and mp3_path.stat().st_size > 1024
+    except Exception as e:
+        print(f"[Kaggle-Arjun] Cloned voice notice: {e}")
+        return False
 
 
 async def make_tts_and_subtitles(text: str, mp3_path: Path, ass_path: Path, persona: dict = None) -> float:
-    """Generates audio via Edge-TTS (vertical persona) + word-level Hormozi ASS subtitles via Faster-Whisper."""
-    persona = persona or {"voice": "en-US-AndrewNeural", "rate": "+3%", "pitch": "+0Hz"}
-    for attempt in range(1, 4):
-        try:
-            comm = edge_tts.Communicate(text=text, voice=persona["voice"], rate=persona.get("rate", "+3%"), pitch=persona.get("pitch", "+0Hz"))
-            await comm.save(str(mp3_path))
-            if mp3_path.exists() and mp3_path.stat().st_size > 1024:
-                break
-        except Exception as e:
-            if attempt == 3:
-                raise e
-            await asyncio.sleep(2 * attempt)
+    """Generates audio via Cloned Arjun / Arjun Neural + word-level Hormozi ASS subtitles via Faster-Whisper."""
+    # 1. Try 100% offline Cloned Arjun first
+    generated_offline = _try_cloned_arjun_tts(text, mp3_path)
+    
+    # 2. Resilient fallback with 3-attempt exponential backoff using Arjun profile
+    if not generated_offline or not mp3_path.exists() or mp3_path.stat().st_size <= 1024:
+        persona = persona or select_voice_persona("stock_market")
+        for attempt in range(1, 4):
+            try:
+                comm = edge_tts.Communicate(text=text, voice=persona["voice"], rate=persona.get("rate", "+3%"), pitch=persona.get("pitch", "-2Hz"))
+                await comm.save(str(mp3_path))
+                if mp3_path.exists() and mp3_path.stat().st_size > 1024:
+                    break
+            except Exception as e:
+                if attempt == 3:
+                    raise e
+                await asyncio.sleep(2 * attempt)
 
     res = subprocess.run(
         ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(mp3_path)],

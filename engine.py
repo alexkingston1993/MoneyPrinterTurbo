@@ -57,9 +57,30 @@ async def generate_tts_audio(text: str, mp3_path: Path) -> float:
     humanized_text = humanizer.apply_human_touch(text, context_type="script")
     mp3_path.parent.mkdir(parents=True, exist_ok=True)
 
+    # 1. ALWAYS TRY LOCALLY CLONED ARJUN (XTTS-v2 OFFLINE) FIRST
+    try:
+        from app.services.cloned_prabhat_tts import cloned_prabhat_tts
+        wav_path = mp3_path.with_suffix(".wav")
+        res = cloned_prabhat_tts(humanized_text, str(wav_path))
+        if res and wav_path.exists() and wav_path.stat().st_size > 1024:
+            subprocess.run(
+                ["ffmpeg", "-y", "-i", str(wav_path), "-codec:a", "libmp3lame", "-qscale:a", "2", str(mp3_path)],
+                check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+            )
+            if wav_path.exists():
+                wav_path.unlink()
+            if mp3_path.exists() and mp3_path.stat().st_size > 1024:
+                res_probe = subprocess.run(
+                    ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(mp3_path)],
+                    stdout=subprocess.PIPE, text=True, check=True
+                )
+                return max(float(res_probe.stdout.strip()), 1.0)
+    except Exception as e:
+        logger.warning(f"[Voice] Cloned Arjun TTS notice: {e}. Falling back to backup...")
+
     try:
         import edge_tts
-        voice = "en-US-AndrewNeural" # Calm, authoritative financial educator tone
+        voice = "en-IN-PrabhatNeural" # Arjun persona
         comm = edge_tts.Communicate(text=humanized_text, voice=voice, rate="+3%")
         await comm.save(str(mp3_path))
     except Exception as e:

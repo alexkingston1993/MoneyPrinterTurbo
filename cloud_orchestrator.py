@@ -685,6 +685,14 @@ def run_kaggle_gpu_renderer(
             shutil.copy2(ava_path, KAGGLE_STAGE_DIR / "avatar_1.png")
             break
 
+    # Stage authentic Cloned Arjun audio assets for 100% offline cloud TTS
+    voices_dir = BASE_DIR / "app" / "services" / "voices"
+    for vfile in ["prabhat_latents.pt", "prabhat_ref_8s.wav", "prabhat_ref_master.wav"]:
+        src_v = voices_dir / vfile
+        if src_v.exists():
+            shutil.copy2(src_v, KAGGLE_STAGE_DIR / vfile)
+            logger.info(f"🎙️ Staged Cloned Arjun voice asset: {vfile}")
+
     dataset_meta = {
         "title": "Flipzon Daily Payload",
         "id": f"{KAGGLE_USERNAME}/{DATASET_SLUG}",
