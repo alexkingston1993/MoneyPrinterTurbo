@@ -4,14 +4,14 @@
   "vertical": "crypto",
   "vertical_label": "Slot #2",
   "shorts_count": 2,
-  "status": "WAITING_APPROVAL",
+  "status": "FAILED",
   "overall_pct": 75,
   "stage_pct": 50,
   "current_stage_index": 5,
   "current_stage_name": "Local CPU Media Engine",
-  "current_subtask_label": "Uploading 1080p Masterclass to YouTube...",
+  "current_subtask_label": "Error: expected an indented block after 'if' statement on line 319 (short_ren",
   "started_at": "2026-10-28T06:43:06Z",
-  "updated_at": "2026-10-28T07:03:17Z",
+  "updated_at": "2026-10-28T07:03:30Z",
   "eta_seconds": 0,
   "stages": [
     {
