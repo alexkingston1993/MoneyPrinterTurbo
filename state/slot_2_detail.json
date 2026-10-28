@@ -209,6 +209,11 @@
       "ts": "07:03:14",
       "level": "INFO",
       "msg": "[KAGGLE_GPU]: \ud83d\ude80 Uploading Long Masterclass to YouTube... | "
+    },
+    {
+      "ts": "07:03:33",
+      "level": "ERROR",
+      "msg": "Runner failed: expected an indented block after 'if' statement on line 319 (short_renderer.py, line 320)"
     }
   ]
 }
