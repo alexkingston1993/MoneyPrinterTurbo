@@ -224,6 +224,11 @@
       "ts": "17:06:11",
       "level": "INFO",
       "msg": "[VERCEL]: \ud83d\udcdd Compiling MDX & IndexNow Ping... | "
+    },
+    {
+      "ts": "17:06:17",
+      "level": "INFO",
+      "msg": "[VERCEL]: \u2705 Live & Indexed (`https://the-bull-print.vercel.app/article.html?slug=health-insurance-claim-settlement-ratio-vs-ic-1793206244`) | \ud83c\udfac Shorts (1): QUOTA_EXHAUSTED_ALL_SLOTS \u00b7 \ud83d\udc26 X Thread: Skipped (X keys not set)"
     }
   ]
 }
