@@ -113,7 +113,7 @@ def diagnose_failure_with_gemini(log_snippet: str) -> dict:
             }
         return default_diagnosis
 
-    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={GEMINI_API_KEY}"
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-lite-latest:generateContent?key={GEMINI_API_KEY}"
     prompt = (
         "You are the autonomous SRE doctor for an automated YouTube video production pipeline.\n"
         "Analyze this trailing GitHub Actions error log snippet and output JSON with these keys:\n"

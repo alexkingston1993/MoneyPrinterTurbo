@@ -87,7 +87,7 @@ def generate_custom_topic_comment(title: str, description: str, vertical: str) -
                 f"3. Strictly under 280 characters. No hashtags. No generic fluff like 'Did you spot this pattern'."
             )
             resp = client.models.generate_content(
-                model="gemini-flash-latest",
+                model="gemini-flash-lite-latest",
                 contents=prompt,
             )
             text = (resp.text or "").strip().replace('"', '')

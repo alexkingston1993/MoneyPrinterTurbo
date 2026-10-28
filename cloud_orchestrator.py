@@ -60,9 +60,9 @@ try:
             os.environ["TELEGRAM_BOT_TOKEN"] = _cfg["telegram_bot_token"]
         if not os.getenv("TELEGRAM_CHAT_ID") and _cfg.get("telegram_chat_id"):
             os.environ["TELEGRAM_CHAT_ID"] = str(_cfg["telegram_chat_id"])
-        _m_val = _cfg.get("gemini_model_name", "gemini-flash-latest")
+        _m_val = _cfg.get("gemini_model_name", "gemini-flash-lite-latest")
         if not _m_val or "gemini-2.5-flash" in _m_val or "gemini-pro" in _m_val:
-            _m_val = "gemini-flash-latest"
+            _m_val = "gemini-flash-lite-latest"
         os.environ["GEMINI_MODEL_NAME"] = _m_val
 except Exception:
     pass
@@ -566,9 +566,9 @@ def generate_master_json_via_ai_studio(
             client = genai.Client(api_key=api_key)
             schema_dict = json.loads(schema_file.read_text(encoding="utf-8")) if schema_file.exists() else {}
 
-            _chosen_model = os.getenv("GEMINI_MODEL_NAME", "gemini-flash-latest")
+            _chosen_model = os.getenv("GEMINI_MODEL_NAME", "gemini-flash-lite-latest")
             if not _chosen_model or "gemini-2.5-flash" in _chosen_model or "gemini-pro" in _chosen_model:
-                _chosen_model = "gemini-flash-latest"
+                _chosen_model = "gemini-flash-lite-latest"
 
             logger.info(f"🧠 Calling Google AI Studio ({_chosen_model}) for {vertical} slot #{slot_index}...")
             response = client.models.generate_content(

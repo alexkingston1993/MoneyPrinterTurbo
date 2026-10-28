@@ -102,8 +102,8 @@ if os.getenv("LLM_PROVIDER"):
 
 if os.getenv("GEMINI_MODEL_NAME"):
     app["gemini_model_name"] = os.getenv("GEMINI_MODEL_NAME")
-elif app.get("gemini_model_name") in ["gemini-pro", "gemini-1.0-pro", "gemini-2.5-flash"]:
-    app["gemini_model_name"] = "gemini-flash-latest"
+elif app.get("gemini_model_name") in ["gemini-pro", "gemini-1.0-pro", "gemini-2.5-flash", "gemini-flash-latest"]:
+    app["gemini_model_name"] = "gemini-flash-lite-latest"
 
 if os.getenv("PEXELS_API_KEY"):
     app["pexels_api_keys"] = [os.getenv("PEXELS_API_KEY")]

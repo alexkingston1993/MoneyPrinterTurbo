@@ -11,7 +11,7 @@ from openai.types.chat import ChatCompletion
 from app.config import config
 
 _max_retries = 5
-_DEFAULT_GEMINI_MODEL = "gemini-2.0-flash"
+_DEFAULT_GEMINI_MODEL = "gemini-flash-lite-latest"
 _DEPRECATED_GEMINI_MODELS = {"gemini-pro", "gemini-1.0-pro", "gemini-2.5-flash"}
 
 

@@ -30,9 +30,9 @@ POSTS_MANIFEST = BASE_DIR / "content" / "posts.json"
 SCHEMA_PATH = BASE_DIR / "master_schema.json"
 SYSTEM_PROMPT_PATH = BASE_DIR / "master_system_prompt.txt"
 
-# Live Gemini model alias ('gemini-flash-latest' always resolves to the currently served GA Flash model).
-_raw_model = os.getenv("GEMINI_MODEL_NAME", "gemini-flash-latest")
-LIVE_GEMINI_MODEL = "gemini-flash-latest" if (not _raw_model or "gemini-2.5-flash" in _raw_model or "gemini-pro" in _raw_model) else _raw_model
+# Live Gemini model alias ('gemini-flash-lite-latest' for high speed and zero deprecation).
+_raw_model = os.getenv("GEMINI_MODEL_NAME", "gemini-flash-lite-latest")
+LIVE_GEMINI_MODEL = "gemini-flash-lite-latest" if (not _raw_model or "gemini-2.5-flash" in _raw_model or "gemini-pro" in _raw_model) else _raw_model
 
 # Deterministic Regex Patterns for Illegal Financial Advisory Triggers
 _BANNED_RAW = [
