@@ -134,8 +134,16 @@ def select_voice_persona(vertical: str) -> dict:
 async def make_tts_and_subtitles(text: str, mp3_path: Path, ass_path: Path, persona: dict = None) -> float:
     """Generates audio via Edge-TTS (vertical persona) + word-level Hormozi ASS subtitles via Faster-Whisper."""
     persona = persona or {"voice": "en-US-AndrewNeural", "rate": "+3%", "pitch": "+0Hz"}
-    comm = edge_tts.Communicate(text=text, voice=persona["voice"], rate=persona.get("rate", "+3%"), pitch=persona.get("pitch", "+0Hz"))
-    await comm.save(str(mp3_path))
+    for attempt in range(1, 4):
+        try:
+            comm = edge_tts.Communicate(text=text, voice=persona["voice"], rate=persona.get("rate", "+3%"), pitch=persona.get("pitch", "+0Hz"))
+            await comm.save(str(mp3_path))
+            if mp3_path.exists() and mp3_path.stat().st_size > 1024:
+                break
+        except Exception as e:
+            if attempt == 3:
+                raise e
+            await asyncio.sleep(2 * attempt)
 
     res = subprocess.run(
         ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(mp3_path)],
@@ -143,6 +151,18 @@ async def make_tts_and_subtitles(text: str, mp3_path: Path, ass_path: Path, pers
     )
     duration = float(res.stdout.strip())
 
+    ass_header = """[Script Info]
+ScriptType: v4.00+
+PlayResX: 1920
+PlayResY: 1080
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, BackColour, Bold, Outline, Shadow, Alignment, MarginV
+Style: Hormozi,Arial,56,&H0081B910,&H80000000,-1,4,2,2,85
+
+[Events]
+Format: Layer, Start, End, Style, Text
+"""
     events = []
     try:
         try:
