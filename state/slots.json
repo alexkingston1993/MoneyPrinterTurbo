@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-28T14:11:07Z",
+  "updated_at": "2026-10-28T14:38:51Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -9,15 +9,15 @@
       "vertical": "stock_market",
       "vertical_label": "Stock Market #1",
       "shorts_count": 2,
-      "status": "COMPLETED",
-      "overall_pct": 100,
-      "stage_pct": 100,
-      "current_stage": "Multi-Channel Distribution",
-      "current_stage_index": 7,
+      "status": "RUNNING",
+      "overall_pct": 2,
+      "stage_pct": 10,
+      "current_stage": "SEO Topic Harvester (open-seo)",
+      "current_stage_index": 1,
       "archetype": "institutional_trap_expose",
       "topic": "Nifty 50 Liquidity Traps & Institutional Accumulation",
       "voice_persona": "AndrewNeural",
-      "run_id": "40573048070"
+      "run_id": "40707783021"
     },
     "2": {
       "slot": 2,
