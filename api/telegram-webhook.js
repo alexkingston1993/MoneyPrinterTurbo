@@ -6,14 +6,11 @@ const AUTH_CHAT_ID = process.env.TELEGRAM_CHAT_ID || '1126599043';
 const GH_REPO = process.env.GITHUB_REPO || 'alexkingston1993/MoneyPrinterTurbo';
 const GH_TOKEN = process.env.GITHUB_PAT_TOKEN || process.env.GITHUB_TOKEN || '';
 
-// Multi-key support with verified fallback key
+// Multi-key support with environment variables
 const RAW_GEMINI_KEYS = (process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEYS || '')
   .split(',')
   .map((k) => k.trim())
   .filter(Boolean);
-if (!RAW_GEMINI_KEYS.includes('AQ.Ab8RN6JC2ZpSlzffHIb9ckCH8t_QkfkTcc5hOSJIYjVFsPIp2g')) {
-  RAW_GEMINI_KEYS.push('AQ.Ab8RN6JC2ZpSlzffHIb9ckCH8t_QkfkTcc5hOSJIYjVFsPIp2g');
-}
 
 const CANDIDATE_GEMINI_MODELS = [
   process.env.GEMINI_MODEL_NAME,
