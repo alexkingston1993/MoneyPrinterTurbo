@@ -5,13 +5,13 @@
   "vertical_label": "Slot #3",
   "shorts_count": 2,
   "status": "RUNNING",
-  "overall_pct": 45,
-  "stage_pct": 70,
-  "current_stage_index": 4,
-  "current_stage_name": "Chart & High-CTR Thumbnail Studio",
-  "current_subtask_label": "Thumbnails rendered & staged",
-  "started_at": "2026-10-28T20:14:01Z",
-  "updated_at": "2026-10-28T20:15:24Z",
+  "overall_pct": 2,
+  "stage_pct": 10,
+  "current_stage_index": 1,
+  "current_stage_name": "SEO Topic Harvester (open-seo)",
+  "current_subtask_label": "Harvesting search intent & clusters",
+  "started_at": "2026-10-28T20:15:37Z",
+  "updated_at": "2026-10-28T20:15:37Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -148,6 +148,11 @@
       "ts": "20:15:27",
       "level": "INFO",
       "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering Pillow Graphics... | "
+    },
+    {
+      "ts": "20:15:37",
+      "level": "INFO",
+      "msg": "Slot #3 (insurance) initialized. Target: 1 Long + 2 Shorts."
     }
   ]
 }
