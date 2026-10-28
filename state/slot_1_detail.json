@@ -40,9 +40,9 @@
       "started_at": null,
       "completed_at": "2026-10-28T14:39:09Z",
       "metrics": {
-        "audit_attempts": 1,
-        "compliance_status": "PASS_1",
-        "audit_notes": "Pass #1/3: 1 suggestion(s) applied (Virality: 90/100, Compliance: FLAGGED)"
+        "audit_attempts": 2,
+        "compliance_status": "PASS_2",
+        "audit_notes": "100% Pass: Virality 90/100 + SEBI/IRDAI Approved"
       }
     },
     {
