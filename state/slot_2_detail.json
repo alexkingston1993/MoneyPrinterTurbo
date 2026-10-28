@@ -39,7 +39,11 @@
       "pct": 0,
       "started_at": null,
       "completed_at": "2026-10-28T06:43:27Z",
-      "metrics": {}
+      "metrics": {
+        "audit_attempts": 1,
+        "compliance_status": "PASS_1",
+        "audit_notes": "100% Pass: Virality 95/100 + SEBI/IRDAI Approved"
+      }
     },
     {
       "id": 4,
