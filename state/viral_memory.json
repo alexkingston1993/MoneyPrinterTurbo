@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-28T20:14:07Z",
+  "updated_at": "2026-10-28T20:15:44Z",
   "channel_median_vph": 0.23,
   "top_outperformers": [
     {
@@ -11,7 +11,7 @@
       "view_count": 129,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 5.33,
+      "views_per_hour": 5.32,
       "engagement_rate": 0.031
     },
     {
@@ -23,7 +23,7 @@
       "view_count": 2,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 3.37,
+      "views_per_hour": 3.22,
       "engagement_rate": 2.0
     },
     {
@@ -35,7 +35,7 @@
       "view_count": 2,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 1.68,
+      "views_per_hour": 1.65,
       "engagement_rate": 2.0
     }
   ],
@@ -45,7 +45,7 @@
       "title": "The Math Retail Misses: Health Insurance Claim Settlement R #Shorts (Institutional Breakdown) (",
       "format": "SHORT",
       "published_at": "2026-10-26T15:30:01Z",
-      "hours_live": 52.7,
+      "hours_live": 52.8,
       "view_count": 2,
       "like_count": 0,
       "comment_count": 1,
@@ -69,7 +69,7 @@
       "title": "The Institutional Compounding Secret: How Smart Money Traps Retail in F&O (Institutional Breakd",
       "format": "LONG",
       "published_at": "2026-10-23T08:54:42Z",
-      "hours_live": 131.3,
+      "hours_live": 131.4,
       "view_count": 3,
       "like_count": 1,
       "comment_count": 1,
