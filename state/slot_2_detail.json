@@ -103,7 +103,16 @@
       "pct": 100,
       "started_at": "2026-10-29T07:44:28Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "yt_long_id": "gEkRKqYhCN4",
+        "yt_short_ids": [
+          "ILk_hqAJD_8",
+          "BGQG71kmUMI"
+        ],
+        "oauth_slot_used": 1,
+        "article_url": "https://the-bull-print.vercel.app/article.html?slug=TBP_CRYPTO_FUNDING_02",
+        "x_thread_url": "Skipped (X keys not set)"
+      }
     }
   ],
   "live_logs": [
