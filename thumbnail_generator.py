@@ -30,8 +30,23 @@ import urllib.request
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageStat
 from loguru import logger
+
+def validate_thumbnail_richness(img: Image.Image, name: str = "thumbnail") -> bool:
+    """
+    Enforces minimum brightness and contrast/entropy gate to permanently ban dark/black fallbacks.
+    Raises ValueError if image mean brightness < 25 or standard deviation < 30.
+    """
+    stat = ImageStat.Stat(img.convert("L"))
+    mean_val = stat.mean[0]
+    std_val = stat.stddev[0]
+    if mean_val < 25 or std_val < 30:
+        raise ValueError(
+            f"CRITICAL REJECTION: {name} is pitch-black/dull (mean={mean_val:.1f}, std={std_val:.1f})! "
+            f"Blank/dark fallbacks are strictly banned."
+        )
+    return True
 
 BASE_DIR = Path(__file__).resolve().parent
 IMAGES_DIR = BASE_DIR / "output" / "images"
@@ -266,31 +281,19 @@ def generate_ai_scene_backdrop(
         except Exception as e:
             logger.warning(f"[Thumbs] Candidate URL attempt note ({url[:60]}...): {e}")
 
-    # High quality procedural dark telemetry background
-    canvas = Image.new("RGBA", (width, height), BG_DARK + (255,))
-    cdraw = ImageDraw.Draw(canvas)
-    for x in range(0, width, 60):
-        cdraw.line([(x, 0), (x, height)], fill=(15, 23, 42, 60), width=1)
-    for y in range(0, height, 60):
-        cdraw.line([(0, y), (width, y)], fill=(15, 23, 42, 60), width=1)
-    return canvas
+    # Dark fallback is permanently banned. Raise error if remote image generation failed.
+    raise RuntimeError(f"CRITICAL: Failed to fetch AI 3D scene from all candidates for prompt: {scene_prompt[:60]}... Silent dark fallbacks are banned.")
 
 
-def apply_calm_zone_gradient(img: Image.Image, width: int, height: int, calm_ratio: float = 0.65) -> Image.Image:
+def apply_calm_zone_gradient(img: Image.Image, width: int, height: int, calm_ratio: float = 0.0) -> Image.Image:
     """
-    Overlays directional dark gradient over the left zone so that
-    typography has unmatched readability while the 3D subject shines on the right.
+    Maintains 100% full-bleed visual richness with zero black paint cover over the AI scene.
+    Only protects the tiny duration timestamp badge area in bottom-right corner.
     """
     calm = Image.new("RGBA", (width, height), (0, 0, 0, 0))
     cdraw = ImageDraw.Draw(calm)
-    calm_w = int(width * calm_ratio)
-    for x in range(calm_w):
-        ratio = x / float(calm_w)
-        alpha = int(245 * ((1.0 - ratio) ** 1.5))
-        cdraw.line([(x, 0), (x, height)], fill=(BG_DARK[0], BG_DARK[1], BG_DARK[2], alpha))
-
-    # Mask out bottom-right corner for YouTube duration badge
-    cdraw.rectangle([int(width * 0.82), int(height * 0.82), width, height], fill=(BG_DARK[0], BG_DARK[1], BG_DARK[2], 160))
+    # Mask out only bottom-right corner for YouTube duration badge
+    cdraw.rectangle([int(width * 0.82), int(height * 0.82), width, height], fill=(BG_DARK[0], BG_DARK[1], BG_DARK[2], 120))
     return Image.alpha_composite(img, calm)
 
 

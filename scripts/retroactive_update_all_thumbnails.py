@@ -2,8 +2,9 @@
 """
 scripts/retroactive_update_all_thumbnails.py
 Retroactively updates the thumbnails on ALL uploaded Long-Form videos on The Bull Print YouTube Channel
-using the new 2-Stage Hybrid AI 3D Scene + Metallic Typography Compositor.
+using native 100% full-bleed 3D AI renders (Flow AI & Imagen 3 benchmark quality).
 
+Zero black fallbacks, zero flat 2D PIL text walls.
 API Cost: 50 quota units per video (very low, well within daily quota pool).
 """
 
@@ -14,15 +15,84 @@ import time
 from pathlib import Path
 from typing import List, Dict, Any
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-sys.path.insert(0, str(BASE_DIR))
-
+from PIL import Image, ImageStat
 from loguru import logger
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from google.auth.transport.requests import Request
 
+BASE_DIR = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(BASE_DIR))
+
 import thumbnail_generator
+
+
+# Master 9-Video Native 3D Full-Bleed Artwork Mapping
+MASTER_3D_THUMBNAILS = {
+    # 1. IRDAI Proportionate Deduction Math: Room Caps
+    "nMfqeaCzuAg": {
+        "source": "/Users/apple/.gemini/antigravity-ide/brain/96ef1dba-78f2-4790-bd8d-1dbad7261bf9/.user_uploaded/media_1793278651474.jpg",
+        "hook": "CLAIM CUTS EXPOSED",
+        "badge": "ROOM RENT CAPS!",
+        "metaphor": "Cracked Medical Shield + Scissors Cutting Falling Chart",
+    },
+    # 2. Claim Settlement Ratio vs ICR Reality
+    "GgFmjQY9IMo": {
+        "source": "/Users/apple/.gemini/antigravity-ide/brain/96ef1dba-78f2-4790-bd8d-1dbad7261bf9/ratio_lie_thumb_1793281935784.jpg",
+        "hook": "98% RATIO LIE!",
+        "badge": "HIDDEN ICR MATH",
+        "metaphor": "Red Claim Rejected Stamp Smashing Golden Shield",
+    },
+    # 3. Crypto Funding Rates: Perpetuals
+    "WG-9Tv5Jt-k": {
+        "source": "/Users/apple/.gemini/antigravity-ide/brain/96ef1dba-78f2-4790-bd8d-1dbad7261bf9/funding_bleed_thumb_1793281972376.jpg",
+        "hook": "8-HOUR BLEED!",
+        "badge": "FUNDING FEE DRAIN",
+        "metaphor": "Golden Bitcoin Drained by Red Syphon Tubes + Liquidation Gauge",
+    },
+    # 4. Crypto Funding Rates: Foreign Banks & Whales
+    "gEkRKqYhCN4": {
+        "source": "/Users/apple/.gemini/antigravity-ide/brain/96ef1dba-78f2-4790-bd8d-1dbad7261bf9/whale_squeeze_thumb_1793282004908.jpg",
+        "hook": "WHALE SQUEEZE",
+        "badge": "LIQUIDATION CASCADE",
+        "metaphor": "Cybernetic Killer Whale Crushing Leveraged Gauges",
+    },
+    # 5. Decoding SEBI F&O Rules
+    "T69-BM1mgjc": {
+        "source": "/Users/apple/.gemini/antigravity-ide/brain/96ef1dba-78f2-4790-bd8d-1dbad7261bf9/sebi_fo_shock_1793281902849.jpg",
+        "hook": "SEBI F&O SHOCK",
+        "badge": "NEW LOT SIZES",
+        "metaphor": "Metallic Gavel Smashing F&O Option Terminal",
+    },
+    # 6. Nifty 50 Today Option Chain Analysis
+    "-2K3qWYq6y8": {
+        "source": "/Users/apple/.gemini/antigravity-ide/brain/96ef1dba-78f2-4790-bd8d-1dbad7261bf9/.user_uploaded/media_1793278668553.jpg",
+        "hook": "NIFTY 50 TRAP EXPOSED!",
+        "badge": "OPTION CHAIN LIGHTNING",
+        "metaphor": "Golden Bull in Fiery Steel Bear Trap + Option Matrix",
+    },
+    # 7. Don't Fall for the 24500 Trap
+    "b02BMahomyE": {
+        "source": "/Users/apple/.gemini/antigravity-ide/brain/96ef1dba-78f2-4790-bd8d-1dbad7261bf9/.user_uploaded/media_1793278689806.jpg",
+        "hook": "24,500 LEVEL / DON'T FALL FOR IT!",
+        "badge": "LED WARNING MATRIX",
+        "metaphor": "LED Warning Sign + Candlestick Crashing Off Cliff Edge",
+    },
+    # 8. The 22,400 Liquidity Trap
+    "t05-xVABLaE": {
+        "source": "/Users/apple/.gemini/antigravity-ide/brain/96ef1dba-78f2-4790-bd8d-1dbad7261bf9/.user_uploaded/media_1793278681565.jpg",
+        "hook": "SMART MONEY CODE",
+        "badge": "LIQUIDITY TRAP 22,400",
+        "metaphor": "Neon Green Cybernetic Bull Breaking Red Handcuffs",
+    },
+    # 9. The Institutional Compounding Secret
+    "dxhUWlm3DUQ": {
+        "source": "/Users/apple/.gemini/antigravity-ide/brain/96ef1dba-78f2-4790-bd8d-1dbad7261bf9/formula_engine_thumb_1793282042236.jpg",
+        "hook": "THE 1% FORMULA",
+        "badge": "INSTITUTIONAL ENGINE",
+        "metaphor": "Golden Vault Gear Clockwork Compounding Candlestick Tower",
+    },
+}
 
 
 def get_authenticated_service():
@@ -67,8 +137,6 @@ def fetch_long_form_videos(service) -> List[Dict[str, Any]]:
         if not page_token:
             break
 
-    logger.info(f"📋 Total playlist items: {len(raw_items)}. Fetching duration details...")
-
     long_form = []
     for i in range(0, len(raw_items), 50):
         chunk = raw_items[i:i+50]
@@ -85,26 +153,37 @@ def fetch_long_form_videos(service) -> List[Dict[str, Any]]:
             privacy = v["status"]["privacyStatus"]
 
             is_short = "#shorts" in title.lower() or dur in ("PT1M", "PT59S", "PT58S", "PT30S", "PT15S", "PT20S")
-            # Long form has duration > 65s (contains 'M' or 'H' and not a short)
             if not is_short and ("M" in dur or "H" in dur):
-                # Infer vertical from title
-                t_lower = title.lower()
-                if any(w in t_lower for w in ["claim", "insurance", "irdai", "room rent", "hospital"]):
-                    vert = "insurance"
-                elif any(w in t_lower for w in ["crypto", "bitcoin", "funding rate", "perp", "115bbh", "tax notice"]):
-                    vert = "crypto"
-                else:
-                    vert = "stock_market"
-
                 long_form.append({
                     "id": vid,
                     "title": title,
                     "duration": dur,
                     "privacy": privacy,
-                    "vertical": vert,
                 })
 
     return long_form
+
+
+def prepare_and_validate_thumbnail(vid: str, meta: Dict[str, str]) -> Path:
+    src_path = Path(meta["source"])
+    if not src_path.exists():
+        raise FileNotFoundError(f"Missing master 3D thumbnail file: {src_path}")
+
+    img = Image.open(src_path).convert("RGB")
+    
+    # 1. Enforce Strict Visual Richness & Brightness Gate (Bans all black fallbacks)
+    thumbnail_generator.validate_thumbnail_richness(img, name=vid)
+
+    # 2. Resize to crisp 1280x720 standard if needed
+    if img.size != (1280, 720):
+        img = img.resize((1280, 720), Image.Resampling.LANCZOS)
+
+    # 3. Export to output/thumbnails
+    out_dir = BASE_DIR / "output" / "thumbnails"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / f"master_{vid}.jpg"
+    img.save(out_path, "JPEG", quality=95)
+    return out_path
 
 
 def main():
@@ -120,34 +199,39 @@ def main():
     for idx, v in enumerate(videos, 1):
         vid = v["id"]
         title = v["title"]
-        vert = v["vertical"]
+        meta = MASTER_3D_THUMBNAILS.get(vid)
 
-        logger.info(f"\n[{idx}/{len(videos)}] Processing: {title[:55]} ({vid}) [{vert}]")
+        if not meta:
+            logger.warning(f"[{idx}/{len(videos)}] No custom 3D mapping found for {vid}. Skipping.")
+            continue
 
-        # 1. Art Direction via Gemini
-        art = thumbnail_generator.get_ai_art_direction(title, vertical=vert)
-        hook_display = f"{art.get('line1')} / {art.get('line2')} [{art.get('pill_badge')}]"
-        logger.info(f"   Hook: {hook_display}")
+        logger.info(f"\n[{idx}/{len(videos)}] Processing: {title[:55]} ({vid})")
+        logger.info(f"   Hook: {meta['hook']} | Badge: {meta['badge']}")
+        logger.info(f"   Metaphor: {meta['metaphor']}")
 
-        # 2. Render 1280x720 3D Hybrid Thumbnail
-        slug = f"retro_{vid}"
-        seed = abs(hash(vid)) % 100000 + 42
-        raw_bg = thumbnail_generator.generate_ai_scene_backdrop(art["scene_prompt"], width=1280, height=720, seed=seed)
-        bg = thumbnail_generator.apply_calm_zone_gradient(raw_bg, width=1280, height=720, calm_ratio=0.62)
-        thumb_img = thumbnail_generator.composite_3d_metallic_branding(bg, art, width=1280, height=720, is_short=False)
+        # Prepare and validate high-res thumbnail
+        try:
+            thumb_path = prepare_and_validate_thumbnail(vid, meta)
+            size_kb = os.path.getsize(thumb_path) / 1024
+            logger.info(f"   ✓ Validated Full-Bleed 3D Artwork: {thumb_path.name} ({size_kb:.1f} KB)")
+        except Exception as e:
+            logger.error(f"   ❌ Validation failed for {vid}: {e}")
+            results.append({
+                "id": vid,
+                "title": title,
+                "hook": meta["hook"],
+                "badge": meta["badge"],
+                "status": f"FAILED: {e}"
+            })
+            continue
 
-        out_path = BASE_DIR / "output" / "thumbnails" / f"{slug}.jpg"
-        thumb_img.save(out_path, "JPEG", quality=95)
-        size_kb = os.path.getsize(out_path) / 1024
-        logger.info(f"   Saved thumbnail: {out_path.name} ({size_kb:.1f} KB)")
-
-        # 3. Upload thumbnail to YouTube Data API v3
+        # Upload thumbnail to YouTube Data API v3
         success = False
         err_msg = ""
         try:
-            media = MediaFileUpload(str(out_path), mimetype="image/jpeg", resumable=True)
+            media = MediaFileUpload(str(thumb_path), mimetype="image/jpeg", resumable=True)
             res = service.thumbnails().set(videoId=vid, media_body=media).execute()
-            logger.success(f"   ✓ Successfully updated thumbnail on YouTube for {vid}!")
+            logger.success(f"   🎉 Successfully updated 3D thumbnail on YouTube for {vid}!")
             success = True
         except Exception as e:
             err_msg = str(e)
@@ -156,23 +240,23 @@ def main():
         results.append({
             "id": vid,
             "title": title,
-            "hook": f"{art.get('line1')} / {art.get('line2')}",
-            "badge": art.get("pill_badge", ""),
+            "hook": meta["hook"],
+            "badge": meta["badge"],
             "status": "SUCCESS" if success else f"FAILED: {err_msg[:20]}"
         })
 
         time.sleep(1.0) # respectful rate pacing
 
     # Print Confirmation Table
-    print("\n" + "=" * 115)
-    print(f"{'VIDEO ID':<13} | {'STATUS':<9} | {'HOOK TEXT (LINE 1 / LINE 2)':<32} | {'RED PILL BADGE':<22} | {'TITLE'}")
-    print("=" * 115)
+    print("\n" + "=" * 125)
+    print(f"{'VIDEO ID':<13} | {'STATUS':<9} | {'NATIVE 3D HOOK TEXT':<34} | {'WARNING BADGE':<24} | {'TITLE'}")
+    print("=" * 125)
     for r in results:
-        print(f"{r['id']:<13} | {r['status']:<9} | {r['hook'][:32]:<32} | {r['badge'][:22]:<22} | {r['title'][:30]}")
-    print("=" * 115 + "\n")
+        print(f"{r['id']:<13} | {r['status']:<9} | {r['hook'][:34]:<34} | {r['badge'][:24]:<24} | {r['title'][:35]}")
+    print("=" * 125 + "\n")
 
     success_count = sum(1 for r in results if r["status"] == "SUCCESS")
-    logger.success(f"🎉 Retroactive thumbnail update finished: {success_count}/{len(results)} videos updated successfully!")
+    logger.success(f"🚀 Retroactive thumbnail update finished: {success_count}/{len(results)} videos updated live on YouTube!")
 
 
 if __name__ == "__main__":
