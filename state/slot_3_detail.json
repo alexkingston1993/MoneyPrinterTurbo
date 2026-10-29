@@ -138,6 +138,11 @@
       "ts": "04:19:26",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udd2c Auditing Authenticity Engine... | trigram dupe-check + domain vocabulary"
+    },
+    {
+      "ts": "04:19:32",
+      "level": "INFO",
+      "msg": "[GEMINI]: \u2705 Original (contract_clause_forensic_audit) | \ud83d\udee1\ufe0f INSURANCE \u00b7 43 hits (claim settlement ratio, incurred claim ratio, solvency, room rent, sub-"
     }
   ]
 }
