@@ -1,19 +1,19 @@
 {
-  "updated_at": "2026-10-29T05:11:52Z",
+  "updated_at": "2026-10-29T06:11:56Z",
   "videos": {
     "slot_1_long": {
       "slot": 1,
       "format": "16:9 LONG",
-      "vertical": "STOCK_MARKET",
-      "title": "[LONG-FORM] Nifty 50 today option chain",
-      "current_stage": "Stage 7/7: Uploaded & Distributed",
-      "stage_pct": 100,
-      "completion_pct": 100,
-      "eta_seconds": 0,
+      "vertical": "INSURANCE",
+      "title": "[LONG-FORM] Term insurance claim rejection reasons in hindi",
+      "current_stage": "Stage 4/7: Chart & High-CTR Thumbnail Studio",
+      "stage_pct": 20,
+      "completion_pct": 40,
+      "eta_seconds": 360,
       "compliance_status": "\ud83d\udee1\ufe0f Feedback Healed & Verified",
-      "updated_at": "2026-10-29T03:57:28Z",
+      "updated_at": "2026-10-29T06:11:56Z",
       "video_id": "slot_1_long",
-      "status": "COMPLETED",
+      "status": "IN_PROGRESS",
       "started_at": "2026-10-25T20:36:34Z",
       "youtube_id": "-2K3qWYq6y8",
       "youtube_url": "https://www.youtube.com/watch?v=-2K3qWYq6y8"
