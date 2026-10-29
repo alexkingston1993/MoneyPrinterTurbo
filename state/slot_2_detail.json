@@ -103,7 +103,16 @@
       "pct": 100,
       "started_at": "2026-10-29T08:10:17Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "yt_long_id": "WG-9Tv5Jt-k",
+        "yt_short_ids": [
+          "IdmAhvGHZ9k",
+          "NSXBElquu0I"
+        ],
+        "oauth_slot_used": 1,
+        "article_url": "https://the-bull-print.vercel.app/article.html?slug=TBP_CRYPTO_2023_02",
+        "x_thread_url": "Skipped (X keys not set)"
+      }
     }
   ],
   "live_logs": [
