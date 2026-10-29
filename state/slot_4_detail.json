@@ -96,7 +96,16 @@
       "pct": 100,
       "started_at": "2026-10-29T05:11:59Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "yt_long_id": "z3nnqlTiGhk",
+        "yt_short_ids": [
+          "PjMgEUhamIM",
+          "Oun_zJVPCAo"
+        ],
+        "oauth_slot_used": 1,
+        "article_url": "https://the-bull-print.vercel.app/article.html?slug=sebi_fo_rules_04",
+        "x_thread_url": "Skipped (X keys not set)"
+      }
     }
   ],
   "live_logs": [
