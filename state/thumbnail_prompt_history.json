@@ -1095,6 +1095,182 @@
       "archetype": "pressure_gauge",
       "color_palette": "gold_slate",
       "timestamp": "2026-10-29T19:41:17.333123+00:00"
+    },
+    {
+      "id": "revamp_short_12",
+      "type": "short",
+      "title": "Order-Flow Footprints: How Institutions Absorb Liquidity",
+      "line1": "DELTA FLOW",
+      "line2": "GAMMA PEAK",
+      "pill_badge": "NIFTY ABSORPTION",
+      "archetype": "iceberg_split",
+      "color_palette": "amber_purple",
+      "timestamp": "2026-10-29T19:43:36.976646+00:00"
+    },
+    {
+      "id": "revamp_short_13",
+      "type": "short",
+      "title": "The Gamma Playbook: How Market Makers Hedge Zero-DTE Expiries",
+      "line1": "DELTA FLOW",
+      "line2": "GAMMA PEAK",
+      "pill_badge": "NIFTY ABSORPTION",
+      "archetype": "syphon_pump",
+      "color_palette": "neon_blue_amber",
+      "timestamp": "2026-10-29T19:45:46.528234+00:00"
+    },
+    {
+      "id": "revamp_short_14",
+      "type": "short",
+      "title": "The 20% Co-Payment Clause: How Insurers Cut Big Claim Payouts",
+      "line1": "0.5x CUT",
+      "line2": "POLICY MATH",
+      "pill_badge": "IRDAI CLAUSE 19",
+      "archetype": "guillotine",
+      "color_palette": "crimson_gold",
+      "timestamp": "2026-10-29T19:47:57.943106+00:00"
+    },
+    {
+      "id": "revamp_short_15",
+      "type": "short",
+      "title": "Liquidation Heatmaps: The Magnet Pulling Crypto Prices",
+      "line1": "115BBH DRAIN",
+      "line2": "ON-CHAIN AUDIT",
+      "pill_badge": "30% LEVY RULE",
+      "archetype": "hydraulic_press",
+      "color_palette": "gold_slate",
+      "timestamp": "2026-10-29T19:50:05.164891+00:00"
+    },
+    {
+      "id": "revamp_short_16",
+      "type": "short",
+      "title": "Block Deals Decoded: Tracking FII Institutional Accumulation",
+      "line1": "DELTA FLOW",
+      "line2": "GAMMA PEAK",
+      "pill_badge": "NIFTY ABSORPTION",
+      "archetype": "speedometer",
+      "color_palette": "amber_purple",
+      "timestamp": "2026-10-29T19:52:08.018264+00:00"
+    },
+    {
+      "id": "revamp_short_17",
+      "type": "short",
+      "title": "The Consumables Trap: Why Cashless Policies Leave You Paying 15%",
+      "line1": "15% UNPAID",
+      "line2": "CONSUMABLES CUT",
+      "pill_badge": "NON-PAYABLE ITEMS",
+      "archetype": "syphon_pump",
+      "color_palette": "cyan_crimson",
+      "timestamp": "2026-10-29T19:54:27.665552+00:00"
+    },
+    {
+      "id": "revamp_short_18",
+      "type": "short",
+      "title": "CME Futures Gaps: Why Bitcoin Rallies Return to Weekend Levels",
+      "line1": "CME GAP",
+      "line2": "FUTURES ARBITRAGE",
+      "pill_badge": "ALGO REBALANCE",
+      "archetype": "stethoscope_safe",
+      "color_palette": "crimson_gold",
+      "timestamp": "2026-10-29T19:56:45.519283+00:00"
+    },
+    {
+      "id": "revamp_short_19",
+      "type": "short",
+      "title": "The Zero-Hero Option Trap: The Mathematics of Theta Decay",
+      "line1": "THETA CRUSH",
+      "line2": "ZERO-HERO MATH",
+      "pill_badge": "EXPIRY VOLATILITY",
+      "archetype": "altimeter",
+      "color_palette": "emerald_gold",
+      "timestamp": "2026-10-29T19:58:59.826737+00:00"
+    },
+    {
+      "id": "revamp_short_20",
+      "type": "short",
+      "title": "Critical Illness vs Mediclaim: The Thirty-Day Survival Clause",
+      "line1": "0.5x CUT",
+      "line2": "POLICY MATH",
+      "pill_badge": "IRDAI CLAUSE 19",
+      "archetype": "abacus",
+      "color_palette": "amber_purple",
+      "timestamp": "2026-10-29T20:01:45.114764+00:00"
+    },
+    {
+      "id": "revamp_short_21",
+      "type": "short",
+      "title": "Negative Funding Rates: Why Extreme Bearish Sentiment Sparks Squeezes",
+      "line1": "NEGATIVE RATES",
+      "line2": "SHORT SQUEEZE",
+      "pill_badge": "PERP INVERSION",
+      "archetype": "xray_scanner",
+      "color_palette": "cyan_crimson",
+      "timestamp": "2026-10-29T20:03:55.192928+00:00"
+    },
+    {
+      "id": "revamp_short_22",
+      "type": "short",
+      "title": "FII Long-Short Ratio: The Ultimate Institutional Macro Indicator",
+      "line1": "FII RATIO",
+      "line2": "INDEX SIGNALS",
+      "pill_badge": "DERIVATIVE MACRO",
+      "archetype": "pressure_gauge",
+      "color_palette": "neon_blue_amber",
+      "timestamp": "2026-10-29T20:06:04.996262+00:00"
+    },
+    {
+      "id": "revamp_short_23",
+      "type": "short",
+      "title": "Health Insurance Portability: How to Switch Without Losing Credits",
+      "line1": "PORTABILITY NORM",
+      "line2": "CREDIT SHIELD",
+      "pill_badge": "IRDAI CLAUSE 14",
+      "archetype": "magnifying_glass",
+      "color_palette": "crimson_gold",
+      "timestamp": "2026-10-29T20:08:29.780199+00:00"
+    },
+    {
+      "id": "revamp_short_24",
+      "type": "short",
+      "title": "Proof of Reserves vs Real Audits: What Exchanges Won't Tell You",
+      "line1": "MERKLE TREE",
+      "line2": "RESERVE AUDIT",
+      "pill_badge": "LIABILITY GAP",
+      "archetype": "iceberg_split",
+      "color_palette": "emerald_gold",
+      "timestamp": "2026-10-29T20:10:57.046857+00:00"
+    },
+    {
+      "id": "revamp_short_25",
+      "type": "short",
+      "title": "The IV Crush Trap: Why Options Lose Value Even When You Are Right",
+      "line1": "DELTA FLOW",
+      "line2": "GAMMA PEAK",
+      "pill_badge": "NIFTY ABSORPTION",
+      "archetype": "microscope",
+      "color_palette": "amber_purple",
+      "timestamp": "2026-10-29T20:13:22.084777+00:00"
+    },
+    {
+      "id": "revamp_short_26",
+      "type": "short",
+      "title": "The AYUSH Sub-Limit Trap: Ayurveda Hospital Bill Reductions",
+      "line1": "AYUSH LIMIT",
+      "line2": "POLICY SUB-CAP",
+      "pill_badge": "ALTERNATIVE CLAIMS",
+      "archetype": "guillotine",
+      "color_palette": "cyan_crimson",
+      "timestamp": "2026-10-29T20:15:35.947210+00:00"
+    },
+    {
+      "id": "revamp_short_27",
+      "type": "short",
+      "title": "Point of Control: How Smart Money Uses Volume Profiles",
+      "line1": "VOLUME POC",
+      "line2": "VALUE AREA",
+      "pill_badge": "AUCTION THEORY",
+      "archetype": "orderbook_matrix",
+      "color_palette": "crimson_gold",
+      "timestamp": "2026-10-29T20:17:47.477182+00:00"
     }
   ]
 }
