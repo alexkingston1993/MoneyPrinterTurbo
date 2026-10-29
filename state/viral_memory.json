@@ -1,51 +1,63 @@
 {
-  "updated_at": "2026-10-29T09:07:52Z",
-  "channel_median_vph": 0.22,
+  "updated_at": "2026-10-29T11:39:18Z",
+  "channel_median_vph": 0.12,
   "top_outperformers": [
+    {
+      "video_id": "t3ymfBTQZ78",
+      "title": "Why 90% Lose in Nifty F&O: The Math Behind Option Chain Open Interest! | The Math That Settles It #S",
+      "format": "LONG",
+      "published_at": "2026-10-29T03:56:32Z",
+      "hours_live": 7.7,
+      "view_count": 16,
+      "like_count": 2,
+      "comment_count": 1,
+      "views_per_hour": 2.07,
+      "engagement_rate": 0.3125
+    },
     {
       "video_id": "2odtGQiI8JE",
       "title": "The 0.5 Multiplier Trap: Hospital Bill Math Explained | The Math That Settles It #Shorts",
       "format": "SHORT",
       "published_at": "2026-10-29T04:40:46Z",
-      "hours_live": 4.5,
-      "view_count": 4,
+      "hours_live": 7.0,
+      "view_count": 6,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 0.9,
-      "engagement_rate": 1.0
+      "views_per_hour": 0.86,
+      "engagement_rate": 0.6667
     },
-    {
-      "video_id": "6MT6TGBIdXQ",
-      "title": "Decoding Section 142(1) Crypto Notices Fast #Shorts",
-      "format": "SHORT",
-      "published_at": "2026-10-29T04:17:53Z",
-      "hours_live": 4.8,
-      "view_count": 4,
-      "like_count": 2,
-      "comment_count": 1,
-      "views_per_hour": 0.83,
-      "engagement_rate": 1.25
-    },
-    {
-      "video_id": "DA77ofQnZs4",
-      "title": "The Crypto Tax Trap Nobody Talks About! #Shorts",
-      "format": "SHORT",
-      "published_at": "2026-10-29T04:17:14Z",
-      "hours_live": 4.8,
-      "view_count": 4,
-      "like_count": 1,
-      "comment_count": 1,
-      "views_per_hour": 0.83,
-      "engagement_rate": 1.0
-    }
-  ],
-  "bottom_underperformers": [
     {
       "video_id": "Oun_zJVPCAo",
       "title": "The Math Behind Institutional F&O Traps #Shorts",
       "format": "SHORT",
       "published_at": "2026-10-29T05:12:01Z",
+      "hours_live": 6.5,
+      "view_count": 5,
+      "like_count": 1,
+      "comment_count": 1,
+      "views_per_hour": 0.77,
+      "engagement_rate": 0.8
+    }
+  ],
+  "bottom_underperformers": [
+    {
+      "video_id": "gEkRKqYhCN4",
+      "title": "Crypto Funding Rates Explained: How Big Foreign Banks & Whales Trap Retail Traders",
+      "format": "LONG",
+      "published_at": "2026-10-29T07:43:25Z",
       "hours_live": 3.9,
+      "view_count": 0,
+      "like_count": 0,
+      "comment_count": 1,
+      "views_per_hour": 0.0,
+      "engagement_rate": 3.0
+    },
+    {
+      "video_id": "ILk_hqAJD_8",
+      "title": "The Hidden Funding Rate Trap! | The Trap Nobody Talks About #Shorts",
+      "format": "SHORT",
+      "published_at": "2026-10-29T07:41:58Z",
+      "hours_live": 4.0,
       "view_count": 0,
       "like_count": 0,
       "comment_count": 1,
@@ -57,24 +69,12 @@
       "title": "IRDAI Proportionate Deduction Math: How Daily Room Caps Slash Surgery & Doctor ICU Claims",
       "format": "LONG",
       "published_at": "2026-10-29T04:39:25Z",
-      "hours_live": 4.5,
+      "hours_live": 7.0,
       "view_count": 0,
       "like_count": 0,
       "comment_count": 1,
       "views_per_hour": 0.0,
       "engagement_rate": 3.0
-    },
-    {
-      "video_id": "jzAdid46TU4",
-      "title": "The Nifty Option Trap Retailers Fall For Every Single Day! | The Trap Nobody Talks About #Shorts",
-      "format": "SHORT",
-      "published_at": "2026-10-29T03:55:44Z",
-      "hours_live": 5.2,
-      "view_count": 0,
-      "like_count": 1,
-      "comment_count": 1,
-      "views_per_hour": 0.0,
-      "engagement_rate": 4.0
     }
   ],
   "winning_hook_patterns": [
