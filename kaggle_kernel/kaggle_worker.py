@@ -724,12 +724,13 @@ def _upload_with_slot(slot: dict, mp4_path: Path, thumb_path: Path, yt_payload: 
     creds.refresh(Request())
     youtube = build("youtube", "v3", credentials=creds)
 
-    # Idempotency guard: skip if same normalized title was uploaded within 24h
+    # Idempotency guard: skip if same normalized title was uploaded within 24h (bypassed on force_upload)
     meta = yt_payload["metadata"]
-    dup_id = find_recent_duplicate(youtube, meta["title"])
-    if dup_id:
-        print(f"Duplicate guard: '{meta['title'][:60]}' uploaded within 24h — skipping, existing video {dup_id}")
-        return dup_id
+    if not yt_payload.get("force_upload"):
+        dup_id = find_recent_duplicate(youtube, meta["title"])
+        if dup_id:
+            print(f"Duplicate guard: '{meta['title'][:60]}' uploaded within 24h — skipping, existing video {dup_id}")
+            return dup_id
 
     custom_status = yt_payload.get("status") or {}
     status_dict = {
@@ -918,40 +919,25 @@ async def render_and_upload_short_gpu(payload: dict, long_video_id: str, short_d
     has_cover = short_thumb.exists()
     has_header = short_header.exists()
 
-    if has_cover and has_header:
-        filter_graph = (
+    if has_cover:
+        base_chain = (
             "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=25:5,"
             "drawbox=x=0:y=0:w=1080:h=1920:color=black@0.60:t=fill[bg];"
             "[0:v]scale=1040:-1[fg_chart];"
             "[bg][fg_chart]overlay=20:540[with_chart];"
-            "[with_chart]drawbox=x=18:y=538:w=1044:h=590:color=0x10B981@0.8:t=3[with_border];"
-            "[with_border][2:v]overlay=0:0[with_header];"
-            "[with_header][1:v]overlay=0:0:enable='between(t,0,1.5)'[vbase]"
+            "[with_chart]drawbox=x=18:y=538:w=1044:h=590:color=0x10B981@0.8:t=3[chart_view]"
         )
         if tail:
-            filter_graph += ";" + "[vbase]" + ",".join(tail) + "[v]"
+            base_chain += ";" + "[chart_view]" + ",".join(tail) + "[chart_analyzed]"
+            final_bg = "[chart_analyzed]"
         else:
-            filter_graph += ";[vbase]null[v]"
-        inputs = [
-            "-loop", "1", "-i", str(chart_png),
-            "-loop", "1", "-i", str(short_thumb),
-            "-loop", "1", "-i", str(short_header),
-            "-i", str(mp3),
-        ]
-        audio_idx = 3
-    elif has_cover:
+            final_bg = "[chart_view]"
+
         filter_graph = (
-            "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=25:5,"
-            "drawbox=x=0:y=0:w=1080:h=1920:color=black@0.60:t=fill[bg];"
-            "[0:v]scale=1040:-1[fg_chart];"
-            "[bg][fg_chart]overlay=20:540[with_chart];"
-            "[with_chart]drawbox=x=18:y=538:w=1044:h=590:color=0x10B981@0.8:t=3[with_border];"
-            "[with_border][1:v]overlay=0:0:enable='between(t,0,1.5)'[vbase]"
+            f"{base_chain};"
+            f"[1:v]scale=1080:1920[flow_master];"
+            f"{final_bg}[flow_master]overlay=0:0:enable='between(t,0,5.0)'[v]"
         )
-        if tail:
-            filter_graph += ";" + "[vbase]" + ",".join(tail) + "[v]"
-        else:
-            filter_graph += ";[vbase]null[v]"
         inputs = [
             "-loop", "1", "-i", str(chart_png),
             "-loop", "1", "-i", str(short_thumb),

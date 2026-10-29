@@ -534,6 +534,49 @@ def create_marketing_images(
     return yt_thumb_path, discover_img_path
 
 
+FLOW_AI_MASTERS_DIR = BASE_DIR / "assets" / "flow_ai_masters"
+FLOW_AI_MASTERS = {
+    "fii_dump": FLOW_AI_MASTERS_DIR / "fii_dump_3200cr.jpg",
+    "90_lose": FLOW_AI_MASTERS_DIR / "90_percent_lose.jpg",
+    "3pm_trap": FLOW_AI_MASTERS_DIR / "3pm_trap.jpg",
+    "sebi_rule": FLOW_AI_MASTERS_DIR / "sebi_rule_exposed.jpg",
+}
+FLOW_AI_LIST = [
+    FLOW_AI_MASTERS_DIR / "fii_dump_3200cr.jpg",
+    FLOW_AI_MASTERS_DIR / "90_percent_lose.jpg",
+    FLOW_AI_MASTERS_DIR / "3pm_trap.jpg",
+    FLOW_AI_MASTERS_DIR / "sebi_rule_exposed.jpg",
+]
+
+
+def get_flow_ai_master(headline: str = "", vertical: str = "", index: int = 0) -> Path:
+    """
+    Selects one of the 4 pristine Flow AI 9:16 masterworks based on context keywords or index rotation:
+    1. FII DUMP ₹3,200 CR!
+    2. 90% LOSE: THE BRUTAL TRUTH
+    3. 3 PM TRAP!
+    4. SEBI RULE EXPOSED!
+    """
+    text = f"{headline} {vertical}".lower()
+    if any(k in text for k in ["fii", "dump", "3,200", "3200", "whale", "cr", "crore", "institution"]):
+        candidate = FLOW_AI_MASTERS["fii_dump"]
+    elif any(k in text for k in ["90%", "90 percent", "lose", "losing", "brutal", "options", "f&o", "truth", "retail"]):
+        candidate = FLOW_AI_MASTERS["90_lose"]
+    elif any(k in text for k in ["3 pm", "3pm", "mutual fund", "time", "clock", "nav", "timing", "trap"]):
+        candidate = FLOW_AI_MASTERS["3pm_trap"]
+    elif any(k in text for k in ["sebi", "rule", "exposed", "regulation", "claim", "rejection", "policy", "penalty", "tax"]):
+        candidate = FLOW_AI_MASTERS["sebi_rule"]
+    else:
+        candidate = FLOW_AI_LIST[index % len(FLOW_AI_LIST)]
+
+    if candidate.exists():
+        return candidate
+    for fallback in FLOW_AI_LIST:
+        if fallback.exists():
+            return fallback
+    return FLOW_AI_MASTERS["fii_dump"]
+
+
 def generate_persistent_short_header(
     headline: str,
     vertical: str,
@@ -541,74 +584,13 @@ def generate_persistent_short_header(
     hook_data: Optional[Dict] = None,
 ) -> str:
     """
-    Generates a 1080x420 transparent overlay pinned at the top of 9:16 Shorts from t=0 to end.
+    Zero Pillow Text Stamping for Shorts:
+    Outputs a clean transparent header to permanently eliminate amateurish 'POLICY MATH' text boxes.
     """
-    width, height = 1080, 420
-    if hook_data and isinstance(hook_data, dict) and hook_data.get("line1_setup"):
-        art = {
-            "line1": str(hook_data["line1_setup"]).upper(),
-            "line2": str(hook_data.get("line2_power", "")).upper(),
-            "pill_badge": str(hook_data.get("badge", "")).upper(),
-            "category": "INSTITUTIONAL FORENSICS",
-            "scene_prompt": ""
-        }
-    else:
-        art = get_ai_art_direction(headline, vertical)
-
-    # 🛡️ 30-Day Uniqueness & Compliance Gate
-    try:
-        from app.services.compliance_gate import ComplianceGate
-        art["title"] = headline
-        art = ComplianceGate.validate_and_heal_thumbnail_prompt(art, vertical=vertical, is_short=True)
-    except Exception as e:
-        logger.warning(f"[Compliance Gate] Header validation bypass: {e}")
-
-    img = Image.new("RGBA", (width, height), (0, 0, 0, 0))
-    draw = ImageDraw.Draw(img)
-
-    for y in range(height):
-        ratio = y / float(height)
-        alpha = int(240 * ((1.0 - ratio) ** 1.3))
-        draw.line([(0, y), (width, y)], fill=(BG_DARK[0], BG_DARK[1], BG_DARK[2], alpha))
-
-    # Category Pill
-    font_cat = _get_font(26)
-    cat_text = art.get("category", "INSTITUTIONAL FORENSICS").upper()
-    c_bbox = draw.textbbox((0, 0), cat_text, font=font_cat)
-    cw = c_bbox[2] - c_bbox[0] + 36
-    cx = (width - cw) // 2
-    draw.rounded_rectangle([cx, 28, cx + cw, 28 + 44], radius=10, fill=(15, 23, 42, 230), outline=ACCENT_RED, width=2)
-    draw.text((cx + 18, 36), cat_text, font=font_cat, fill=WHITE)
-
-    # Line 1
-    font_l1 = _get_font(64)
-    l1_text = art.get("line1", "NIFTY 50")
-    l1_bbox = draw.textbbox((0, 0), l1_text, font=font_l1)
-    l1_x = (width - (l1_bbox[2] - l1_bbox[0])) // 2
-    render_3d_extruded_gradient_text(img, (l1_x, 96), l1_text, font_l1, GOLD_METALLIC, extrusion_depth=6)
-
-    # Line 2
-    font_l2 = _get_font(98)
-    l2_text = art.get("line2", "TRAP EXPOSED!")
-    l2_bbox = draw.textbbox((0, 0), l2_text, font=font_l2)
-    l2_x = (width - (l2_bbox[2] - l2_bbox[0])) // 2
-    render_3d_extruded_gradient_text(img, (l2_x, 176), l2_text, font_l2, SILVER_METALLIC, extrusion_depth=7)
-
-    # Warning Pill
-    pill_text = art.get("pill_badge", "LIQUIDITY TRAP!").upper()
-    font_pill = _get_font(30)
-    p_bbox = draw.textbbox((0, 0), pill_text, font=font_pill)
-    pw = p_bbox[2] - p_bbox[0] + 44
-    ph = p_bbox[3] - p_bbox[1] + 24
-    px = (width - pw) // 2
-    py = 308
-
-    draw.rounded_rectangle([px, py, px + pw, py + ph], radius=12, fill=(180, 15, 25, 240), outline=(255, 80, 80, 255), width=2)
-    draw.text((px + 22, py + 10), pill_text, font=font_pill, fill=WHITE)
-
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    img = Image.new("RGBA", (1080, 420), (0, 0, 0, 0))
     img.save(output_path, "PNG")
-    logger.info(f"🎨 [Persistent Shorts Hook Header] saved at {output_path}")
+    logger.info(f"🎨 [Clean Transparent Shorts Header] saved at {output_path}")
     return output_path
 
 
@@ -619,48 +601,25 @@ def generate_high_ctr_short_cover(
     hook_data: Optional[Dict] = None,
     chart_bg_path: Optional[Path] = None,
     avatar_path: Optional[Path] = None,
+    master_index: Optional[int] = None,
 ) -> str:
     """
-    Generates full 9:16 (1080x1920) YouTube Shorts Cover image using 3D scene + metallic text.
+    Direct Master-Asset Injection Pipeline:
+    Locks in the pristine Flow AI master assets directly without any 2D Pillow text overlays.
     """
+    master_path = get_flow_ai_master(headline, vertical, index=(master_index or 0))
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    if master_path.exists():
+        shutil.copy2(master_path, output_path)
+        logger.success(f"🎨 [Flow AI Master Injected] {master_path.name} -> {output_path}")
+        return output_path
+
+    # Fallback only if master assets are missing
     width, height = 1080, 1920
-    if hook_data and isinstance(hook_data, dict) and hook_data.get("line1_setup"):
-        art = {
-            "scene_prompt": f"Dramatic hyper-detailed 3D cinematic scene representing {headline}. High contrast volumetric lighting, octane render, 8k.",
-            "line1": str(hook_data["line1_setup"]).upper(),
-            "line2": str(hook_data.get("line2_power", "")).upper(),
-            "pill_badge": str(hook_data.get("badge", "")).upper(),
-            "category": "INSTITUTIONAL FORENSICS",
-            "punch_color": hook_data.get("punch_color", "gold"),
-        }
-    else:
-        art = get_ai_art_direction(headline, vertical)
-
-    # 🛡️ 30-Day Uniqueness & Compliance Gate
-    try:
-        from app.services.compliance_gate import ComplianceGate
-        art["title"] = headline
-        art = ComplianceGate.validate_and_heal_thumbnail_prompt(art, vertical=vertical, is_short=True)
-    except Exception as e:
-        logger.warning(f"[Compliance Gate] Short cover validation bypass: {e}")
-
+    art = get_ai_art_direction(headline, vertical)
     seed = abs(hash(headline)) % 100000 + 42
     raw_bg = generate_ai_scene_backdrop(art["scene_prompt"], width=width, height=height, seed=seed, vertical=vertical)
-    
-    # Apply vertical top-to-bottom darkening gradient for text contrast
-    calm = Image.new("RGBA", (width, height), (0, 0, 0, 0))
-    cdraw = ImageDraw.Draw(calm)
-    for y in range(int(height * 0.40)):
-        ratio = y / float(height * 0.40)
-        alpha = int(245 * ((1.0 - ratio) ** 1.3))
-        cdraw.line([(0, y), (width, y)], fill=(BG_DARK[0], BG_DARK[1], BG_DARK[2], alpha))
-    bg = Image.alpha_composite(raw_bg, calm)
-
-    final_img = composite_3d_metallic_branding(bg, art, width=width, height=height, is_short=True)
-    validate_thumbnail_richness(final_img, name=f"9:16 Shorts Cover ({headline[:25]})")
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    final_img.save(output_path, "JPEG", quality=95)
-    logger.info(f"🎨 [High-CTR Shorts Cover] saved at {output_path}")
+    raw_bg.save(output_path, "JPEG", quality=95)
     return output_path
 
 
@@ -672,6 +631,7 @@ def create_short_thumbnail(
     punch_color: Optional[str] = None,
     hook_data: Optional[Dict] = None,
     vertical: str = "stock_market",
+    short_index: int = 1,
 ) -> Tuple[Path, Path]:
     cover_path = IMAGES_DIR / f"{output_slug}.jpg"
     header_path = IMAGES_DIR / f"{output_slug}_header.png"
@@ -684,6 +644,7 @@ def create_short_thumbnail(
         hook_data=hook_data,
         chart_bg_path=chart_bg_path,
         avatar_path=avatar_path,
+        master_index=short_index - 1,
     )
 
     generate_persistent_short_header(
@@ -699,3 +660,4 @@ def create_short_thumbnail(
     shutil.copy2(header_path, legacy_header)
 
     return cover_path, header_path
+

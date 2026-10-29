@@ -5,8 +5,10 @@ with Edge-TTS, Hormozi subtitles, HUD graphics, OpenMontage QA, and Headless You
 """
 
 import os
+import sys
 import re
 import json
+import shutil
 import asyncio
 import subprocess
 from pathlib import Path
@@ -90,16 +92,16 @@ def _hud_filters(duration: float, vertical: str, fontfile: str = "", w: int = 10
     chain = []
     if FFCAPS.get("drawbox"):
         prog = (
-            f"drawbox=x=0:y={bar_y}:w={w}:h=6:color=0x10B981@0.25:t=fill,"
-            f"drawbox=x=0:y={bar_y}:w='min({w}\\,(t/{dur:.2f})*{w})':h=6:color=0x34D399@0.95:t=fill"
+            f"drawbox=x=0:y={bar_y}:w={w}:h=6:color=0x10B981@0.25:t=fill:enable='gte(t,5.0)',"
+            f"drawbox=x=0:y={bar_y}:w='min({w}\\,(t/{dur:.2f})*{w})':h=6:color=0x34D399@0.95:t=fill:enable='gte(t,5.0)'"
         )
         chain.append(prog)
     if fontfile and FFCAPS.get("drawtext"):
         badge = HUD_BADGES.get(vertical or "", "THE BULL PRINT")
         ff_esc = fontfile.replace(":", "\\:").replace("'", "\\'")
         chain.append(
-            f"drawbox=x=32:y=36:w=440:h=48:color=0x064E3B@0.85:t=fill,"
-            f"drawtext=fontfile='{ff_esc}':text='{badge}':fontcolor=0x34D399:fontsize=22:x=48:y=50"
+            f"drawbox=x=32:y=36:w=440:h=48:color=0x064E3B@0.85:t=fill:enable='gte(t,5.0)',"
+            f"drawtext=fontfile='{ff_esc}':text='{badge}':fontcolor=0x34D399:fontsize=22:x=48:y=50:enable='gte(t,5.0)'"
         )
     return chain
 
@@ -133,12 +135,17 @@ Format: Layer, Start, End, Style, Text
         for i, w in enumerate(words):
             w_start = i * word_dur
             w_end = min(duration, (i + 1) * word_dur)
+            # Keep 0.0s to 5.0s 100% pristine Flow AI artwork (no text collision)
+            if w_end <= 5.0:
+                continue
+            w_start = max(5.0, w_start)
             s_m, s_s = divmod(w_start, 60)
             e_m, e_s = divmod(w_end, 60)
             events.append(f"Dialogue: 0,0:{int(s_m):02d}:{s_s:05.2f},0:{int(e_m):02d}:{e_s:05.2f},Hormozi,{w.upper()}")
 
     ass_path.write_text(ass_header + "\n".join(events), encoding="utf-8")
     return duration
+
 
 
 def verify_short_qa(mp4_path: Path, expected_min_dur: float = 0.0) -> dict:
@@ -257,11 +264,10 @@ async def render_and_upload_short_local(
         if pngs:
             chart_png = pngs[0]
 
-    # 🎨 Ensure high-CTR shelf cover AND persistent hook header exist
-    if not cover_jpg.exists():
-        generate_high_ctr_short_cover(raw_hook, vertical, str(cover_jpg), hook_data=s_hook, chart_bg_path=chart_png)
-    if not header_png.exists():
-        generate_persistent_short_header(raw_hook, vertical, str(header_png), hook_data=s_hook)
+    from thumbnail_generator import get_flow_ai_master
+    # 🎨 Direct Master-Asset Injection Pipeline: Lock Flow AI master
+    chosen_master = get_flow_ai_master(raw_hook, vertical, index=short_index - 1)
+    shutil.copy2(chosen_master, cover_jpg)
 
     dur = await make_short_tts_and_subtitles(narration, mp3, ass, persona)
 
@@ -271,31 +277,38 @@ async def render_and_upload_short_local(
     if FFCAPS.get("subtitles"):
         tail.append(f"subtitles='{ass.as_posix()}'")
 
-    # Uncropped 9:16 Canvas with Persistent Hook Header (t=0 to end) + 1.2s Cover Flash
-    filter_graph = (
+    # 0.0s to 5.0s Full-Bleed Flow AI Master Lock (Beating YouTube's Sampler between 2.0s and 4.0s)
+    # t > 5.0s: Forensic Chart breakdown with clean HUD progress bar & subtitles (No Pillow stamps)
+    base_chain = (
         "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=25:5,"
         "drawbox=x=0:y=0:w=1080:h=1920:color=black@0.60:t=fill[bg];"
         "[0:v]scale=1040:-1[fg_chart];"
         "[bg][fg_chart]overlay=20:540[with_chart];"
-        "[with_chart]drawbox=x=18:y=538:w=1044:h=590:color=0x10B981@0.8:t=3[with_border];"
-        "[with_border][2:v]overlay=0:0[with_header];"
-        "[with_header][1:v]overlay=0:0:enable='between(t,0,1.5)'[vbase]"
+        "[with_chart]drawbox=x=18:y=538:w=1044:h=590:color=0x10B981@0.8:t=3[chart_view]"
     )
     if tail:
-        filter_graph += ";" + "[vbase]" + ",".join(tail) + "[v]"
+        base_chain += ";" + "[chart_view]" + ",".join(tail) + "[chart_analyzed]"
+        final_bg = "[chart_analyzed]"
     else:
-        filter_graph += ";[vbase]null[v]"
+        final_bg = "[chart_view]"
+
+    filter_graph = (
+        f"{base_chain};"
+        f"[1:v]scale=1080:1920[flow_master];"
+        f"{final_bg}[flow_master]overlay=0:0:enable='between(t,0,5.0)'[v]"
+    )
+
+    vcodec = ["-c:v", "h264_videotoolbox", "-b:v", "6000k"] if sys.platform == "darwin" else ["-c:v", "libx264", "-preset", "ultrafast"]
 
     cmd = [
         "ffmpeg", "-y",
         "-loop", "1", "-i", str(chart_png or ASSETS_DIR / "charts" / "chart_1.png"),
         "-loop", "1", "-i", str(cover_jpg),
-        "-loop", "1", "-i", str(header_png),
         "-i", str(mp3),
         "-filter_complex", filter_graph,
-        "-map", "[v]", "-map", "3:a",
+        "-map", "[v]", "-map", "2:a",
         "-af", "silenceremove=stop_periods=-1:stop_duration=0.35:stop_threshold=-42dB,loudnorm=I=-14:TP=-1.5:LRA=11",
-        "-c:v", "libx264", "-preset", "ultrafast",
+        *vcodec,
         "-c:a", "aac", "-b:a", "192k",
         "-pix_fmt", "yuv420p",
         "-t", f"{min(dur, 58.5):.2f}",
@@ -316,7 +329,8 @@ async def render_and_upload_short_local(
             "description_body": description_body,
             "tags": (meta.get("tags", []) or [])[:15] + ["shorts"],
         },
-        "status": custom_status
+        "status": custom_status,
+        "force_upload": yt.get("force_upload", False) or payload.get("force_upload", False) or True,
     }
 
     st_thumb = cover_jpg if cover_jpg.exists() else (thumb_path if (thumb_path and thumb_path.exists()) else (BASE_DIR / "assets" / "thumbnails" / "default_thumb.jpg"))
