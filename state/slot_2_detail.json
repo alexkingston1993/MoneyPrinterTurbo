@@ -138,6 +138,11 @@
       "ts": "07:08:17",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udd2c Auditing Authenticity Engine... | trigram dupe-check + domain vocabulary"
+    },
+    {
+      "ts": "07:08:22",
+      "level": "INFO",
+      "msg": "[GEMINI]: \u2705 Original (institutional_trap_expose) | \ud83e\ude99 CRYPTO \u00b7 125 hits (liquidation, liquidation cluster, funding rate, open interest, perp, p"
     }
   ]
 }
