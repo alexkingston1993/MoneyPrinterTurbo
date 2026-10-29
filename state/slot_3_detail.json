@@ -103,7 +103,16 @@
       "pct": 100,
       "started_at": "2026-10-29T04:41:27Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "yt_long_id": "nMfqeaCzuAg",
+        "yt_short_ids": [
+          "VmPbOZv6kuk",
+          "2odtGQiI8JE"
+        ],
+        "oauth_slot_used": 1,
+        "article_url": "https://the-bull-print.vercel.app/article.html?slug=INS-IRD-03",
+        "x_thread_url": "Skipped (X keys not set)"
+      }
     }
   ],
   "live_logs": [
