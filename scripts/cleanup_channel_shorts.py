@@ -1,21 +1,14 @@
 #!/usr/bin/env python3
 """
 scripts/cleanup_channel_shorts.py
-Clean up legacy, low-CTR Shorts from The Bull Print YouTube Channel.
+Audit & Privacy Management for The Bull Print YouTube Shorts.
 
-Features:
-- Scans all uploads from the channel's master playlist.
-- Identifies legacy Shorts (containing '#Shorts' or duration <= 60s).
-- Displays a clean visual audit table (Video ID, Title, Published Date, Views, Privacy).
-- Supports:
-    --list (default, dry run inspection)
-    --private (safely sets legacy shorts to private, keeping channel analytics)
-    --delete (permanently deletes legacy shorts from YouTube)
-    --include-today (by default, today's uploads are protected from deletion)
+Rules:
+- Rule A (viewCount > 50): MUST be/remain PUBLIC (protected top performers).
+- Rule B (viewCount <= 50): Set to PRIVATE (never deleted, queued for revamp).
 """
 
 import os
-import re
 import sys
 import pickle
 import argparse
@@ -48,22 +41,15 @@ def get_authenticated_service():
         return None
 
 
-def fetch_channel_shorts(service, protect_today: bool = True) -> List[Dict[str, Any]]:
-    ch = service.channels().list(mine=True, part="snippet,contentDetails").execute()
-    items = ch.get("items", [])
-    if not items:
-        logger.error("❌ No channel found.")
-        return []
-
-    channel_title = items[0]["snippet"]["title"]
-    uploads_playlist_id = items[0]["contentDetails"]["relatedPlaylists"]["uploads"]
-    logger.info(f"📺 Channel: '{channel_title}' | Uploads Playlist: {uploads_playlist_id}")
+def fetch_all_shorts(service) -> List[Dict[str, Any]]:
+    uploads_id = "UUwe4D4M4i9aaHdi2ZBlbUmA"
+    logger.info(f"🔍 Fetching all videos from playlist: {uploads_id}...")
 
     raw_items = []
     page_token = None
     while True:
         res = service.playlistItems().list(
-            playlistId=uploads_playlist_id,
+            playlistId=uploads_id,
             part="snippet,contentDetails",
             maxResults=50,
             pageToken=page_token
@@ -79,9 +65,8 @@ def fetch_channel_shorts(service, protect_today: bool = True) -> List[Dict[str, 
         if not page_token:
             break
 
-    logger.info(f"🔍 Found {len(raw_items)} total videos in uploads playlist. Fetching details...")
+    logger.info(f"📋 Total videos in channel: {len(raw_items)}. Fetching statistics & durations...")
 
-    # Fetch status & stats in chunks of 50
     shorts_list = []
     for i in range(0, len(raw_items), 50):
         chunk = raw_items[i:i+50]
@@ -105,83 +90,100 @@ def fetch_channel_shorts(service, protect_today: bool = True) -> List[Dict[str, 
             privacy = status.get("privacyStatus", "unknown")
             dur = details.get("duration", "")
 
-            # Identify if it's a Short
-            is_short = "#shorts" in title.lower() or "#shorts" in desc.lower() or dur in ("PT1M", "PT59S", "PT58S", "PT30S")
+            # Identify if it's a Short (duration <= 60s or #Shorts in metadata)
+            is_short = "#shorts" in title.lower() or "#shorts" in desc.lower() or dur in ("PT1M", "PT59S", "PT58S", "PT50S", "PT45S", "PT30S", "PT15S", "PT20S")
+            # If duration has minutes > 1, it's long form
+            if ("M" in dur and dur != "PT1M") or "H" in dur:
+                is_short = False
 
             if not is_short:
                 continue
-
-            # Protect today's fresh uploads if protect_today is True
-            today_str = "2026-10-29"
-            is_today = pub.startswith(today_str)
 
             shorts_list.append({
                 "id": vid,
                 "title": title,
                 "published_at": pub[:10],
                 "views": views,
-                "privacy": privacy,
-                "is_today": is_today,
+                "previous_privacy": privacy,
+                "duration": dur,
             })
 
     return shorts_list
 
 
+def audit_and_sync_shorts_privacy(service, execute: bool = True):
+    shorts = fetch_all_shorts(service)
+    if not shorts:
+        logger.info("✓ No Shorts found.")
+        return
+
+    logger.info(f"📊 Auditing {len(shorts)} Shorts on channel...")
+
+    audit_results = []
+    for s in shorts:
+        vid = s["id"]
+        views = s["views"]
+        prev_priv = s["previous_privacy"]
+
+        # Rule A: > 50 views -> MUST BE PUBLIC
+        if views > 50:
+            target_priv = "public"
+            label = "PUBLIC [PROTECTED >50 VIEWS]"
+        else:
+            # Rule B: <= 50 views -> MUST BE PRIVATE
+            target_priv = "private"
+            label = "PRIVATE [QUEUED FOR REVAMP]"
+
+        status_changed = (prev_priv != target_priv)
+
+        if execute and status_changed:
+            try:
+                service.videos().update(
+                    part="status",
+                    body={"id": vid, "status": {"privacyStatus": target_priv}}
+                ).execute()
+                logger.success(f"Updated {vid} ({views} views): {prev_priv} -> {target_priv}")
+                current_priv = target_priv
+            except Exception as e:
+                logger.error(f"Failed to update {vid}: {e}")
+                current_priv = prev_priv
+        else:
+            current_priv = target_priv if execute else prev_priv
+
+        audit_results.append({
+            "id": vid,
+            "pub": s["published_at"],
+            "views": views,
+            "prev": prev_priv,
+            "new": current_priv,
+            "label": label,
+            "title": s["title"]
+        })
+
+    # Print Clean Formatted Audit Table
+    print("\n" + "=" * 125)
+    print(f"{'VIDEO ID':<13} | {'PUB DATE':<10} | {'VIEWS':<6} | {'OLD STATUS':<10} | {'NEW STATUS / ACTION':<32} | {'TITLE'}")
+    print("=" * 125)
+    for r in audit_results:
+        print(f"{r['id']:<13} | {r['pub']:<10} | {r['views']:<6} | {r['prev']:<10} | {r['label']:<32} | {r['title'][:40]}")
+    print("=" * 125 + "\n")
+
+    protected_count = sum(1 for r in audit_results if r["views"] > 50)
+    privated_count = sum(1 for r in audit_results if r["views"] <= 50)
+    logger.success(f"✓ Shorts Audit Complete: {protected_count} Protected (>50 views, PUBLIC) | {privated_count} Privated (<=50 views, PRIVATE)")
+    return audit_results
+
+
 def main():
-    parser = argparse.ArgumentParser(description="Clean up legacy low-CTR YouTube Shorts.")
-    parser.add_argument("--private", action="store_true", help="Set legacy Shorts to private.")
-    parser.add_argument("--delete", action="store_true", help="Permanently delete legacy Shorts.")
-    parser.add_argument("--include-today", action="store_true", help="Also modify/delete shorts uploaded today.")
+    parser = argparse.ArgumentParser(description="Audit and sync Shorts privacy status.")
+    parser.add_argument("--dry-run", action="store_true", help="Inspect without modifying.")
     args = parser.parse_args()
 
     service = get_authenticated_service()
     if not service:
         sys.exit(1)
 
-    shorts = fetch_channel_shorts(service, protect_today=not args.include_today)
-    if not shorts:
-        logger.info("✓ No legacy Shorts found.")
-        return
-
-    print("\n" + "=" * 90)
-    print(f"{'VIDEO ID':<13} | {'PUB DATE':<10} | {'VIEWS':<6} | {'PRIVACY':<8} | {'TITLE'}")
-    print("=" * 90)
-    for s in shorts:
-        flag = " [TODAY]" if s["is_today"] else ""
-        print(f"{s['id']:<13} | {s['published_at']:<10} | {s['views']:<6} | {s['privacy']:<8} | {s['title'][:45]}{flag}")
-    print("=" * 90 + "\n")
-
-    targets = [s for s in shorts if args.include_today or not s["is_today"]]
-    logger.info(f"📋 Found {len(shorts)} total Shorts ({len(targets)} eligible legacy targets).")
-
-    if args.delete:
-        logger.warning(f"🚨 PERMANENT DELETION requested for {len(targets)} Shorts!")
-        for idx, t in enumerate(targets, 1):
-            try:
-                service.videos().delete(id=t["id"]).execute()
-                logger.success(f"[{idx}/{len(targets)}] 🗑️ Deleted Short: {t['id']} - {t['title'][:40]}")
-            except Exception as e:
-                logger.error(f"Failed to delete {t['id']}: {e}")
-        logger.success("✓ Batch deletion completed.")
-    elif args.private:
-        logger.info(f"🔒 Setting {len(targets)} legacy Shorts to PRIVATE...")
-        for idx, t in enumerate(targets, 1):
-            if t["privacy"] == "private":
-                logger.info(f"[{idx}/{len(targets)}] Already private: {t['id']}")
-                continue
-            try:
-                service.videos().update(
-                    part="status",
-                    body={"id": t["id"], "status": {"privacyStatus": "private"}}
-                ).execute()
-                logger.success(f"[{idx}/{len(targets)}] 🔒 Set to PRIVATE: {t['id']} - {t['title'][:40]}")
-            except Exception as e:
-                logger.error(f"Failed to update {t['id']}: {e}")
-        logger.success("✓ Batch privacy update completed.")
-    else:
-        logger.info("ℹ️ Dry-run mode completed. To execute, run:")
-        logger.info("   python scripts/cleanup_channel_shorts.py --private   (to safely hide old Shorts)")
-        logger.info("   python scripts/cleanup_channel_shorts.py --delete    (to permanently remove old Shorts)")
+    audit_and_sync_shorts_privacy(service, execute=not args.dry_run)
 
 
 if __name__ == "__main__":

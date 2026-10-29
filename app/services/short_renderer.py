@@ -70,15 +70,31 @@ from thumbnail_generator import (
 )
 
 
+def _probe_ffmpeg_caps() -> dict:
+    caps = {"subtitles": False, "drawtext": False, "drawbox": False}
+    try:
+        chk = subprocess.run(["ffmpeg", "-filters"], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True)
+        caps["subtitles"] = " subtitles " in chk.stdout
+        caps["drawtext"] = " drawtext " in chk.stdout
+        caps["drawbox"] = " drawbox " in chk.stdout
+    except Exception:
+        pass
+    return caps
+
+FFCAPS = _probe_ffmpeg_caps()
+
+
 def _hud_filters(duration: float, vertical: str, fontfile: str = "", w: int = 1080, h: int = 1920) -> list:
     dur = max(1.0, float(duration))
     bar_y = h - 26
-    prog = (
-        f"drawbox=x=0:y={bar_y}:w={w}:h=6:color=0x10B981@0.25:t=fill,"
-        f"drawbox=x=0:y={bar_y}:w='min({w}\\,(t/{dur:.2f})*{w})':h=6:color=0x34D399@0.95:t=fill"
-    )
-    chain = [prog]
-    if fontfile:
+    chain = []
+    if FFCAPS.get("drawbox"):
+        prog = (
+            f"drawbox=x=0:y={bar_y}:w={w}:h=6:color=0x10B981@0.25:t=fill,"
+            f"drawbox=x=0:y={bar_y}:w='min({w}\\,(t/{dur:.2f})*{w})':h=6:color=0x34D399@0.95:t=fill"
+        )
+        chain.append(prog)
+    if fontfile and FFCAPS.get("drawtext"):
         badge = HUD_BADGES.get(vertical or "", "THE BULL PRINT")
         ff_esc = fontfile.replace(":", "\\:").replace("'", "\\'")
         chain.append(
@@ -252,7 +268,8 @@ async def render_and_upload_short_local(
     fontfile = _find_fontfile()
     hud_list = _hud_filters(min(dur, 58.5), vertical, fontfile, w=1080, h=1920)
     tail = list(hud_list)
-    tail.append(f"subtitles='{ass.as_posix()}'")
+    if FFCAPS.get("subtitles"):
+        tail.append(f"subtitles='{ass.as_posix()}'")
 
     # Uncropped 9:16 Canvas with Persistent Hook Header (t=0 to end) + 1.2s Cover Flash
     filter_graph = (
@@ -262,7 +279,7 @@ async def render_and_upload_short_local(
         "[bg][fg_chart]overlay=20:540[with_chart];"
         "[with_chart]drawbox=x=18:y=538:w=1044:h=590:color=0x10B981@0.8:t=3[with_border];"
         "[with_border][2:v]overlay=0:0[with_header];"
-        "[with_header][1:v]overlay=0:0:enable='between(t,0,1.2)'[vbase]"
+        "[with_header][1:v]overlay=0:0:enable='between(t,0,1.5)'[vbase]"
     )
     if tail:
         filter_graph += ";" + "[vbase]" + ",".join(tail) + "[v]"
@@ -292,12 +309,14 @@ async def render_and_upload_short_local(
         return ""
 
     description_body = format_vertical_description(short_data, vertical)
+    custom_status = short_data.get("status") or yt.get("status") or {}
     short_yt_payload = {
         "metadata": {
             "title": short_title,
             "description_body": description_body,
             "tags": (meta.get("tags", []) or [])[:15] + ["shorts"],
-        }
+        },
+        "status": custom_status
     }
 
     st_thumb = cover_jpg if cover_jpg.exists() else (thumb_path if (thumb_path and thumb_path.exists()) else (BASE_DIR / "assets" / "thumbnails" / "default_thumb.jpg"))

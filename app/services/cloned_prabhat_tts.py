@@ -7,6 +7,7 @@ latents from authentic Prabhat training audio.
 """
 
 import os
+import sys
 import re
 import subprocess
 import time
@@ -241,19 +242,21 @@ def synthesize_arjun_voice(
     wav_path = out_p.with_suffix(".wav") if is_mp3 else out_p
 
     logger.info(f"🎙️ [Arjun-Voice] Synthesizing signature audio ({len(clean_text)} chars) -> {out_p.name}")
-    try:
-        sub = cloned_prabhat_tts(
-            text=clean_text,
-            voice_file=str(wav_path),
-            voice_rate=voice_rate,
-            voice_volume=voice_volume,
-        )
-    except Exception as synth_err:
-        logger.warning(f"[Arjun-Voice] Offline XTTS call error: {synth_err}")
-        sub = None
+    sub = None
+    if sys.platform != "darwin" and os.path.exists(LATENTS_PATH):
+        try:
+            sub = cloned_prabhat_tts(
+                text=clean_text,
+                voice_file=str(wav_path),
+                voice_rate=voice_rate,
+                voice_volume=voice_volume,
+            )
+        except Exception as synth_err:
+            logger.warning(f"[Arjun-Voice] Offline XTTS call notice: {synth_err}")
+            sub = None
 
     if not wav_path.exists() or wav_path.stat().st_size <= 1024:
-        logger.warning("[Arjun-Voice] Offline XTTS unavailable or returned empty audio; synthesizing via authentic Arjun neural profile (en-IN-PrabhatNeural)...")
+        logger.info("[Arjun-Voice] Synthesizing via signature Arjun neural profile (en-IN-PrabhatNeural)...")
         rate_str = "+3%" if voice_rate == 1.0 else f"{int((voice_rate - 1.0) * 100):+d}%"
         try:
             import edge_tts, asyncio

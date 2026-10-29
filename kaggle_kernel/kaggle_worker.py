@@ -17,9 +17,10 @@ import datetime
 import subprocess
 from pathlib import Path
 
-# Ephemeral container package setup
-subprocess.run(["pip", "install", "-q", "edge-tts", "soundfile", "faster-whisper", "google-api-python-client", "google-auth"], check=False)
-subprocess.run(["pip", "install", "-q", "TTS"], check=False)
+# Ephemeral container package setup (only when running inside Kaggle environment)
+if Path("/kaggle").exists() or os.getenv("KAGGLE_KERNEL_RUN_TYPE"):
+    subprocess.run(["pip", "install", "-q", "edge-tts", "soundfile", "faster-whisper", "google-api-python-client", "google-auth"], check=False)
+    subprocess.run(["pip", "install", "-q", "TTS"], check=False)
 
 
 try:
@@ -730,6 +731,16 @@ def _upload_with_slot(slot: dict, mp4_path: Path, thumb_path: Path, yt_payload: 
         print(f"Duplicate guard: '{meta['title'][:60]}' uploaded within 24h — skipping, existing video {dup_id}")
         return dup_id
 
+    custom_status = yt_payload.get("status") or {}
+    status_dict = {
+        "privacyStatus": custom_status.get("privacyStatus", "public"),
+        "selfDeclaredMadeForKids": False,
+        "containsSyntheticMedia": True
+    }
+    if "publishAt" in custom_status:
+        status_dict["publishAt"] = custom_status["publishAt"]
+        status_dict["privacyStatus"] = "private"
+
     body = {
         "snippet": {
             "title": meta["title"][:100],
@@ -737,11 +748,7 @@ def _upload_with_slot(slot: dict, mp4_path: Path, thumb_path: Path, yt_payload: 
             "tags": meta["tags"][:15],
             "categoryId": "27"
         },
-        "status": {
-            "privacyStatus": "public",
-            "selfDeclaredMadeForKids": False,
-            "containsSyntheticMedia": True
-        }
+        "status": status_dict
     }
 
     req = youtube.videos().insert(
@@ -919,7 +926,7 @@ async def render_and_upload_short_gpu(payload: dict, long_video_id: str, short_d
             "[bg][fg_chart]overlay=20:540[with_chart];"
             "[with_chart]drawbox=x=18:y=538:w=1044:h=590:color=0x10B981@0.8:t=3[with_border];"
             "[with_border][2:v]overlay=0:0[with_header];"
-            "[with_header][1:v]overlay=0:0:enable='between(t,0,1.2)'[vbase]"
+            "[with_header][1:v]overlay=0:0:enable='between(t,0,1.5)'[vbase]"
         )
         if tail:
             filter_graph += ";" + "[vbase]" + ",".join(tail) + "[v]"
@@ -939,7 +946,7 @@ async def render_and_upload_short_gpu(payload: dict, long_video_id: str, short_d
             "[0:v]scale=1040:-1[fg_chart];"
             "[bg][fg_chart]overlay=20:540[with_chart];"
             "[with_chart]drawbox=x=18:y=538:w=1044:h=590:color=0x10B981@0.8:t=3[with_border];"
-            "[with_border][1:v]overlay=0:0:enable='between(t,0,1.2)'[vbase]"
+            "[with_border][1:v]overlay=0:0:enable='between(t,0,1.5)'[vbase]"
         )
         if tail:
             filter_graph += ";" + "[vbase]" + ",".join(tail) + "[v]"
