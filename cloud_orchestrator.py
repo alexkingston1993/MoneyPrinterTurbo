@@ -380,8 +380,16 @@ def _enforce_master_keys(data: Dict) -> Dict:
             derived.append(str(meta.get("title", data.get("topic", "The Bull Print daily insight")))[:70])
         web["tldr_summary"] = derived
 
-    if "thumbnail_top_text" not in meta or not meta["thumbnail_top_text"]:
-        meta["thumbnail_top_text"] = str(meta.get("title") or data.get("topic") or "THE MARKET TRAP")[:30]
+    vert_detected = detect_vertical_from_content(str(meta.get("title") or "") + " " + str(data.get("topic") or ""))
+    hook_derived = extract_thumbnail_hook(
+        title=str(meta.get("title") or ""),
+        topic=str(data.get("topic") or ""),
+        vertical=vert_detected,
+        meta=meta,
+    )
+    data["thumbnail_hook"] = hook_derived
+    meta["thumbnail_hook"] = hook_derived
+    meta["thumbnail_top_text"] = f"{hook_derived['line1_setup']} {hook_derived['line2_power']}"
 
     if not data.get("campaign_id"):
         title_cand = meta.get("title") or data.get("topic") or "market-insight"
@@ -389,6 +397,99 @@ def _enforce_master_keys(data: Dict) -> Dict:
         data["campaign_id"] = f"{clean_slug}-{int(time.time())}"
 
     return data
+
+
+def extract_thumbnail_hook(
+    title: str,
+    topic: str,
+    vertical: str,
+    meta: Optional[Dict] = None,
+    short_data: Optional[Dict] = None,
+) -> Dict:
+    """
+    ImageEditPro Benchmark Hook Extractor:
+    Guarantees that thumbnails NEVER repeat 7-9 word titles.
+    Strictly derives 2-4 punchy words (Line 1 Setup + 1.4x Line 2 Power Word)
+    paired with concrete numbers/claims and a Before/After comparison pair.
+    """
+    if short_data and isinstance(short_data, dict) and short_data.get("thumbnail_hook"):
+        return short_data["thumbnail_hook"]
+    if meta and isinstance(meta, dict) and meta.get("thumbnail_hook"):
+        return meta["thumbnail_hook"]
+
+    vert = (vertical or "stock_market").lower()
+    combined_text = f"{title} {topic} {getattr(short_data, 'get', lambda k, d='': '')('spoken_hook_and_body', '')}".lower()
+
+    if "insurance" in vert:
+        category_pill = "🛡️ POLICY FORENSICS"
+        accent_color = "#FF3B30"
+        if any(k in combined_text for k in ("room rent", "0.5", "multiplier", "proportional")):
+            line1_setup = "ROOM RENT"
+            line2_power = "0.5x BILL TRAP"
+            badge = "₹5L Cover ➔ ₹2.1L Paid"
+            pair = {"left": "CLAIM: ₹5,00,000", "right": "PAID: ₹2,10,000 ❌", "badge": badge}
+        elif any(k in combined_text for k in ("csr", "icr", "settlement", "ratio", "claim")):
+            line1_setup = "HOSPITAL BILL"
+            line2_power = "50% SLASHED!"
+            badge = "₹6L CLAIM ➔ ₹3L PAID"
+            pair = {"left": "CLAIM: ₹6,00,000", "right": "PAID: ₹2,80,000 ❌", "badge": badge}
+        else:
+            line1_setup = "POLICY AUDIT"
+            line2_power = "₹3L VANISHED!"
+            badge = "IRDAI ICR Exposed"
+            pair = {"left": "EXPECTED", "right": "DEDUCTED ❌", "badge": badge}
+    elif "crypto" in vert:
+        category_pill = "⚡ ON-CHAIN FORENSICS"
+        accent_color = "#FACC15"
+        if any(k in combined_text for k in ("115bbh", "tax", "194s", "tds")):
+            line1_setup = "CRYPTO TAX"
+            line2_power = "30% TAX SHOCK"
+            badge = "30% Flat + 1% TDS"
+            pair = {"left": "PROFIT: ₹5L", "right": "LOSS: ₹0 OFFSET ❌", "badge": badge}
+        elif any(k in combined_text for k in ("liquidation", "heatmap", "margin", "leverage")):
+            line1_setup = "LIQUIDATIONS"
+            line2_power = "$40M RECKED!"
+            accent_color = "#FF3B30"
+            badge = "Stop Loss Hunt"
+            pair = {"left": "50x LONG", "right": "LIQUIDATED ❌", "badge": badge}
+        else:
+            line1_setup = "ON-CHAIN ALPHA"
+            line2_power = "WHALE DUMP!"
+            badge = "Order Flow Delta"
+            pair = {"left": "RETAIL BUY", "right": "SMART MONEY", "badge": badge}
+    else:  # stock market
+        category_pill = "📈 ORDER FLOW RADAR"
+        accent_color = "#FACC15"
+        if any(k in combined_text for k in ("3:15", "closing", "auction", "square-off")):
+            line1_setup = "3:15 PM BELL"
+            line2_power = "MIS SQUARE-OFF"
+            accent_color = "#FF3B30"
+            badge = "Forced Liquidation"
+            pair = {"left": "RETAIL BUY", "right": "FII DUMP ❌", "badge": badge}
+        elif any(k in combined_text for k in ("cvd", "delta", "absorption", "footprint")):
+            line1_setup = "ORDER FLOW"
+            line2_power = "DELTA TRAP!"
+            badge = "Passive Absorption"
+            pair = {"left": "MARKET BUYS", "right": "LIMIT ABSORB", "badge": badge}
+        elif any(k in combined_text for k in ("nifty", "expiry", "option", "chain", "f&o")):
+            line1_setup = "NIFTY EXPIRY"
+            line2_power = "90% GET TRAPPED"
+            badge = "93% Retail Trapped"
+            pair = {"left": "RETAIL BUY", "right": "FII DUMP ❌", "badge": badge}
+        else:
+            line1_setup = "MARKET TRUTH"
+            line2_power = "90% LOSE HERE"
+            badge = "SEBI Audit Verified"
+            pair = {"left": "EXPECTED", "right": "REALITY ❌", "badge": badge}
+
+    return {
+        "line1_setup": line1_setup,
+        "line2_power": line2_power,
+        "accent_color": accent_color,
+        "category_pill": category_pill,
+        "comparison_pair": pair,
+        "badge": badge,
+    }
 
 
 # =====================================================================
@@ -614,6 +715,7 @@ def run_kaggle_gpu_renderer(
     mission: AriaMissionControl,
     short_thumb_path: Optional[Path] = None,
     short_thumb_paths: Optional[List[Path]] = None,
+    short_header_paths: Optional[List[Path]] = None,
 ) -> Tuple[str, List[str], List[str], int]:
     """
     Pushes payload + charts to private Kaggle dataset, triggers T4 GPU kernel,
@@ -663,9 +765,12 @@ def run_kaggle_gpu_renderer(
     for i, st_path in enumerate(short_thumb_paths or [], start=1):
         if st_path and Path(st_path).exists():
             shutil.copy2(st_path, KAGGLE_STAGE_DIR / f"short_thumb_{i}.jpg")
+    for i, sh_path in enumerate(short_header_paths or [], start=1):
+        if sh_path and Path(sh_path).exists():
+            shutil.copy2(sh_path, KAGGLE_STAGE_DIR / f"short_header_{i}.png")
     short_count = len([p for p in (short_thumb_paths or []) if p and Path(p).exists()])
     if short_count:
-        logger.info(f"🎬 Staged {short_count} per-Short shelf thumbnail(s) into Kaggle dataset")
+        logger.info(f"🎬 Staged {short_count} per-Short shelf thumbnail(s) & persistent header(s) into Kaggle dataset")
     pool_json = os.getenv("YT_OAUTH_POOL_JSON", "")
     if not pool_json:
         local_pool = BASE_DIR / "data" / "youtube_tokens" / "oauth_pool.json"
@@ -823,6 +928,10 @@ def run_kaggle_gpu_renderer(
                 break
         for audio_file in KAGGLE_STAGE_DIR.glob("*.mp3"):
             shutil.copy2(audio_file, kernel_dir / audio_file.name)
+        for st_file in KAGGLE_STAGE_DIR.glob("short_thumb_*.jpg"):
+            shutil.copy2(st_file, kernel_dir / st_file.name)
+        for sh_file in KAGGLE_STAGE_DIR.glob("short_header_*.png"):
+            shutil.copy2(sh_file, kernel_dir / sh_file.name)
         logger.info(f"📦 Staged self-contained payload.json & assets into {kernel_dir}")
     except Exception as e:
         logger.warning(f"Could not copy direct payload to kernel_dir: {e}")
@@ -1270,7 +1379,12 @@ async def _async_main():
     mission.update_stage("thumbnail", "🎨 Rendering Pillow Graphics...")
     yt_meta = payload.get("youtube_payload", {}).get("metadata", {})
     top_text = yt_meta.get("thumbnail_top_text") or payload.get("thumbnail_top_text") or payload.get("title") or topic or "THE MARKET TRAP"
-    headline_words = str(top_text).split()[:4] or ["THE", "MARKET", "TRAP"]
+
+    # 🎨 Extract ImageEditPro Compliant 2-4 Word Hook & Comparison Pair
+    hook_data = extract_thumbnail_hook(top_text, topic, vertical, meta=yt_meta)
+    payload["thumbnail_hook"] = hook_data
+    yt_meta["thumbnail_hook"] = hook_data
+    headline_words = [hook_data["line1_setup"], hook_data["line2_power"]]
 
     primary_chart = None
     if chart_files:
@@ -1284,12 +1398,28 @@ async def _async_main():
     avatar_1 = BASE_DIR / "assets" / "avatars" / "avatar_1.png"
     if not avatar_1.exists():
         avatar_1 = BASE_DIR / "assets" / "avatar_1.png"
-    yt_thumb, discover_img = create_marketing_images(primary_chart, avatar_1, headline_words, slug)
+
+    yt_thumb, discover_img = create_marketing_images(
+        chart_bg_path=primary_chart,
+        avatar_path=avatar_1,
+        headline_words=headline_words,
+        output_slug=slug,
+        hook_data=hook_data,
+        vertical=vertical,
+    )
 
     # Generate Variant B Thumbnail for T+6h CTR Rescue
     try:
-        variant_b_words = ["THE", "TRAP", "EXPOSED"] if "trap" in topic.lower() else ["WHY", "MOST", "LOSE"]
-        thumb_b_path, _ = create_marketing_images(primary_chart, avatar_1, variant_b_words, f"{slug}_b")
+        variant_b_hook = dict(hook_data)
+        variant_b_hook["line2_power"] = "TRAP EXPOSED" if "trap" in topic.lower() else "WHY MOST LOSE"
+        thumb_b_path, _ = create_marketing_images(
+            chart_bg_path=primary_chart,
+            avatar_path=avatar_1,
+            headline_words=[variant_b_hook["line1_setup"], variant_b_hook["line2_power"]],
+            output_slug=f"{slug}_b",
+            hook_data=variant_b_hook,
+            vertical=vertical,
+        )
         payload["thumb_b_path"] = str(thumb_b_path)
     except Exception as b_err:
         logger.debug(f"Variant B thumb generation note: {b_err}")
@@ -1311,27 +1441,37 @@ async def _async_main():
         timeout_sec=int(os.getenv("THUMBNAIL_WAIT_TIMEOUT", "20"))
     )
 
-    # Per-Short 9:16 shelf thumbs — each Short gets ITS OWN headline punchline, not the long thumb's
+    # Per-Short 9:16 shelf covers & persistent hook headers
     short_thumb_paths: List[Path] = []
+    short_header_paths: List[Path] = []
     try:
         shorts_list = payload["youtube_payload"].get("short_extractions") or []
         shorts_to_render = [s for s in shorts_list if isinstance(s, dict) and str(s.get("spoken_hook_and_body", "")).strip()][:shorts_count]
         if not shorts_to_render and payload["youtube_payload"].get("short_extraction"):
             shorts_to_render = [payload["youtube_payload"]["short_extraction"]]
-        mission.update_stage("thumbnail", f"🎨 Rendering {len(shorts_to_render)} 9:16 Shelf Thumbnails...")
+        mission.update_stage("thumbnail", f"🎨 Rendering {len(shorts_to_render)} 9:16 Shelf Covers & Headers...")
         for i, sd in enumerate(shorts_to_render, start=1):
             try:
-                st_headline = str(sd.get("short_title", "")).split()[:4] or headline_words
-                st_path = create_short_thumbnail(primary_chart, avatar_1, st_headline, f"{slug}_short{i}")
+                s_hook = extract_thumbnail_hook(sd.get("short_title", ""), sd.get("spoken_hook_and_body", ""), vertical, short_data=sd)
+                sd["thumbnail_hook"] = s_hook
+                st_words = [s_hook["line1_setup"], s_hook["line2_power"]]
+                st_path, sh_path = create_short_thumbnail(
+                    chart_bg_path=primary_chart,
+                    avatar_path=avatar_1,
+                    headline_words=st_words,
+                    output_slug=f"{slug}_short{i}",
+                    hook_data=s_hook,
+                    vertical=vertical,
+                )
                 short_thumb_paths.append(st_path)
+                short_header_paths.append(sh_path)
             except Exception as st_err:
-                logger.warning(f"Short #{i} shelf thumb failed (falls back to shared banner): {st_err}")
+                logger.warning(f"Short #{i} shelf thumb failed: {st_err}")
         if short_thumb_paths:
-            # legacy single-banner field keeps old kernel versions working if staging lags
             legacy_short_thumb = short_thumb_paths[0]
-            logger.info(f"🎬 {len(short_thumb_paths)} per-Short thumbnails staged (legacy: {legacy_short_thumb.name})")
+            logger.info(f"🎬 {len(short_thumb_paths)} per-Short thumbnails & persistent headers staged (legacy: {legacy_short_thumb.name})")
     except Exception as s_err:
-        logger.warning(f"Shorts thumbnail generation failed entirely (Shorts fall back to long thumb): {s_err}")
+        logger.warning(f"Shorts thumbnail generation failed entirely: {s_err}")
 
     # 5. Render Video via Kaggle GPU NVENC / Faster-Whisper (payload shorts_count drives the kernel loop)
     payload["shorts_count"] = shorts_count
@@ -1419,6 +1559,7 @@ async def _async_main():
                     payload, chart_files, yt_thumb, mission,
                     short_thumb_path=(short_thumb_paths[0] if short_thumb_paths else None),
                     short_thumb_paths=short_thumb_paths,
+                    short_header_paths=short_header_paths,
                 )
                 if yt_video_id and (yt_video_id.startswith("DRY_RUN") or yt_video_id == "QUOTA_EXHAUSTED_ALL_SLOTS"):
                     logger.warning(f"⚠️ Kaggle GPU returned non-published ID ({yt_video_id}). Engaging CPU Fallback Engine...")
@@ -1435,6 +1576,7 @@ async def _async_main():
             yt_video_id, timestamps_log, short_video_ids, oauth_slot_used = await run_local_cpu_fallback_renderer(
                 payload, chart_files, yt_thumb, mission,
                 short_thumb_paths=short_thumb_paths,
+                short_header_paths=short_header_paths,
             )
 
         if not yt_video_id:

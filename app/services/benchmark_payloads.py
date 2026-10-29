@@ -22,6 +22,33 @@ def get_benchmark_payload(vertical: str, topic: str = "", slot_index: int = 1) -
         short1_body = "Think your 5 Lakh health cover protects you? If your policy has a 1% room rent limit, taking a private room triggers proportional deduction. The hospital bills you 50% extra across doctor fees and surgeries! Check your policy tonight."
         short2_title = "CSR vs ICR: Why 98% is an Insurance Lie #Shorts"
         short2_body = "Insurers advertise a 98% Claim Settlement Ratio, but IRDAI reports show Incurred Claim Ratio is what matters. If ICR is below 60%, the insurer is rejecting high-value claims to protect profits! Full forensic dossier on The Bull Print."
+        thumb_hook = {
+            "line1_setup": "HOSPITAL BILL",
+            "line2_power": "50% SLASHED!",
+            "accent_color": "#FF3B30",
+            "category_pill": "🛡️ POLICY FORENSICS",
+            "comparison_pair": {
+                "left": "CLAIM: ₹6,00,000",
+                "right": "PAID: ₹2,80,000 ❌",
+                "badge": "₹6L CLAIM ➔ ₹3L PAID"
+            },
+            "short_hooks": [
+                {
+                    "line1_setup": "ROOM RENT",
+                    "line2_power": "0.5x BILL TRAP",
+                    "accent_color": "#FF3B30",
+                    "category_pill": "⚠️ PROPORTIONAL DEDUCTION",
+                    "badge": "₹5L Cover ➔ ₹2.1L Paid"
+                },
+                {
+                    "line1_setup": "98% CSR LIE",
+                    "line2_power": "62% REALITY!",
+                    "accent_color": "#FF3B30",
+                    "category_pill": "🚨 IRDAI ICR AUDIT",
+                    "badge": "Low Payouts Exposed"
+                }
+            ]
+        }
     elif vert == "crypto":
         title = "Bitcoin Liquidation Heatmap: Institutional Funding Rate Trap"
         top_pill = "ON-CHAIN ALPHA"
@@ -31,6 +58,33 @@ def get_benchmark_payload(vertical: str, topic: str = "", slot_index: int = 1) -
         short1_body = "Made 5 Lakhs in Bitcoin and lost 4 Lakhs in Ethereum? Under Section 115BBH, you CANNOT offset losses! You owe 30% tax on the full 5 Lakh profit plus 1% TDS on every swap. Learn how institutional traders track compliance."
         short2_title = "How Market Makers Hunt Crypto Liquidations #Shorts"
         short2_body = "Ever wonder why Bitcoin wicks down right after you open a 50x long? Market makers read the liquidation heatmap and flush thin books to trigger your stop-loss into their limit bids! Watch the full masterclass on The Bull Print."
+        thumb_hook = {
+            "line1_setup": "CRYPTO TAX",
+            "line2_power": "30% TAX SHOCK",
+            "accent_color": "#FACC15",
+            "category_pill": "⚡ ON-CHAIN FORENSICS",
+            "comparison_pair": {
+                "left": "PROFIT: ₹5L",
+                "right": "LOSS: ₹0 OFFSET ❌",
+                "badge": "30% Flat + 1% TDS"
+            },
+            "short_hooks": [
+                {
+                    "line1_setup": "115BBH AUDIT",
+                    "line2_power": "ZERO OFFSET!",
+                    "accent_color": "#FACC15",
+                    "category_pill": "⚡ SECTION 115BBH",
+                    "badge": "All Losses Locked"
+                },
+                {
+                    "line1_setup": "LIQUIDATIONS",
+                    "line2_power": "$40M RECKED!",
+                    "accent_color": "#FF3B30",
+                    "category_pill": "🎯 HEATMAP SWEEP",
+                    "badge": "Stop Loss Hunt"
+                }
+            ]
+        }
     else:
         title = "Nifty 50 Order Flow Absorption & Institutional Footprint Forensics"
         top_pill = "ORDER-FLOW RADAR"
@@ -40,6 +94,33 @@ def get_benchmark_payload(vertical: str, topic: str = "", slot_index: int = 1) -
         short1_body = "At 3:15 PM every day, retail brokers trigger mandatory intraday square-offs. Big institutional desks place passive limit orders to absorb forced selling at deep discounts before closing crossings. Never hold blind positions into the bell!"
         short2_title = "Why Retail Misses CVD Divergence at 24500 #Shorts"
         short2_body = "Price makes a higher high, but Cumulative Volume Delta prints a lower low. That's institutional passive absorption! Aggressive retail buys are absorbed by institutional limit sellers. Full footprint breakdown on The Bull Print."
+        thumb_hook = {
+            "line1_setup": "NIFTY EXPIRY",
+            "line2_power": "90% GET TRAPPED",
+            "accent_color": "#FACC15",
+            "category_pill": "📈 ORDER FLOW RADAR",
+            "comparison_pair": {
+                "left": "RETAIL BUY",
+                "right": "FII DUMP ❌",
+                "badge": "93% Retail Trapped"
+            },
+            "short_hooks": [
+                {
+                    "line1_setup": "3:15 PM BELL",
+                    "line2_power": "MIS SQUARE-OFF",
+                    "accent_color": "#FF3B30",
+                    "category_pill": "📉 CLOSING BELL TRAP",
+                    "badge": "Forced Liquidation"
+                },
+                {
+                    "line1_setup": "CVD DIVERGENCE",
+                    "line2_power": "PASSIVE TRAP!",
+                    "accent_color": "#FACC15",
+                    "category_pill": "📊 FOOTPRINT DELTA",
+                    "badge": "Big Banks Absorb"
+                }
+            ]
+        }
 
     now_ts = int(time.time())
     clean_slug = re.sub(r"[^a-zA-Z0-9]+", "-", title.lower()).strip("-")[:45]
@@ -49,6 +130,7 @@ def get_benchmark_payload(vertical: str, topic: str = "", slot_index: int = 1) -
         "campaign_id": campaign_id,
         "topic": topic or title,
         "vertical": vert,
+        "thumbnail_hook": thumb_hook,
         "youtube_payload": {
             "metadata": {
                 "title": title,
@@ -62,6 +144,7 @@ def get_benchmark_payload(vertical: str, topic: str = "", slot_index: int = 1) -
                 "category_id": "27",
                 "thumbnail_top_text": top_pill,
                 "thumbnail_sub_text": sub_badge,
+                "thumbnail_hook": thumb_hook,
             },
             "segments": segments,
             "short_extractions": [
@@ -70,14 +153,16 @@ def get_benchmark_payload(vertical: str, topic: str = "", slot_index: int = 1) -
                     "spoken_hook_and_body": short1_body,
                     "cta_to_long_video": "Watch the full institutional masterclass on The Bull Print.",
                     "chart_image_ref": "chart_1.png",
-                    "angle": "core_trap_hook"
+                    "angle": "core_trap_hook",
+                    "thumbnail_hook": thumb_hook["short_hooks"][0]
                 },
                 {
                     "short_title": short2_title,
                     "spoken_hook_and_body": short2_body,
                     "cta_to_long_video": "Full quantitative breakdown on The Bull Print.",
                     "chart_image_ref": "chart_2.png",
-                    "angle": "quantitative_proof_rule"
+                    "angle": "quantitative_proof_rule",
+                    "thumbnail_hook": thumb_hook["short_hooks"][1]
                 }
             ]
         },

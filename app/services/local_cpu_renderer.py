@@ -239,6 +239,7 @@ async def run_local_cpu_fallback_renderer(
     yt_thumb: Path,
     mission=None,
     short_thumb_paths: List[Path] = None,
+    short_header_paths: List[Path] = None,
 ) -> Tuple[str, str, List[str], int]:
     """
     Renders Long-Format Masterclass and companion Shorts directly on the GitHub Actions CPU runner.
@@ -341,11 +342,13 @@ async def run_local_cpu_fallback_renderer(
             mission.update_stage("kaggle_gpu", f"🎬 Rendering CPU Short #{s_idx}/{shorts_count}...")
 
         short_thumb = (short_thumb_paths[s_idx - 1] if short_thumb_paths and len(short_thumb_paths) >= s_idx else None)
+        short_header = (short_header_paths[s_idx - 1] if short_header_paths and len(short_header_paths) >= s_idx else None)
         try:
             sv_id = await render_and_upload_short_local(
                 payload=payload,
                 short_index=s_idx,
                 thumb_path=short_thumb,
+                header_path=short_header,
                 vertical=vertical,
                 existing_long_id=long_video_id,
             )

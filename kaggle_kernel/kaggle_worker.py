@@ -874,15 +874,20 @@ async def render_and_upload_short_gpu(payload: dict, long_video_id: str, short_d
     if not avatar_img.exists():
         avatar_img = ASSETS_DIR / "avatars" / "avatar_1.png"
 
-    # Per-short 9:16 shelf thumbnail staged by the orchestrator
+    # Per-short 9:16 shelf thumbnail and persistent hook header staged by the orchestrator
     short_thumb = PAYLOAD_DIR / f"short_thumb_{short_index}.jpg"
     if not short_thumb.exists():
         short_thumb = PAYLOAD_DIR / "yt_short_thumb.jpg"
     if not short_thumb.exists():
         short_thumb = PAYLOAD_DIR / "yt_thumb.jpg"
 
-    # 9:16 master: Ken Burns chart on top, avatar bottom, emerald divider,
-    # cover flash on first 0.85s for mobile thumbnail capture, Hormozi subtitles burned in.
+    short_header = PAYLOAD_DIR / f"short_header_{short_index}.png"
+    if not short_header.exists():
+        short_header = PAYLOAD_DIR / "short_header_1.png"
+    if not short_header.exists():
+        short_header = PAYLOAD_DIR / "short_header.png"
+
+    # 9:16 master: Uncropped 1040px center card + persistent top hook header (t=0 to end) + subtitles
     fontfile = _find_fontfile()
     hud_list = _hud_filters(min(dur, 58.5), vertical, fontfile, w=1080, h=1920)
     tail = list(hud_list)
@@ -891,16 +896,37 @@ async def render_and_upload_short_gpu(payload: dict, long_video_id: str, short_d
         tail.append(subs.lstrip(","))
 
     has_cover = short_thumb.exists()
-    # Uncropped 9:16 Canvas: Blurred backdrop + sharp 1040px center card + 1.5s cover overlay
-    if has_cover:
+    has_header = short_header.exists()
+
+    if has_cover and has_header:
         filter_graph = (
             "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=25:5,"
-            "drawbox=x=0:y=0:w=1080:h=1920:color=black@0.55:t=fill[bg];"
+            "drawbox=x=0:y=0:w=1080:h=1920:color=black@0.60:t=fill[bg];"
             "[0:v]scale=1040:-1[fg_chart];"
             "[bg][fg_chart]overlay=20:540[with_chart];"
             "[with_chart]drawbox=x=18:y=538:w=1044:h=590:color=0x10B981@0.8:t=3[with_border];"
-            "[1:v]scale=1080:1920[cover];"
-            "[with_border][cover]overlay=0:0:enable='between(t,0,1.5)'[vbase]"
+            "[with_border][2:v]overlay=0:0[with_header];"
+            "[with_header][1:v]overlay=0:0:enable='between(t,0,1.2)'[vbase]"
+        )
+        if tail:
+            filter_graph += ";" + "[vbase]" + ",".join(tail) + "[v]"
+        else:
+            filter_graph += ";[vbase]null[v]"
+        inputs = [
+            "-loop", "1", "-i", str(chart_png),
+            "-loop", "1", "-i", str(short_thumb),
+            "-loop", "1", "-i", str(short_header),
+            "-i", str(mp3),
+        ]
+        audio_idx = 3
+    elif has_cover:
+        filter_graph = (
+            "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=25:5,"
+            "drawbox=x=0:y=0:w=1080:h=1920:color=black@0.60:t=fill[bg];"
+            "[0:v]scale=1040:-1[fg_chart];"
+            "[bg][fg_chart]overlay=20:540[with_chart];"
+            "[with_chart]drawbox=x=18:y=538:w=1044:h=590:color=0x10B981@0.8:t=3[with_border];"
+            "[with_border][1:v]overlay=0:0:enable='between(t,0,1.2)'[vbase]"
         )
         if tail:
             filter_graph += ";" + "[vbase]" + ",".join(tail) + "[v]"
@@ -915,7 +941,7 @@ async def render_and_upload_short_gpu(payload: dict, long_video_id: str, short_d
     else:
         filter_graph = (
             "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=25:5,"
-            "drawbox=x=0:y=0:w=1080:h=1920:color=black@0.55:t=fill[bg];"
+            "drawbox=x=0:y=0:w=1080:h=1920:color=black@0.60:t=fill[bg];"
             "[0:v]scale=1040:-1[fg_chart];"
             "[bg][fg_chart]overlay=20:540[with_chart];"
             "[with_chart]drawbox=x=18:y=538:w=1044:h=590:color=0x10B981@0.8:t=3"
