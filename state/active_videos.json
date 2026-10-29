@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-29T03:57:28Z",
+  "updated_at": "2026-10-29T03:57:33Z",
   "videos": {
     "slot_1_long": {
       "slot": 1,
@@ -28,10 +28,10 @@
       "completion_pct": 100,
       "eta_seconds": 0,
       "compliance_status": "\ud83d\udee1\ufe0f Feedback Healed & Verified",
-      "updated_at": "2026-10-28T15:10:34Z",
+      "updated_at": "2026-10-29T03:57:33Z",
       "status": "COMPLETED",
-      "youtube_id": "QUOTA_EXHAUSTED_ALL_SLOTS",
-      "youtube_url": "https://www.youtube.com/shorts/QUOTA_EXHAUSTED_ALL_SLOTS"
+      "youtube_id": "jzAdid46TU4",
+      "youtube_url": "https://www.youtube.com/shorts/jzAdid46TU4"
     },
     "slot_6_long": {
       "video_id": "slot_6_long",
