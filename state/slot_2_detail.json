@@ -93,6 +93,11 @@
       "ts": "07:46:35",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udd0d Harvested `Crypto funding rates explained` | source: autocomplete \u00b7 cluster: crypto funding rates explained, crypto funding rates delta exchange, crypto funding rate arbitrage bot"
+    },
+    {
+      "ts": "07:46:41",
+      "level": "INFO",
+      "msg": "[PLAYWRIGHT]: \ud83d\udd04 Capturing 3 charts... | "
     }
   ]
 }
