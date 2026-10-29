@@ -1,17 +1,29 @@
 {
-  "updated_at": "2026-10-29T16:54:59Z",
+  "updated_at": "2026-10-29T18:44:10Z",
   "channel_median_vph": 0.0,
   "top_outperformers": [
+    {
+      "video_id": "t-wuYkz6FxA",
+      "title": "The 0.5x Multiplier Trap: How Room Rent Caps Slash Hospital Bills #Shorts",
+      "format": "SHORT",
+      "published_at": "2026-10-29T18:10:03Z",
+      "hours_live": 0.6,
+      "view_count": 1,
+      "like_count": 1,
+      "comment_count": 0,
+      "views_per_hour": 1.76,
+      "engagement_rate": 1.0
+    },
     {
       "video_id": "5x0bwiO1ac4",
       "title": "The Truth About SIP Investment at 24500",
       "format": "SHORT",
       "published_at": "2026-10-29T12:02:26Z",
-      "hours_live": 4.9,
+      "hours_live": 6.7,
       "view_count": 5,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 1.03,
+      "views_per_hour": 0.75,
       "engagement_rate": 0.8
     },
     {
@@ -19,33 +31,33 @@
       "title": "The Brutal Truth Behind SEBI F&O Rules and Retail Losses | The Trap Nobody Talks About #Shorts",
       "format": "SHORT",
       "published_at": "2026-10-29T12:03:18Z",
-      "hours_live": 4.9,
+      "hours_live": 6.7,
       "view_count": 3,
       "like_count": 0,
       "comment_count": 0,
-      "views_per_hour": 0.62,
-      "engagement_rate": 0.0
-    },
-    {
-      "video_id": "LktTWcy0bgo",
-      "title": "Why 98% Claim Settlement Ratios Are a Marketing Mirage #Shorts",
-      "format": "SHORT",
-      "published_at": "2026-10-29T15:12:16Z",
-      "hours_live": 1.7,
-      "view_count": 1,
-      "like_count": 0,
-      "comment_count": 0,
-      "views_per_hour": 0.58,
+      "views_per_hour": 0.45,
       "engagement_rate": 0.0
     }
   ],
   "bottom_underperformers": [
     {
-      "video_id": "C5fjMYw1SbU",
-      "title": "The Truth About Mutual Funds India 3 PM Trap",
+      "video_id": "extmk1rVQ38",
+      "title": "The 8-Hour Funding Bleed: How Perpetual Swaps Drain Retail Longs #Shorts",
+      "format": "SHORT",
+      "published_at": "2026-10-29T15:14:40Z",
+      "hours_live": 3.5,
+      "view_count": 0,
+      "like_count": 0,
+      "comment_count": 0,
+      "views_per_hour": 0.0,
+      "engagement_rate": 0.0
+    },
+    {
+      "video_id": "T69-BM1mgjc",
+      "title": "Decoding SEBI F&O Rules: How Institutional Order Flow Exposes Retail Traps",
       "format": "LONG",
-      "published_at": "2026-10-29T10:51:25Z",
-      "hours_live": 6.1,
+      "published_at": "2026-10-29T12:05:39Z",
+      "hours_live": 6.6,
       "view_count": 0,
       "like_count": 0,
       "comment_count": 1,
@@ -53,23 +65,11 @@
       "engagement_rate": 3.0
     },
     {
-      "video_id": "gJ1tqsfh6g8",
-      "title": "Why 98% Claim Settlement Ratios Are a Marketing Illusion! | The Trap Nobody Talks About #Shorts",
-      "format": "SHORT",
-      "published_at": "2026-10-29T09:32:54Z",
-      "hours_live": 7.4,
-      "view_count": 0,
-      "like_count": 0,
-      "comment_count": 0,
-      "views_per_hour": 0.0,
-      "engagement_rate": 0.0
-    },
-    {
-      "video_id": "GgFmjQY9IMo",
-      "title": "Why Claim Settlement Ratio Marketing Hides Incurred Claim Ratio Reality | The Bull Print",
+      "video_id": "C5fjMYw1SbU",
+      "title": "The Truth About Mutual Funds India 3 PM Trap",
       "format": "LONG",
-      "published_at": "2026-10-29T09:31:55Z",
-      "hours_live": 7.4,
+      "published_at": "2026-10-29T10:51:25Z",
+      "hours_live": 7.9,
       "view_count": 0,
       "like_count": 0,
       "comment_count": 1,
