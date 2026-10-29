@@ -1,5 +1,224 @@
 [
   {
+    "title": "Decoding SEBI F&O Rules: Institutional Trap Forensics & Order Flow",
+    "slug": "sebi_fo_rules_04",
+    "description": "Master sebi f&o rules with institutional order flow analysis, volume profile forensics, and risk management frameworks from The Bull Print.",
+    "date": "2026-10-24",
+    "author": "Alex from Chennai",
+    "reading_time": "2 min read",
+    "word_count": 421,
+    "categories": [
+      "Market Education",
+      "Institutional Flow",
+      "Risk Management"
+    ],
+    "tags": [
+      "Nifty",
+      "Bitcoin",
+      "Order Flow",
+      "Beginner Guide"
+    ],
+    "youtube_video_id": "z3nnqlTiGhk",
+    "charts": [
+      "nifty_opening_range.png",
+      "nifty_order_flow_absorption.png",
+      "dxy_macro_liquidity.png"
+    ],
+    "content_path": "content/posts/c_sebi_fo_rules_004.md"
+  },
+  {
+    "title": "Sebi f&o rules (Short #2) #Shorts",
+    "slug": "sebi_fo_rules_04-short-2",
+    "description": "Institutional analysis of Sebi f&o rules for everyday investors.",
+    "date": "2026-10-29 05:11:52",
+    "vertical": "stock_market",
+    "category": "Stock Market",
+    "format": "SHORT",
+    "youtube_video_id": "Oun_zJVPCAo",
+    "youtube_id": "Oun_zJVPCAo",
+    "youtubeUrl": "https://www.youtube.com/shorts/Oun_zJVPCAo",
+    "dossier_url": "/article.html?slug=sebi_fo_rules_04",
+    "compliance_notes": "SEBI/IRDAI Zero-violation feedback verified"
+  },
+  {
+    "title": "Sebi f&o rules (Short #1) #Shorts",
+    "slug": "sebi_fo_rules_04-short-1",
+    "description": "Institutional analysis of Sebi f&o rules for everyday investors.",
+    "date": "2026-10-29 05:11:52",
+    "vertical": "stock_market",
+    "category": "Stock Market",
+    "format": "SHORT",
+    "youtube_video_id": "PjMgEUhamIM",
+    "youtube_id": "PjMgEUhamIM",
+    "youtubeUrl": "https://www.youtube.com/shorts/PjMgEUhamIM",
+    "dossier_url": "/article.html?slug=sebi_fo_rules_04",
+    "compliance_notes": "SEBI/IRDAI Zero-violation feedback verified"
+  },
+  {
+    "title": "IRDAI Proportionate Deduction Math: Room Caps & Claim Cuts",
+    "slug": "INS-IRD-03",
+    "description": "Master IRDAI proportionate deduction math and room-rent sub-limits. Learn how daily caps slash surgeon and ICU claims and how to protect your finances.",
+    "date": "2026-10-24",
+    "author": "Alex from Chennai",
+    "reading_time": "5 min read",
+    "word_count": 1148,
+    "categories": [
+      "Market Education",
+      "Institutional Flow",
+      "Risk Management"
+    ],
+    "tags": [
+      "Nifty",
+      "Bitcoin",
+      "Order Flow",
+      "Beginner Guide"
+    ],
+    "youtube_video_id": "nMfqeaCzuAg",
+    "charts": [
+      "ins_claim_vs_deduction_matrix.png",
+      "ins_compounding_protection_curve.png"
+    ],
+    "content_path": "content/posts/INS-IRD-03.md"
+  },
+  {
+    "title": "IRDAI Proportionate Deduction Math: How Daily Room Caps Slash Surgery & Doctor ICU Claims (Short #2) #Shorts",
+    "slug": "INS-IRD-03-short-2",
+    "description": "Institutional analysis of IRDAI Proportionate Deduction Math: How Daily Room Caps Slash Surgery & Doctor ICU Claims for everyday investors.",
+    "date": "2026-10-29 04:41:20",
+    "vertical": "insurance",
+    "category": "Insurance",
+    "format": "SHORT",
+    "youtube_video_id": "2odtGQiI8JE",
+    "youtube_id": "2odtGQiI8JE",
+    "youtubeUrl": "https://www.youtube.com/shorts/2odtGQiI8JE",
+    "dossier_url": "/article.html?slug=INS-IRD-03",
+    "compliance_notes": "SEBI/IRDAI Zero-violation feedback verified"
+  },
+  {
+    "title": "IRDAI Proportionate Deduction Math: How Daily Room Caps Slash Surgery & Doctor ICU Claims (Short #1) #Shorts",
+    "slug": "INS-IRD-03-short-1",
+    "description": "Institutional analysis of IRDAI Proportionate Deduction Math: How Daily Room Caps Slash Surgery & Doctor ICU Claims for everyday investors.",
+    "date": "2026-10-29 04:41:20",
+    "vertical": "insurance",
+    "category": "Insurance",
+    "format": "SHORT",
+    "youtube_video_id": "VmPbOZv6kuk",
+    "youtube_id": "VmPbOZv6kuk",
+    "youtubeUrl": "https://www.youtube.com/shorts/VmPbOZv6kuk",
+    "dossier_url": "/article.html?slug=INS-IRD-03",
+    "compliance_notes": "SEBI/IRDAI Zero-violation feedback verified"
+  },
+  {
+    "title": "Section 115BBH & 194S Forensic Audit: Reconciling AIS / TIS Data with On-Chain Ledger Swaps",
+    "slug": "crypto_115bbh_194s_audit_02",
+    "description": "Master the forensic reconciliation of crypto taxes in India. Learn how Section 115BBH, Section 194S, AIS, TIS, and on-chain ledger swaps interact.",
+    "date": "2026-10-24",
+    "author": "Alex from Chennai",
+    "reading_time": "2 min read",
+    "word_count": 433,
+    "categories": [
+      "Market Education",
+      "Institutional Flow",
+      "Risk Management"
+    ],
+    "tags": [
+      "Nifty",
+      "Bitcoin",
+      "Order Flow",
+      "Beginner Guide"
+    ],
+    "youtube_video_id": "WUeH4yF1Lqo",
+    "charts": [
+      "btc_hourly_structure.png",
+      "btc_footprint_absorption.png",
+      "dxy_macro_liquidity.png"
+    ],
+    "content_path": "content/posts/crypto_115bbh_194s_audit_02.md"
+  },
+  {
+    "title": "Section 115BBH & 194S Forensic Audit: Reconciling AIS / TIS Data with On-Chain Ledger Swaps (Short #2) #Shorts",
+    "slug": "crypto_115bbh_194s_audit_02-short-2",
+    "description": "Institutional analysis of Section 115BBH & 194S Forensic Audit: Reconciling AIS / TIS Data with On-Chain Ledger Swaps for everyday investors.",
+    "date": "2026-10-29 04:17:33",
+    "vertical": "crypto",
+    "category": "Crypto",
+    "format": "SHORT",
+    "youtube_video_id": "6MT6TGBIdXQ",
+    "youtube_id": "6MT6TGBIdXQ",
+    "youtubeUrl": "https://www.youtube.com/shorts/6MT6TGBIdXQ",
+    "dossier_url": "/article.html?slug=crypto_115bbh_194s_audit_02",
+    "compliance_notes": "SEBI/IRDAI Zero-violation feedback verified"
+  },
+  {
+    "title": "Section 115BBH & 194S Forensic Audit: Reconciling AIS / TIS Data with On-Chain Ledger Swaps (Short #1) #Shorts",
+    "slug": "crypto_115bbh_194s_audit_02-short-1",
+    "description": "Institutional analysis of Section 115BBH & 194S Forensic Audit: Reconciling AIS / TIS Data with On-Chain Ledger Swaps for everyday investors.",
+    "date": "2026-10-29 04:17:33",
+    "vertical": "crypto",
+    "category": "Crypto",
+    "format": "SHORT",
+    "youtube_video_id": "DA77ofQnZs4",
+    "youtube_id": "DA77ofQnZs4",
+    "youtubeUrl": "https://www.youtube.com/shorts/DA77ofQnZs4",
+    "dossier_url": "/article.html?slug=crypto_115bbh_194s_audit_02",
+    "compliance_notes": "SEBI/IRDAI Zero-violation feedback verified"
+  },
+  {
+    "title": "Nifty 50 Today Option Chain Analysis: Institutional Order Flow & Traps",
+    "slug": "TBP-NIFTY-50-2025-01",
+    "description": "Decode the Nifty 50 today option chain with institutional order flow, volume profile POC, and CVD forensics. Learn why 90% of F&O traders lose money.",
+    "date": "2026-10-24",
+    "author": "Alex from Chennai",
+    "reading_time": "6 min read",
+    "word_count": 1285,
+    "categories": [
+      "Market Education",
+      "Institutional Flow",
+      "Risk Management"
+    ],
+    "tags": [
+      "Nifty",
+      "Bitcoin",
+      "Order Flow",
+      "Beginner Guide"
+    ],
+    "youtube_video_id": "-2K3qWYq6y8",
+    "charts": [
+      "nifty_opening_range.png",
+      "nifty_order_flow_absorption.png",
+      "dxy_macro_liquidity.png"
+    ],
+    "content_path": "content/posts/TBP-NIFTY-OPT-001.md"
+  },
+  {
+    "title": "Nifty 50 today option chain (Short #2) #Shorts",
+    "slug": "TBP-NIFTY-50-2025-01-short-2",
+    "description": "Institutional analysis of Nifty 50 today option chain for everyday investors.",
+    "date": "2026-10-29 03:57:28",
+    "vertical": "stock_market",
+    "category": "Stock Market",
+    "format": "SHORT",
+    "youtube_video_id": "t3ymfBTQZ78",
+    "youtube_id": "t3ymfBTQZ78",
+    "youtubeUrl": "https://www.youtube.com/shorts/t3ymfBTQZ78",
+    "dossier_url": "/article.html?slug=TBP-NIFTY-50-2025-01",
+    "compliance_notes": "SEBI/IRDAI Zero-violation feedback verified"
+  },
+  {
+    "title": "Nifty 50 today option chain (Short #1) #Shorts",
+    "slug": "TBP-NIFTY-50-2025-01-short-1",
+    "description": "Institutional analysis of Nifty 50 today option chain for everyday investors.",
+    "date": "2026-10-29 03:57:28",
+    "vertical": "stock_market",
+    "category": "Stock Market",
+    "format": "SHORT",
+    "youtube_video_id": "jzAdid46TU4",
+    "youtube_id": "jzAdid46TU4",
+    "youtubeUrl": "https://www.youtube.com/shorts/jzAdid46TU4",
+    "dossier_url": "/article.html?slug=TBP-NIFTY-50-2025-01",
+    "compliance_notes": "SEBI/IRDAI Zero-violation feedback verified"
+  },
+  {
     "title": "Nifty 50 Order Flow Absorption & Institutional Footprint Forensics",
     "slug": "nifty-50-order-flow-absorption-institutional--1793218746",
     "description": "Nifty 50 Order Flow Absorption & Institutional Footprint Forensics. Detailed forensic data breakdown with full charts and analysis.",
