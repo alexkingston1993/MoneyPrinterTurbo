@@ -148,6 +148,11 @@
       "ts": "15:08:23",
       "level": "INFO",
       "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering Pillow Graphics... | "
+    },
+    {
+      "ts": "15:08:32",
+      "level": "ERROR",
+      "msg": "Runner failed: CRITICAL: Failed to fetch AI 3D scene from all candidates for prompt: photorealistic 3D octane render, glowing 3D Bitcoi"
     }
   ]
 }
