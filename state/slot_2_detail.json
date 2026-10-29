@@ -96,7 +96,16 @@
       "pct": 100,
       "started_at": "2026-10-29T04:17:42Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "yt_long_id": "WUeH4yF1Lqo",
+        "yt_short_ids": [
+          "DA77ofQnZs4",
+          "6MT6TGBIdXQ"
+        ],
+        "oauth_slot_used": 1,
+        "article_url": "https://the-bull-print.vercel.app/article.html?slug=crypto_115bbh_194s_audit_02",
+        "x_thread_url": "Skipped (X keys not set)"
+      }
     }
   ],
   "live_logs": [
