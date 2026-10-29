@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-29T04:17:58Z",
+  "updated_at": "2026-10-29T04:18:07Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -42,14 +42,14 @@
       "vertical_label": "Insurance #1",
       "shorts_count": 2,
       "status": "RUNNING",
-      "overall_pct": 45,
-      "stage_pct": 70,
-      "current_stage": "Chart & High-CTR Thumbnail Studio",
-      "current_stage_index": 4,
+      "overall_pct": 2,
+      "stage_pct": 10,
+      "current_stage": "SEO Topic Harvester (open-seo)",
+      "current_stage_index": 1,
       "archetype": "regulatory_arbitrage_breakdown",
       "topic": "IRDAI Claim Settlement Ratio & Policy Traps",
       "voice_persona": "PrabhatNeural",
-      "run_id": "40758664423"
+      "run_id": "40812903447"
     },
     "4": {
       "slot": 4,
