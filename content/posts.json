@@ -1,5 +1,59 @@
 [
   {
+    "title": "Why Claim Settlement Ratio Marketing Hides Incurred Claim Ratio Reality",
+    "slug": "INS-2026-03",
+    "description": "Discover why insurance CSR marketing hides ICR reality. Learn about term insurance claim rejections, health insurance room rent limits, and IRDAI rules.",
+    "date": "2026-10-24",
+    "author": "Alex from Chennai",
+    "reading_time": "6 min read",
+    "word_count": 1237,
+    "categories": [
+      "Market Education",
+      "Institutional Flow",
+      "Risk Management"
+    ],
+    "tags": [
+      "Nifty",
+      "Bitcoin",
+      "Order Flow",
+      "Beginner Guide"
+    ],
+    "youtube_video_id": "GgFmjQY9IMo",
+    "charts": [
+      "ins_claim_vs_deduction_matrix.png",
+      "ins_compounding_protection_curve.png"
+    ],
+    "content_path": "content/posts/INS-2023-CSR-ICR-FORENSICS.md"
+  },
+  {
+    "title": "Why Claim Settlement Ratio Marketing Hides Incurred Claim Ratio Reality (Short #2) #Shorts",
+    "slug": "INS-2026-03-short-2",
+    "description": "Institutional analysis of Why Claim Settlement Ratio Marketing Hides Incurred Claim Ratio Reality for everyday investors.",
+    "date": "2026-10-29 09:34:58",
+    "vertical": "insurance",
+    "category": "Insurance",
+    "format": "SHORT",
+    "youtube_video_id": "W2x0aso-Md4",
+    "youtube_id": "W2x0aso-Md4",
+    "youtubeUrl": "https://www.youtube.com/shorts/W2x0aso-Md4",
+    "dossier_url": "/article.html?slug=INS-2026-03",
+    "compliance_notes": "SEBI/IRDAI Zero-violation feedback verified"
+  },
+  {
+    "title": "Why Claim Settlement Ratio Marketing Hides Incurred Claim Ratio Reality (Short #1) #Shorts",
+    "slug": "INS-2026-03-short-1",
+    "description": "Institutional analysis of Why Claim Settlement Ratio Marketing Hides Incurred Claim Ratio Reality for everyday investors.",
+    "date": "2026-10-29 09:34:58",
+    "vertical": "insurance",
+    "category": "Insurance",
+    "format": "SHORT",
+    "youtube_video_id": "gJ1tqsfh6g8",
+    "youtube_id": "gJ1tqsfh6g8",
+    "youtubeUrl": "https://www.youtube.com/shorts/gJ1tqsfh6g8",
+    "dossier_url": "/article.html?slug=INS-2026-03",
+    "compliance_notes": "SEBI/IRDAI Zero-violation feedback verified"
+  },
+  {
     "title": "Crypto Funding Rates Explained: Master Perp Structure & Arbitrage Bots",
     "slug": "TBP_CRYPTO_FUNDING_02",
     "description": "Discover crypto funding rates explained thoroughly. Learn perp structure, open interest delta, exchange flows, and crypto funding rate arbitrage mechanics.",
