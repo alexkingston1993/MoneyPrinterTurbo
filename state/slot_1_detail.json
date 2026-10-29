@@ -93,6 +93,11 @@
       "ts": "06:10:59",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udd0d Harvested `Term insurance claim rejection reasons in hindi` | source: autocomplete \u00b7 cluster: term insurance claim rejection reasons in hindi, hdfc term insurance claim rejection reasons, icici term insurance claim rejection reasons"
+    },
+    {
+      "ts": "06:11:04",
+      "level": "INFO",
+      "msg": "[PLAYWRIGHT]: \ud83d\udcca Rendering insurance infographics... | "
     }
   ]
 }
