@@ -1,17 +1,17 @@
 {
-  "updated_at": "2026-10-29T06:10:49Z",
-  "channel_median_vph": 0.2,
+  "updated_at": "2026-10-29T07:06:48Z",
+  "channel_median_vph": 0.23,
   "top_outperformers": [
     {
       "video_id": "ujBlVUq9WSo",
       "title": "The Truth About Mutual Funds India 3:15 PM Trap",
       "format": "LONG",
       "published_at": "2026-10-27T20:01:55Z",
-      "hours_live": 34.1,
+      "hours_live": 35.1,
       "view_count": 123,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 3.6,
+      "views_per_hour": 3.51,
       "engagement_rate": 0.0325
     },
     {
@@ -19,11 +19,11 @@
       "title": "The 0.5 Multiplier Trap: Hospital Bill Math Explained | The Math That Settles It #Shorts",
       "format": "SHORT",
       "published_at": "2026-10-29T04:40:46Z",
-      "hours_live": 1.5,
+      "hours_live": 2.4,
       "view_count": 4,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 2.66,
+      "views_per_hour": 1.64,
       "engagement_rate": 1.0
     },
     {
@@ -31,21 +31,21 @@
       "title": "Why 90% Lose in Nifty F&O: The Math Behind Option Chain Open Interest! | The Math That Settles It #S",
       "format": "LONG",
       "published_at": "2026-10-29T03:56:32Z",
-      "hours_live": 2.2,
+      "hours_live": 3.2,
       "view_count": 3,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 1.34,
+      "views_per_hour": 0.95,
       "engagement_rate": 1.3333
     }
   ],
   "bottom_underperformers": [
     {
-      "video_id": "6MT6TGBIdXQ",
-      "title": "Decoding Section 142(1) Crypto Notices Fast #Shorts",
-      "format": "SHORT",
-      "published_at": "2026-10-29T04:17:53Z",
-      "hours_live": 1.9,
+      "video_id": "nMfqeaCzuAg",
+      "title": "IRDAI Proportionate Deduction Math: How Daily Room Caps Slash Surgery & Doctor ICU Claims",
+      "format": "LONG",
+      "published_at": "2026-10-29T04:39:25Z",
+      "hours_live": 2.5,
       "view_count": 0,
       "like_count": 0,
       "comment_count": 1,
@@ -57,7 +57,7 @@
       "title": "The Crypto Tax Trap Nobody Talks About! #Shorts",
       "format": "SHORT",
       "published_at": "2026-10-29T04:17:14Z",
-      "hours_live": 1.9,
+      "hours_live": 2.8,
       "view_count": 0,
       "like_count": 1,
       "comment_count": 1,
@@ -69,7 +69,7 @@
       "title": "The Nifty Option Trap Retailers Fall For Every Single Day! | The Trap Nobody Talks About #Shorts",
       "format": "SHORT",
       "published_at": "2026-10-29T03:55:44Z",
-      "hours_live": 2.3,
+      "hours_live": 3.2,
       "view_count": 0,
       "like_count": 1,
       "comment_count": 1,
