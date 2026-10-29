@@ -5,13 +5,13 @@
   "vertical_label": "Slot #6",
   "shorts_count": 1,
   "status": "WAITING_APPROVAL",
-  "overall_pct": 78,
-  "stage_pct": 95,
+  "overall_pct": 75,
+  "stage_pct": 80,
   "current_stage_index": 5,
   "current_stage_name": "Kaggle T4 GPU Render Farm",
-  "current_subtask_label": "Short #2 9:16 render & QA (5m 10s)",
+  "current_subtask_label": "Short #2 9:16 render & QA (5m 39s)",
   "started_at": "2026-10-29T18:44:04Z",
-  "updated_at": "2026-10-29T18:56:12Z",
+  "updated_at": "2026-10-29T18:56:35Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -68,16 +68,16 @@
       "id": 5,
       "name": "Kaggle T4 GPU Render Farm",
       "status": "RUNNING",
-      "pct": 95,
+      "pct": 80,
       "started_at": "2026-10-29T18:46:56Z",
       "completed_at": null,
       "metrics": {
         "voice_persona": "Arjun \u2014 Signature Cloned Voice",
         "kaggle_kernel_status": "RUNNING",
         "long_render_pct": 100,
-        "short_1_render_pct": 90,
-        "short_2_render_pct": 35,
-        "gpu_elapsed_sec": 280
+        "short_1_render_pct": 100,
+        "short_2_render_pct": 85,
+        "gpu_elapsed_sec": 310
       }
     },
     {
