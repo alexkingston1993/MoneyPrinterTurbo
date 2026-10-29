@@ -93,6 +93,11 @@
       "ts": "20:25:45",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udd0d Harvested `Why Claim Settlement Ratio Marketing Hides Incur` | source: registry_fallback \u00b7 cluster: term insurance claim rejection, health insurance room rent limit, irdai new rules"
+    },
+    {
+      "ts": "20:25:50",
+      "level": "INFO",
+      "msg": "[PLAYWRIGHT]: \ud83d\udcca Rendering insurance infographics... | "
     }
   ]
 }
