@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-29T08:10:08Z",
+  "updated_at": "2026-10-29T09:09:06Z",
   "videos": {
     "slot_1_long": {
       "slot": 1,
@@ -85,16 +85,16 @@
     "slot_3_long": {
       "video_id": "slot_3_long",
       "slot": 3,
-      "title": "[LONG-FORM] IRDAI Proportionate Deduction Math: How Daily Room Caps Slash Surgery & Doctor ICU Claims",
+      "title": "[LONG-FORM] Why Claim Settlement Ratio Marketing Hides Incurred Claim Ratio Reality",
       "format": "16:9 LONG",
       "vertical": "INSURANCE",
-      "current_stage": "Stage 7/7: Uploaded & Distributed",
-      "stage_pct": 100,
-      "completion_pct": 100,
-      "eta_seconds": 0,
+      "current_stage": "Stage 4/7: Chart & High-CTR Thumbnail Studio",
+      "stage_pct": 20,
+      "completion_pct": 40,
+      "eta_seconds": 360,
       "compliance_status": "\ud83d\udee1\ufe0f Feedback Healed & Verified",
-      "status": "COMPLETED",
-      "updated_at": "2026-10-29T04:41:20Z",
+      "status": "IN_PROGRESS",
+      "updated_at": "2026-10-29T09:09:06Z",
       "started_at": "2026-10-27T20:23:01Z",
       "youtube_id": "nMfqeaCzuAg",
       "youtube_url": "https://www.youtube.com/watch?v=nMfqeaCzuAg"
