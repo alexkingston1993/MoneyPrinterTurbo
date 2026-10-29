@@ -20,7 +20,7 @@ from loguru import logger
 BASE_DIR = Path(__file__).resolve().parent.parent
 TG_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN") or "8829963924:AAE7v_xEQXLmy3-YEx8kqMo2GRfnbnxf4GA"
 TG_CHAT_ID = os.getenv("TELEGRAM_CHAT_ID") or "1126599043"
-GH_REPO = os.getenv("GITHUB_REPOSITORY") or "alexkingston1993/MoneyPrinterTurbo"
+GH_REPO = os.getenv("GITHUB_REPOSITORY") or "alexkingston1993/the-bull-print"
 GH_TOKEN = os.getenv("GITHUB_TOKEN") or os.getenv("GITHUB_PAT_TOKEN") or ""
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY") or ""
 

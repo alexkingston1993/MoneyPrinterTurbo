@@ -1,6 +1,6 @@
-# MoneyPrinterTurbo Test Directory
+# The Bull Print Test Directory
 
-This directory contains unit tests for the **MoneyPrinterTurbo** project.
+This directory contains unit tests for the **The Bull Print** project.
 
 ## Directory Structure
 

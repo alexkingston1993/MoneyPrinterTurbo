@@ -1,5 +1,5 @@
 # ==============================================================================
-# The Bull Print / MoneyPrinterTurbo Cloud Engine
+# The Bull Print / The Bull Print Cloud Engine
 # Pre-baked container with FFmpeg, Kokoro-82M neural TTS weights, and all Python dependencies.
 # Eliminates cold-start package installs and network timeouts in cloud runners.
 # ==============================================================================
@@ -8,11 +8,11 @@ FROM python:3.11-slim-bookworm
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONUNBUFFERED=1 \
-    PYTHONPATH=/MoneyPrinterTurbo \
+    PYTHONPATH=/TheBullPrint \
     HF_HOME=/root/.cache/huggingface \
     IMAGEIO_FFMPEG_EXE=/usr/bin/ffmpeg
 
-WORKDIR /MoneyPrinterTurbo
+WORKDIR /TheBullPrint
 
 # 1. Install system utilities, FFmpeg, ImageMagick, and fonts
 RUN apt-get update && apt-get install -y --no-install-recommends \

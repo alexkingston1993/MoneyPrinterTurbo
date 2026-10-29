@@ -1,6 +1,6 @@
 # Conversation History — The Compounder (Indian Stock Market Content Automation)
 
-**Project**: Content automation pipeline for the YouTube channel **"The Compounder"** (English / Tamil / Hindi), built as a heavily extended fork of **MoneyPrinterTurbo**.
+**Project**: Content automation pipeline for the YouTube channel **"The Compounder"** (English / Tamil / Hindi), built as a heavily extended fork of **The Bull Print**.
 
 **Recorded sessions**: 8 (from the local opencode database, `~/.local/share/opencode/opencode.db`)
 **Period**: June 14, 2026 → June 28, 2026 (this retrieval session: October 19, 2026)

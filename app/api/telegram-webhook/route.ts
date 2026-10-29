@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 
 const TG_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '';
 const AUTH_CHAT_ID = process.env.TELEGRAM_CHAT_ID || '';
-const GH_REPO = process.env.GITHUB_REPO || 'alexkingston1993/MoneyPrinterTurbo';
+const GH_REPO = process.env.GITHUB_REPO || 'alexkingston1993/the-bull-print';
 const GH_TOKEN = process.env.GITHUB_PAT_TOKEN || process.env.GITHUB_TOKEN || '';
 
 async function sendTelegram(chatId: number | string, text: string, replyMarkup?: object) {

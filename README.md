@@ -1,16 +1,16 @@
 <div align="center">
-<h1 align="center">MoneyPrinterTurbo 💸</h1>
+<h1 align="center">The Bull Print 💸</h1>
 
 <p align="center">
-  <a href="https://github.com/harry0703/MoneyPrinterTurbo/stargazers"><img src="https://img.shields.io/github/stars/harry0703/MoneyPrinterTurbo.svg?style=for-the-badge" alt="Stargazers"></a>
-  <a href="https://github.com/harry0703/MoneyPrinterTurbo/issues"><img src="https://img.shields.io/github/issues/harry0703/MoneyPrinterTurbo.svg?style=for-the-badge" alt="Issues"></a>
-  <a href="https://github.com/harry0703/MoneyPrinterTurbo/network/members"><img src="https://img.shields.io/github/forks/harry0703/MoneyPrinterTurbo.svg?style=for-the-badge" alt="Forks"></a>
-  <a href="https://github.com/harry0703/MoneyPrinterTurbo/blob/main/LICENSE"><img src="https://img.shields.io/github/license/harry0703/MoneyPrinterTurbo.svg?style=for-the-badge" alt="License"></a>
+  <a href="https://github.com/alexkingston1993/the-bull-print/stargazers"><img src="https://img.shields.io/github/stars/alexkingston1993/the-bull-print.svg?style=for-the-badge" alt="Stargazers"></a>
+  <a href="https://github.com/alexkingston1993/the-bull-print/issues"><img src="https://img.shields.io/github/issues/alexkingston1993/the-bull-print.svg?style=for-the-badge" alt="Issues"></a>
+  <a href="https://github.com/alexkingston1993/the-bull-print/network/members"><img src="https://img.shields.io/github/forks/alexkingston1993/the-bull-print.svg?style=for-the-badge" alt="Forks"></a>
+  <a href="https://github.com/alexkingston1993/the-bull-print/blob/main/LICENSE"><img src="https://img.shields.io/github/license/alexkingston1993/the-bull-print.svg?style=for-the-badge" alt="License"></a>
 </p>
 <br>
 <h3>简体中文 | <a href="README-en.md">English</a></h3>
 <div align="center">
-  <a href="https://trendshift.io/repositories/8731" target="_blank"><img src="https://trendshift.io/api/badge/repositories/8731" alt="harry0703%2FMoneyPrinterTurbo | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
+  <a href="https://trendshift.io/repositories/8731" target="_blank"><img src="https://trendshift.io/api/badge/repositories/8731" alt="harry0703%2FThe Bull Print | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 </div>
 <br>
 只需提供一个视频 <b>主题</b> 或 <b>关键词</b> ，就可以全自动生成视频文案、视频素材、视频字幕、视频背景音乐，然后合成一个高清的短视频。
@@ -57,9 +57,9 @@
 </thead>
 <tbody>
 <tr>
-<td align="center"><video src="https://github.com/harry0703/MoneyPrinterTurbo/assets/4928832/a84d33d5-27a2-4aba-8fd0-9fb2bd91c6a6"></video></td>
-<td align="center"><video src="https://github.com/harry0703/MoneyPrinterTurbo/assets/4928832/af2f3b0b-002e-49fe-b161-18ba91c055e8"></video></td>
-<td align="center"><video src="https://github.com/harry0703/MoneyPrinterTurbo/assets/4928832/112c9564-d52b-4472-99ad-970b75f66476"></video></td>
+<td align="center"><video src="https://github.com/alexkingston1993/the-bull-print/assets/4928832/a84d33d5-27a2-4aba-8fd0-9fb2bd91c6a6"></video></td>
+<td align="center"><video src="https://github.com/alexkingston1993/the-bull-print/assets/4928832/af2f3b0b-002e-49fe-b161-18ba91c055e8"></video></td>
+<td align="center"><video src="https://github.com/alexkingston1993/the-bull-print/assets/4928832/112c9564-d52b-4472-99ad-970b75f66476"></video></td>
 </tr>
 </tbody>
 </table>
@@ -75,8 +75,8 @@
 </thead>
 <tbody>
 <tr>
-<td align="center"><video src="https://github.com/harry0703/MoneyPrinterTurbo/assets/4928832/346ebb15-c55f-47a9-a653-114f08bb8073"></video></td>
-<td align="center"><video src="https://github.com/harry0703/MoneyPrinterTurbo/assets/4928832/271f2fae-8283-44a0-8aa0-0ed8f9a6fa87"></video></td>
+<td align="center"><video src="https://github.com/alexkingston1993/the-bull-print/assets/4928832/346ebb15-c55f-47a9-a653-114f08bb8073"></video></td>
+<td align="center"><video src="https://github.com/alexkingston1993/the-bull-print/assets/4928832/271f2fae-8283-44a0-8aa0-0ed8f9a6fa87"></video></td>
 </tr>
 </tbody>
 </table>
@@ -105,9 +105,9 @@
 - 想要隔离运行环境：优先使用 Docker 部署
 
 ### 在 Google Colab 中运行
-免去本地环境配置，点击直接在 Google Colab 中快速体验 MoneyPrinterTurbo
+免去本地环境配置，点击直接在 Google Colab 中快速体验 The Bull Print
 
-[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/harry0703/MoneyPrinterTurbo/blob/main/docs/MoneyPrinterTurbo.ipynb)
+[![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/alexkingston1993/the-bull-print/blob/main/docs/TheBullPrint.ipynb)
 
 
 ### Windows一键启动包
@@ -132,7 +132,7 @@
 #### ① 克隆代码
 
 ```shell
-git clone https://github.com/harry0703/MoneyPrinterTurbo.git
+git clone https://github.com/alexkingston1993/the-bull-print.git
 ```
 
 #### ② 修改配置文件（可选，建议启动后也可以在 WebUI 里面配置）
@@ -153,7 +153,7 @@ git clone https://github.com/harry0703/MoneyPrinterTurbo.git
 2. https://learn.microsoft.com/zh-cn/windows/wsl/tutorials/wsl-containers
 
 ```shell
-cd MoneyPrinterTurbo
+cd The Bull Print
 docker-compose up
 ```
 
@@ -179,8 +179,8 @@ docker-compose up
 推荐使用 [uv](https://docs.astral.sh/uv/) 管理 Python 环境和依赖，默认使用 Python `3.11`
 
 ```shell
-git clone https://github.com/harry0703/MoneyPrinterTurbo.git
-cd MoneyPrinterTurbo
+git clone https://github.com/alexkingston1993/the-bull-print.git
+cd The Bull Print
 uv python install 3.11
 uv sync --frozen
 ```
@@ -221,7 +221,7 @@ pip install -r requirements.txt
 
 #### ③ 启动Web界面 🌐
 
-注意需要到 MoneyPrinterTurbo 项目 `根目录` 下执行以下命令
+注意需要到 The Bull Print 项目 `根目录` 下执行以下命令
 
 ###### Windows
 
@@ -310,11 +310,11 @@ python main.py
 - 百度网盘: https://pan.baidu.com/s/11h3Q6tsDtjQKTjUu3sc5cA?pwd=xjs9
 - 夸克网盘：https://pan.quark.cn/s/3ee3d991d64b
 
-模型下载后解压，整个目录放到 `.\MoneyPrinterTurbo\models` 里面，
-最终的文件路径应该是这样: `.\MoneyPrinterTurbo\models\whisper-large-v3`
+模型下载后解压，整个目录放到 `.\TheBullPrint\models` 里面，
+最终的文件路径应该是这样: `.\TheBullPrint\models\whisper-large-v3`
 
 ```
-MoneyPrinterTurbo  
+The Bull Print  
   ├─models
   │   └─whisper-large-v3
   │          config.json
@@ -416,8 +416,8 @@ Trying to load the model directly from the local cache, if it exists.
 
 ## 反馈建议 📢
 
-- 可以提交 [issue](https://github.com/harry0703/MoneyPrinterTurbo/issues)
-  或者 [pull request](https://github.com/harry0703/MoneyPrinterTurbo/pulls)。
+- 可以提交 [issue](https://github.com/alexkingston1993/the-bull-print/issues)
+  或者 [pull request](https://github.com/alexkingston1993/the-bull-print/pulls)。
 
 ## 许可证 📝
 
@@ -425,4 +425,4 @@ Trying to load the model directly from the local cache, if it exists.
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=harry0703/MoneyPrinterTurbo&type=Date)](https://star-history.com/#harry0703/MoneyPrinterTurbo&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=alexkingston1993/the-bull-print&type=Date)](https://star-history.com/#alexkingston1993/the-bull-print&Date)

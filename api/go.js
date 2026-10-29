@@ -78,7 +78,7 @@ export default async function handler(req, res) {
     return res.end();
   }
 
-  const repo = process.env.GITHUB_REPO || 'alexkingston1993/MoneyPrinterTurbo';
+  const repo = process.env.GITHUB_REPO || 'alexkingston1993/the-bull-print';
   const token = process.env.GITHUB_PAT_TOKEN || process.env.GITHUB_TOKEN || '';
 
   // Bounded-wait telemetry: serverless freezes after res.end() and kills

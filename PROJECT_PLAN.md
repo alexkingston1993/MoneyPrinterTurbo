@@ -410,7 +410,7 @@ MEDIA LAYER
     ├── Style: Clean, professional, at bottom-center
     └── Language: English
 │
-└── Video Renderer (MoneyPrinterTurbo)
+└── Video Renderer (The Bull Print)
     ├── Input: Script + assets + audio + subtitles
     ├── Process: Combine into final video with transitions, BGM, branding
     └── Output: 1080x1920 (vertical) for Shorts, 1920x1080 (horizontal) for long-form
@@ -488,7 +488,7 @@ PUBLISHING LAYER
 |---|---|
 | **Language** | Python 3.11+ |
 | **Scheduler** | APScheduler / Cron / GitHub Actions |
-| **Video Generation** | MoneyPrinterTurbo (existing) + custom modifications |
+| **Video Generation** | The Bull Print (existing) + custom modifications |
 | **LLM Script Writing** | OpenAI API / DeepSeek API (cheaper) |
 | **Stock Data** | yfinance (free) + DalalAI API (paid, ₹1999/mo) |
 | **News** | NewsAPI.org / Google News RSS |
@@ -537,7 +537,7 @@ PUBLISHING LAYER
 
 ### 7.1 Current Problem
 
-The existing MoneyPrinterTurbo videos are basic because:
+The existing The Bull Print videos are basic because:
 1. Stock video from Pexels/Pixabay is generic (people typing on laptops, generic city shots)
 2. No financial charts/data visualizations in the video
 3. Voiceover reads a shallow script with no real analysis
@@ -574,7 +574,7 @@ Create a directory `resources/visuals/` with:
 - [ ] Improve prompts based on review
 
 ### Phase 2: Video Production (Weeks 4-6)
-- [ ] Extend MoneyPrinterTurbo with financial chart generation
+- [ ] Extend The Bull Print with financial chart generation
 - [ ] Create branded intro/outro templates
 - [ ] Build visual library for financial content
 - [ ] Generate first 10 long-form videos with human review

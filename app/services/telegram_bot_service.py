@@ -74,7 +74,7 @@ class AriaEngineerTools:
             res = subprocess.run(
                 [
                     gh_bin, "run", "list",
-                    "-R", "alexkingston1993/MoneyPrinterTurbo",
+                    "-R", "alexkingston1993/the-bull-print",
                     "-L", "1",
                     "--json", "databaseId,status,conclusion,updatedAt,event,headSha"
                 ],
@@ -97,7 +97,7 @@ class AriaEngineerTools:
             res = subprocess.run(
                 [
                     gh_bin, "run", "list",
-                    "-R", "alexkingston1993/MoneyPrinterTurbo",
+                    "-R", "alexkingston1993/the-bull-print",
                     "-L", str(count),
                     "--json", "databaseId,status,conclusion,updatedAt,event,headSha"
                 ],
@@ -127,7 +127,7 @@ class AriaEngineerTools:
         context = (
             f"LIVE OPERATIONS TELEMETRY:\n"
             f"- Recent GitHub Actions Runs: {runs_str}\n"
-            f"- Repository Security: alexkingston1993/MoneyPrinterTurbo and all 7 user repos are 100% PRIVATE.\n"
+            f"- Repository Security: alexkingston1993/the-bull-print and all 7 user repos are 100% PRIVATE.\n"
             f"- Voice Engine: Microsoft Azure Neural Indian English ('en-IN-PrabhatNeural' / Arjun profile).\n"
             f"- Production Brand: The Bull Print (0% Dalal Street mentions).\n\n"
             f"ENGINEERING KNOWLEDGE ON 'Task pipeline terminated without youtube_upload result (res=None)':\n"
@@ -171,7 +171,7 @@ class AriaEngineerTools:
             fail_log = ""
             try:
                 res = subprocess.run(
-                    [gh_bin, "run", "view", str(run_id), "--log-failed", "-R", "alexkingston1993/MoneyPrinterTurbo"],
+                    [gh_bin, "run", "view", str(run_id), "--log-failed", "-R", "alexkingston1993/the-bull-print"],
                     capture_output=True,
                     text=True,
                     timeout=20,
@@ -261,7 +261,7 @@ class AriaEngineerTools:
         gh_bin = cls.get_gh_bin()
         try:
             res = subprocess.run(
-                [gh_bin, "workflow", "run", "market_publisher.yml", "-R", "alexkingston1993/MoneyPrinterTurbo", "-f", f"slot={slot_name}"],
+                [gh_bin, "workflow", "run", "market_publisher.yml", "-R", "alexkingston1993/the-bull-print", "-f", f"slot={slot_name}"],
                 capture_output=True,
                 text=True,
                 timeout=15,
@@ -473,7 +473,7 @@ class TelegramBotDaemon:
                     if data.startswith("rerun_failed:"):
                         run_id = data.split(":")[1]
                         gh_bin = AriaEngineerTools.get_gh_bin()
-                        subprocess.run([gh_bin, "run", "rerun", run_id, "--failed", "-R", "alexkingston1993/MoneyPrinterTurbo"], capture_output=True)
+                        subprocess.run([gh_bin, "run", "rerun", run_id, "--failed", "-R", "alexkingston1993/the-bull-print"], capture_output=True)
                         self.send_message(chat_id, f"🔄 *Agent Aria:* Dispatched re-run for failed jobs in Run `#{run_id}`! ☕🚀")
                     elif data.startswith("run_slot:"):
                         slot = data.split(":")[1]

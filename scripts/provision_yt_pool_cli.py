@@ -283,7 +283,7 @@ def main() -> int:
     ap.add_argument("--slot", type=int, default=0, help="Slot number (e.g. 2 or 3)")
     ap.add_argument("--authorize", action="store_true", help="Authorize a slot via interactive browser consent")
     ap.add_argument("--bootstrap", metavar="LANG", help="en|ta|hi|slot number — interactive consent for a NEW slot")
-    ap.add_argument("--repo", default="alexkingston1993/MoneyPrinterTurbo")
+    ap.add_argument("--repo", default="alexkingston1993/the-bull-print")
     ap.add_argument("--profile", default="the-bull-print")
     args = ap.parse_args()
 

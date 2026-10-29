@@ -31,7 +31,7 @@ while len(completed) < len(TASK_MAP):
         if task_id in completed:
             continue
         
-        # Checking for final-1.mp4 (this is the completed file MoneyPrinterTurbo produces)
+        # Checking for final-1.mp4 (this is the completed file The Bull Print produces)
         final_video_path = os.path.join(BASE_DIR, task_id, "final-1.mp4")
         
         if os.path.exists(final_video_path):

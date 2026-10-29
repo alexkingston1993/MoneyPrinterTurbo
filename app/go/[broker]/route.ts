@@ -97,7 +97,7 @@ export async function GET(
   // Bounded-wait telemetry: serverless freezes after the response is returned and
   // kills fire-and-forget promises, so we track FIRST but cap the wait at ~1.2s —
   // the redirect ALWAYS fires (no lost clicks, no failed/slow redirects).
-  const repo = process.env.GITHUB_REPO || 'alexkingston1993/MoneyPrinterTurbo';
+  const repo = process.env.GITHUB_REPO || 'alexkingston1993/the-bull-print';
   const token = process.env.GITHUB_PAT_TOKEN || process.env.GITHUB_TOKEN || '';
   await Promise.race([
     trackAffiliateClick(

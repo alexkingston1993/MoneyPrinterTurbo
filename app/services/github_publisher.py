@@ -30,7 +30,7 @@ class GitHubVercelPublisher:
 
     def _load_config(self):
         gh_cfg = config._cfg.get("github", {}) or config.app.get("github", {})
-        self.repo = os.getenv("GITHUB_REPO", gh_cfg.get("repo", "alexkingston1993/MoneyPrinterTurbo"))
+        self.repo = os.getenv("GITHUB_REPO", gh_cfg.get("repo", "alexkingston1993/the-bull-print"))
         self.branch = gh_cfg.get("branch", "main")
         self.token = os.getenv("GITHUB_TOKEN", gh_cfg.get("token", ""))
         self.posts_dir = gh_cfg.get("posts_dir", "content/posts").strip("/")

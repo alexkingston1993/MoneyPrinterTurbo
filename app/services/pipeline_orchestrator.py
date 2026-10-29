@@ -3,7 +3,7 @@ Pipeline Orchestrator — Autonomous Multi-Modal Publishing Coordinator.
 
 Executes the unified loop:
 1. Ingests live NSE/BSE & macro data via MarketDataFetcher
-2. Generates video script + renders video with MoneyPrinterTurbo
+2. Generates video script + renders video with The Bull Print
 3. Uploads video to YouTube (retrieves published YouTube URL)
 4. Generates humanized 1,500w financial article with ArticleGenerator
 5. Publishes article to WordPress (embedding the YouTube video)

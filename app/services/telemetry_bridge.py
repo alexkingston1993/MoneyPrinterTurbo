@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 LOCAL_CACHE_DIR = BASE_DIR / "data" / "telemetry_cache"
 LOCAL_CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
-DEFAULT_REPO = "alexkingston1993/MoneyPrinterTurbo"
+DEFAULT_REPO = "alexkingston1993/the-bull-print"
 BRANCH = "telemetry-live"
 
 

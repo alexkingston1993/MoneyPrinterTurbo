@@ -447,7 +447,7 @@ class AriaCommandToolkit:
         try:
             gh_bin = "/usr/local/bin/gh" if os.path.exists("/usr/local/bin/gh") else (shutil.which("gh") or "gh")
             res = subprocess.run(
-                [gh_bin, "run", "list", "-R", "alexkingston1993/MoneyPrinterTurbo", "-L", "1", "--json", "status,conclusion,headSha,updatedAt,event"],
+                [gh_bin, "run", "list", "-R", "alexkingston1993/the-bull-print", "-L", "1", "--json", "status,conclusion,headSha,updatedAt,event"],
                 capture_output=True,
                 text=True,
                 timeout=10,
@@ -579,7 +579,7 @@ class AriaCommandToolkit:
         try:
             gh_bin = "/usr/local/bin/gh" if os.path.exists("/usr/local/bin/gh") else (shutil.which("gh") or "gh")
             res = subprocess.run(
-                [gh_bin, "workflow", "run", "market_publisher.yml", "-R", "alexkingston1993/MoneyPrinterTurbo", "-f", f"slot={clean_slot}"],
+                [gh_bin, "workflow", "run", "market_publisher.yml", "-R", "alexkingston1993/the-bull-print", "-f", f"slot={clean_slot}"],
                 capture_output=True,
                 text=True,
                 timeout=15,
@@ -676,7 +676,7 @@ class AriaCommandToolkit:
     # -----------------------------------------------------------------
     # 💰 AFFILIATE & REVENUE LEDGER (Zero-DB — GitHub Actions Repo Variable)
     # -----------------------------------------------------------------
-    GH_REPO = os.getenv("GITHUB_REPO", "alexkingston1993/MoneyPrinterTurbo")
+    GH_REPO = os.getenv("GITHUB_REPO", "alexkingston1993/the-bull-print")
     SITE_BASE = os.getenv("SITE_BASE_URL", "https://the-bull-print.vercel.app")
     BROKER_LABELS = {"zerodha": "Zerodha", "tradingview": "TradingView", "gocharting": "GoCharting", "delta": "Delta", "bybit": "Bybit"}
     EST_CVR = 0.04           # 4% refresh → funded-account conversion assumption

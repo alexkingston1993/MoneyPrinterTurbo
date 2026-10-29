@@ -4,7 +4,7 @@
 
 const { verifyToken, parseCookies } = require('./auth');
 
-const GH_REPO = process.env.GITHUB_REPO || 'alexkingston1993/MoneyPrinterTurbo';
+const GH_REPO = process.env.GITHUB_REPO || 'alexkingston1993/the-bull-print';
 const GH_TOKEN = process.env.GITHUB_PAT_TOKEN || process.env.GITHUB_TOKEN || '';
 const BRANCH = 'telemetry-live';
 

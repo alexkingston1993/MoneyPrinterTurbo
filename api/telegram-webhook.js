@@ -3,7 +3,7 @@
 
 const TG_TOKEN = process.env.TELEGRAM_BOT_TOKEN || '8829963924:AAE7v_xEQXLmy3-YEx8kqMo2GRfnbnxf4GA';
 const AUTH_CHAT_ID = process.env.TELEGRAM_CHAT_ID || '1126599043';
-const GH_REPO = process.env.GITHUB_REPO || 'alexkingston1993/MoneyPrinterTurbo';
+const GH_REPO = process.env.GITHUB_REPO || 'alexkingston1993/the-bull-print';
 const GH_TOKEN = process.env.GITHUB_PAT_TOKEN || process.env.GITHUB_TOKEN || '';
 
 // Multi-key support with environment variables

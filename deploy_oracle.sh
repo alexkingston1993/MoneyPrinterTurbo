@@ -43,7 +43,7 @@ CURRENT_USER=$(whoami)
 
 sudo bash -c "cat > $SERVICE_FILE" <<EOF
 [Unit]
-Description=MoneyPrinterTurbo Autonomous Live Market Daemon
+Description=The Bull Print Autonomous Live Market Daemon
 After=network.target ollama.service
 
 [Service]
