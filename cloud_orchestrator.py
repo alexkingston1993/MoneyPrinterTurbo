@@ -380,6 +380,9 @@ def _enforce_master_keys(data: Dict) -> Dict:
             derived.append(str(meta.get("title", data.get("topic", "The Bull Print daily insight")))[:70])
         web["tldr_summary"] = derived
 
+    if "thumbnail_top_text" not in meta or not meta["thumbnail_top_text"]:
+        meta["thumbnail_top_text"] = str(meta.get("title") or data.get("topic") or "THE MARKET TRAP")[:30]
+
     if not data.get("campaign_id"):
         title_cand = meta.get("title") or data.get("topic") or "market-insight"
         clean_slug = re.sub(r"[^a-zA-Z0-9]+", "-", str(title_cand).lower()).strip("-")[:50]
@@ -566,8 +569,9 @@ def generate_master_json_via_ai_studio(
             client = genai.Client(api_key=api_key)
             schema_dict = json.loads(schema_file.read_text(encoding="utf-8")) if schema_file.exists() else {}
 
+            # Strictly enforce high-quota models (1,500 req/day). Never allow gemini-flash-latest / 3.8 / pro which cap at 20 req/day
             _chosen_model = os.getenv("GEMINI_MODEL_NAME", "gemini-flash-lite-latest")
-            if not _chosen_model or "gemini-2.5-flash" in _chosen_model or "gemini-pro" in _chosen_model:
+            if not _chosen_model or "gemini-flash-lite" not in _chosen_model:
                 _chosen_model = "gemini-flash-lite-latest"
 
             logger.info(f"🧠 Calling Google AI Studio ({_chosen_model}) for {vertical} slot #{slot_index}...")
@@ -652,6 +656,7 @@ def run_kaggle_gpu_renderer(
         return vid_id, timestamps, [], 0
 
     # 1. Stage Kaggle Dataset — include the YT OAuth quota pool so the GPU kernel rotates slots
+    slot_index = payload.get("slot_index") or getattr(mission, "slot", 1) or getattr(mission, "slot_index", 1) or 1
     if short_thumb_path and Path(short_thumb_path).exists():
         shutil.copy2(short_thumb_path, KAGGLE_STAGE_DIR / "yt_short_thumb.jpg")
         logger.info("🎬 Staged 9:16 Shorts shelf thumbnail into Kaggle dataset")
@@ -669,7 +674,9 @@ def run_kaggle_gpu_renderer(
     if pool_json:
         try:
             (KAGGLE_STAGE_DIR / "yt_oauth_pool.json").write_text(pool_json, encoding="utf-8")
-            logger.info(f"🔐 Staged YT OAuth quota pool ({len(json.loads(pool_json))} slot(s)) into Kaggle dataset")
+            parsed_pool = json.loads(pool_json)
+            payload["yt_oauth_pool"] = parsed_pool
+            logger.info(f"🔐 Staged YT OAuth quota pool ({len(parsed_pool)} slot(s)) into Kaggle dataset")
         except Exception as e:
             logger.warning(f"Could not stage YT OAuth pool: {e}")
 
@@ -1229,9 +1236,22 @@ async def _async_main():
 
     # 4. Generate Thumbnail & Enter Approval Gate
     mission.update_stage("thumbnail", "🎨 Rendering Pillow Graphics...")
-    headline_words = payload["youtube_payload"]["metadata"]["thumbnail_top_text"].split()[:4]
-    primary_chart = BASE_DIR / "assets" / "charts" / chart_files[0]
+    yt_meta = payload.get("youtube_payload", {}).get("metadata", {})
+    top_text = yt_meta.get("thumbnail_top_text") or payload.get("thumbnail_top_text") or payload.get("title") or topic or "THE MARKET TRAP"
+    headline_words = str(top_text).split()[:4] or ["THE", "MARKET", "TRAP"]
+
+    primary_chart = None
+    if chart_files:
+        cand_chart = BASE_DIR / "assets" / "charts" / chart_files[0]
+        if cand_chart.exists():
+            primary_chart = cand_chart
+    if not primary_chart:
+        charts = list((BASE_DIR / "assets" / "charts").glob("*.png"))
+        primary_chart = charts[0] if charts else (BASE_DIR / "assets" / "charts" / "default_chart.png")
+
     avatar_1 = BASE_DIR / "assets" / "avatars" / "avatar_1.png"
+    if not avatar_1.exists():
+        avatar_1 = BASE_DIR / "assets" / "avatar_1.png"
     yt_thumb, discover_img = create_marketing_images(primary_chart, avatar_1, headline_words, slug)
 
     # Generate Variant B Thumbnail for T+6h CTR Rescue
@@ -1368,6 +1388,9 @@ async def _async_main():
                     short_thumb_path=(short_thumb_paths[0] if short_thumb_paths else None),
                     short_thumb_paths=short_thumb_paths,
                 )
+                if yt_video_id and (yt_video_id.startswith("DRY_RUN") or yt_video_id == "QUOTA_EXHAUSTED_ALL_SLOTS"):
+                    logger.warning(f"⚠️ Kaggle GPU returned non-published ID ({yt_video_id}). Engaging CPU Fallback Engine...")
+                    yt_video_id = None
             except Exception as kaggle_err:
                 logger.warning(f"⚠️ Kaggle GPU run failed or timed out ({kaggle_err}). Triggering uncrashable CPU Fallback Engine...")
                 yt_video_id = None

@@ -136,10 +136,20 @@ def _try_cloned_arjun_tts(text: str, mp3_path: Path) -> bool:
         from TTS.api import TTS
         
         latents_path = None
-        for p in [Path("/kaggle/input/flipzon-daily-payload/prabhat_latents.pt"), Path("prabhat_latents.pt")]:
+        for p in [
+            PAYLOAD_DIR / "prabhat_latents.pt",
+            Path("/kaggle/input/flipzon-daily-payload/prabhat_latents.pt"),
+            Path("prabhat_latents.pt"),
+            Path("/kaggle/working/prabhat_latents.pt"),
+            Path("/kaggle/src/prabhat_latents.pt"),
+        ]:
             if p.exists():
                 latents_path = p
                 break
+        if not latents_path and Path("/kaggle/input").exists():
+            matches = list(Path("/kaggle/input").rglob("prabhat_latents.pt"))
+            if matches:
+                latents_path = matches[0]
         if not latents_path:
             return False
             
@@ -617,6 +627,21 @@ def load_oauth_pool() -> list:
                         slots.append(s)
             except Exception as e:
                 print(f"{p} unparsable: {e}")
+
+    # Check payload.json directly for embedded yt_oauth_pool
+    for p in [PAYLOAD_DIR / "payload.json", Path("/kaggle/src/payload.json"), Path("/kaggle/working/payload.json"), Path("payload.json")]:
+        if p.exists():
+            try:
+                p_data = json.loads(p.read_text(encoding="utf-8"))
+                pool_data = p_data.get("yt_oauth_pool")
+                if pool_data:
+                    if isinstance(pool_data, dict):
+                        pool_data = [pool_data]
+                    for s in pool_data:
+                        if s.get("client_id") and s.get("client_secret") and s.get("refresh_token"):
+                            slots.append(s)
+            except Exception as e:
+                print(f"payload.json oauth extract note: {e}")
 
     if Path("/kaggle/input").exists():
         for match in Path("/kaggle/input").rglob("yt_oauth_pool.json"):
