@@ -58,7 +58,11 @@
       "pct": 60,
       "started_at": "2026-10-29T07:21:07Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "approval_status": "WAITING_APPROVAL",
+        "approval_deadline_ts": 1793258589,
+        "headline": "ON-CHAIN ALPHA WHALE DUMP!"
+      }
     },
     {
       "id": 5,
