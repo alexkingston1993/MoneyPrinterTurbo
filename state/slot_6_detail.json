@@ -5,13 +5,13 @@
   "vertical_label": "Slot #6",
   "shorts_count": 1,
   "status": "WAITING_APPROVAL",
-  "overall_pct": 80,
+  "overall_pct": 85,
   "stage_pct": 100,
-  "current_stage_index": 5,
-  "current_stage_name": "Kaggle T4 GPU Render Farm",
-  "current_subtask_label": "GPU render complete (17m 47s)",
+  "current_stage_index": 6,
+  "current_stage_name": "OpenMontage Post-Render QA Gate",
+  "current_subtask_label": "QA Audit: PASSED (mean dB: -14.4, black: 0.0)",
   "started_at": "2026-10-29T20:25:28Z",
-  "updated_at": "2026-10-29T20:51:40Z",
+  "updated_at": "2026-10-29T20:52:13Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -67,10 +67,10 @@
     {
       "id": 5,
       "name": "Kaggle T4 GPU Render Farm",
-      "status": "RUNNING",
+      "status": "COMPLETED",
       "pct": 100,
       "started_at": "2026-10-29T20:28:23Z",
-      "completed_at": null,
+      "completed_at": "2026-10-29T20:52:13Z",
       "metrics": {
         "voice_persona": "Arjun \u2014 Signature Cloned Voice",
         "kaggle_kernel_status": "COMPLETE",
@@ -83,9 +83,9 @@
     {
       "id": 6,
       "name": "OpenMontage Post-Render QA Gate",
-      "status": "PENDING",
-      "pct": 0,
-      "started_at": null,
+      "status": "RUNNING",
+      "pct": 100,
+      "started_at": "2026-10-29T20:52:13Z",
       "completed_at": null,
       "metrics": {}
     },
