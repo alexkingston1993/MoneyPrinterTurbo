@@ -1,17 +1,29 @@
 {
-  "updated_at": "2026-10-29T03:58:06Z",
+  "updated_at": "2026-10-29T04:18:11Z",
   "channel_median_vph": 0.2,
   "top_outperformers": [
+    {
+      "video_id": "t3ymfBTQZ78",
+      "title": "Why 90% Lose in Nifty F&O: The Math Behind Option Chain Open Interest! | The Math That Settles It #S",
+      "format": "LONG",
+      "published_at": "2026-10-29T03:56:32Z",
+      "hours_live": 0.5,
+      "view_count": 2,
+      "like_count": 0,
+      "comment_count": 1,
+      "views_per_hour": 4.0,
+      "engagement_rate": 1.5
+    },
     {
       "video_id": "ujBlVUq9WSo",
       "title": "The Truth About Mutual Funds India 3:15 PM Trap",
       "format": "LONG",
       "published_at": "2026-10-27T20:01:55Z",
-      "hours_live": 31.9,
+      "hours_live": 32.3,
       "view_count": 123,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 3.85,
+      "views_per_hour": 3.81,
       "engagement_rate": 0.0325
     },
     {
@@ -19,32 +31,20 @@
       "title": "Why \u20b93,200 Cr Dump? The Truth About Best Mutual Funds",
       "format": "LONG",
       "published_at": "2026-10-28T19:38:28Z",
-      "hours_live": 8.3,
+      "hours_live": 8.7,
       "view_count": 8,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 0.96,
+      "views_per_hour": 0.92,
       "engagement_rate": 0.5
-    },
-    {
-      "video_id": "OtQ5ttfyt3U",
-      "title": "The Math Retail Misses: Bitcoin Liquidation Heatmap & Fundi #Shorts",
-      "format": "SHORT",
-      "published_at": "2026-10-26T15:26:39Z",
-      "hours_live": 60.5,
-      "view_count": 51,
-      "like_count": 2,
-      "comment_count": 1,
-      "views_per_hour": 0.84,
-      "engagement_rate": 0.098
     }
   ],
   "bottom_underperformers": [
     {
-      "video_id": "-2K3qWYq6y8",
-      "title": "Nifty 50 Today Option Chain Analysis: Decoding Institutional Order Flow & Liquidity Traps",
-      "format": "LONG",
-      "published_at": "2026-10-29T03:57:12Z",
+      "video_id": "WUeH4yF1Lqo",
+      "title": "Crypto Tax Notice Survival Guide: Section 115BBH & 194S Forensics Explained",
+      "format": "SHORT",
+      "published_at": "2026-10-29T04:15:55Z",
       "hours_live": 0.5,
       "view_count": 0,
       "like_count": 0,
@@ -53,10 +53,10 @@
       "engagement_rate": 3.0
     },
     {
-      "video_id": "t3ymfBTQZ78",
-      "title": "Why 90% Lose in Nifty F&O: The Math Behind Option Chain Open Interest! | The Math That Settles It #S",
+      "video_id": "-2K3qWYq6y8",
+      "title": "Nifty 50 Today Option Chain Analysis: Decoding Institutional Order Flow & Liquidity Traps",
       "format": "LONG",
-      "published_at": "2026-10-29T03:56:32Z",
+      "published_at": "2026-10-29T03:57:12Z",
       "hours_live": 0.5,
       "view_count": 0,
       "like_count": 0,
