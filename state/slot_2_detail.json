@@ -204,6 +204,11 @@
       "ts": "07:11:05",
       "level": "INFO",
       "msg": "[KAGGLE_GPU]: \u26a1 CPU Fallback Engine Active (Kaggle Bypassed) | "
+    },
+    {
+      "ts": "07:11:13",
+      "level": "ERROR",
+      "msg": "Runner failed: No module named 'moviepy'"
     }
   ]
 }
