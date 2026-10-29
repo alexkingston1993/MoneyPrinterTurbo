@@ -1,5 +1,60 @@
 [
   {
+    "title": "Crypto Funding Rates Explained: Master Perp Structure & Arbitrage Bots",
+    "slug": "TBP_CRYPTO_FUNDING_02",
+    "description": "Discover crypto funding rates explained thoroughly. Learn perp structure, open interest delta, exchange flows, and crypto funding rate arbitrage mechanics.",
+    "date": "2026-10-24",
+    "author": "Alex from Chennai",
+    "reading_time": "6 min read",
+    "word_count": 1291,
+    "categories": [
+      "Market Education",
+      "Institutional Flow",
+      "Risk Management"
+    ],
+    "tags": [
+      "Nifty",
+      "Bitcoin",
+      "Order Flow",
+      "Beginner Guide"
+    ],
+    "youtube_video_id": "gEkRKqYhCN4",
+    "charts": [
+      "btc_hourly_structure.png",
+      "btc_footprint_absorption.png",
+      "dxy_macro_liquidity.png"
+    ],
+    "content_path": "content/posts/TBP_CRYPTO_FUNDING_02.md"
+  },
+  {
+    "title": "Crypto funding rates explained (Short #2) #Shorts",
+    "slug": "TBP_CRYPTO_FUNDING_02-short-2",
+    "description": "Institutional analysis of Crypto funding rates explained for everyday investors.",
+    "date": "2026-10-29 07:44:19",
+    "vertical": "crypto",
+    "category": "Crypto",
+    "format": "SHORT",
+    "youtube_video_id": "BGQG71kmUMI",
+    "youtube_id": "BGQG71kmUMI",
+    "youtubeUrl": "https://www.youtube.com/shorts/BGQG71kmUMI",
+    "dossier_url": "/article.html?slug=TBP_CRYPTO_FUNDING_02",
+    "compliance_notes": "SEBI/IRDAI Zero-violation feedback verified"
+  },
+  {
+    "title": "Crypto funding rates explained (Short #1) #Shorts",
+    "slug": "TBP_CRYPTO_FUNDING_02-short-1",
+    "description": "Institutional analysis of Crypto funding rates explained for everyday investors.",
+    "date": "2026-10-29 07:44:19",
+    "vertical": "crypto",
+    "category": "Crypto",
+    "format": "SHORT",
+    "youtube_video_id": "ILk_hqAJD_8",
+    "youtube_id": "ILk_hqAJD_8",
+    "youtubeUrl": "https://www.youtube.com/shorts/ILk_hqAJD_8",
+    "dossier_url": "/article.html?slug=TBP_CRYPTO_FUNDING_02",
+    "compliance_notes": "SEBI/IRDAI Zero-violation feedback verified"
+  },
+  {
     "title": "Decoding SEBI F&O Rules: Institutional Trap Forensics & Order Flow",
     "slug": "sebi_fo_rules_04",
     "description": "Master sebi f&o rules with institutional order flow analysis, volume profile forensics, and risk management frameworks from The Bull Print.",
