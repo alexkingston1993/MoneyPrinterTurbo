@@ -184,6 +184,11 @@
       "ts": "07:09:53",
       "level": "INFO",
       "msg": "[KAGGLE_GPU]: \ud83d\udd25 Waking Dual-T4 GPU Kernel... | "
+    },
+    {
+      "ts": "07:10:10",
+      "level": "INFO",
+      "msg": "[KAGGLE_GPU]: \u23f3 Queued on Kaggle (0m 0s) | Waiting for free T4 node..."
     }
   ]
 }
