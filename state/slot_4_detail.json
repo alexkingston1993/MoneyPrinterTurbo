@@ -376,6 +376,11 @@
       "ts": "12:05:24",
       "level": "INFO",
       "msg": "[VERCEL]: \ud83d\udcdd Compiling MDX & IndexNow Ping... | "
+    },
+    {
+      "ts": "12:05:30",
+      "level": "INFO",
+      "msg": "[VERCEL]: \u2705 Live & Indexed (`https://the-bull-print.vercel.app/article.html?slug=sebi_fo_rules_04`) | \ud83c\udfac Shorts (2): UHCbNzCzB-E \u00b7 wGmLjO9xLKA \u00b7 \ud83d\udc26 X Thread: Skipped (X keys not set)"
     }
   ]
 }
