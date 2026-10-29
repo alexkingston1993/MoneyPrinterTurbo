@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-29T06:14:56Z",
+  "updated_at": "2026-10-29T06:14:59Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -9,7 +9,7 @@
       "vertical": "stock_market",
       "vertical_label": "Stock Market #1",
       "shorts_count": 2,
-      "status": "WAITING_APPROVAL",
+      "status": "FAILED",
       "overall_pct": 60,
       "stage_pct": 20,
       "current_stage": "Local CPU Media Engine",
