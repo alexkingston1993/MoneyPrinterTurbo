@@ -224,6 +224,11 @@
       "ts": "17:16:10",
       "level": "INFO",
       "msg": "[VERCEL]: \ud83d\udcdd Compiling MDX & IndexNow Ping... | "
+    },
+    {
+      "ts": "17:16:15",
+      "level": "INFO",
+      "msg": "[VERCEL]: \u2705 Live & Indexed (`https://the-bull-print.vercel.app/article.html?slug=INS-S45-06`) | \ud83d\udc26 X Thread: Skipped (X keys not set)"
     }
   ]
 }
