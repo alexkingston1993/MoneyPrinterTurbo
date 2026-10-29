@@ -103,7 +103,16 @@
       "pct": 100,
       "started_at": "2026-10-29T03:57:37Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "yt_long_id": "-2K3qWYq6y8",
+        "yt_short_ids": [
+          "jzAdid46TU4",
+          "t3ymfBTQZ78"
+        ],
+        "oauth_slot_used": 1,
+        "article_url": "https://the-bull-print.vercel.app/article.html?slug=TBP-NIFTY-50-2025-01",
+        "x_thread_url": "Skipped (X keys not set)"
+      }
     }
   ],
   "live_logs": [
