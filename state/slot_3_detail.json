@@ -58,7 +58,11 @@
       "pct": 60,
       "started_at": "2026-10-29T04:18:23Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "approval_status": "WAITING_APPROVAL",
+        "approval_deadline_ts": 1793247606,
+        "headline": "CLAIM CUTS EXPOSED"
+      }
     },
     {
       "id": 5,
