@@ -58,7 +58,11 @@
       "pct": 60,
       "started_at": "2026-10-29T03:58:19Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "approval_status": "WAITING_APPROVAL",
+        "approval_deadline_ts": 1793246412,
+        "headline": "CRYPTO TAX NOTICE AUDIT"
+      }
     },
     {
       "id": 5,
