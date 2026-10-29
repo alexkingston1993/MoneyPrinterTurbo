@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-29T03:35:59Z",
+  "updated_at": "2026-10-29T03:58:06Z",
   "channel_median_vph": 0.2,
   "top_outperformers": [
     {
@@ -7,11 +7,11 @@
       "title": "The Truth About Mutual Funds India 3:15 PM Trap",
       "format": "LONG",
       "published_at": "2026-10-27T20:01:55Z",
-      "hours_live": 31.6,
+      "hours_live": 31.9,
       "view_count": 123,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 3.9,
+      "views_per_hour": 3.85,
       "engagement_rate": 0.0325
     },
     {
@@ -19,11 +19,11 @@
       "title": "Why \u20b93,200 Cr Dump? The Truth About Best Mutual Funds",
       "format": "LONG",
       "published_at": "2026-10-28T19:38:28Z",
-      "hours_live": 8.0,
+      "hours_live": 8.3,
       "view_count": 8,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 1.01,
+      "views_per_hour": 0.96,
       "engagement_rate": 0.5
     },
     {
@@ -31,50 +31,50 @@
       "title": "The Math Retail Misses: Bitcoin Liquidation Heatmap & Fundi #Shorts",
       "format": "SHORT",
       "published_at": "2026-10-26T15:26:39Z",
-      "hours_live": 60.2,
-      "view_count": 53,
+      "hours_live": 60.5,
+      "view_count": 51,
       "like_count": 2,
       "comment_count": 1,
-      "views_per_hour": 0.88,
-      "engagement_rate": 0.0943
+      "views_per_hour": 0.84,
+      "engagement_rate": 0.098
     }
   ],
   "bottom_underperformers": [
     {
-      "video_id": "yr2IVf-0aWM",
-      "title": "The Math Retail Misses: Health Insurance Claim Settlement R #Shorts (Institutional Breakdown) (",
-      "format": "SHORT",
-      "published_at": "2026-10-26T15:30:01Z",
-      "hours_live": 60.1,
-      "view_count": 2,
+      "video_id": "-2K3qWYq6y8",
+      "title": "Nifty 50 Today Option Chain Analysis: Decoding Institutional Order Flow & Liquidity Traps",
+      "format": "LONG",
+      "published_at": "2026-10-29T03:57:12Z",
+      "hours_live": 0.5,
+      "view_count": 0,
       "like_count": 0,
       "comment_count": 1,
-      "views_per_hour": 0.03,
-      "engagement_rate": 1.5
+      "views_per_hour": 0.0,
+      "engagement_rate": 3.0
     },
     {
-      "video_id": "b02BMahomyE",
-      "title": "Don't Fall for the 24500 Trap: Why 90% of Everyday Buyers Lose Money (Institutional Breakdown)",
-      "format": "SHORT",
-      "published_at": "2026-10-24T10:03:39Z",
-      "hours_live": 113.5,
-      "view_count": 3,
-      "like_count": 1,
-      "comment_count": 1,
-      "views_per_hour": 0.03,
-      "engagement_rate": 1.3333
-    },
-    {
-      "video_id": "dxhUWlm3DUQ",
-      "title": "The Institutional Compounding Secret: How Smart Money Traps Retail in F&O (Institutional Breakd",
+      "video_id": "t3ymfBTQZ78",
+      "title": "Why 90% Lose in Nifty F&O: The Math Behind Option Chain Open Interest! | The Math That Settles It #S",
       "format": "LONG",
-      "published_at": "2026-10-23T08:54:42Z",
-      "hours_live": 138.7,
-      "view_count": 3,
-      "like_count": 1,
+      "published_at": "2026-10-29T03:56:32Z",
+      "hours_live": 0.5,
+      "view_count": 0,
+      "like_count": 0,
       "comment_count": 1,
-      "views_per_hour": 0.02,
-      "engagement_rate": 1.3333
+      "views_per_hour": 0.0,
+      "engagement_rate": 3.0
+    },
+    {
+      "video_id": "jzAdid46TU4",
+      "title": "The Nifty Option Trap Retailers Fall For Every Single Day! | The Trap Nobody Talks About #Shorts",
+      "format": "SHORT",
+      "published_at": "2026-10-29T03:55:44Z",
+      "hours_live": 0.5,
+      "view_count": 0,
+      "like_count": 0,
+      "comment_count": 1,
+      "views_per_hour": 0.0,
+      "engagement_rate": 3.0
     }
   ],
   "winning_hook_patterns": [
