@@ -93,12 +93,12 @@ def _split_into_sentence_chunks(text: str, max_chars: int = 350) -> List[str]:
 
 def synthesize_audio_prabhat(text: str, output_path: str) -> Tuple[float, List[Tuple[float, float, str]]]:
     """
-    Synthesizes speech using Microsoft Azure Neural en-IN-PrabhatNeural.
+    Synthesizes speech strictly using cloned Arjun voice engine.
     Generates audio and synchronized subtitle cue entries.
     """
     import asyncio
-    import edge_tts
     import soundfile as sf
+    import tempfile
 
     try:
         from app.services.tts_normalizer import normalize_script_for_tts
@@ -107,19 +107,24 @@ def synthesize_audio_prabhat(text: str, output_path: str) -> Tuple[float, List[T
         pass
 
     chunks = _split_into_sentence_chunks(text, max_chars=320)
-    _log(f"[TTS] Synthesizing {len(text)} chars across {len(chunks)} chunks with en-IN-PrabhatNeural...")
+    _log(f"[TTS] Synthesizing {len(text)} chars across {len(chunks)} chunks with Arjun cloned voice...")
 
     combined_audio = bytearray()
     subtitle_entries: List[Tuple[float, float, str]] = []
     current_time_offset = 0.0
 
+    from app.services.cloned_prabhat_tts import synthesize_arjun_voice
+
     async def _synth_chunk(c_text: str) -> bytes:
-        comm = edge_tts.Communicate(c_text, "en-IN-PrabhatNeural", rate="+0%")
-        b = bytearray()
-        async for item in comm.stream():
-            if item["type"] == "audio":
-                b.extend(item["data"])
-        return bytes(b)
+        with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as tmp:
+            tmp_path = tmp.name
+        try:
+            synthesize_arjun_voice(c_text, tmp_path)
+            with open(tmp_path, "rb") as f:
+                return f.read()
+        finally:
+            if os.path.exists(tmp_path):
+                os.unlink(tmp_path)
 
     for i, chunk in enumerate(chunks):
         success = False

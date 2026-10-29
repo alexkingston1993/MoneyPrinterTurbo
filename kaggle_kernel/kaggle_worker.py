@@ -18,10 +18,9 @@ import subprocess
 from pathlib import Path
 
 # Ephemeral container package setup
-subprocess.run(["pip", "install", "-q", "edge-tts", "faster-whisper", "google-api-python-client", "google-auth"], check=False)
+subprocess.run(["pip", "install", "-q", "TTS", "soundfile", "faster-whisper", "google-api-python-client", "google-auth"], check=False)
 
 try:
-    import edge_tts
     from faster_whisper import WhisperModel
     from google.oauth2.credentials import Credentials
     from google.auth.transport.requests import Request
@@ -192,24 +191,49 @@ def _try_cloned_arjun_tts(text: str, mp3_path: Path) -> bool:
         return False
 
 
+def _sanitize_spoken_text(text: str) -> str:
+    """Sanitizes text so spoken audio never slurs URLs or domains."""
+    if not text:
+        return ""
+    clean = text
+    # First, replace domain/brand variations with clean spoken 'The Bull Print'
+    clean = re.sub(r'https?://(www\.)?the-bull-print\.vercel\.app[^\s]*', 'The Bull Print', clean, flags=re.I)
+    clean = re.sub(r'https?://(www\.)?thebullprint\.in[^\s]*', 'The Bull Print', clean, flags=re.I)
+    clean = re.sub(r'https?://(www\.)?pebbleprint\.in[^\s]*', 'The Bull Print', clean, flags=re.I)
+    clean = re.sub(r'\bthe-bull-print\.vercel\.app\b', 'The Bull Print', clean, flags=re.I)
+    clean = re.sub(r'\bthebullprint\.in\b', 'The Bull Print', clean, flags=re.I)
+    clean = re.sub(r'\bpebbleprint\.in\b', 'The Bull Print', clean, flags=re.I)
+    clean = re.sub(r'\bpebbleprint\b', 'The Bull Print', clean, flags=re.I)
+    clean = re.sub(r'\bthebullprint\b', 'The Bull Print', clean, flags=re.I)
+    # Then strip any remaining generic URLs
+    clean = re.sub(r'https?://[^\s]+', '', clean)
+    clean = re.sub(r'[\r\n]+', ' ', clean)
+    clean = re.sub(r'\s+', ' ', clean).strip()
+    return clean
+
+
 async def make_tts_and_subtitles(text: str, mp3_path: Path, ass_path: Path, persona: dict = None) -> float:
-    """Generates audio via Cloned Arjun / Arjun Neural + word-level Hormozi ASS subtitles via Faster-Whisper."""
-    # 1. Try 100% offline Cloned Arjun first
-    generated_offline = _try_cloned_arjun_tts(text, mp3_path)
-    
-    # 2. Resilient fallback with 3-attempt exponential backoff using Arjun profile
-    if not generated_offline or not mp3_path.exists() or mp3_path.stat().st_size <= 1024:
-        persona = persona or select_voice_persona("stock_market")
-        for attempt in range(1, 4):
-            try:
-                comm = edge_tts.Communicate(text=text, voice=persona["voice"], rate=persona.get("rate", "+3%"), pitch=persona.get("pitch", "-2Hz"))
-                await comm.save(str(mp3_path))
-                if mp3_path.exists() and mp3_path.stat().st_size > 1024:
-                    break
-            except Exception as e:
-                if attempt == 3:
-                    raise e
-                await asyncio.sleep(2 * attempt)
+    """Generates audio exclusively via Cloned Arjun voice + word-level Hormozi ASS subtitles via Faster-Whisper."""
+    # 1. Check if pre-synthesized signature Arjun audio is already staged in payload (Option A)
+    if not (mp3_path.exists() and mp3_path.stat().st_size > 1024):
+        for candidate_dir in [PAYLOAD_DIR, Path("/kaggle/input/flipzon-daily-payload"), Path(".")]:
+            cand = candidate_dir / mp3_path.name
+            if cand.exists() and cand.stat().st_size > 1024:
+                import shutil
+                shutil.copy2(cand, mp3_path)
+                print(f"[Kaggle-Arjun] Using pre-synthesized signature audio track: {cand.name}")
+                break
+
+    # 2. If not pre-staged, synthesize offline on Kaggle GPU using Arjun latents (Option B)
+    if not (mp3_path.exists() and mp3_path.stat().st_size > 1024):
+        clean_text = _sanitize_spoken_text(text)
+        success = _try_cloned_arjun_tts(clean_text, mp3_path)
+        if not success or not mp3_path.exists() or mp3_path.stat().st_size <= 1024:
+            raise RuntimeError(f"FATAL: Offline Arjun voice synthesis failed for text: {text[:60]}. Edge-TTS fallback is strictly forbidden.")
+
+    # 3. Hard audio verification gate
+    if not mp3_path.exists() or mp3_path.stat().st_size <= 1024:
+        raise RuntimeError(f"FATAL: Missing or corrupted audio track {mp3_path}")
 
     res = subprocess.run(
         ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(mp3_path)],
@@ -757,6 +781,39 @@ def upload_youtube_headless(mp4_path: Path, thumb_path: Path, yt_payload: dict) 
     return "QUOTA_EXHAUSTED_ALL_SLOTS"
 
 
+def format_vertical_description(short_data: dict, vertical: str, long_video_id: str = "") -> str:
+    """Formats sentence-safe YouTube Shorts description with vertical-specific disclaimer and real domain."""
+    spoken = str(short_data.get("spoken_hook_and_body") or short_data.get("hook") or "").strip()
+    sentences = [s.strip() for s in re.split(r'(?<=[.?!])\s+', spoken) if s.strip()]
+    hook_summary = ""
+    for s in sentences:
+        if len(hook_summary) + len(s) + 1 <= 240:
+            hook_summary = f"{hook_summary} {s}".strip()
+        else:
+            if not hook_summary:
+                hook_summary = s[:240].rsplit(' ', 1)[0] + "..."
+            break
+    if not hook_summary:
+        hook_summary = spoken[:200].rsplit(' ', 1)[0] + "..." if len(spoken) > 200 else spoken
+
+    vert = (vertical or "").lower()
+    if vert == "insurance":
+        disclaimer = "🛡️ IRDAI Educational Forensics: Policy terms, room-rent math & claim forensics only — check your policy schedule."
+        dossier_text = "🔍 Read the full Policy Forensic Dossier & Claim Audit: https://thebullprint.in"
+    elif "crypto" in vert:
+        disclaimer = "⚡ VDA & On-Chain Educational Research: Market structure & liquidity risk analysis only — not financial advice."
+        dossier_text = "📊 Full On-Chain CVD & Tax Dossier: https://thebullprint.in"
+    else:
+        disclaimer = "📌 SEBI Educational Research: Market structure, order-flow & derivative dynamics only — not investment advice."
+        dossier_text = "📈 Full Institutional Order-Flow Dossier: https://thebullprint.in"
+
+    parts = [hook_summary, ""]
+    if long_video_id:
+        parts.extend([f"▶️ Watch the FULL MASTERCLASS: https://youtu.be/{long_video_id}", ""])
+    parts.extend([dossier_text, "🛠️ Free Financial Tools & Calculators: https://thebullprint.in", "", disclaimer])
+    return "\n".join(parts)
+
+
 async def render_and_upload_short_gpu(payload: dict, long_video_id: str, short_data: dict = None, short_index: int = 1, vertical: str = "") -> str:
     """Renders ONE 9:16 companion #Short (Ken Burns chart top / avatar bottom / emerald
     divider / HUD ticker) with vertical Hormozi subtitles and uploads headless to YouTube.
@@ -834,14 +891,16 @@ async def render_and_upload_short_gpu(payload: dict, long_video_id: str, short_d
         tail.append(subs.lstrip(","))
 
     has_cover = short_thumb.exists()
-    # 100% Fullscreen 9:16 Canvas with Ken Burns motion & subtle dark vignette
+    # Uncropped 9:16 Canvas: Blurred backdrop + sharp 1040px center card + 1.5s cover overlay
     if has_cover:
         filter_graph = (
-            "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,"
-            "zoompan=z='min(zoom+0.0008,1.15)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:fps=30:s=1080x1920,"
-            "drawbox=x=0:y=0:w=1080:h=1920:color=black@0.30:t=fill[bg];"
+            "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=25:5,"
+            "drawbox=x=0:y=0:w=1080:h=1920:color=black@0.55:t=fill[bg];"
+            "[0:v]scale=1040:-1[fg_chart];"
+            "[bg][fg_chart]overlay=20:540[with_chart];"
+            "[with_chart]drawbox=x=18:y=538:w=1044:h=590:color=0x10B981@0.8:t=3[with_border];"
             "[1:v]scale=1080:1920[cover];"
-            "[bg][cover]overlay=0:0:enable='between(t,0,0.75)'[vbase]"
+            "[with_border][cover]overlay=0:0:enable='between(t,0,1.5)'[vbase]"
         )
         if tail:
             filter_graph += ";" + "[vbase]" + ",".join(tail) + "[v]"
@@ -855,9 +914,11 @@ async def render_and_upload_short_gpu(payload: dict, long_video_id: str, short_d
         audio_idx = 2
     else:
         filter_graph = (
-            "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,"
-            "zoompan=z='min(zoom+0.0008,1.15)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:fps=30:s=1080x1920,"
-            "drawbox=x=0:y=0:w=1080:h=1920:color=black@0.30:t=fill"
+            "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=25:5,"
+            "drawbox=x=0:y=0:w=1080:h=1920:color=black@0.55:t=fill[bg];"
+            "[0:v]scale=1040:-1[fg_chart];"
+            "[bg][fg_chart]overlay=20:540[with_chart];"
+            "[with_chart]drawbox=x=18:y=538:w=1044:h=590:color=0x10B981@0.8:t=3"
         )
         if tail:
             filter_graph += "," + ",".join(tail)
@@ -897,12 +958,8 @@ async def render_and_upload_short_gpu(payload: dict, long_video_id: str, short_d
     short_title = str(short_data.get("short_title", "") or meta.get("title", "The Bull Print Daily Brief"))
     if angle_suffix and angle_suffix.lower() not in short_title.lower():
         short_title = f"{short_title} | {angle_suffix}"
-    description_body = (
-        f"{str(short_data.get('spoken_hook_and_body', ''))[:180]}\n\n"
-        f"▶️ Watch the FULL MASTERCLASS: https://youtu.be/{long_video_id}\n"
-        f"🛠️ Get every free trading tool: https://the-bull-print.vercel.app/tools\n\n"
-        f"🎓 SEBI: Educational content only — not investment advice."
-    )
+
+    description_body = format_vertical_description(short_data, vertical, long_video_id)
     short_yt_payload = {
         "metadata": {
             "title": f"{short_title} #Shorts",

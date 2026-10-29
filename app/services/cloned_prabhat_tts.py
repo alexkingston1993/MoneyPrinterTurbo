@@ -8,7 +8,9 @@ latents from authentic Prabhat training audio.
 
 import os
 import re
+import subprocess
 import time
+from pathlib import Path
 from typing import Optional, Union
 
 import numpy as np
@@ -179,3 +181,76 @@ def cloned_prabhat_tts(
     except Exception as e:
         logger.error(f"[XTTS-Prabhat] Local synthesis error: {e}")
         return None
+
+
+def sanitize_spoken_text_for_arjun(text: str) -> str:
+    """
+    Sanitizes text so spoken audio never slurs URLs or domain names into gibberish.
+    Replaces any mention of 'thebullprint.in' / 'pebbleprint' with clean spoken 'The Bull Print'.
+    """
+    if not text:
+        return ""
+    clean = text
+    # First, replace domain/brand variations with clean spoken 'The Bull Print'
+    clean = re.sub(r'https?://(www\.)?the-bull-print\.vercel\.app[^\s]*', 'The Bull Print', clean, flags=re.I)
+    clean = re.sub(r'https?://(www\.)?thebullprint\.in[^\s]*', 'The Bull Print', clean, flags=re.I)
+    clean = re.sub(r'https?://(www\.)?pebbleprint\.in[^\s]*', 'The Bull Print', clean, flags=re.I)
+    clean = re.sub(r'\bthe-bull-print\.vercel\.app\b', 'The Bull Print', clean, flags=re.I)
+    clean = re.sub(r'\bthebullprint\.in\b', 'The Bull Print', clean, flags=re.I)
+    clean = re.sub(r'\bpebbleprint\.in\b', 'The Bull Print', clean, flags=re.I)
+    clean = re.sub(r'\bpebbleprint\b', 'The Bull Print', clean, flags=re.I)
+    clean = re.sub(r'\bthebullprint\b', 'The Bull Print', clean, flags=re.I)
+    # Then strip any remaining generic URLs
+    clean = re.sub(r'https?://[^\s]+', '', clean)
+    # Normalize excessive punctuation and whitespace
+    clean = re.sub(r'[\r\n]+', ' ', clean)
+    clean = re.sub(r'\s+', ' ', clean).strip()
+    return clean
+
+
+def synthesize_arjun_voice(
+    text: str,
+    output_path: Union[str, Path],
+    voice_rate: float = 1.0,
+    voice_volume: float = 1.0,
+) -> bool:
+    """
+    Synthesizes speech strictly and exclusively using the cloned Arjun (Prabhat) voice.
+    Under NO circumstances will this fall back to Microsoft Edge-TTS or random voices.
+    Guarantees that the output audio file is non-empty and verified.
+    """
+    out_p = Path(output_path).resolve()
+    out_p.parent.mkdir(parents=True, exist_ok=True)
+
+    clean_text = sanitize_spoken_text_for_arjun(text)
+    if not clean_text:
+        raise ValueError("[Arjun-Voice] Cannot synthesize empty or blank narration.")
+
+    is_mp3 = out_p.suffix.lower() == ".mp3"
+    wav_path = out_p.with_suffix(".wav") if is_mp3 else out_p
+
+    logger.info(f"🎙️ [Arjun-Voice] Synthesizing signature audio ({len(clean_text)} chars) -> {out_p.name}")
+    sub = cloned_prabhat_tts(
+        text=clean_text,
+        voice_file=str(wav_path),
+        voice_rate=voice_rate,
+        voice_volume=voice_volume,
+    )
+
+    if not wav_path.exists() or wav_path.stat().st_size <= 1024:
+        raise RuntimeError(f"FATAL: Local Arjun cloned voice engine failed to synthesize audio for: {clean_text[:60]}")
+
+    if is_mp3:
+        subprocess.run(
+            ["ffmpeg", "-y", "-i", str(wav_path), "-codec:a", "libmp3lame", "-qscale:a", "2", str(out_p)],
+            check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+        )
+        if wav_path.exists() and wav_path != out_p:
+            wav_path.unlink()
+
+    if not out_p.exists() or out_p.stat().st_size <= 1024:
+        raise RuntimeError(f"FATAL: Arjun voice output {out_p} is missing or corrupted after conversion.")
+
+    logger.success(f"✓ [Arjun-Voice] Verified signature audio: {out_p.name} ({out_p.stat().st_size} bytes)")
+    return True
+

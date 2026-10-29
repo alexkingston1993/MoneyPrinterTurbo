@@ -344,78 +344,130 @@ def create_marketing_images(
 
 
 def generate_high_ctr_short_cover(headline: str, vertical: str, output_path: str) -> str:
-    """Generates high-contrast 9:16 vertical cover for YouTube Shorts with massive readable typography,
-    technical order flow grid lines, and glowing focal box."""
-    from PIL import Image, ImageDraw, ImageFont
+    """Generates viral high-CTR 9:16 vertical cover for YouTube Shorts with massive 110pt+ typography,
+    neon color splashes, 3D drop shadows, and high-impact shock badges."""
+    from PIL import Image, ImageDraw, ImageFont, ImageFilter
     import re
 
     width, height = 1080, 1920
-    img = Image.new("RGB", (width, height), color="#090d16")
+    vert = (vertical or "").lower()
+
+    # Determine theme palette
+    is_bearish = any(w in (headline or "").lower() for w in BEARISH_MARKERS) or "trap" in (headline or "").lower()
+    if is_bearish or "insurance" in vert:
+        theme_glow = (239, 68, 68)       # Neon Red #EF4444
+        theme_accent = "#FF3B30"
+        pill_bg = "#EF4444"
+        pill_text = "🚨 CRITICAL FORENSIC AUDIT" if "insurance" in vert else "⚠️ HIGH-RISK TRAP WARNING"
+    elif "crypto" in vert:
+        theme_glow = (168, 85, 247)      # Neon Purple/Cyan
+        theme_accent = "#A855F7"
+        pill_bg = "#8B5CF6"
+        pill_text = "⚡ ON-CHAIN LIQUIDITY SHOCK"
+    else:
+        theme_glow = (16, 185, 129)      # Neon Emerald #10B981
+        theme_accent = "#10B981"
+        pill_bg = "#10B981"
+        pill_text = "📊 INSTITUTIONAL ORDER FLOW"
+
+    # Base canvas with deep tech dark vignette
+    img = Image.new("RGBA", (width, height), color=(10, 14, 23, 255))
     draw = ImageDraw.Draw(img)
 
-    vert = (vertical or "").lower()
-    accent_color = "#10b981" if "stock" in vert else ("#06b6d4" if "crypto" in vert else "#f59e0b")
-    glow_color = (16, 185, 129) if "stock" in vert else ((6, 182, 212) if "crypto" in vert else (245, 158, 11))
+    # Vivid multi-stop radial glow centered at upper-third (y=700)
+    center_x, center_y = width // 2, 680
+    glow_surf = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+    gdraw = ImageDraw.Draw(glow_surf)
+    for r in range(540, 0, -25):
+        alpha = int(45 * (1.0 - r / 540.0))
+        gdraw.ellipse(
+            [center_x - r, center_y - r, center_x + r, center_y + r],
+            fill=(theme_glow[0], theme_glow[1], theme_glow[2], alpha)
+        )
+    img = Image.alpha_composite(img, glow_surf)
+    draw = ImageDraw.Draw(img)
 
-    # Radial gradient background
-    center_y = 650
-    for r in range(500, 0, -20):
-        glow_box = [width // 2 - r, center_y - r, width // 2 + r, center_y + r]
-        draw.ellipse(glow_box, fill=(glow_color[0] // 6, glow_color[1] // 6, glow_color[2] // 6))
+    # Subtle tech matrix grid
+    for x in range(0, width, 90):
+        draw.line([(x, 0), (x, height)], fill=(255, 255, 255, 8), width=1)
+    for y in range(0, height, 90):
+        draw.line([(0, y), (width, y)], fill=(255, 255, 255, 8), width=1)
 
-    # Abstract order flow grid lines for technical depth
-    for x in range(0, width, 120):
-        draw.line([(x, 0), (x, height)], fill="#161f30", width=1)
-    for y in range(0, height, 120):
-        draw.line([(0, y), (width, y)], fill="#161f30", width=1)
+    # Top shock indicator pill (at y=340)
+    font_pill = _get_font(38)
+    pill_bbox = draw.textbbox((0, 0), pill_text, font=font_pill)
+    pill_w = pill_bbox[2] - pill_bbox[0] + 56
+    pill_h = 58
+    pill_x = (width - pill_w) // 2
+    pill_y = 330
+    draw.rounded_rectangle([pill_x, pill_y, pill_x + pill_w, pill_y + pill_h], radius=16, fill=pill_bg)
+    draw.text((pill_x + 28, pill_y + 8), pill_text, fill="#FFFFFF", font=font_pill)
 
-    # Glowing focal box in upper-middle (safe from YouTube bottom overlay)
-    box_rect = [70, 380, width - 70, 960]
-    draw.rectangle(box_rect, fill="#0f172a", outline=accent_color, width=5)
-
-    # Top indicator pill
-    pill_label = "INSTITUTIONAL ALERT" if "stock" in vert else ("ON-CHAIN ALPHA" if "crypto" in vert else "POLICY AUDIT")
-    font_pill = _get_font(34)
-    draw.rectangle([100, 345, 460, 400], fill=accent_color)
-    draw.text((115, 355), pill_label, fill="#000000", font=font_pill)
-
-    # Render bold uppercase text (headline split into 3-4 words per line)
-    font = _get_font(84)
-
+    # Clean headline into 3 punchy lines
     clean_headline = re.sub(r"#\S+", "", headline or "").strip().upper()
     clean_headline = re.sub(r"[^\w\s\$\₹\%\-\:\?]", "", clean_headline).strip()
-    words = clean_headline.split()[:8] or ["THE", "BULL", "PRINT"]
+    raw_words = clean_headline.split()[:7] or ["THE", "MARKET", "TRAP"]
 
     lines = []
-    current_line = ""
-    for w in words:
-        if len(current_line + " " + w) < 16:
-            current_line += (" " + w) if current_line else w
+    cur = ""
+    for w in raw_words:
+        trial = f"{cur} {w}".strip()
+        if len(trial) <= 14:
+            cur = trial
         else:
-            lines.append(current_line)
-            current_line = w
-    if current_line:
-        lines.append(current_line)
+            if cur: lines.append(cur)
+            cur = w
+    if cur: lines.append(cur)
+    lines = lines[:3]
 
-    lines = lines[:3]  # Max 3 massive lines
-    line_h = 105
-    total_text_h = len(lines) * line_h
-    y_text = 430 + (500 - total_text_h) // 2
+    font_size = 110 if len(lines) <= 2 else 96
+    font_headline = _get_font(font_size)
+    line_h = font_size + 24
+    total_h = len(lines) * line_h
+    start_y = 480 + (520 - total_h) // 2
 
     for idx, line in enumerate(lines):
-        # Drop shadow for max readability
-        draw.text((120 + 4, y_text + 4), line, fill="#000000", font=font)
-        # Highlight last line with accent/yellow
-        text_fill = "#facc15" if idx == len(lines) - 1 else "#ffffff"
-        draw.text((120, y_text), line, fill=text_fill, font=font)
-        y_text += line_h
+        line_bbox = draw.textbbox((0, 0), line, font=font_headline)
+        line_w = line_bbox[2] - line_bbox[0]
+        lx = (width - line_w) // 2
+        ly = start_y + idx * line_h
 
-    # Add bottom brand badge
-    font_brand = _get_font(36)
-    draw.text((120, 1750), "THE BULL PRINT • INSTITUTIONAL ALPHA", fill=accent_color, font=font_brand)
+        # 3D Deep drop shadow
+        for s_off in range(6, 12, 2):
+            draw.text((lx + s_off, ly + s_off), line, fill="#000000", font=font_headline)
+
+        # 6px thick black stroke in 8 directions
+        for ox in (-4, -2, 0, 2, 4):
+            for oy in (-4, -2, 0, 2, 4):
+                if ox != 0 or oy != 0:
+                    draw.text((lx + ox, ly + oy), line, fill="#000000", font=font_headline)
+
+        # Main text fill: Yellow/White/Neon
+        if idx == 0:
+            fill_col = "#FFFFFF"
+        elif idx == len(lines) - 1:
+            fill_col = "#FACC15"  # Shock Yellow
+        else:
+            fill_col = theme_accent
+        draw.text((lx, ly), line, fill=fill_col, font=font_headline)
+
+    # Callout pill badge below headline (y=1080)
+    callout_text = "WATCH BEFORE YOUR NEXT TRADE" if "stock" in vert else ("VERIFY YOUR POLICY SCHEDULE" if "insurance" in vert else "TRACK ON-CHAIN LIQUIDITY")
+    font_sub = _get_font(32)
+    s_bbox = draw.textbbox((0, 0), callout_text, font=font_sub)
+    s_w = s_bbox[2] - s_bbox[0] + 48
+    s_x = (width - s_w) // 2
+    s_y = 1060
+    draw.rounded_rectangle([s_x, s_y, s_x + s_w, s_y + 50], radius=12, fill="#0F172A", outline=theme_accent, width=2)
+    draw.text((s_x + 24, s_y + 8), callout_text, fill="#E2E8F0", font=font_sub)
+
+    # Bottom brand signature
+    font_brand = _get_font(30)
+    draw.text((80, 1780), "THE BULL PRINT • INSTITUTIONAL RESEARCH", fill=theme_accent, font=font_brand)
 
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    img.save(output_path, quality=95)
+    final_rgb = img.convert("RGB")
+    final_rgb.save(output_path, quality=95)
     logger.info(f"🎨 [High-CTR Shorts Cover] generated at {output_path}")
     return output_path
 

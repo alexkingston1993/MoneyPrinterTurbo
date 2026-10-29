@@ -98,63 +98,15 @@ def _ken_burns_body(size: str, drift: float = 0.16, sway: float = 24) -> str:
     )
 
 
-async def synthesize_speech(text: str, mp3_path: Path, persona: dict) -> float:
-    # 1. ALWAYS TRY LOCALLY CLONED ARJUN (XTTS-v2 OFFLINE) FIRST
-    try:
-        from app.services.cloned_prabhat_tts import cloned_prabhat_tts
-        wav_path = mp3_path.with_suffix(".wav")
-        res = cloned_prabhat_tts(text, str(wav_path))
-        if res and wav_path.exists() and wav_path.stat().st_size > 1024:
-            subprocess.run(
-                ["ffmpeg", "-y", "-i", str(wav_path), "-codec:a", "libmp3lame", "-qscale:a", "2", str(mp3_path)],
-                check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
-            )
-            if wav_path.exists():
-                wav_path.unlink()
-            if mp3_path.exists() and mp3_path.stat().st_size > 1024:
-                res_probe = subprocess.run(
-                    ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(mp3_path)],
-                    stdout=subprocess.PIPE, text=True, check=True
-                )
-                return float(res_probe.stdout.strip())
-    except Exception as e:
-        logger.warning(f"[Voice] Local Cloned Arjun TTS notice: {e}. Falling back to backup voices...")
-
-    # 2. Resilient Fallback to Edge-TTS with multi-candidate failover
-    import edge_tts
-    candidate_voices = [
-        persona.get("voice", "en-IN-PrabhatNeural"),
-        "en-IN-PrabhatNeural",
-        "en-US-AndrewNeural",
-        "en-US-BrianMultilingualNeural",
-    ]
-    seen = set()
-    candidate_voices = [v for v in candidate_voices if not (v in seen or seen.add(v))]
-
-    last_exc = None
-    for voice in candidate_voices:
-        try:
-            comm = edge_tts.Communicate(
-                text=text,
-                voice=voice,
-                rate=persona.get("rate", "+3%"),
-                pitch=persona.get("pitch", "-1Hz"),
-            )
-            await comm.save(str(mp3_path))
-            if mp3_path.exists() and mp3_path.stat().st_size > 1024:
-                break
-        except Exception as e:
-            last_exc = e
-            continue
-    else:
-        if last_exc:
-            raise last_exc
-
-    res = subprocess.run(
+async def synthesize_speech(text: str, mp3_path: Path, persona: dict = None) -> float:
+    """Synthesizes speech strictly and exclusively using the cloned Arjun voice engine."""
+    from app.services.cloned_prabhat_tts import synthesize_arjun_voice
+    synthesize_arjun_voice(text, mp3_path)
+    res_probe = subprocess.run(
         ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(mp3_path)],
         stdout=subprocess.PIPE, text=True, check=True
     )
-    return float(res.stdout.strip())
+    return float(res_probe.stdout.strip())
 
 
 def generate_hormozi_ass(text: str, duration: float, ass_path: Path, is_vertical: bool = False) -> None:

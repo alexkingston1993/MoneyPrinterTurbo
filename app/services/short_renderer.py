@@ -168,36 +168,9 @@ def _hud_filters(duration: float, vertical: str, fontfile: str = "", w: int = 10
     return chain
 
 
-async def make_short_tts_and_subtitles(text: str, mp3_path: Path, ass_path: Path, persona: dict) -> float:
-    import edge_tts
-    candidate_voices = [
-        persona.get("voice", "en-US-AndrewNeural"),
-        "en-US-AndrewNeural",
-        "en-US-ChristopherNeural",
-        "en-US-GuyNeural",
-        "en-US-BrianMultilingualNeural",
-    ]
-    seen = set()
-    candidate_voices = [v for v in candidate_voices if not (v in seen or seen.add(v))]
-
-    last_exc = None
-    for voice in candidate_voices:
-        try:
-            comm = edge_tts.Communicate(
-                text=text,
-                voice=voice,
-                rate=persona.get("rate", "+3%"),
-                pitch=persona.get("pitch", "+0Hz")
-            )
-            await comm.save(str(mp3_path))
-            if mp3_path.exists() and mp3_path.stat().st_size > 1024:
-                break
-        except Exception as e:
-            last_exc = e
-            continue
-    else:
-        if last_exc:
-            raise last_exc
+async def make_short_tts_and_subtitles(text: str, mp3_path: Path, ass_path: Path, persona: dict = None) -> float:
+    from app.services.cloned_prabhat_tts import synthesize_arjun_voice
+    synthesize_arjun_voice(text, mp3_path)
 
     res = subprocess.run(
         ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(mp3_path)],
@@ -247,6 +220,40 @@ def verify_short_qa(mp4_path: Path, expected_min_dur: float = 0.0) -> dict:
     except Exception as e:
         audit["reasons"].append(str(e))
     return audit
+
+
+def format_vertical_description(short_data: dict, vertical: str, long_video_id: str = "") -> str:
+    """Formats sentence-safe YouTube Shorts description with vertical-specific disclaimer and real domain."""
+    spoken = str(short_data.get("spoken_hook_and_body") or short_data.get("hook") or "").strip()
+    sentences = [s.strip() for s in re.split(r'(?<=[.?!])\s+', spoken) if s.strip()]
+    hook_summary = ""
+    for s in sentences:
+        if len(hook_summary) + len(s) + 1 <= 240:
+            hook_summary = f"{hook_summary} {s}".strip()
+        else:
+            if not hook_summary:
+                hook_summary = s[:240].rsplit(' ', 1)[0] + "..."
+            break
+    if not hook_summary:
+        hook_summary = spoken[:200].rsplit(' ', 1)[0] + "..." if len(spoken) > 200 else spoken
+
+    vert = (vertical or "").lower()
+    if vert == "insurance":
+        disclaimer = "🛡️ IRDAI Educational Forensics: Policy terms, room-rent math & claim forensics only — check your policy schedule."
+        dossier_text = "🔍 Read the full Policy Forensic Dossier & Claim Audit: https://thebullprint.in"
+    elif "crypto" in vert:
+        disclaimer = "⚡ VDA & On-Chain Educational Research: Market structure & liquidity risk analysis only — not financial advice."
+        dossier_text = "📊 Full On-Chain CVD & Tax Dossier: https://thebullprint.in"
+    else:
+        disclaimer = "📌 SEBI Educational Research: Market structure, order-flow & derivative dynamics only — not investment advice."
+        dossier_text = "📈 Full Institutional Order-Flow Dossier: https://thebullprint.in"
+
+    parts = [hook_summary, ""]
+    if long_video_id:
+        parts.extend([f"▶️ Watch the FULL MASTERCLASS: https://youtu.be/{long_video_id}", ""])
+    parts.extend([dossier_text, "🛠️ Free Financial Tools & Calculators: https://thebullprint.in", "", disclaimer])
+    return "\n".join(parts)
+
 
 
 async def render_and_upload_short_local(
@@ -320,13 +327,15 @@ async def render_and_upload_short_local(
     tail = list(hud_list)
     tail.append(f"subtitles='{ass.as_posix()}'")
 
-    # 100% Fullscreen 9:16 Canvas with Ken Burns motion & subtle dark vignette (Zero bottom-half logo)
+    # Uncropped 9:16 Canvas: Blurred backdrop + sharp 1040px center card + 1.5s cover overlay
     filter_graph = (
-        "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,"
-        "zoompan=z='min(zoom+0.0008,1.15)':x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':d=1:fps=30:s=1080x1920,"
-        "drawbox=x=0:y=0:w=1080:h=1920:color=black@0.30:t=fill[bg];"
+        "[0:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,boxblur=25:5,"
+        "drawbox=x=0:y=0:w=1080:h=1920:color=black@0.55:t=fill[bg];"
+        "[0:v]scale=1040:-1[fg_chart];"
+        "[bg][fg_chart]overlay=20:540[with_chart];"
+        "[with_chart]drawbox=x=18:y=538:w=1044:h=590:color=0x10B981@0.8:t=3[with_border];"
         "[1:v]scale=1080:1920[cover];"
-        "[bg][cover]overlay=0:0:enable='between(t,0,0.75)'[vbase]"
+        "[with_border][cover]overlay=0:0:enable='between(t,0,1.5)'[vbase]"
     )
     if tail:
         filter_graph += ";" + "[vbase]" + ",".join(tail) + "[v]"
@@ -354,11 +363,7 @@ async def render_and_upload_short_local(
         logger.error(f"❌ Local Short #{short_index} failed QA: {qa['reasons']}")
         return ""
 
-    description_body = (
-        f"{str(short_data.get('spoken_hook_and_body', ''))[:180]}\n\n"
-        f"🛠️ Get every free trading tool: https://the-bull-print.vercel.app/tools\n\n"
-        f"🎓 SEBI: Educational content only — not investment advice."
-    )
+    description_body = format_vertical_description(short_data, vertical)
     short_yt_payload = {
         "metadata": {
             "title": short_title,

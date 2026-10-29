@@ -700,6 +700,36 @@ def run_kaggle_gpu_renderer(
             shutil.copy2(src_v, KAGGLE_STAGE_DIR / vfile)
             logger.info(f"🎙️ Staged Cloned Arjun voice asset: {vfile}")
 
+    # Pre-synthesize authentic Cloned Arjun audio tracks for 100% voice consistency across cloud renderers
+    try:
+        from app.services.cloned_prabhat_tts import synthesize_arjun_voice
+        logger.info("🎙️ Pre-synthesizing signature Arjun audio tracks for Kaggle bundle...")
+        for idx, seg in enumerate(payload.get("script_segments", [])):
+            seg_audio_name = f"seg_{idx}.mp3"
+            seg_audio_path = KAGGLE_STAGE_DIR / seg_audio_name
+            spoken = seg.get("spoken_narration", "")
+            if spoken and (not seg_audio_path.exists() or seg_audio_path.stat().st_size <= 1024):
+                synthesize_arjun_voice(spoken, seg_audio_path)
+                logger.info(f"🎙️ Pre-synthesized Arjun segment {idx}: {seg_audio_name}")
+
+        yt_block = payload.get("youtube_payload", {})
+        shorts_list = yt_block.get("short_extractions") or []
+        if not shorts_list and yt_block.get("short_extraction"):
+            shorts_list = [yt_block["short_extraction"]]
+
+        for s_idx, s_data in enumerate(shorts_list, start=1):
+            short_audio_name = f"short_{s_idx}.mp3"
+            short_audio_path = KAGGLE_STAGE_DIR / short_audio_name
+            s_narration = " ".join(filter(None, [
+                str(s_data.get("spoken_hook_and_body", "")).strip(),
+                str(s_data.get("cta_to_long_video", "")).strip(),
+            ]))
+            if s_narration and (not short_audio_path.exists() or short_audio_path.stat().st_size <= 1024):
+                synthesize_arjun_voice(s_narration, short_audio_path)
+                logger.info(f"🎙️ Pre-synthesized Arjun short {s_idx}: {short_audio_name}")
+    except Exception as tts_pre_err:
+        logger.warning(f"🎙️ Pre-synthesis notice: {tts_pre_err} (Kaggle GPU will synthesize offline with bundled latents).")
+
     dataset_meta = {
         "title": "Flipzon Daily Payload",
         "id": f"{KAGGLE_USERNAME}/{DATASET_SLUG}",
@@ -708,7 +738,7 @@ def run_kaggle_gpu_renderer(
     (KAGGLE_STAGE_DIR / "dataset-metadata.json").write_text(json.dumps(dataset_meta), encoding="utf-8")
 
     vertical = payload.get("vertical") or getattr(mission, "vertical", None) or "stock_market"
-    voice_persona = "Andrew (Institutional Desk)" if vertical == "stock_market" else ("Brian (High-Beta Macro)" if vertical == "crypto" else "Prabhat (IRDAI Policy Forensics)")
+    voice_persona = "Arjun — Signature Cloned Voice"
 
     logger.info("☁️ Pushing payload & chart PNGs to Private Kaggle Dataset...")
     mission.update_stage("kaggle_gpu", "☁️ Pushing Dataset to Kaggle...")
@@ -791,6 +821,8 @@ def run_kaggle_gpu_renderer(
             if ava_path.exists():
                 shutil.copy2(ava_path, kernel_dir / "avatar_1.png")
                 break
+        for audio_file in KAGGLE_STAGE_DIR.glob("*.mp3"):
+            shutil.copy2(audio_file, kernel_dir / audio_file.name)
         logger.info(f"📦 Staged self-contained payload.json & assets into {kernel_dir}")
     except Exception as e:
         logger.warning(f"Could not copy direct payload to kernel_dir: {e}")

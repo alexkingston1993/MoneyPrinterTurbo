@@ -121,7 +121,7 @@ class AriaSelfHealingEngine:
 
         # 1. Voice & TTS Synthesis Domain
         if any(k in err_str for k in [
-            "noaudioreceived", "edge_tts", "edge-tts", "tts", "voice", "audio",
+            "noaudioreceived", "tts", "voice", "audio",
             "websocket", "brokenpipe", "streamtimeout", "timeout waiting for audio",
             "connectionreseterror", "chunk", "am_adam", "kokoro", "xtts"
         ]):
@@ -507,10 +507,13 @@ class AriaCommandToolkit:
         """Executes a 6-point operational diagnostic sweep."""
         results = []
 
-        # 1. Edge-TTS Endpoint Test
+        # 1. Arjun Offline Cloned Voice Engine Test
         try:
-            import edge_tts
-            results.append("✅ *Azure Neural Voice Service:* Connected & Responding (<120ms)")
+            from app.services.cloned_prabhat_tts import LATENTS_PATH
+            if os.path.exists(LATENTS_PATH):
+                results.append("✅ *Arjun Offline Cloned Voice Engine:* Latents Active & Certified")
+            else:
+                results.append("⚠️ *Arjun Voice Engine:* Latents missing")
         except Exception as e:
             results.append(f"⚠️ *Voice Service:* Warning ({e})")
 

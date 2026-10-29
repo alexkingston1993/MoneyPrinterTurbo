@@ -196,8 +196,8 @@ class AriaEngineerTools:
                 root_cause = "YouTube OAuth refresh token expired or revoked (invalid_grant). Needs one-click re-authorization."
             elif "remedy" in full_log:
                 root_cause = "Function signature parameter mismatch in self-healing retry loop (Resolved in commit bebf266)."
-            elif "NoAudioReceived" in full_log or "edge_tts" in full_log:
-                root_cause = "Azure Neural TTS websocket timeout on free consumer endpoint."
+            elif "NoAudioReceived" in full_log:
+                root_cause = "Audio synthesis timeout on generation endpoint."
             elif "pexels" in full_log or "materials" in full_log:
                 root_cause = "Stock B-roll query yielded zero clips for narrow entity search."
             elif "403" in full_log and "upload" in full_log:

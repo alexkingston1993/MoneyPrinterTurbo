@@ -1227,17 +1227,8 @@ def select_voice_for_language(language: str, default_voice: str = "") -> str:
         logger.info(f"using language-specific voice: {voice_key}={configured_voice}")
         return configured_voice
     
-    # Fallback: use edge_tts multilingual presets
-    edge_voice = MULTILINGUAL_EDGE_VOICES.get(lang)
-    if edge_voice:
-        voice = f"edge:{edge_voice['voice']}"
-        logger.info(f"using edge_tts fallback for {lang}: {voice}")
-        return voice
-    
-    # Ultimate fallback
-    if default_voice:
-        return default_voice
-    return config.ui.get("voice_name", "")
+    # Channel signature voice: Arjun (100% offline cloned voice)
+    return config.ui.get("voice_name") or "xtts:prabhat"
 
 
 def get_edge_voice_for_language(language: str) -> str:

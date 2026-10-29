@@ -236,21 +236,15 @@ print(f"DURATION={{__import__('soundfile').info('{output_path}').duration}}", fl
 
     @staticmethod
     def step_tts_fallback(text: str, output_path: str) -> Tuple[str, float]:
-        """Fallback TTS using edge-tts if Coqui fails."""
-        logger.info("TTS fallback: edge-tts")
-        import edge_tts
+        """Synthesizes speech strictly using cloned Arjun voice."""
+        from app.services.cloned_prabhat_tts import synthesize_arjun_voice
         import soundfile as sf
-
-        async def _gen():
-            communicate = edge_tts.Communicate(text, "en-US-JennyNeural")
-            await communicate.save(output_path)
-
         t0 = time.time()
-        asyncio.run(_gen())
+        synthesize_arjun_voice(text, output_path)
         elapsed = time.time() - t0
         data, sr = sf.read(output_path)
         duration = len(data) / sr
-        logger.info(f"TTS fallback: {duration:.0f}s in {elapsed:.1f}s")
+        logger.info(f"Arjun TTS: {duration:.0f}s in {elapsed:.1f}s")
         return output_path, duration
 
     @staticmethod
