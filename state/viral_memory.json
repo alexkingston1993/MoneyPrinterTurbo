@@ -1,29 +1,29 @@
 {
-  "updated_at": "2026-10-29T04:18:11Z",
-  "channel_median_vph": 0.2,
+  "updated_at": "2026-10-29T04:41:56Z",
+  "channel_median_vph": 0.15,
   "top_outperformers": [
     {
       "video_id": "t3ymfBTQZ78",
       "title": "Why 90% Lose in Nifty F&O: The Math Behind Option Chain Open Interest! | The Math That Settles It #S",
       "format": "LONG",
       "published_at": "2026-10-29T03:56:32Z",
-      "hours_live": 0.5,
-      "view_count": 2,
-      "like_count": 0,
+      "hours_live": 0.8,
+      "view_count": 3,
+      "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 4.0,
-      "engagement_rate": 1.5
+      "views_per_hour": 3.96,
+      "engagement_rate": 1.3333
     },
     {
       "video_id": "ujBlVUq9WSo",
       "title": "The Truth About Mutual Funds India 3:15 PM Trap",
       "format": "LONG",
       "published_at": "2026-10-27T20:01:55Z",
-      "hours_live": 32.3,
+      "hours_live": 32.7,
       "view_count": 123,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 3.81,
+      "views_per_hour": 3.77,
       "engagement_rate": 0.0325
     },
     {
@@ -31,20 +31,20 @@
       "title": "Why \u20b93,200 Cr Dump? The Truth About Best Mutual Funds",
       "format": "LONG",
       "published_at": "2026-10-28T19:38:28Z",
-      "hours_live": 8.7,
+      "hours_live": 9.1,
       "view_count": 8,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 0.92,
+      "views_per_hour": 0.88,
       "engagement_rate": 0.5
     }
   ],
   "bottom_underperformers": [
     {
-      "video_id": "WUeH4yF1Lqo",
-      "title": "Crypto Tax Notice Survival Guide: Section 115BBH & 194S Forensics Explained",
+      "video_id": "DA77ofQnZs4",
+      "title": "The Crypto Tax Trap Nobody Talks About! #Shorts",
       "format": "SHORT",
-      "published_at": "2026-10-29T04:15:55Z",
+      "published_at": "2026-10-29T04:17:14Z",
       "hours_live": 0.5,
       "view_count": 0,
       "like_count": 0,
@@ -57,7 +57,7 @@
       "title": "Nifty 50 Today Option Chain Analysis: Decoding Institutional Order Flow & Liquidity Traps",
       "format": "LONG",
       "published_at": "2026-10-29T03:57:12Z",
-      "hours_live": 0.5,
+      "hours_live": 0.7,
       "view_count": 0,
       "like_count": 0,
       "comment_count": 1,
@@ -69,12 +69,12 @@
       "title": "The Nifty Option Trap Retailers Fall For Every Single Day! | The Trap Nobody Talks About #Shorts",
       "format": "SHORT",
       "published_at": "2026-10-29T03:55:44Z",
-      "hours_live": 0.5,
+      "hours_live": 0.8,
       "view_count": 0,
-      "like_count": 0,
+      "like_count": 1,
       "comment_count": 1,
       "views_per_hour": 0.0,
-      "engagement_rate": 3.0
+      "engagement_rate": 4.0
     }
   ],
   "winning_hook_patterns": [
