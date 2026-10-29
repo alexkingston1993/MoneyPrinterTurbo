@@ -16,8 +16,13 @@ import edge_tts
 import requests
 from edge_tts import SubMaker, submaker
 from loguru import logger
-from moviepy.video.tools import subtitles
-from moviepy.audio.io.AudioFileClip import AudioFileClip
+try:
+    from moviepy.video.tools import subtitles
+    from moviepy.audio.io.AudioFileClip import AudioFileClip
+except Exception:
+    subtitles = None
+    AudioFileClip = None
+
 
 from app.config import config
 from app.utils import utils

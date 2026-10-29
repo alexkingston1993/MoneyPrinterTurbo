@@ -18,7 +18,8 @@ import subprocess
 from pathlib import Path
 
 # Ephemeral container package setup
-subprocess.run(["pip", "install", "-q", "edge-tts", "TTS", "soundfile", "faster-whisper", "google-api-python-client", "google-auth"], check=False)
+subprocess.run(["pip", "install", "-q", "edge-tts", "soundfile", "faster-whisper", "google-api-python-client", "google-auth"], check=False)
+subprocess.run(["pip", "install", "-q", "TTS"], check=False)
 
 
 try:

@@ -227,8 +227,9 @@ jobs:
           else
             sudo apt-get update -o Acquire::Retries=3 -o Acquire::http::Timeout="15" && sudo apt-get install -y --no-install-recommends libsndfile1 || true
           fi
-          pip install --no-cache-dir google-genai playwright Pillow kaggle requests google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2 edge-tts loguru numpy matplotlib toml openai soundfile scipy
+          pip install --no-cache-dir google-genai playwright Pillow kaggle requests google-api-python-client google-auth google-auth-oauthlib google-auth-httplib2 edge-tts loguru numpy matplotlib toml openai soundfile scipy moviepy
           playwright install chromium
+
 
 
       - name: 🔑 Materialize Cloud Credentials from GitHub Secrets
