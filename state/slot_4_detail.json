@@ -5,13 +5,13 @@
   "vertical_label": "Slot #4",
   "shorts_count": 2,
   "status": "WAITING_APPROVAL",
-  "overall_pct": 78,
-  "stage_pct": 95,
+  "overall_pct": 75,
+  "stage_pct": 80,
   "current_stage_index": 5,
   "current_stage_name": "Kaggle T4 GPU Render Farm",
-  "current_subtask_label": "Short #2 9:16 render & QA (7m 5s)",
+  "current_subtask_label": "Short #2 9:16 render & QA (7m 37s)",
   "started_at": "2026-10-29T11:39:12Z",
-  "updated_at": "2026-10-29T11:53:29Z",
+  "updated_at": "2026-10-29T11:53:55Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -68,7 +68,7 @@
       "id": 5,
       "name": "Kaggle T4 GPU Render Farm",
       "status": "RUNNING",
-      "pct": 95,
+      "pct": 80,
       "started_at": "2026-10-29T11:42:23Z",
       "completed_at": null,
       "metrics": {
