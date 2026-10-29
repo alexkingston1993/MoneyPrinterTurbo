@@ -1,17 +1,17 @@
 {
-  "updated_at": "2026-10-29T07:20:50Z",
-  "channel_median_vph": 0.46,
+  "updated_at": "2026-10-29T07:46:22Z",
+  "channel_median_vph": 0.39,
   "top_outperformers": [
     {
       "video_id": "ujBlVUq9WSo",
       "title": "The Truth About Mutual Funds India 3:15 PM Trap",
       "format": "LONG",
       "published_at": "2026-10-27T20:01:55Z",
-      "hours_live": 35.3,
+      "hours_live": 35.7,
       "view_count": 123,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 3.48,
+      "views_per_hour": 3.44,
       "engagement_rate": 0.0325
     },
     {
@@ -19,11 +19,11 @@
       "title": "Why 90% Lose in Nifty F&O: The Math Behind Option Chain Open Interest! | The Math That Settles It #S",
       "format": "LONG",
       "published_at": "2026-10-29T03:56:32Z",
-      "hours_live": 3.4,
+      "hours_live": 3.8,
       "view_count": 8,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 2.35,
+      "views_per_hour": 2.09,
       "engagement_rate": 0.5
     },
     {
@@ -31,33 +31,21 @@
       "title": "The 0.5 Multiplier Trap: Hospital Bill Math Explained | The Math That Settles It #Shorts",
       "format": "SHORT",
       "published_at": "2026-10-29T04:40:46Z",
-      "hours_live": 2.7,
+      "hours_live": 3.1,
       "view_count": 5,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 1.87,
+      "views_per_hour": 1.62,
       "engagement_rate": 0.8
     }
   ],
   "bottom_underperformers": [
     {
-      "video_id": "yr2IVf-0aWM",
-      "title": "The Math Retail Misses: Health Insurance Claim Settlement R #Shorts (Institutional Breakdown) (",
+      "video_id": "BGQG71kmUMI",
+      "title": "Math Behind Perp Funding Rates! | The Math That Settles It #Shorts",
       "format": "SHORT",
-      "published_at": "2026-10-26T15:30:01Z",
-      "hours_live": 63.8,
-      "view_count": 2,
-      "like_count": 0,
-      "comment_count": 1,
-      "views_per_hour": 0.03,
-      "engagement_rate": 1.5
-    },
-    {
-      "video_id": "nMfqeaCzuAg",
-      "title": "IRDAI Proportionate Deduction Math: How Daily Room Caps Slash Surgery & Doctor ICU Claims",
-      "format": "LONG",
-      "published_at": "2026-10-29T04:39:25Z",
-      "hours_live": 2.7,
+      "published_at": "2026-10-29T07:43:03Z",
+      "hours_live": 0.5,
       "view_count": 0,
       "like_count": 0,
       "comment_count": 1,
@@ -65,11 +53,23 @@
       "engagement_rate": 3.0
     },
     {
-      "video_id": "6MT6TGBIdXQ",
-      "title": "Decoding Section 142(1) Crypto Notices Fast #Shorts",
+      "video_id": "ILk_hqAJD_8",
+      "title": "The Hidden Funding Rate Trap! | The Trap Nobody Talks About #Shorts",
       "format": "SHORT",
-      "published_at": "2026-10-29T04:17:53Z",
-      "hours_live": 3.0,
+      "published_at": "2026-10-29T07:41:58Z",
+      "hours_live": 0.5,
+      "view_count": 0,
+      "like_count": 0,
+      "comment_count": 1,
+      "views_per_hour": 0.0,
+      "engagement_rate": 3.0
+    },
+    {
+      "video_id": "nMfqeaCzuAg",
+      "title": "IRDAI Proportionate Deduction Math: How Daily Room Caps Slash Surgery & Doctor ICU Claims",
+      "format": "LONG",
+      "published_at": "2026-10-29T04:39:25Z",
+      "hours_live": 3.1,
       "view_count": 0,
       "like_count": 0,
       "comment_count": 1,
