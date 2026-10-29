@@ -143,6 +143,11 @@
       "ts": "03:59:38",
       "level": "INFO",
       "msg": "[GEMINI]: \u2705 Original (quantitative_data_breakdown) | \ud83e\ude99 CRYPTO \u00b7 114 hits (liquidation, liquidation cluster, funding rate, open interest, perp, p"
+    },
+    {
+      "ts": "03:59:44",
+      "level": "INFO",
+      "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering Pillow Graphics... | "
     }
   ]
 }
