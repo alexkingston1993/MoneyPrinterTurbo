@@ -1,84 +1,63 @@
 {
   "slot": 5,
-  "run_id": "40519219602",
+  "run_id": "40897882411",
   "vertical": "crypto",
   "vertical_label": "Slot #5",
   "shorts_count": 1,
-  "status": "FAILED",
-  "overall_pct": 75,
-  "stage_pct": 80,
-  "current_stage_index": 5,
-  "current_stage_name": "Kaggle T4 GPU Render Farm",
-  "current_subtask_label": "Error: Kaggle GPU Kernel failed: alexytcreative/flipzon-gpu-video-renderer ha",
-  "started_at": "2026-10-27T14:15:37Z",
-  "updated_at": "2026-10-27T14:23:36Z",
+  "status": "RUNNING",
+  "overall_pct": 2,
+  "stage_pct": 10,
+  "current_stage_index": 1,
+  "current_stage_name": "SEO Topic Harvester (open-seo)",
+  "current_subtask_label": "Harvesting search intent & clusters",
+  "started_at": "2026-10-29T15:06:01Z",
+  "updated_at": "2026-10-29T15:06:01Z",
   "eta_seconds": 0,
   "stages": [
     {
       "id": 1,
       "name": "SEO Topic Harvester (open-seo)",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-27T14:15:35Z",
-      "completed_at": "2026-10-27T14:15:45Z",
+      "status": "RUNNING",
+      "pct": 0,
+      "started_at": "2026-10-29T15:06:00Z",
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 2,
       "name": "Gemini Script & Dossier Synthesis",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-27T14:15:45Z",
-      "completed_at": "2026-10-27T14:15:58Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 3,
       "name": "Authenticity & SEBI/IRDAI Compliance Gate",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-27T14:17:24Z",
-      "completed_at": "2026-10-27T14:15:58Z",
-      "metrics": {
-        "audit_attempts": 1,
-        "compliance_status": "PASS_1",
-        "audit_notes": "Virality dopamine pacing and SEBI/IRDAI compliance healed & verified",
-        "compliance_pass": true,
-        "compliance_verdict": "PASSED_AFTER_FEEDBACK",
-        "virality_score": 92,
-        "authenticity_pass": true,
-        "trigram_similarity_pct": 8.4,
-        "regex_violations": 0
-      }
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
+      "metrics": {}
     },
     {
       "id": 4,
       "name": "Chart & High-CTR Thumbnail Studio",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-27T14:15:58Z",
-      "completed_at": "2026-10-27T14:18:35Z",
-      "metrics": {
-        "approval_status": "AUTO_APPROVED",
-        "approval_deadline_ts": 1793110692,
-        "headline": "LIQUIDATION CLUSTERS"
-      }
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
+      "metrics": {}
     },
     {
       "id": 5,
       "name": "Kaggle T4 GPU Render Farm",
-      "status": "RUNNING",
-      "pct": 80,
-      "started_at": "2026-10-27T14:18:35Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
       "completed_at": null,
-      "metrics": {
-        "voice_persona": "Brian (High-Beta Macro)",
-        "kaggle_kernel_status": "ERROR",
-        "long_render_pct": 80,
-        "short_1_render_pct": 25,
-        "short_2_render_pct": 0,
-        "gpu_elapsed_sec": 195
-      }
+      "metrics": {}
     },
     {
       "id": 6,
@@ -101,124 +80,9 @@
   ],
   "live_logs": [
     {
-      "ts": "14:15:37",
+      "ts": "15:06:01",
       "level": "INFO",
       "msg": "Slot #5 (crypto) initialized. Target: 1 Long + 1 Shorts."
-    },
-    {
-      "ts": "14:15:47",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvesting live search intent... | open-seo dark-query loop \u00b7 slot 5"
-    },
-    {
-      "ts": "14:15:55",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvested `Usdt dominance chart crypto` | source: autocomplete \u00b7 cluster: usdt dominance chart crypto, usdt dominance coinmarketcap, usdt dominance chart and ideas \u2014 tradingview"
-    },
-    {
-      "ts": "14:16:00",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \ud83d\udd04 Capturing 3 charts... | "
-    },
-    {
-      "ts": "14:16:20",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \u2705 Captured (3 charts) | "
-    },
-    {
-      "ts": "14:16:25",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83e\udde0 Synthesizing Dual Script + Article... | "
-    },
-    {
-      "ts": "14:17:08",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udee1\ufe0f Auditing Virality & Compliance... | Retention pacing + SEBI/IRDAI auditor"
-    },
-    {
-      "ts": "14:17:13",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udee1\ufe0f Virality & Compliance (Pass 1/3) | 100% Pass: Virality 90/100 + SEBI/IRDAI Approved"
-    },
-    {
-      "ts": "14:17:21",
-      "level": "INFO",
-      "msg": "[GEMINI]: \u2705 Generated + Healed (`bitcoin-liquidation-heatmap-funding-rate-delt-1793110625`) | \ud83e\ude99 CRYPTO"
-    },
-    {
-      "ts": "14:17:33",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd2c Auditing Authenticity Engine... | trigram dupe-check + domain vocabulary"
-    },
-    {
-      "ts": "14:17:38",
-      "level": "INFO",
-      "msg": "[GEMINI]: \u267b\ufe0f Authenticity regen 1/2... | 30-day overlap vs 'bitcoin-liquidation-heatmap-funding-rate-delt-1793038317' \u2192 title overlap ['2026', 'bitcoin', 'delta'"
-    },
-    {
-      "ts": "14:17:44",
-      "level": "INFO",
-      "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering Pillow Graphics... | "
-    },
-    {
-      "ts": "14:18:24",
-      "level": "INFO",
-      "msg": "[THUMBNAIL]: \u26a1 Auto-Approved (`LIQUIDATION CLUSTERS`) | "
-    },
-    {
-      "ts": "14:18:31",
-      "level": "INFO",
-      "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering 1 9:16 Shelf Thumbnails... | "
-    },
-    {
-      "ts": "14:18:37",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\ude80 Dispatching to Kaggle Dual-T4 GPU... | "
-    },
-    {
-      "ts": "14:18:42",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \u2601\ufe0f Pushing Dataset to Kaggle... | "
-    },
-    {
-      "ts": "14:19:59",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Waking Dual-T4 GPU Kernel... | "
-    },
-    {
-      "ts": "14:20:14",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \u23f3 Queued on Kaggle (0m 0s) | Waiting for free T4 node..."
-    },
-    {
-      "ts": "14:20:54",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \u23f3 Queued on Kaggle (0m 41s) | Waiting for free T4 node..."
-    },
-    {
-      "ts": "14:21:35",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \u23f3 Queued on Kaggle (1m 21s) | Waiting for free T4 node..."
-    },
-    {
-      "ts": "14:22:16",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \u23f3 Queued on Kaggle (2m 2s) | Waiting for free T4 node..."
-    },
-    {
-      "ts": "14:22:58",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (2m 44s) | 1080p Long NVENC render (2m 44s)"
-    },
-    {
-      "ts": "14:23:30",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \u274c Kaggle Error \u2014 Fallback Engaged | "
-    },
-    {
-      "ts": "14:23:40",
-      "level": "ERROR",
-      "msg": "Runner failed: Kaggle GPU Kernel failed: alexytcreative/flipzon-gpu-video-renderer has status \"kernelworkerstatus.error\""
     }
   ]
 }
