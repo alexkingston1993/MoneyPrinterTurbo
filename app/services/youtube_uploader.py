@@ -375,27 +375,36 @@ class YouTubeUploader:
 
         candidates: List[Tuple[str, str, str]] = []
 
-        # Pass A: uploads playlist (up to 25 most recent)
+        # Pass A: uploads playlist (up to 100 most recent across pages)
         try:
             channel_res = service.channels().list(mine=True, part="contentDetails").execute()
             uploads_pl = channel_res["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
-            recent_items = service.playlistItems().list(
-                playlistId=uploads_pl, part="snippet", maxResults=25
-            ).execute().get("items", [])
-            for item in recent_items:
-                snippet = item.get("snippet", {})
-                candidates.append((
-                    snippet.get("resourceId", {}).get("videoId", ""),
-                    snippet.get("title", ""),
-                    snippet.get("publishedAt", ""),
-                ))
+            page_token = None
+            pages_scanned = 0
+            while pages_scanned < 2:
+                pl_res = service.playlistItems().list(
+                    playlistId=uploads_pl, part="snippet", maxResults=50, pageToken=page_token
+                ).execute()
+                items = pl_res.get("items", [])
+                for item in items:
+                    snippet = item.get("snippet", {})
+                    candidates.append((
+                        snippet.get("resourceId", {}).get("videoId", ""),
+                        snippet.get("title", ""),
+                        snippet.get("publishedAt", ""),
+                    ))
+                page_token = pl_res.get("nextPageToken")
+                pages_scanned += 1
+                if not page_token or not items:
+                    break
         except Exception as e:
             logger.debug(f"[{language}] Duplicate playlist scan notice: {e}")
 
-        # Pass B: search.list forMine (up to 15 most recent by date)
+        # Pass B: targeted search.list forMine with search query matching title
         try:
+            search_query = " ".join(title.split()[:6])
             found = service.search().list(
-                part="snippet", forMine=True, type="video", maxResults=15, order="date"
+                part="snippet", forMine=True, type="video", q=search_query, maxResults=15, order="date"
             ).execute().get("items", [])
             for item in found:
                 snippet = item.get("snippet", {})
@@ -413,7 +422,7 @@ class YouTubeUploader:
                 continue
             seen.add(video_id)
             norm = self._normalize_title(video_title)
-            if not published_at or not (norm == normalized or norm[:60] == prefix_match):
+            if not published_at or not (norm == normalized or norm[:40] == prefix_match[:40]):
                 continue
             try:
                 when = datetime.datetime.fromisoformat(str(published_at).replace("Z", "+00:00"))

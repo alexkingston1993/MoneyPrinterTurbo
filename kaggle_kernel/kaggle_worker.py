@@ -586,22 +586,32 @@ def find_recent_duplicate(youtube_service, title: str, window_hours: int = 24) -
 
     candidates = []
 
-    # Pass A: uploads playlist (up to 25 most recent)
+    # Pass A: uploads playlist (up to 100 most recent across pages)
     try:
         chan = youtube_service.channels().list(part="contentDetails", mine=True).execute()
         uploads_pl = chan["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
-        for it in youtube_service.playlistItems().list(
-            part="snippet", playlistId=uploads_pl, maxResults=25
-        ).execute().get("items", []):
-            sn = it.get("snippet", {})
-            candidates.append((sn.get("resourceId", {}).get("videoId", ""), sn.get("title", ""), sn.get("publishedAt", "")))
+        page_token = None
+        pages_scanned = 0
+        while pages_scanned < 2:
+            pl_res = youtube_service.playlistItems().list(
+                part="snippet", playlistId=uploads_pl, maxResults=50, pageToken=page_token
+            ).execute()
+            items = pl_res.get("items", [])
+            for it in items:
+                sn = it.get("snippet", {})
+                candidates.append((sn.get("resourceId", {}).get("videoId", ""), sn.get("title", ""), sn.get("publishedAt", "")))
+            page_token = pl_res.get("nextPageToken")
+            pages_scanned += 1
+            if not page_token or not items:
+                break
     except Exception as e:
         print(f"Duplicate playlist scan notice: {e}")
 
-    # Pass B: search.list forMine (up to 15 most recent by date)
+    # Pass B: targeted search.list forMine with title keywords
     try:
+        search_query = " ".join(title.split()[:6])
         for it in youtube_service.search().list(
-            part="snippet", forMine=True, type="video", maxResults=15, order="date"
+            part="snippet", forMine=True, type="video", q=search_query, maxResults=15, order="date"
         ).execute().get("items", []):
             sn = it.get("snippet", {})
             candidates.append((it.get("id", {}).get("videoId", ""), sn.get("title", ""), sn.get("publishTime", "")))
@@ -614,7 +624,7 @@ def find_recent_duplicate(youtube_service, title: str, window_hours: int = 24) -
             continue
         seen.add(vid)
         norm = _norm(v_title)
-        if not published_at or not (norm == target or norm[:60] == target_prefix):
+        if not published_at or not (norm == target or norm[:40] == target_prefix[:40]):
             continue
         try:
             when = datetime.datetime.fromisoformat(str(published_at).replace("Z", "+00:00"))
