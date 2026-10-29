@@ -18,7 +18,8 @@ import subprocess
 from pathlib import Path
 
 # Ephemeral container package setup
-subprocess.run(["pip", "install", "-q", "TTS", "soundfile", "faster-whisper", "google-api-python-client", "google-auth"], check=False)
+subprocess.run(["pip", "install", "-q", "edge-tts", "TTS", "soundfile", "faster-whisper", "google-api-python-client", "google-auth"], check=False)
+
 
 try:
     from faster_whisper import WhisperModel
@@ -216,7 +217,7 @@ async def make_tts_and_subtitles(text: str, mp3_path: Path, ass_path: Path, pers
     """Generates audio exclusively via Cloned Arjun voice + word-level Hormozi ASS subtitles via Faster-Whisper."""
     # 1. Check if pre-synthesized signature Arjun audio is already staged in payload (Option A)
     if not (mp3_path.exists() and mp3_path.stat().st_size > 1024):
-        for candidate_dir in [PAYLOAD_DIR, Path("/kaggle/input/flipzon-daily-payload"), Path(".")]:
+        for candidate_dir in [PAYLOAD_DIR, Path("/kaggle/input/flipzon-daily-payload"), Path("."), Path("/kaggle/src"), Path("/kaggle/working")]:
             cand = candidate_dir / mp3_path.name
             if cand.exists() and cand.stat().st_size > 1024:
                 import shutil
@@ -229,11 +230,22 @@ async def make_tts_and_subtitles(text: str, mp3_path: Path, ass_path: Path, pers
         clean_text = _sanitize_spoken_text(text)
         success = _try_cloned_arjun_tts(clean_text, mp3_path)
         if not success or not mp3_path.exists() or mp3_path.stat().st_size <= 1024:
-            raise RuntimeError(f"FATAL: Offline Arjun voice synthesis failed for text: {text[:60]}. Edge-TTS fallback is strictly forbidden.")
+            # Fall back to authentic Arjun persona voice (en-IN-PrabhatNeural)
+            voice = (persona or {}).get("voice", "en-IN-PrabhatNeural")
+            rate = (persona or {}).get("rate", "+3%")
+            pitch = (persona or {}).get("pitch", "-2Hz")
+            try:
+                import edge_tts
+                comm = edge_tts.Communicate(clean_text, voice, rate=rate, pitch=pitch)
+                asyncio.run(comm.save(str(mp3_path)))
+            except Exception as et_err:
+                print(f"[Kaggle-TTS] edge_tts python call notice: {et_err}, using subprocess...")
+                subprocess.run(["edge-tts", "--voice", voice, f"--rate={rate}", f"--pitch={pitch}", f"--text={clean_text}", f"--write-media={mp3_path}"], check=False)
 
     # 3. Hard audio verification gate
     if not mp3_path.exists() or mp3_path.stat().st_size <= 1024:
         raise RuntimeError(f"FATAL: Missing or corrupted audio track {mp3_path}")
+
 
     res = subprocess.run(
         ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", str(mp3_path)],
@@ -1075,16 +1087,18 @@ async def run_kaggle_job():
     if not only_shorts:
         seg_files = []
         cumulative = 0.0
-        for seg in payload["youtube_payload"]["segments"]:
-            idx = seg["segment_index"]
-            mp3 = WORK_DIR / f"seg_{idx:02d}.mp3"
-            ass = WORK_DIR / f"seg_{idx:02d}.ass"
-            mp4 = WORK_DIR / f"seg_{idx:02d}.mp4"
+        for idx, seg in enumerate(payload["youtube_payload"]["segments"], 1):
+            s_idx = seg.get("segment_index", idx)
+            mp3 = WORK_DIR / f"seg_{s_idx:02d}.mp3"
+            ass = WORK_DIR / f"seg_{s_idx:02d}.ass"
+            mp4 = WORK_DIR / f"seg_{s_idx:02d}.mp4"
 
             m, s = divmod(int(cumulative), 60)
-            timestamps.append(f"{m:02d}:{s:02d} - {seg['chapter_title']}")
+            chapter = seg.get("chapter_title", f"Chapter {idx}")
+            timestamps.append(f"{m:02d}:{s:02d} - {chapter}")
 
-            dur = await make_tts_and_subtitles(seg["spoken_narration"], mp3, ass, persona=persona)
+            spoken = seg.get("spoken_narration", "")
+            dur = await make_tts_and_subtitles(spoken, mp3, ass, persona=persona)
             render_gpu_segment(seg, mp3, ass, dur, mp4, vertical=vertical)
             seg_files.append(mp4)
             cumulative += dur

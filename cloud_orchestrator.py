@@ -808,14 +808,16 @@ def run_kaggle_gpu_renderer(
     # Pre-synthesize authentic Cloned Arjun audio tracks for 100% voice consistency across cloud renderers
     try:
         from app.services.cloned_prabhat_tts import synthesize_arjun_voice
-        logger.info("🎙️ Pre-synthesizing signature Arjun audio tracks for Kaggle bundle...")
-        for idx, seg in enumerate(payload.get("script_segments", [])):
-            seg_audio_name = f"seg_{idx}.mp3"
+        long_segs = payload.get("script_segments") or payload.get("youtube_payload", {}).get("segments", [])
+        for idx, seg in enumerate(long_segs, 1):
+            s_idx = seg.get("segment_index", idx)
+            seg_audio_name = f"seg_{s_idx:02d}.mp3"
             seg_audio_path = KAGGLE_STAGE_DIR / seg_audio_name
             spoken = seg.get("spoken_narration", "")
             if spoken and (not seg_audio_path.exists() or seg_audio_path.stat().st_size <= 1024):
                 synthesize_arjun_voice(spoken, seg_audio_path)
-                logger.info(f"🎙️ Pre-synthesized Arjun segment {idx}: {seg_audio_name}")
+                logger.info(f"🎙️ Pre-synthesized Arjun segment {s_idx}: {seg_audio_name}")
+
 
         yt_block = payload.get("youtube_payload", {})
         shorts_list = yt_block.get("short_extractions") or []
