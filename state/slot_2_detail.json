@@ -143,6 +143,11 @@
       "ts": "07:48:13",
       "level": "INFO",
       "msg": "[GEMINI]: \u2705 Original (institutional_trap_expose) | \ud83e\ude99 CRYPTO \u00b7 81 hits (liquidation, liquidation cluster, funding rate, open interest, perp, pe"
+    },
+    {
+      "ts": "07:48:19",
+      "level": "INFO",
+      "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering Pillow Graphics... | "
     }
   ]
 }
