@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-30T09:21:26Z",
+  "updated_at": "2026-10-30T09:44:04Z",
   "videos": {
     "slot_1_long": {
       "slot": 1,
@@ -88,16 +88,16 @@
       "title": "[LONG-FORM] How Super Top-Up Policy Wording Decides Your First Claim Rejection",
       "format": "16:9 LONG",
       "vertical": "INSURANCE",
-      "current_stage": "Stage 5/7: Kaggle T4 GPU \u2014 NVENC Encoding",
-      "stage_pct": 50,
-      "completion_pct": 65,
-      "eta_seconds": 220,
+      "current_stage": "Stage 7/7: Uploaded & Distributed",
+      "stage_pct": 100,
+      "completion_pct": 100,
+      "eta_seconds": 0,
       "compliance_status": "\ud83d\udee1\ufe0f Feedback Healed & Verified",
-      "status": "IN_PROGRESS",
-      "updated_at": "2026-10-30T09:21:26Z",
+      "status": "COMPLETED",
+      "updated_at": "2026-10-30T09:44:04Z",
       "started_at": "2026-10-27T20:23:01Z",
-      "youtube_id": "GgFmjQY9IMo",
-      "youtube_url": "https://www.youtube.com/watch?v=GgFmjQY9IMo"
+      "youtube_id": "T80vt_hFTPo",
+      "youtube_url": "https://www.youtube.com/watch?v=T80vt_hFTPo"
     },
     "slot_4_long": {
       "video_id": "slot_4_long",
