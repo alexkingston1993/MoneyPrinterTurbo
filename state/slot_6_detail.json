@@ -1,379 +1,88 @@
 {
   "slot": 6,
-  "run_id": "41092141181",
+  "run_id": "41105848112",
   "vertical": "insurance",
   "vertical_label": "Slot #6",
   "shorts_count": 1,
-  "status": "COMPLETED",
-  "overall_pct": 100,
-  "stage_pct": 100,
-  "current_stage_index": 7,
-  "current_stage_name": "Multi-Channel Distribution",
-  "current_subtask_label": "Live: https://the-bull-print.vercel.app/article.html?slug=INS-2026-STU-06",
-  "started_at": "2026-10-30T16:42:36Z",
-  "updated_at": "2026-10-30T17:08:59Z",
+  "status": "RUNNING",
+  "overall_pct": 2,
+  "stage_pct": 10,
+  "current_stage_index": 1,
+  "current_stage_name": "SEO Topic Harvester (open-seo)",
+  "current_subtask_label": "Harvesting search intent & clusters",
+  "started_at": "2026-10-30T18:19:58Z",
+  "updated_at": "2026-10-30T18:19:58Z",
   "eta_seconds": 0,
   "stages": [
     {
       "id": 1,
       "name": "SEO Topic Harvester (open-seo)",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-30T16:42:35Z",
-      "completed_at": "2026-10-30T16:42:47Z",
+      "status": "RUNNING",
+      "pct": 0,
+      "started_at": "2026-10-30T18:19:58Z",
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 2,
       "name": "Gemini Script & Dossier Synthesis",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-30T16:42:47Z",
-      "completed_at": "2026-10-30T16:43:05Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 3,
       "name": "Authenticity & SEBI/IRDAI Compliance Gate",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-30T16:44:03Z",
-      "completed_at": "2026-10-30T16:43:05Z",
-      "metrics": {
-        "audit_attempts": 1,
-        "compliance_status": "PASS_1",
-        "audit_notes": "Virality dopamine pacing and SEBI/IRDAI compliance healed & verified",
-        "compliance_pass": true,
-        "compliance_verdict": "PASSED_AFTER_FEEDBACK",
-        "virality_score": 92,
-        "authenticity_pass": true,
-        "trigram_similarity_pct": 8.4,
-        "regex_violations": 0
-      }
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
+      "metrics": {}
     },
     {
       "id": 4,
       "name": "Chart & High-CTR Thumbnail Studio",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-30T16:43:05Z",
-      "completed_at": "2026-10-30T16:45:55Z",
-      "metrics": {
-        "approval_status": "AUTO_APPROVED",
-        "approval_deadline_ts": 1793378721,
-        "headline": "HOSPITAL BILL 50% SLASHED!"
-      }
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
+      "metrics": {}
     },
     {
       "id": 5,
       "name": "Kaggle T4 GPU Render Farm",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-30T16:45:55Z",
-      "completed_at": "2026-10-30T17:08:28Z",
-      "metrics": {
-        "voice_persona": "Arjun \u2014 Signature Cloned Voice",
-        "kaggle_kernel_status": "COMPLETE",
-        "long_render_pct": 100,
-        "short_1_render_pct": 100,
-        "short_2_render_pct": 100,
-        "gpu_elapsed_sec": 1010
-      }
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
+      "metrics": {}
     },
     {
       "id": 6,
       "name": "OpenMontage Post-Render QA Gate",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-30T17:08:28Z",
-      "completed_at": "2026-10-30T17:08:43Z",
-      "metrics": {
-        "qa_passed": true,
-        "mean_volume_db": -14.5,
-        "max_volume_db": -0.3,
-        "black_frame_ratio": 0.0,
-        "duration_sec": 802.24,
-        "resolution": "1080x1920 & 1920x1080"
-      }
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
+      "metrics": {}
     },
     {
       "id": 7,
       "name": "Multi-Channel Distribution",
-      "status": "RUNNING",
-      "pct": 100,
-      "started_at": "2026-10-30T17:08:43Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
       "completed_at": null,
-      "metrics": {
-        "yt_long_id": "T80vt_hFTPo",
-        "yt_short_ids": [
-          "l2kOChiZXnk"
-        ],
-        "oauth_slot_used": 1,
-        "article_url": "https://the-bull-print.vercel.app/article.html?slug=INS-2026-STU-06",
-        "x_thread_url": "Skipped (X keys not set)"
-      }
+      "metrics": {}
     }
   ],
   "live_logs": [
     {
-      "ts": "16:42:36",
+      "ts": "18:19:58",
       "level": "INFO",
       "msg": "Slot #6 (insurance) initialized. Target: 1 Long + 1 Shorts."
-    },
-    {
-      "ts": "16:42:50",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvesting live search intent... | open-seo dark-query loop \u00b7 slot 6"
-    },
-    {
-      "ts": "16:42:58",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvested `How Super Top-Up Policy Wording Decides Your Fir` | source: registry_fallback \u00b7 cluster: term insurance claim rejection, health insurance room rent limit, irdai new rules"
-    },
-    {
-      "ts": "16:43:08",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \ud83d\udcca Rendering insurance infographics... | "
-    },
-    {
-      "ts": "16:43:14",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \u2705 Rendered (2 infographics) | "
-    },
-    {
-      "ts": "16:43:20",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83e\udde0 Synthesizing Dual Script + Article... | "
-    },
-    {
-      "ts": "16:43:46",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udee1\ufe0f Auditing Virality & Compliance... | Retention pacing + SEBI/IRDAI auditor"
-    },
-    {
-      "ts": "16:43:51",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udee1\ufe0f Virality & Compliance (Pass 1/3) | 100% Pass: Virality 100/100 + SEBI/IRDAI Approved"
-    },
-    {
-      "ts": "16:44:00",
-      "level": "INFO",
-      "msg": "[GEMINI]: \u2705 Generated + Healed (`INS-2026-STU-06`) | \ud83d\udee1\ufe0f INSURANCE"
-    },
-    {
-      "ts": "16:44:13",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd2c Auditing Authenticity Engine... | trigram dupe-check + domain vocabulary"
-    },
-    {
-      "ts": "16:44:20",
-      "level": "INFO",
-      "msg": "[GEMINI]: \u267b\ufe0f Authenticity regen 1/2... | 30-day overlap vs 'ins_super_top_up_claim_rejection_03' \u2192 title overlap ['claim', 'decides', 'first', 'policy']"
-    },
-    {
-      "ts": "16:44:42",
-      "level": "INFO",
-      "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering Pillow Graphics... | "
-    },
-    {
-      "ts": "16:45:39",
-      "level": "INFO",
-      "msg": "[THUMBNAIL]: \u26a1 Auto-Approved (`HOSPITAL BILL 50% SLASHED!`) | "
-    },
-    {
-      "ts": "16:45:49",
-      "level": "INFO",
-      "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering 1 9:16 Shelf Covers & Headers... | "
-    },
-    {
-      "ts": "16:45:57",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\ude80 Dispatching to Kaggle Dual-T4 GPU... | "
-    },
-    {
-      "ts": "16:50:12",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \u2601\ufe0f Pushing Dataset to Kaggle... | "
-    },
-    {
-      "ts": "16:50:56",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Waking Dual-T4 GPU Kernel... | "
-    },
-    {
-      "ts": "16:51:10",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \u23f3 Queued on Kaggle (0m 0s) | Waiting for free T4 node..."
-    },
-    {
-      "ts": "16:51:53",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (0m 43s) | TTS + Whisper alignment (0m 43s)"
-    },
-    {
-      "ts": "16:52:25",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (1m 15s) | 1080p Long NVENC render (1m 15s)"
-    },
-    {
-      "ts": "16:52:57",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (1m 46s) | 1080p Long NVENC render (1m 46s)"
-    },
-    {
-      "ts": "16:53:29",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (2m 19s) | 1080p Long NVENC render (2m 19s)"
-    },
-    {
-      "ts": "16:54:00",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (2m 50s) | 1080p Long NVENC render (2m 50s)"
-    },
-    {
-      "ts": "16:54:32",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (3m 22s) | Short #1 9:16 render (3m 22s)"
-    },
-    {
-      "ts": "16:55:04",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (3m 53s) | Short #1 9:16 render (3m 53s)"
-    },
-    {
-      "ts": "16:55:36",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (4m 25s) | Short #1 9:16 render (4m 25s)"
-    },
-    {
-      "ts": "16:56:07",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (4m 57s) | Short #1 9:16 render (4m 57s)"
-    },
-    {
-      "ts": "16:56:39",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (5m 29s) | Short #2 9:16 render & QA (5m 29s)"
-    },
-    {
-      "ts": "16:57:12",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (6m 2s) | Short #2 9:16 render & QA (6m 2s)"
-    },
-    {
-      "ts": "16:57:45",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (6m 34s) | Short #2 9:16 render & QA (6m 34s)"
-    },
-    {
-      "ts": "16:58:18",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (7m 7s) | Short #2 9:16 render & QA (7m 7s)"
-    },
-    {
-      "ts": "16:58:51",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (7m 39s) | Short #2 9:16 render & QA (7m 39s)"
-    },
-    {
-      "ts": "16:59:22",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (8m 12s) | Short #2 9:16 render & QA (8m 12s)"
-    },
-    {
-      "ts": "16:59:54",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (8m 43s) | Short #2 9:16 render & QA (8m 43s)"
-    },
-    {
-      "ts": "17:00:29",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (9m 19s) | Short #2 9:16 render & QA (9m 19s)"
-    },
-    {
-      "ts": "17:01:00",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (9m 50s) | Short #2 9:16 render & QA (9m 50s)"
-    },
-    {
-      "ts": "17:01:32",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (10m 21s) | Short #2 9:16 render & QA (10m 21s)"
-    },
-    {
-      "ts": "17:02:06",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (10m 55s) | Short #2 9:16 render & QA (10m 55s)"
-    },
-    {
-      "ts": "17:02:37",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (11m 27s) | Short #2 9:16 render & QA (11m 27s)"
-    },
-    {
-      "ts": "17:03:08",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (11m 58s) | Short #2 9:16 render & QA (11m 58s)"
-    },
-    {
-      "ts": "17:03:40",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (12m 30s) | Short #2 9:16 render & QA (12m 30s)"
-    },
-    {
-      "ts": "17:04:13",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (13m 3s) | Short #2 9:16 render & QA (13m 3s)"
-    },
-    {
-      "ts": "17:04:45",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (13m 35s) | Short #2 9:16 render & QA (13m 35s)"
-    },
-    {
-      "ts": "17:05:17",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (14m 7s) | Short #2 9:16 render & QA (14m 7s)"
-    },
-    {
-      "ts": "17:05:50",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (14m 40s) | Short #2 9:16 render & QA (14m 40s)"
-    },
-    {
-      "ts": "17:06:24",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (15m 14s) | Short #2 9:16 render & QA (15m 14s)"
-    },
-    {
-      "ts": "17:06:56",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (15m 46s) | Short #2 9:16 render & QA (15m 46s)"
-    },
-    {
-      "ts": "17:07:28",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (16m 18s) | Short #2 9:16 render & QA (16m 18s)"
-    },
-    {
-      "ts": "17:08:00",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \u2705 Rendered & Uploaded (16m 50s) | "
-    },
-    {
-      "ts": "17:08:35",
-      "level": "INFO",
-      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (done) | \ud83d\udd11 YT Quota Slot #1 \u00b7 \ud83c\udfac 1 Short(s) \u00b7 \ud83d\udee1\ufe0f QA PASSED \u00b7 -14.5 dB \u00b7 black 0.0"
-    },
-    {
-      "ts": "17:08:45",
-      "level": "INFO",
-      "msg": "[VERCEL]: \ud83d\udcdd Compiling MDX & IndexNow Ping... | "
-    },
-    {
-      "ts": "17:08:53",
-      "level": "INFO",
-      "msg": "[VERCEL]: \u2705 Live & Indexed (`https://the-bull-print.vercel.app/article.html?slug=INS-2026-STU-06`) | \ud83c\udfac Shorts (1): l2kOChiZXnk \u00b7 \ud83d\udc26 X Thread: Skipped (X keys not set)"
     }
   ]
 }
