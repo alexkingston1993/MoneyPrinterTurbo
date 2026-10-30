@@ -9,9 +9,9 @@
   "stage_pct": 100,
   "current_stage_index": 2,
   "current_stage_name": "Gemini Script & Dossier Synthesis",
-  "current_subtask_label": "trigram dupe-check + domain vocabulary",
+  "current_subtask_label": "30-day overlap vs 'ins_super_top_up_claim_rejection_03-short-2' \u2192 title overlap ['claim', 'decides', 'first', 'policy']",
   "started_at": "2026-10-30T18:19:58Z",
-  "updated_at": "2026-10-30T18:21:17Z",
+  "updated_at": "2026-10-30T18:21:22Z",
   "eta_seconds": 0,
   "stages": [
     {
