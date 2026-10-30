@@ -87,7 +87,14 @@
       "pct": 100,
       "started_at": "2026-10-30T09:43:49Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "qa_passed": true,
+        "mean_volume_db": -14.5,
+        "max_volume_db": -1.1,
+        "black_frame_ratio": 0.0,
+        "duration_sec": 702.41,
+        "resolution": "1080x1920 & 1920x1080"
+      }
     },
     {
       "id": 7,
