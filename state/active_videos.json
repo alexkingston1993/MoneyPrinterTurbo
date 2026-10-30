@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-29T20:52:24Z",
+  "updated_at": "2026-10-30T09:19:47Z",
   "videos": {
     "slot_1_long": {
       "slot": 1,
@@ -85,16 +85,16 @@
     "slot_3_long": {
       "video_id": "slot_3_long",
       "slot": 3,
-      "title": "[LONG-FORM] Why Claim Settlement Ratio Marketing Hides Incurred Claim Ratio Reality",
+      "title": "[LONG-FORM] How Super Top-Up Policy Wording Decides Your First Claim Rejection",
       "format": "16:9 LONG",
       "vertical": "INSURANCE",
-      "current_stage": "Stage 7/7: Uploaded & Distributed",
-      "stage_pct": 100,
-      "completion_pct": 100,
-      "eta_seconds": 0,
+      "current_stage": "Stage 4/7: Chart & High-CTR Thumbnail Studio",
+      "stage_pct": 20,
+      "completion_pct": 40,
+      "eta_seconds": 360,
       "compliance_status": "\ud83d\udee1\ufe0f Feedback Healed & Verified",
-      "status": "COMPLETED",
-      "updated_at": "2026-10-29T09:34:58Z",
+      "status": "IN_PROGRESS",
+      "updated_at": "2026-10-30T09:19:47Z",
       "started_at": "2026-10-27T20:23:01Z",
       "youtube_id": "GgFmjQY9IMo",
       "youtube_url": "https://www.youtube.com/watch?v=GgFmjQY9IMo"
