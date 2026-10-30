@@ -1,51 +1,51 @@
 {
-  "updated_at": "2026-10-30T18:20:04Z",
-  "channel_median_vph": 0.0,
+  "updated_at": "2026-10-30T19:59:21Z",
+  "channel_median_vph": 0.11,
   "top_outperformers": [
+    {
+      "video_id": "8Q3lBWHleOg",
+      "title": "The 36-Month Pre-Existing Disease Rule Under New IRDAI Norms #Shorts",
+      "format": "SHORT",
+      "published_at": "2026-10-30T19:12:04Z",
+      "hours_live": 0.8,
+      "view_count": 2,
+      "like_count": 1,
+      "comment_count": 0,
+      "views_per_hour": 2.54,
+      "engagement_rate": 0.5
+    },
+    {
+      "video_id": "Tg7ZvmiQMs4",
+      "title": "The Super Top-Up Deductible Trap You Never Knew Existed | The Trap Nobody Talks About #Shorts",
+      "format": "SHORT",
+      "published_at": "2026-10-30T18:43:15Z",
+      "hours_live": 1.3,
+      "view_count": 2,
+      "like_count": 1,
+      "comment_count": 1,
+      "views_per_hour": 1.58,
+      "engagement_rate": 2.0
+    },
     {
       "video_id": "T2ndsGl35ew",
       "title": "Why 90% Lose: The Truth About SIP Investment",
       "format": "LONG",
       "published_at": "2026-10-30T15:13:26Z",
-      "hours_live": 3.1,
-      "view_count": 3,
-      "like_count": 0,
-      "comment_count": 1,
-      "views_per_hour": 0.96,
-      "engagement_rate": 1.0
-    },
-    {
-      "video_id": "obfYOi_8Wtw",
-      "title": "Stop Buying High: The Proven SIP Investment Rule",
-      "format": "SHORT",
-      "published_at": "2026-10-30T11:52:58Z",
-      "hours_live": 6.5,
-      "view_count": 3,
+      "hours_live": 4.8,
+      "view_count": 6,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 0.46,
-      "engagement_rate": 1.3333
-    },
-    {
-      "video_id": "T80vt_hFTPo",
-      "title": "Why Your Super Top-Up Health Insurance Claim Gets Rejected: Policy Wording Forensics",
-      "format": "LONG",
-      "published_at": "2026-10-30T09:40:34Z",
-      "hours_live": 8.7,
-      "view_count": 2,
-      "like_count": 1,
-      "comment_count": 1,
-      "views_per_hour": 0.23,
-      "engagement_rate": 2.0
+      "views_per_hour": 1.26,
+      "engagement_rate": 0.6667
     }
   ],
   "bottom_underperformers": [
     {
-      "video_id": "nBG7sLRGczs",
-      "title": "Negative Funding Rates: Why Extreme Bearish Sentiment Sparks Squeezes #Shorts",
+      "video_id": "G_Xwi3mVyIA",
+      "title": "The IV Crush Trap: Why Options Lose Value Even When You Are Right #Shorts",
       "format": "SHORT",
-      "published_at": "2026-10-29T20:05:39Z",
-      "hours_live": 22.2,
+      "published_at": "2026-10-29T20:15:03Z",
+      "hours_live": 23.7,
       "view_count": 0,
       "like_count": 0,
       "comment_count": 0,
@@ -53,11 +53,11 @@
       "engagement_rate": 0.0
     },
     {
-      "video_id": "2P-pElnfNi4",
-      "title": "Critical Illness vs Mediclaim: The Thirty-Day Survival Clause #Shorts",
+      "video_id": "J3VxBwKDSQY",
+      "title": "Proof of Reserves vs Real Audits: What Exchanges Won't Tell You #Shorts",
       "format": "SHORT",
-      "published_at": "2026-10-29T20:03:26Z",
-      "hours_live": 22.3,
+      "published_at": "2026-10-29T20:12:45Z",
+      "hours_live": 23.8,
       "view_count": 0,
       "like_count": 0,
       "comment_count": 0,
@@ -65,11 +65,11 @@
       "engagement_rate": 0.0
     },
     {
-      "video_id": "RQtWv0hE1uM",
-      "title": "The Zero-Hero Option Trap: The Mathematics of Theta Decay #Shorts",
+      "video_id": "pqs6ZDI5TcI",
+      "title": "Health Insurance Portability: How to Switch Without Losing Credits #Shorts",
       "format": "SHORT",
-      "published_at": "2026-10-29T20:01:13Z",
-      "hours_live": 22.3,
+      "published_at": "2026-10-29T20:10:16Z",
+      "hours_live": 23.8,
       "view_count": 0,
       "like_count": 0,
       "comment_count": 0,
