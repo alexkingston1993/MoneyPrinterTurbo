@@ -189,6 +189,11 @@
       "ts": "16:51:10",
       "level": "INFO",
       "msg": "[KAGGLE_GPU]: \u23f3 Queued on Kaggle (0m 0s) | Waiting for free T4 node..."
+    },
+    {
+      "ts": "16:51:53",
+      "level": "INFO",
+      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (0m 43s) | TTS + Whisper alignment (0m 43s)"
     }
   ]
 }
