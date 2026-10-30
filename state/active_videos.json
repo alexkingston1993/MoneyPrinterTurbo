@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-30T11:31:44Z",
+  "updated_at": "2026-10-30T14:59:00Z",
   "videos": {
     "slot_1_long": {
       "slot": 1,
@@ -62,7 +62,7 @@
       "eta_seconds": 360,
       "compliance_status": "\ud83d\udee1\ufe0f Feedback Healed & Verified",
       "status": "IN_PROGRESS",
-      "updated_at": "2026-10-29T15:07:26Z",
+      "updated_at": "2026-10-30T14:59:00Z",
       "started_at": "2026-10-27T14:17:29Z"
     },
     "slot_2_long": {
