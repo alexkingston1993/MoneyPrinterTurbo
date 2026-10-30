@@ -1,51 +1,51 @@
 {
-  "updated_at": "2026-10-29T20:25:34Z",
+  "updated_at": "2026-10-30T09:18:34Z",
   "channel_median_vph": 0.0,
   "top_outperformers": [
-    {
-      "video_id": "d_sX2rK81Z0",
-      "title": "Point of Control: How Smart Money Uses Volume Profiles #Shorts",
-      "format": "SHORT",
-      "published_at": "2026-10-29T20:19:29Z",
-      "hours_live": 0.5,
-      "view_count": 0,
-      "like_count": 0,
-      "comment_count": 0,
-      "views_per_hour": 0.0,
-      "engagement_rate": 0.0
-    },
-    {
-      "video_id": "vFj_1fJ-3EM",
-      "title": "The AYUSH Sub-Limit Trap: Ayurveda Hospital Bill Reductions #Shorts",
-      "format": "SHORT",
-      "published_at": "2026-10-29T20:17:19Z",
-      "hours_live": 0.5,
-      "view_count": 0,
-      "like_count": 0,
-      "comment_count": 0,
-      "views_per_hour": 0.0,
-      "engagement_rate": 0.0
-    },
-    {
-      "video_id": "G_Xwi3mVyIA",
-      "title": "The IV Crush Trap: Why Options Lose Value Even When You Are Right #Shorts",
-      "format": "SHORT",
-      "published_at": "2026-10-29T20:15:03Z",
-      "hours_live": 0.5,
-      "view_count": 0,
-      "like_count": 0,
-      "comment_count": 0,
-      "views_per_hour": 0.0,
-      "engagement_rate": 0.0
-    }
-  ],
-  "bottom_underperformers": [
     {
       "video_id": "HL5jzo1TJ78",
       "title": "The Nifty 50 Liquidity Trap: Smart Money Strike Absorption #Shorts",
       "format": "SHORT",
-      "published_at": "2026-10-29T19:27:45Z",
-      "hours_live": 1.0,
+      "published_at": "2026-10-30T04:12:24Z",
+      "hours_live": 5.1,
+      "view_count": 1,
+      "like_count": 0,
+      "comment_count": 0,
+      "views_per_hour": 0.2,
+      "engagement_rate": 0.0
+    },
+    {
+      "video_id": "68PiqUYjVtM",
+      "title": "The Claim Settlement Ratio Trap Exposed! | The Trap Nobody Talks About #Shorts",
+      "format": "SHORT",
+      "published_at": "2026-10-29T20:51:33Z",
+      "hours_live": 12.5,
+      "view_count": 2,
+      "like_count": 1,
+      "comment_count": 1,
+      "views_per_hour": 0.16,
+      "engagement_rate": 2.0
+    },
+    {
+      "video_id": "D8d4teb1pj8",
+      "title": "Mutual Funds India: The Truth Behind \u20b93,200Cr Dump",
+      "format": "LONG",
+      "published_at": "2026-10-29T19:50:12Z",
+      "hours_live": 13.5,
+      "view_count": 1,
+      "like_count": 0,
+      "comment_count": 1,
+      "views_per_hour": 0.07,
+      "engagement_rate": 3.0
+    }
+  ],
+  "bottom_underperformers": [
+    {
+      "video_id": "8Q3lBWHleOg",
+      "title": "The 36-Month Pre-Existing Disease Rule Under New IRDAI Norms #Shorts",
+      "format": "SHORT",
+      "published_at": "2026-10-29T19:43:04Z",
+      "hours_live": 13.6,
       "view_count": 0,
       "like_count": 0,
       "comment_count": 0,
@@ -53,11 +53,11 @@
       "engagement_rate": 0.0
     },
     {
-      "video_id": "UcGUzeJyNb4",
-      "title": "The Flat 30% Crypto Tax Trap Nobody Talks About #Shorts",
+      "video_id": "dvGeWRUasgw",
+      "title": "CVD Divergence: How Smart Money Spots Fake Breakouts #Shorts",
       "format": "SHORT",
-      "published_at": "2026-10-29T19:25:11Z",
-      "hours_live": 1.0,
+      "published_at": "2026-10-29T19:40:05Z",
+      "hours_live": 13.6,
       "view_count": 0,
       "like_count": 0,
       "comment_count": 0,
@@ -65,11 +65,11 @@
       "engagement_rate": 0.0
     },
     {
-      "video_id": "rcxraPjUDoo",
-      "title": "The 0.5x Multiplier Trap: How Room Rent Caps Slash Hospital Bills #Shorts",
+      "video_id": "oDtR72Jc6j8",
+      "title": "Naked Short Strangles: The Hidden Margin Multiplier #Shorts",
       "format": "SHORT",
-      "published_at": "2026-10-29T19:22:47Z",
-      "hours_live": 1.0,
+      "published_at": "2026-10-29T19:37:45Z",
+      "hours_live": 13.7,
       "view_count": 0,
       "like_count": 0,
       "comment_count": 0,
