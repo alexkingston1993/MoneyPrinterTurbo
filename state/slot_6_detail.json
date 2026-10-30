@@ -73,11 +73,11 @@
       "completed_at": null,
       "metrics": {
         "voice_persona": "Arjun \u2014 Signature Cloned Voice",
-        "kaggle_kernel_status": "RUNNING",
+        "kaggle_kernel_status": "COMPLETE",
         "long_render_pct": 100,
         "short_1_render_pct": 100,
-        "short_2_render_pct": 85,
-        "gpu_elapsed_sec": 978
+        "short_2_render_pct": 100,
+        "gpu_elapsed_sec": 1010
       }
     },
     {
