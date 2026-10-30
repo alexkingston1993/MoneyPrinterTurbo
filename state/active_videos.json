@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-30T09:44:04Z",
+  "updated_at": "2026-10-30T11:31:44Z",
   "videos": {
     "slot_1_long": {
       "slot": 1,
@@ -105,13 +105,13 @@
       "title": "[LONG-FORM] Sebi f&o rules",
       "format": "16:9 LONG",
       "vertical": "STOCK_MARKET",
-      "current_stage": "Stage 7/7: Uploaded & Distributed",
-      "stage_pct": 100,
-      "completion_pct": 100,
-      "eta_seconds": 0,
+      "current_stage": "Stage 4/7: Chart & High-CTR Thumbnail Studio",
+      "stage_pct": 20,
+      "completion_pct": 40,
+      "eta_seconds": 360,
       "compliance_status": "\ud83d\udee1\ufe0f Feedback Healed & Verified",
-      "status": "COMPLETED",
-      "updated_at": "2026-10-29T12:05:15Z",
+      "status": "IN_PROGRESS",
+      "updated_at": "2026-10-30T11:31:44Z",
       "started_at": "2026-10-27T20:31:29Z",
       "youtube_id": "T69-BM1mgjc",
       "youtube_url": "https://www.youtube.com/watch?v=T69-BM1mgjc"
