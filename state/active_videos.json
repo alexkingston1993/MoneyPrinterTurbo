@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-30T18:43:53Z",
+  "updated_at": "2026-10-30T20:00:34Z",
   "videos": {
     "slot_1_long": {
       "slot": 1,
@@ -39,13 +39,13 @@
       "title": "[LONG-FORM] How Super Top-Up Policy Wording Decides Your First Claim Rejection",
       "format": "16:9 LONG",
       "vertical": "INSURANCE",
-      "current_stage": "Stage 7/7: Uploaded & Distributed",
-      "stage_pct": 100,
-      "completion_pct": 100,
-      "eta_seconds": 0,
+      "current_stage": "Stage 4/7: Chart & High-CTR Thumbnail Studio",
+      "stage_pct": 20,
+      "completion_pct": 40,
+      "eta_seconds": 360,
       "compliance_status": "\ud83d\udee1\ufe0f Feedback Healed & Verified",
-      "status": "COMPLETED",
-      "updated_at": "2026-10-30T18:43:53Z",
+      "status": "IN_PROGRESS",
+      "updated_at": "2026-10-30T20:00:34Z",
       "started_at": "2026-10-26T17:21:07Z",
       "youtube_id": "T80vt_hFTPo",
       "youtube_url": "https://www.youtube.com/watch?v=T80vt_hFTPo"
