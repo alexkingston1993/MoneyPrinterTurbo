@@ -103,7 +103,15 @@
       "pct": 100,
       "started_at": "2026-10-30T17:08:43Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "yt_long_id": "T80vt_hFTPo",
+        "yt_short_ids": [
+          "l2kOChiZXnk"
+        ],
+        "oauth_slot_used": 1,
+        "article_url": "https://the-bull-print.vercel.app/article.html?slug=INS-2026-STU-06",
+        "x_thread_url": "Skipped (X keys not set)"
+      }
     }
   ],
   "live_logs": [
