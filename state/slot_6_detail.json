@@ -74,10 +74,10 @@
       "metrics": {
         "voice_persona": "Arjun \u2014 Signature Cloned Voice",
         "kaggle_kernel_status": "RUNNING",
-        "long_render_pct": 80,
-        "short_1_render_pct": 25,
-        "short_2_render_pct": 0,
-        "gpu_elapsed_sec": 159
+        "long_render_pct": 100,
+        "short_1_render_pct": 90,
+        "short_2_render_pct": 35,
+        "gpu_elapsed_sec": 189
       }
     },
     {
