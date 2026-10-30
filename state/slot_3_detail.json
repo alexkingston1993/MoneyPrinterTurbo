@@ -103,7 +103,16 @@
       "pct": 100,
       "started_at": "2026-10-30T09:44:11Z",
       "completed_at": null,
-      "metrics": {}
+      "metrics": {
+        "yt_long_id": "T80vt_hFTPo",
+        "yt_short_ids": [
+          "5vRUkpjcDS4",
+          "LdZFwty1dcc"
+        ],
+        "oauth_slot_used": 1,
+        "article_url": "https://the-bull-print.vercel.app/article.html?slug=ins_super_top_up_claim_rejection_03",
+        "x_thread_url": "Skipped (X keys not set)"
+      }
     }
   ],
   "live_logs": [
