@@ -133,6 +133,11 @@
       "ts": "14:58:55",
       "level": "INFO",
       "msg": "[GEMINI]: \u2705 Generated + Healed (`TBP-CRYPTO-2025-05`) | \ud83e\ude99 CRYPTO"
+    },
+    {
+      "ts": "14:59:04",
+      "level": "INFO",
+      "msg": "[GEMINI]: \ud83d\udd2c Auditing Authenticity Engine... | trigram dupe-check + domain vocabulary"
     }
   ]
 }
