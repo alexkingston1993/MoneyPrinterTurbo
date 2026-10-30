@@ -148,6 +148,11 @@
       "ts": "20:01:07",
       "level": "INFO",
       "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering Pillow Graphics... | "
+    },
+    {
+      "ts": "20:01:18",
+      "level": "ERROR",
+      "msg": "Runner failed: CRITICAL: Failed to generate or load 3D scene. All remote and local assets unavailable."
     }
   ]
 }
