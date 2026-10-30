@@ -93,6 +93,11 @@
       "ts": "16:42:58",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udd0d Harvested `How Super Top-Up Policy Wording Decides Your Fir` | source: registry_fallback \u00b7 cluster: term insurance claim rejection, health insurance room rent limit, irdai new rules"
+    },
+    {
+      "ts": "16:43:08",
+      "level": "INFO",
+      "msg": "[PLAYWRIGHT]: \ud83d\udcca Rendering insurance infographics... | "
     }
   ]
 }
