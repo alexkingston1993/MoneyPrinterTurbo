@@ -194,6 +194,11 @@
       "ts": "09:26:26",
       "level": "INFO",
       "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (0m 42s) | TTS + Whisper alignment (0m 42s)"
+    },
+    {
+      "ts": "09:27:02",
+      "level": "INFO",
+      "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (1m 13s) | 1080p Long NVENC render (1m 13s)"
     }
   ]
 }
