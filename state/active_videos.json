@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-31T19:27:58Z",
+  "updated_at": "2026-10-31T19:50:15Z",
   "videos": {
     "slot_1_long": {
       "slot": 1,
@@ -39,16 +39,16 @@
       "title": "[LONG-FORM] How Room-Rent Sub-Limits Devour Health Insurance Claims Proportionally",
       "format": "16:9 LONG",
       "vertical": "INSURANCE",
-      "current_stage": "Stage 5/7: Kaggle T4 GPU \u2014 NVENC Encoding",
-      "stage_pct": 50,
-      "completion_pct": 65,
-      "eta_seconds": 220,
+      "current_stage": "Stage 7/7: Uploaded & Distributed",
+      "stage_pct": 100,
+      "completion_pct": 100,
+      "eta_seconds": 0,
       "compliance_status": "\ud83d\udee1\ufe0f Feedback Healed & Verified",
-      "status": "IN_PROGRESS",
-      "updated_at": "2026-10-31T19:27:58Z",
+      "status": "COMPLETED",
+      "updated_at": "2026-10-31T19:50:15Z",
       "started_at": "2026-10-26T17:21:07Z",
-      "youtube_id": "T80vt_hFTPo",
-      "youtube_url": "https://www.youtube.com/watch?v=T80vt_hFTPo"
+      "youtube_id": "_nFj_0DkTW0",
+      "youtube_url": "https://www.youtube.com/watch?v=_nFj_0DkTW0"
     },
     "slot_5_long": {
       "video_id": "slot_5_long",
