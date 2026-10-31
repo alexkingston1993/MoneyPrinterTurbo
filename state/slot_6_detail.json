@@ -1,62 +1,52 @@
 {
   "slot": 6,
-  "run_id": "41119502322",
+  "run_id": "41216152893",
   "vertical": "insurance",
   "vertical_label": "Slot #6",
   "shorts_count": 1,
-  "status": "FAILED",
-  "overall_pct": 45,
-  "stage_pct": 70,
-  "current_stage_index": 4,
-  "current_stage_name": "Chart & High-CTR Thumbnail Studio",
-  "current_subtask_label": "Error: CRITICAL: Failed to generate or load 3D scene. All remote and local as",
-  "started_at": "2026-10-30T19:59:14Z",
-  "updated_at": "2026-10-30T20:01:14Z",
+  "status": "RUNNING",
+  "overall_pct": 2,
+  "stage_pct": 10,
+  "current_stage_index": 1,
+  "current_stage_name": "SEO Topic Harvester (open-seo)",
+  "current_subtask_label": "Harvesting search intent & clusters",
+  "started_at": "2026-10-31T15:43:56Z",
+  "updated_at": "2026-10-31T15:43:56Z",
   "eta_seconds": 0,
   "stages": [
     {
       "id": 1,
       "name": "SEO Topic Harvester (open-seo)",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-30T19:59:13Z",
-      "completed_at": "2026-10-30T19:59:22Z",
+      "status": "RUNNING",
+      "pct": 0,
+      "started_at": "2026-10-31T15:43:55Z",
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 2,
       "name": "Gemini Script & Dossier Synthesis",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-30T19:59:22Z",
-      "completed_at": "2026-10-30T19:59:35Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 3,
       "name": "Authenticity & SEBI/IRDAI Compliance Gate",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-30T20:00:28Z",
-      "completed_at": "2026-10-30T19:59:35Z",
-      "metrics": {
-        "audit_attempts": 1,
-        "compliance_status": "PASS_1",
-        "audit_notes": "Virality dopamine pacing and SEBI/IRDAI compliance healed & verified",
-        "compliance_pass": true,
-        "compliance_verdict": "PASSED_AFTER_FEEDBACK",
-        "virality_score": 92,
-        "authenticity_pass": true,
-        "trigram_similarity_pct": 8.4,
-        "regex_violations": 0
-      }
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
+      "metrics": {}
     },
     {
       "id": 4,
       "name": "Chart & High-CTR Thumbnail Studio",
-      "status": "RUNNING",
-      "pct": 70,
-      "started_at": "2026-10-30T19:59:35Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
       "completed_at": null,
       "metrics": {}
     },
@@ -90,69 +80,9 @@
   ],
   "live_logs": [
     {
-      "ts": "19:59:14",
+      "ts": "15:43:56",
       "level": "INFO",
       "msg": "Slot #6 (insurance) initialized. Target: 1 Long + 1 Shorts."
-    },
-    {
-      "ts": "19:59:25",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvesting live search intent... | open-seo dark-query loop \u00b7 slot 6"
-    },
-    {
-      "ts": "19:59:32",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvested `How Super Top-Up Policy Wording Decides Your Fir` | source: registry_fallback \u00b7 cluster: term insurance claim rejection, health insurance room rent limit, irdai new rules"
-    },
-    {
-      "ts": "19:59:37",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \ud83d\udcca Rendering insurance infographics... | "
-    },
-    {
-      "ts": "19:59:45",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \u2705 Rendered (2 infographics) | "
-    },
-    {
-      "ts": "19:59:50",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83e\udde0 Synthesizing Dual Script + Article... | "
-    },
-    {
-      "ts": "20:00:11",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udee1\ufe0f Auditing Virality & Compliance... | Retention pacing + SEBI/IRDAI auditor"
-    },
-    {
-      "ts": "20:00:16",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udee1\ufe0f Virality & Compliance (Pass 1/3) | 100% Pass: Virality 100/100 + SEBI/IRDAI Approved"
-    },
-    {
-      "ts": "20:00:25",
-      "level": "INFO",
-      "msg": "[GEMINI]: \u2705 Generated + Healed (`INS-2025-06-SUPER-TOP-UP`) | \ud83d\udee1\ufe0f INSURANCE"
-    },
-    {
-      "ts": "20:00:38",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd2c Auditing Authenticity Engine... | trigram dupe-check + domain vocabulary"
-    },
-    {
-      "ts": "20:00:44",
-      "level": "INFO",
-      "msg": "[GEMINI]: \u267b\ufe0f Authenticity regen 1/2... | 30-day overlap vs 'INS-2025-STU-06' \u2192 title overlap ['claim', 'decides', 'first', 'policy']"
-    },
-    {
-      "ts": "20:01:07",
-      "level": "INFO",
-      "msg": "[THUMBNAIL]: \ud83c\udfa8 Rendering Pillow Graphics... | "
-    },
-    {
-      "ts": "20:01:18",
-      "level": "ERROR",
-      "msg": "Runner failed: CRITICAL: Failed to generate or load 3D scene. All remote and local assets unavailable."
     }
   ]
 }
