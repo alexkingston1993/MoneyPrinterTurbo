@@ -93,6 +93,11 @@
       "ts": "19:25:32",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udd0d Harvested `How Room-Rent Sub-Limits Devour Health Insurance` | source: registry_fallback \u00b7 cluster: term insurance claim rejection, health insurance room rent limit, irdai new rules"
+    },
+    {
+      "ts": "19:25:37",
+      "level": "INFO",
+      "msg": "[PLAYWRIGHT]: \ud83d\udcca Rendering insurance infographics... | "
     }
   ]
 }
