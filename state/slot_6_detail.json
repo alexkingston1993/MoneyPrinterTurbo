@@ -5,13 +5,13 @@
   "vertical_label": "Slot #6",
   "shorts_count": 1,
   "status": "WAITING_APPROVAL",
-  "overall_pct": 75,
-  "stage_pct": 80,
+  "overall_pct": 70,
+  "stage_pct": 70,
   "current_stage_index": 5,
   "current_stage_name": "Kaggle T4 GPU Render Farm",
   "current_subtask_label": "1080p Long NVENC render (1m 40s)",
   "started_at": "2026-10-31T19:25:15Z",
-  "updated_at": "2026-10-31T19:33:20Z",
+  "updated_at": "2026-10-31T19:33:25Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -68,7 +68,7 @@
       "id": 5,
       "name": "Kaggle T4 GPU Render Farm",
       "status": "RUNNING",
-      "pct": 80,
+      "pct": 70,
       "started_at": "2026-10-31T19:27:59Z",
       "completed_at": null,
       "metrics": {
