@@ -1,62 +1,52 @@
 {
   "slot": 5,
-  "run_id": "41076097664",
+  "run_id": "41210063559",
   "vertical": "crypto",
   "vertical_label": "Slot #5",
   "shorts_count": 1,
-  "status": "FAILED",
-  "overall_pct": 45,
-  "stage_pct": 70,
-  "current_stage_index": 4,
-  "current_stage_name": "Chart & High-CTR Thumbnail Studio",
-  "current_subtask_label": "Error: CRITICAL: Failed to generate or load 3D scene. All remote and local as",
-  "started_at": "2026-10-30T14:57:31Z",
-  "updated_at": "2026-10-30T14:59:19Z",
+  "status": "RUNNING",
+  "overall_pct": 2,
+  "stage_pct": 10,
+  "current_stage_index": 1,
+  "current_stage_name": "SEO Topic Harvester (open-seo)",
+  "current_subtask_label": "Harvesting search intent & clusters",
+  "started_at": "2026-10-31T14:26:40Z",
+  "updated_at": "2026-10-31T14:26:40Z",
   "eta_seconds": 0,
   "stages": [
     {
       "id": 1,
       "name": "SEO Topic Harvester (open-seo)",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-30T14:57:30Z",
-      "completed_at": "2026-10-30T14:57:37Z",
+      "status": "RUNNING",
+      "pct": 0,
+      "started_at": "2026-10-31T14:26:40Z",
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 2,
       "name": "Gemini Script & Dossier Synthesis",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-30T14:57:37Z",
-      "completed_at": "2026-10-30T14:57:50Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
       "metrics": {}
     },
     {
       "id": 3,
       "name": "Authenticity & SEBI/IRDAI Compliance Gate",
-      "status": "COMPLETED",
-      "pct": 100,
-      "started_at": "2026-10-30T14:58:58Z",
-      "completed_at": "2026-10-30T14:57:50Z",
-      "metrics": {
-        "audit_attempts": 1,
-        "compliance_status": "PASS_1",
-        "audit_notes": "Virality dopamine pacing and SEBI/IRDAI compliance healed & verified",
-        "compliance_pass": true,
-        "compliance_verdict": "PASSED_AFTER_FEEDBACK",
-        "virality_score": 92,
-        "authenticity_pass": true,
-        "trigram_similarity_pct": 8.4,
-        "regex_violations": 0
-      }
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
+      "completed_at": null,
+      "metrics": {}
     },
     {
       "id": 4,
       "name": "Chart & High-CTR Thumbnail Studio",
-      "status": "RUNNING",
-      "pct": 70,
-      "started_at": "2026-10-30T14:57:50Z",
+      "status": "PENDING",
+      "pct": 0,
+      "started_at": null,
       "completed_at": null,
       "metrics": {}
     },
@@ -90,64 +80,9 @@
   ],
   "live_logs": [
     {
-      "ts": "14:57:31",
+      "ts": "14:26:40",
       "level": "INFO",
       "msg": "Slot #5 (crypto) initialized. Target: 1 Long + 1 Shorts."
-    },
-    {
-      "ts": "14:57:40",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvesting live search intent... | open-seo dark-query loop \u00b7 slot 5"
-    },
-    {
-      "ts": "14:57:46",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd0d Harvested `Usdt dominance coinmarketcap` | source: autocomplete \u00b7 cluster: usdt dominance coinmarketcap, usdt dominance chart and ideas \u2014 tradingview, usdt dominance chart binance"
-    },
-    {
-      "ts": "14:57:52",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \ud83d\udd04 Capturing 3 charts... | "
-    },
-    {
-      "ts": "14:58:11",
-      "level": "INFO",
-      "msg": "[PLAYWRIGHT]: \u2705 Captured (3 charts) | "
-    },
-    {
-      "ts": "14:58:22",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83e\udde0 Synthesizing Dual Script + Article... | "
-    },
-    {
-      "ts": "14:58:43",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udee1\ufe0f Auditing Virality & Compliance... | Retention pacing + SEBI/IRDAI auditor"
-    },
-    {
-      "ts": "14:58:47",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udee1\ufe0f Virality & Compliance (Pass 1/3) | 100% Pass: Virality 90/100 + SEBI/IRDAI Approved"
-    },
-    {
-      "ts": "14:58:55",
-      "level": "INFO",
-      "msg": "[GEMINI]: \u2705 Generated + Healed (`TBP-CRYPTO-2025-05`) | \ud83e\ude99 CRYPTO"
-    },
-    {
-      "ts": "14:59:04",
-      "level": "INFO",
-      "msg": "[GEMINI]: \ud83d\udd2c Auditing Authenticity Engine... | trigram dupe-check + domain vocabulary"
-    },
-    {
-      "ts": "14:59:08",
-      "level": "INFO",
-      "msg": "[GEMINI]: \u2705 Original (contract_clause_forensic_audit) | \ud83e\ude99 CRYPTO \u00b7 111 hits (liquidation, liquidation cluster, funding rate, open interest, perp, p"
-    },
-    {
-      "ts": "14:59:22",
-      "level": "ERROR",
-      "msg": "Runner failed: CRITICAL: Failed to generate or load 3D scene. All remote and local assets unavailable."
     }
   ]
 }
