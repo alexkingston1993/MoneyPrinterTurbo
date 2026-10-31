@@ -143,6 +143,11 @@
       "ts": "14:28:11",
       "level": "INFO",
       "msg": "[GEMINI]: \u2705 Original (smart_money_footprint_reversal) | \ud83e\ude99 CRYPTO \u00b7 111 hits (liquidation, liquidation cluster, funding rate, open interest, perp, p"
+    },
+    {
+      "ts": "14:28:25",
+      "level": "ERROR",
+      "msg": "Runner failed: CRITICAL: Failed to generate or load 3D scene. All remote and local assets unavailable."
     }
   ]
 }
