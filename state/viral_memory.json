@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-31T14:26:46Z",
+  "updated_at": "2026-10-31T15:44:02Z",
   "channel_median_vph": 0.07,
   "top_outperformers": [
     {
@@ -7,11 +7,11 @@
       "title": "Why 90% Lose: The Truth About SIP Investment",
       "format": "LONG",
       "published_at": "2026-10-30T15:13:26Z",
-      "hours_live": 23.2,
+      "hours_live": 24.5,
       "view_count": 11,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 0.47,
+      "views_per_hour": 0.45,
       "engagement_rate": 0.3636
     },
     {
@@ -19,24 +19,24 @@
       "title": "The 20% Co-Payment Clause: How Insurers Cut Big Claim Payouts #Shorts",
       "format": "SHORT",
       "published_at": "2026-10-31T04:12:13Z",
-      "hours_live": 10.2,
+      "hours_live": 11.5,
       "view_count": 4,
       "like_count": 1,
       "comment_count": 0,
-      "views_per_hour": 0.39,
+      "views_per_hour": 0.35,
       "engagement_rate": 0.25
     },
     {
-      "video_id": "8Q3lBWHleOg",
-      "title": "The 36-Month Pre-Existing Disease Rule Under New IRDAI Norms #Shorts",
+      "video_id": "EQDaXOsGWBg",
+      "title": "Don't Fall for the 24500 Trap: Why 90% of Everyday Buyers Lose Money",
       "format": "SHORT",
-      "published_at": "2026-10-30T19:12:04Z",
-      "hours_live": 19.2,
+      "published_at": "2026-10-30T20:00:55Z",
+      "hours_live": 19.7,
       "view_count": 5,
-      "like_count": 1,
+      "like_count": 0,
       "comment_count": 0,
-      "views_per_hour": 0.26,
-      "engagement_rate": 0.2
+      "views_per_hour": 0.25,
+      "engagement_rate": 0.0
     }
   ],
   "bottom_underperformers": [
@@ -45,7 +45,7 @@
       "title": "Order-Flow Footprints: How Institutions Absorb Liquidity #Shorts",
       "format": "SHORT",
       "published_at": "2026-10-30T22:12:15Z",
-      "hours_live": 16.2,
+      "hours_live": 17.5,
       "view_count": 0,
       "like_count": 0,
       "comment_count": 0,
@@ -57,7 +57,7 @@
       "title": "Don't Fall for the 24500 Trap: Why 90% of Everyday Buyers Lose Money",
       "format": "SHORT",
       "published_at": "2026-10-30T19:42:02Z",
-      "hours_live": 18.7,
+      "hours_live": 20.0,
       "view_count": 0,
       "like_count": 0,
       "comment_count": 0,
@@ -69,7 +69,7 @@
       "title": "Don't Fall for the 24500 Trap: Why 90% of Everyday Buyers Lose Money",
       "format": "SHORT",
       "published_at": "2026-10-30T19:23:02Z",
-      "hours_live": 19.1,
+      "hours_live": 20.4,
       "view_count": 0,
       "like_count": 0,
       "comment_count": 0,
