@@ -1,5 +1,45 @@
 [
   {
+    "title": "How Room-Rent Sub-Limits Devour Health Insurance Claims Proportionally | The Bull Print",
+    "slug": "INS-RRSL-06",
+    "description": "Discover how health insurance room-rent sub-limits trigger proportional deductions on hospital bills. Learn IRDAI rules, claim settlement traps, and super top-up strategies.",
+    "date": "2026-10-24",
+    "author": "Alex from Chennai",
+    "reading_time": "6 min read",
+    "word_count": 1310,
+    "categories": [
+      "Market Education",
+      "Institutional Flow",
+      "Risk Management"
+    ],
+    "tags": [
+      "Nifty",
+      "Bitcoin",
+      "Order Flow",
+      "Beginner Guide"
+    ],
+    "youtube_video_id": "_nFj_0DkTW0",
+    "charts": [
+      "ins_claim_vs_deduction_matrix.png",
+      "ins_compounding_protection_curve.png"
+    ],
+    "content_path": "content/posts/INS-RRSL-06.md"
+  },
+  {
+    "title": "How Room-Rent Sub-Limits Devour Health Insurance Claims Proportionally (Short #1) #Shorts",
+    "slug": "INS-RRSL-06-short-1",
+    "description": "Institutional analysis of How Room-Rent Sub-Limits Devour Health Insurance Claims Proportionally for everyday investors.",
+    "date": "2026-10-31 19:50:15",
+    "vertical": "insurance",
+    "category": "Insurance",
+    "format": "SHORT",
+    "youtube_video_id": "NVLAgi9EISA",
+    "youtube_id": "NVLAgi9EISA",
+    "youtubeUrl": "https://www.youtube.com/shorts/NVLAgi9EISA",
+    "dossier_url": "/article.html?slug=INS-RRSL-06",
+    "compliance_notes": "SEBI/IRDAI Zero-violation feedback verified"
+  },
+  {
     "title": "The $110 Billion Shadow Engine: Forensic Audit of Tether's Reserves, Cantor Fitzgerald, and Global Crypto Liquidity",
     "slug": "the-110-billion-tether-shadow-engine-crypto-liquidity-audit-2026",
     "description": "A forensic institutional deep-dive into Tether's $110B reserve architecture, Howard Lutnick's Cantor Fitzgerald custody, commercial paper history, Tron network liquidity, and systemic stablecoin risks.",
