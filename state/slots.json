@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-31T09:10:06Z",
+  "updated_at": "2026-10-31T09:11:32Z",
   "daily_target": 16,
   "daily_published": 0,
   "slots": {
@@ -41,7 +41,7 @@
       "vertical": "insurance",
       "vertical_label": "Insurance #1",
       "shorts_count": 2,
-      "status": "WAITING_APPROVAL",
+      "status": "FAILED",
       "overall_pct": 60,
       "stage_pct": 20,
       "current_stage": "Local CPU Media Engine",
