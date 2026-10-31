@@ -138,6 +138,11 @@
       "ts": "19:26:29",
       "level": "INFO",
       "msg": "[GEMINI]: \ud83d\udd2c Auditing Authenticity Engine... | trigram dupe-check + domain vocabulary"
+    },
+    {
+      "ts": "19:26:35",
+      "level": "INFO",
+      "msg": "[GEMINI]: \u267b\ufe0f Authenticity regen 1/2... | 30-day overlap vs 'INS-CSR-ICR-006' \u2192 title overlap ['claim', 'ratio', 'settlement']"
     }
   ]
 }
