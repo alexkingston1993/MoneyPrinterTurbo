@@ -1,51 +1,51 @@
 {
-  "updated_at": "2026-10-31T17:26:30Z",
-  "channel_median_vph": 0.09,
+  "updated_at": "2026-10-31T19:25:21Z",
+  "channel_median_vph": 0.11,
   "top_outperformers": [
+    {
+      "video_id": "RQtWv0hE1uM",
+      "title": "The Zero-Hero Option Trap: The Mathematics of Theta Decay #Shorts",
+      "format": "SHORT",
+      "published_at": "2026-10-31T19:11:53Z",
+      "hours_live": 0.5,
+      "view_count": 1,
+      "like_count": 0,
+      "comment_count": 0,
+      "views_per_hour": 2.0,
+      "engagement_rate": 0.0
+    },
     {
       "video_id": "T2ndsGl35ew",
       "title": "Why 90% Lose: The Truth About SIP Investment",
       "format": "LONG",
       "published_at": "2026-10-30T15:13:26Z",
-      "hours_live": 26.2,
-      "view_count": 11,
+      "hours_live": 28.2,
+      "view_count": 13,
       "like_count": 1,
       "comment_count": 1,
-      "views_per_hour": 0.42,
-      "engagement_rate": 0.3636
-    },
-    {
-      "video_id": "DXpRuTMymNo",
-      "title": "Don't Fall for the 24500 Trap: Why 90% of Everyday Buyers Lose Money",
-      "format": "SHORT",
-      "published_at": "2026-10-31T11:54:18Z",
-      "hours_live": 5.5,
-      "view_count": 2,
-      "like_count": 1,
-      "comment_count": 0,
-      "views_per_hour": 0.36,
-      "engagement_rate": 0.5
+      "views_per_hour": 0.46,
+      "engagement_rate": 0.3077
     },
     {
       "video_id": "l5n5au_PKxg",
       "title": "The 20% Co-Payment Clause: How Insurers Cut Big Claim Payouts #Shorts",
       "format": "SHORT",
       "published_at": "2026-10-31T04:12:13Z",
-      "hours_live": 13.2,
-      "view_count": 4,
+      "hours_live": 15.2,
+      "view_count": 5,
       "like_count": 1,
       "comment_count": 0,
-      "views_per_hour": 0.3,
-      "engagement_rate": 0.25
+      "views_per_hour": 0.33,
+      "engagement_rate": 0.2
     }
   ],
   "bottom_underperformers": [
     {
       "video_id": "n-TH4OtdE2I",
-      "title": "Order-Flow Footprints: How Institutions Absorb Liquidity #Shorts",
+      "title": "Order-Flow Footprints: How Institutions Absorb Liquidity #Shorts (Institutional Breakdown)",
       "format": "SHORT",
       "published_at": "2026-10-30T22:12:15Z",
-      "hours_live": 19.2,
+      "hours_live": 21.2,
       "view_count": 0,
       "like_count": 0,
       "comment_count": 0,
@@ -54,10 +54,10 @@
     },
     {
       "video_id": "QnK4dyjRmCI",
-      "title": "Don't Fall for the 24500 Trap: Why 90% of Everyday Buyers Lose Money",
+      "title": "Don't Fall for the 24500 Trap: Why 90% of Everyday Buyers Lose Money (Institutional Breakdown)",
       "format": "SHORT",
       "published_at": "2026-10-30T19:42:02Z",
-      "hours_live": 21.7,
+      "hours_live": 23.7,
       "view_count": 0,
       "like_count": 0,
       "comment_count": 0,
@@ -69,7 +69,7 @@
       "title": "Don't Fall for the 24500 Trap: Why 90% of Everyday Buyers Lose Money",
       "format": "SHORT",
       "published_at": "2026-10-30T19:23:02Z",
-      "hours_live": 22.1,
+      "hours_live": 24.0,
       "view_count": 0,
       "like_count": 0,
       "comment_count": 0,
