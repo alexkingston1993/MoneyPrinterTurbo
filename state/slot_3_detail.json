@@ -194,6 +194,11 @@
       "ts": "09:09:21",
       "level": "INFO",
       "msg": "[KAGGLE_GPU]: \ud83d\udd25 Encoding NVENC + Whisper (0m 40s) | TTS + Whisper alignment (0m 40s)"
+    },
+    {
+      "ts": "09:09:50",
+      "level": "INFO",
+      "msg": "[KAGGLE_GPU]: \u274c Kaggle Error \u2014 Fallback Engaged | "
     }
   ]
 }
