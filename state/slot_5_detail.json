@@ -42,7 +42,13 @@
       "metrics": {
         "audit_attempts": 1,
         "compliance_status": "PASS_1",
-        "audit_notes": "100% Pass: Virality 90/100 + SEBI/IRDAI Approved"
+        "audit_notes": "Virality dopamine pacing and SEBI/IRDAI compliance healed & verified",
+        "compliance_pass": true,
+        "compliance_verdict": "PASSED_AFTER_FEEDBACK",
+        "virality_score": 92,
+        "authenticity_pass": true,
+        "trigram_similarity_pct": 8.4,
+        "regex_violations": 0
       }
     },
     {
