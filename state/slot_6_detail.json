@@ -5,13 +5,13 @@
   "vertical_label": "Slot #6",
   "shorts_count": 1,
   "status": "WAITING_APPROVAL",
-  "overall_pct": 85,
-  "stage_pct": 100,
-  "current_stage_index": 6,
-  "current_stage_name": "OpenMontage Post-Render QA Gate",
-  "current_subtask_label": "QA Audit: PASSED (mean dB: -14.4, black: 0.0)",
+  "overall_pct": 75,
+  "stage_pct": 80,
+  "current_stage_index": 5,
+  "current_stage_name": "Kaggle T4 GPU Render Farm",
+  "current_subtask_label": "\ud83d\udd11 YT Quota Slot #1 \u00b7 \ud83c\udfac 1 Short(s) \u00b7 \ud83d\udee1\ufe0f QA PASSED \u00b7 -14.4 dB \u00b7 black 0.0",
   "started_at": "2026-10-31T19:25:15Z",
-  "updated_at": "2026-10-31T19:50:04Z",
+  "updated_at": "2026-10-31T19:50:08Z",
   "eta_seconds": 0,
   "stages": [
     {
@@ -67,8 +67,8 @@
     {
       "id": 5,
       "name": "Kaggle T4 GPU Render Farm",
-      "status": "COMPLETED",
-      "pct": 100,
+      "status": "RUNNING",
+      "pct": 80,
       "started_at": "2026-10-31T19:27:59Z",
       "completed_at": "2026-10-31T19:50:04Z",
       "metrics": {
@@ -83,8 +83,8 @@
     {
       "id": 6,
       "name": "OpenMontage Post-Render QA Gate",
-      "status": "RUNNING",
-      "pct": 100,
+      "status": "PENDING",
+      "pct": 0,
       "started_at": "2026-10-31T19:50:04Z",
       "completed_at": null,
       "metrics": {
