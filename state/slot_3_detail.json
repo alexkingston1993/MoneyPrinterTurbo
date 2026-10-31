@@ -133,6 +133,11 @@
       "ts": "09:06:26",
       "level": "INFO",
       "msg": "[GEMINI]: \u2705 Generated + Healed (`c1_irdai_claims_003`) | \ud83d\udee1\ufe0f INSURANCE"
+    },
+    {
+      "ts": "09:06:37",
+      "level": "INFO",
+      "msg": "[GEMINI]: \ud83d\udd2c Auditing Authenticity Engine... | trigram dupe-check + domain vocabulary"
     }
   ]
 }
