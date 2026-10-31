@@ -167,6 +167,11 @@
       "ts": "19:28:01",
       "level": "INFO",
       "msg": "[KAGGLE_GPU]: \ud83d\ude80 Dispatching to Kaggle Dual-T4 GPU... | "
+    },
+    {
+      "ts": "19:30:48",
+      "level": "INFO",
+      "msg": "[KAGGLE_GPU]: \u2601\ufe0f Pushing Dataset to Kaggle... | "
     }
   ]
 }
